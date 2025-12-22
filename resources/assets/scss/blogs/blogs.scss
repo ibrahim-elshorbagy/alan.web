@@ -1,0 +1,75 @@
+.blog-img {
+    position: relative;
+    max-width: 500px;
+    max-height: 300px;
+    border-radius: 20px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .blog-img img {
+    max-height: 100%;
+  }
+
+  img {
+    border-radius: 5%;
+  }
+
+  .about-section {
+    margin-top: -80px;
+  }
+
+  .blog-detail-img {
+    height: auto;
+  }
+
+  @media (min-width: 1400px) {
+    .mt-100 {
+      margin-top: 100px;
+    }
+  }
+
+  .pagination li .page-item .active{
+      background-color: green;
+  }
+
+  .pagination .page-link{
+      background-color: white;
+      color: grey;
+  }
+
+  .pagination button {
+      margin: 0 10px 0 10px;
+      border-radius: 10px;
+  }
+
+  .pagination button.page-item{
+      background-color: white;
+  }
+
+  .pagination .page-item:first-child .page-link {
+      background-color: white;
+      color: grey;
+      border:none;
+      font-size: 30px;
+      margin-top: -10px;
+      margin-right: 10px;
+  }
+
+  .pagination .page-item:last-child .page-link {
+      background-color: white;
+      color: grey;
+      border:none;
+      font-size: 30px;
+      margin-top: -10px;
+  }
+  .pagination .page-item.active .page-link {
+      background-color: #7638f9;
+      color: white;
+      border-radius: 10px;
+      margin-right: 10px;
+  }
+
+   p.small.text-muted{
+      display: none;
+  }

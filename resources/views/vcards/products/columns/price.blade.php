@@ -1,0 +1,1 @@
+{{ !empty($row->currency->currency_icon) ? $row->currency->currency_icon : '' }}{{ getSuperAdminSettingValue('hide_decimal_values') == 1 ? number_format($row->price, 0) : number_format($row->price, 2) }}

@@ -1,0 +1,106 @@
+
+.blog-img {
+    position: relative;
+    max-width: 500px;
+    max-height: 300px;
+    border-radius: 20px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .blog-img img {
+    max-height: 100%;
+  }
+
+  img {
+    border-radius: 5%;
+  }
+  .categoryColor:hover {
+    color: #c351fe !important;
+  }
+  .categoryColor{
+    color: #c351fe !important;
+  }
+
+  .about-section {
+    margin-top: -80px;
+  }
+
+  .blog-detail-img {
+    max-height: 460px;
+  }
+
+  @media (min-width: 1400px) {
+    .mt-99 {
+      margin-top: 99px;
+    }
+  }
+  .pagination li .page-item .active {
+    background-color: green;
+  }
+
+  .pagination .page-link {
+    background-color: white;
+    color: grey;
+  }
+
+  .pagination button {
+    margin: 0 10px 0 10px;
+    border-radius: 10px;
+    border-color: lightgray;
+  }
+
+  .pagination button.page-item {
+    background-color: white;
+  }
+
+  .pagination .page-item:first-child .page-link {
+    background-color: white;
+    color: grey;
+    border: none;
+    font-size: 30px;
+    margin-top: -10px;
+    margin-right: 10px;
+  }
+
+  .pagination .page-item:last-child .page-link {
+    background-color: white;
+    color: grey;
+    border: none;
+    font-size: 30px;
+    margin-top: -10px;
+  }
+
+  .pagination .page-item.active .page-link{
+    background-color: #bf4dfe !important;
+    color: white !important;
+    border-radius: 10px;
+    margin-right: 10px;
+    border-color: grey !important;
+  }
+
+  .active.page-link:hover {
+    z-index: auto !important;
+    color: #808080 !important;
+    background-color: transparent !important;
+    border-color: #d3d3d3 !important;
+   }
+
+  .page-link:hover {
+    z-index: auto !important;
+    color: #808080 !important;
+    background-color: transparent !important;
+    border-color: #d3d3d3 !important;
+   }
+
+  .page-link:focus {
+    z-index: 3;
+    color: #808080 !important;
+    background-color: transparent !important;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(156,39,176,.25) !important;
+}
+
+  p.small.text-muted {
+    display: none;
+  }

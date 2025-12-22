@@ -1,0 +1,3 @@
+Sitemap: https://alan.web.jo/sitemap.xml
+User-agent: *
+Disallow:
