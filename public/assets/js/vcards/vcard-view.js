@@ -1,2 +1,6595 @@
-/*! For license information please see vcard-view.js.LICENSE.txt */
-(()=>{var e,a={3297:(e,a,n)=>{"use strict";var o,r;n(7908);function t(e){return t="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},t(e)}function i(e,a,n){return(a=function(e){var a=function(e,a){if("object"!==t(e)||null===e)return e;var n=e[Symbol.toPrimitive];if(void 0!==n){var o=n.call(e,a||"default");if("object"!==t(o))return o;throw new TypeError("@@toPrimitive must return a primitive value.")}return("string"===a?String:Number)(e)}(e,"string");return"symbol"===t(a)?a:String(a)}(a))in e?Object.defineProperty(e,a,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[a]=n,e}function d(e,a){var n=$(e);n.removeClass("d-none"),n.show(),n.text(a),setTimeout((function(){$(e).slideUp()}),3e3)}document.addEventListener("DOMContentLoaded",d),document.addEventListener("DOMContentLoaded",l),document.addEventListener("DOMContentLoaded",(function(){if(password){$("#passwordModal").appendTo("body").modal("show")}else $(".content-blur").removeClass("content-blur")})),document.addEventListener("DOMContentLoaded",(function(){if(!$(".dropdown1").length)return;$(".dropdown1").hover((function(){$(this).find(".dropdown-menu").stop(!0,!0).delay(100).fadeIn(100)}),(function(){$(this).find(".dropdown-menu").stop(!0,!0).delay(100).fadeOut(100)}))})),document.addEventListener("DOMContentLoaded",(function(){var e=document.querySelector("#contactrPhone"),a=document.querySelector("#prefix_code");if(e){var n=window.intlTelInput(e,{initialCountry:defaultCountryCodeValue,preferredCountries:["us","gb","in"],separateDialCode:!0}),o=n.getSelectedCountryData();a.value=o.dialCode,e.addEventListener("countrychange",(function(){var e=n.getSelectedCountryData();a.value=e.dialCode}))}})),$(document).ready((function(){$("html, body").animate({scrollTop:$("html").offset().top})}));var s=[];function l(){var e=window.location.href;if(-1!=e.indexOf("?")){window.history.pushState(null,"",route("vcard.show",vcardAlias));var a=e.split("?").pop();displaySuccessMessage(decodeURIComponent(a))}$(".date").length&&(r=0===(r=(new Date).getTimezoneOffset())?0:-r,s.forEach((function(e){e&&e.destroy()})),s=[],$.ajax({url:route("get.available.days"),type:"GET",data:{vcardId},success:function(e){if(e.success){var a=e.data;$(".date").each((function(){var e=$(this).flatpickr({locale:lang,minDate:new Date,disableMobile:!0,disable:[function(e){var n=e.getDay(),o=0===n?7:n;return!a.includes(o)}]});s.push(e)}))}else $(".date").each((function(){var e=$(this).flatpickr({locale:lang,minDate:new Date,disableMobile:!0});s.push(e)}))},error:function(){$(".date").each((function(){var e=$(this).flatpickr({locale:lang,minDate:new Date,disableMobile:!0});s.push(e)}))}}),setTimeout((function(){isEdit&&$(".date").val(date).trigger("change")}),1e3),$(".no-time-slot").length&&$(".no-time-slot").removeClass("d-none"))}listenChange(".date, .appoint-input",(function(){var e;$("#slotData").empty();var a=1==$("#templateId").length?"#appoitmentTemplateV11":"#appoitmentTemplate";o=$(this).val();var n=moment(o).format(getFormattedDateTime(userDateFormate,1));$("#Date").val(n),$(".date").val(n),$.ajax({url:slotUrl,type:"GET",data:(e={date:n},i(e,"date",o),i(e,"timezone_offset_minutes",r),i(e,"vcardId",vcardId),e),success:function(e){e.success&&($(".appointmentAdd").addClass("d-none"),$.each(e.data,(function(n,o){var r=[{value:o}],t=e.message,i=$(prepareTemplateRender(a,r));i.addClass("dynamic-btn-".concat(t)),i.on("click",(function(){$(this).find(".time-slot").hasClass("activeSlot")?$(".appointmentAdd").addClass("d-none"):$(".appointmentAdd").removeClass("d-none")})),$("#slotData").append(i)})))},error:function(e){$("#slotData").html(""),displayErrorMessage(e.responseJSON.message)}})})),listenClick(".appointmentAdd",(function(){$(".time-slot").hasClass("activeSlot")?($("#AppointmentModal").modal("show"),$("#appointmentPaymentMethod").select2({dropdownParent:$("#AppointmentModal")})):displayErrorMessage(Lang.get("js.select_hour"))})),listenChange("#appointmentPaymentMethod",(function(){7==$(this).val()?$(".manual-payment-guide").removeClass("d-none"):$(".manual-payment-guide").addClass("d-none")})),listenClick(".time-slot",(function(){$("#templateId").length&&($(this).hasClass("btn-primary")?($(".time-slot").removeClass("btn-primary"),$(this).removeClass("btn-primary"),$(this).addClass("btn-primary")&&$(this).removeClass("btn-primary")):($(".time-slot").removeClass("btn-primary"),$(this).addClass("btn-primary"))),$(this).hasClass("activeSlot")?($(".time-slot").removeClass("activeSlot"),$(this).removeClass("activeSlot"),$(this).addClass("activeSlot")&&$(this).removeClass("activeSlot")):($(".time-slot").removeClass("activeSlot"),$(this).addClass("activeSlot"));var e=$(this).attr("data-id").split("-"),a=e[0],n=e[1];$("#timeSlot").val(""),$("#toTime").val(""),$("#timeSlot").val(a),$("#toTime").val(n)})),listenHiddenBsModal("#AppointmentModal",(function(){resetModalForm("#addAppointmentForm")})),listenSubmit("#addAppointmentForm",(function(e){e.preventDefault(),$("#serviceSave").prop("disabled",!0),$.ajax({url:appointmentUrl,type:"POST",data:$(this).serialize(),success:function(e){if(e.success){if(!isEmpty(e.data)){if(1==e.data.payment_method){var a=e.data[0].sessionId;stripe.redirectToCheckout({sessionId:a})}if(2==e.data.payment_method&&(e.data[0].original.link&&(window.location.href=e.data[0].original.link),201===e.data[0].original.statusCode)){var n="";$.each(e.data[0].original.result.links,(function(e,a){"approve"==a.rel&&(n=a.href)})),location.href=n}if(3==e.data.payment_method&&e&&(window.location.href=e.data[0]),8!=e.data.payment_method&&10!=e.data.payment_method&&12!=e.data.payment_method||(window.location.href=e.data[0]),4==e.data.payment_method&&e.data[0].original.link&&(window.location.href=e.data[0].original.link),13==e.data.payment_method&&($("#AppointmentModal").modal("hide"),e.data.result)){var o=e.data.result,r=o.id,t=o.amount,i=o.name,d=o.email,s=o.contact,h=o.key,c={};c.key=h,c.amount=t,c.order_id=r,c.prefill={name:i,email:d,contact:s},c.callback_url=route("razorpay.payment.success");var u=new Razorpay(c);return u.open(),u.on("payment.failed",(function(e){$("#AppointmentModal").modal("hide"),displayErrorMessage("Payment Failed")})),!1}9==e.data.payment_method&&e.data[0].id&&appointmentMercadoPagoPublicKey.checkout({preference:{id:e.data[0].id},autoOpen:!0})}$("#addAppointmentForm")[0].reset(),$("#AppointmentModal").modal("hide"),$("#slotData").empty(),setTimeout((function(){l()}),500);var m=$("#pickUpDate").val();$("#pickUpDate").val(""),displaySuccessMessage(Lang.get("js.book_successfully")+m),$("#serviceSave").prop("disabled",!1),$(".appointmentAdd").addClass("d-none")}},error:function(e){$("#addAppointmentForm")[0].reset(),$("#AppointmentModal").modal("hide"),$("#slotData").empty(),displayErrorMessage(e.responseJSON.message),$("#serviceSave").prop("disabled",!1)}})})),listenClick("#languageName",(function(){var e=$(this).attr("data-name");$.ajax({url:languageChange+"/"+e+"/"+vcardAlias,type:"GET",success:function(e){displaySuccessMessage(e.message),setTimeout((function(){location.reload()}),2e3)},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".share",(function(){$("#vcard1-shareModel").modal("hide")})),listenClick(".share2",(function(){$("#vcard2-shareModel").modal("hide")})),listenClick(".share3",(function(){$("#vcard3-shareModel").modal("hide")})),listenClick(".share4",(function(){$("#vcard4-shareModel").modal("hide")})),listenClick(".share5",(function(){$("#vcard5-shareModel").modal("hide")})),listenClick(".share6",(function(){$("#vcard6-shareModel").modal("hide")})),listenClick(".share7",(function(){$("#vcard7-shareModel").modal("hide")})),listenClick(".share8",(function(){$("#vcard8-shareModel").modal("hide")})),listenClick("share9",(function(){$("#vcard9-shareModel").modal("hide")})),listenClick(".share10",(function(){$("#vcard10-shareModel").modal("hide")})),listenClick(".share13",(function(){$("#vcard13-shareModel").modal("hide")})),listenClick(".share17",(function(){$("#vcard17-shareModel").modal("hide")})),listenClick(".share21",(function(){$("#vcard21-shareModel").modal("hide")})),listenClick(".share31",(function(){$("#vcard31-shareModel").modal("hide")})),listenClick(".share32",(function(){$("#vcard32-shareModel").modal("hide")})),listenClick(".share34",(function(){$("#vcard34-shareModel").modal("hide")})),listenClick(".share35",(function(){$("#vcard35-shareModel").modal("hide")})),listenClick(".share36",(function(){$("#vcard36-shareModel").modal("hide")})),listenClick(".share37",(function(){$("#vcard37-shareModel").modal("hide")})),listenClick(".share38",(function(){$("#vcard38-shareModel").modal("hide")})),listenClick(".share39",(function(){$("#vcard39-shareModel").modal("hide")})),listenClick(".share29",(function(){$("#vcard29-shareModel").modal("hide")})),listenClick(".share27",(function(){$("#vcard27-shareModel").modal("hide")})),listenClick(".share26",(function(){$("#vcard26-shareModel").modal("hide")})),listenClick(".share28",(function(){$("#vcard28-shareModel").modal("hide")})),listenClick(".share30",(function(){$("#vcard30-shareModel").modal("hide")})),listenClick(".share33",(function(){$("#vcard33-shareModel").modal("hide")})),listenClick(".share35",(function(){$("#vcard35-shareModel").modal("hide")})),listenClick(".share36",(function(){$("#vcard36-shareModel").modal("hide")})),listenClick(".share37",(function(){$("#vcard37-shareModel").modal("hide")})),listenClick(".share38",(function(){$("#vcard38-shareModel").modal("hide")})),listenClick(".share24",(function(){$("#vcard24-shareModel").modal("hide")})),listenClick(".share25",(function(){$("#vcard25-shareModel").modal("hide")})),listenClick(".share22",(function(){$("#vcard22-shareModel").modal("hide")})),listenClick(".vcard23-share",(function(){$("#vcard23-shareModel").modal("show")})),listenClick(".share20",(function(){$("#vcard20-shareModel").modal("hide")})),listenClick(".share14",(function(){$("#vcard14-shareModel").modal("hide")})),listenClick(".share12",(function(){$("#vcard12-shareModel").modal("hide")})),listenClick(".share15",(function(){$("#vcard15-shareModel").modal("hide")})),listenClick(".share18",(function(){$("#vcard18-shareModel").modal("hide")})),listenClick(".share19",(function(){$("#vcard19-shareModel").modal("hide")})),listenClick(".copy-referral-btn",(function(){var e=$(this).attr("data-id"),a=$("<input>");$("body").append(a),a.val(route("register")+"?referral-code="+e).select(),document.execCommand("copy"),a.remove(),displaySuccessMessage(Lang.get("js.copied_successfully"))})),$(window).resize((function(){$(window).width()<1025?($(".vcard11-referral-text").addClass("d-none"),$(".vcard11-referral-icon").removeClass("me-2")):($(".vcard11-referral-text").removeClass("d-none"),$(".vcard11-referral-icon").addClass("me-2"))})),$(window).trigger("resize"),listenHiddenBsModal("#passwordModal",(function(){$(this).find("#password").focus()})),listenSubmit("#passwordForm",(function(e){e.preventDefault(),$.ajax({url:passwordUrl,type:"POST",data:$(this).serialize(),success:function(e){e.success&&($("#passwordModal").modal("hide"),$(".content-blur").removeClass("content-blur"))},error:function(e){d("#passwordError",e.responseJSON.message)}})})),listenSubmit("#enquiryForm",(function(e){e.preventDefault(),$(".contact-btn").prop("disabled",!0);var a=new FormData($("#enquiryForm")[0]);$.ajax({url:enquiryUrl,type:"POST",data:a,processData:!1,contentType:!1,success:function(e){e.success&&(displaySuccessMessage(e.message),$("#enquiryForm")[0].reset(),$(".contact-btn").prop("disabled",!1),$("#selectedFilesSection").hide())},error:function(e){d("#enquiryError",e.responseJSON.message),$(".contact-btn").prop("disabled",!1)}})})),listenSubmit("#newsLatterForm",(function(e){e.preventDefault(),$("#newsLatterModal").prop("disabled",!0),$.ajax({url:"emailSubscriprion-store",type:"POST",data:$(this).serialize(),success:function(e){if(e.success){displaySuccessMessage(e.message),$("#emailSubscription").val(""),$("#newsLatterModal").modal("hide"),$("#newsLatterModal").addClass("d-none");var a=new Date,n=new Date(a.getTime()+31536e7);document.cookie="newsletter_popup=2; expires="+n.toUTCString()}},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),listenClick(".vcard1-share",(function(){$("#vcard1-shareModel").modal("show")})),listenClick(".vcard2-share",(function(){$("#vcard2-shareModel").modal("show")})),listenClick(".vcard3-share",(function(){$("#vcard3-shareModel").modal("show")})),listenClick(".vcard4-share",(function(){$("#vcard4-shareModel").modal("show")})),listenClick(".vcard5-share",(function(){$("#vcard5-shareModel").modal("show")})),listenClick(".vcard6-share",(function(){$("#vcard6-shareModel").modal("show")})),listenClick(".vcard7-share",(function(){$("#vcard7-shareModel").modal("show")})),listenClick(".vcard8-share",(function(){$("#vcard8-shareModel").modal("show")})),listenClick(".vcard9-share",(function(){$("#vcard9-shareModel").modal("show")})),listenClick(".vcard10-share",(function(){$("#vcard10-shareModel").modal("show")})),listenClick(".vcard13-share",(function(){$("#vcard13-shareModel").modal("show")})),listenClick(".vcard17-share",(function(){$("#vcard17-shareModel").modal("show")})),listenClick(".vcard21-share",(function(){$("#vcard21-shareModel").modal("show")})),listenClick(".vcard31-share",(function(){$("#vcard31-shareModel").modal("show")})),listenClick(".vcard32-share",(function(){$("#vcard32-shareModel").modal("show")})),listenClick(".vcard34-share",(function(){$("#vcard34-shareModel").modal("show")})),listenClick(".vcard35-share",(function(){$("#vcard35-shareModel").modal("show")})),listenClick(".vcard36-share",(function(){$("#vcard36-shareModel").modal("show")})),listenClick(".vcard37-share",(function(){$("#vcard37-shareModel").modal("show")})),listenClick(".vcard38-share",(function(){$("#vcard38-shareModel").modal("show")})),listenClick(".vcard39-share",(function(){$("#vcard39-shareModel").modal("show")})),listenClick(".vcard29-share",(function(){$("#vcard29-shareModel").modal("show")})),listenClick(".vcard27-share",(function(){$("#vcard27-shareModel").modal("show")})),listenClick(".vcard22-share",(function(){$("#vcard22-shareModel").modal("show")})),listenClick(".vcard26-share",(function(){$("#vcard26-shareModel").modal("show")})),listenClick(".vcard28-share",(function(){$("#vcard28-shareModel").modal("show")})),listenClick(".vcard30-share",(function(){$("#vcard30-shareModel").modal("show")})),listenClick(".vcard33-share",(function(){$("#vcard33-shareModel").modal("show")})),listenClick(".vcard25-share",(function(){$("#vcard25-shareModel").modal("show")})),listenClick(".vcard24-share",(function(){$("#vcard24-shareModel").modal("show")})),listenClick(".vcard23-share",(function(){$("#vcard23-shareModel").modal("show")})),listenClick(".vcard20-share",(function(){$("#vcard20-shareModel").modal("show")})),listenClick(".vcard14-share",(function(){$("#vcard14-shareModel").modal("show")})),listenClick(".vcard12-share",(function(){$("#vcard12-shareModel").modal("show")})),listenClick(".vcard15-share",(function(){$("#vcard15-shareModel").modal("show")})),listenClick(".vcard18-share",(function(){$("#vcard18-shareModel").modal("show")})),listenClick(".vcard19-share",(function(){$("#vcard19-shareModel").modal("show")})),listenClick(".gallery-link",(function(){var e=$(this).data("id");$("#video").attr("src",e)})),listenHiddenBsModal("#exampleModal",(function(){$("#video").attr("src","")})),listen("click",".paymentByPaypal",(function(){var e=$("#campaignId").val(),a=$("#firstName").val(),n=$("#lastName").val(),o=$("#email").val(),r=($("#currencyCode").val(),$("#amount").val());return 0===r.trim().length?(iziToast.error({title:"Error",message:"The amount field is required",position:"topRight"}),!1):"0"===r?(iziToast.error({title:"Error",message:"The amount is required greater than zero",position:"topRight"}),!1):0===a.trim().length?(iziToast.error({title:"Error",message:"The first name field is required",position:"topRight"}),!1):0===n.trim().length?(iziToast.error({title:"Error",message:"The last name field is required",position:"topRight"}),!1):($(this).addClass("disabled"),$(".donate-btn").text(Lang.get("js.please_wait")),void $.ajax({type:"GET",url:route("paypal.init"),data:{amount:parseFloat($("#amount").val()),currency_code:$("#currencyCode").val(),campaign_id:e,first_name:a,last_name:n,email:o},success:function(e){if(e.link&&(window.location.href=e.link),201===e.statusCode){var a="";$.each(e.result.links,(function(e,n){"approve"==n.rel&&(a=n.href)})),location.href=a}},error:function(e){iziToast.error({title:"Error",message:e.responseJSON.message,position:"topRight"})},complete:function(){}}))})),listenClick(".copy-vcard-clipboard",(function(){var e=$(this).data("id"),a=$("<input>");$(".modal-body").append(a),a.val($("#vcardUrlCopy"+e).text()).select(),document.execCommand("copy"),a.remove(),displaySuccessMessage(Lang.get("js.copied_successfully"))}));var h="Show more";listenClick(".toggle-description",(function(){var e=$(this).attr("data-id"),a=$("#dots-"+e),n=$("#moreContent-"+e),o=$("#myBtn-"+e);n.hasClass("d-none")?(n.removeClass("d-none"),a.addClass("d-none"),o.html("Show less")):(a.removeClass("d-none"),n.addClass("d-none"),o.html("Show More"))})),$(".morelink").click((function(){return $(this).hasClass("less")?($(this).removeClass("less"),$(this).html(h)):($(this).addClass("less"),$(this).html("Show less")),$(this).parent().prev().toggle(),$(this).prev().toggle(),!1})),$(".next-arrow , .prev-arrow").click((function(){$(".morelink").removeClass("less"),$(".morelink").html(h),$(".morecontent span").css("display","none")})),$(".testimonial-slider, .testimonials-section, .testimonial-box").on("swipe",(function(){$(".morelink").removeClass("less"),$(".morelink").html(h),$(".morecontent span").css("display","none")})),$(".testimonial-slider, .testimonials-section, .testimonial-box, .testimonial-card, .testimonial-vcard").on("beforeChange",(function(){$(".morelink").removeClass("less"),$(".morelink").html(h),$(".morecontent span").css("display","none")})),listenClick(".share-to-wp-btn",(function(){var e=$("#wpNumber");e.hasClass("d-none")?($(".underline").css("transition","all 0.5s linear"),e.removeClass("d-none")):($(".underline").css("transition","none"),e.addClass("d-none"),$(".share-wp-btn").addClass("d-none"),e.val(""))})),listenClick(".bars-btn",(function(){$(".sub-btn").fadeToggle();var e=$(".sub-btn");e.hasClass("d-none")&&e.removeClass("d-none")})),listenClick(".bars-btn",(function(){navigator.platform;$("#videobtn").removeClass("d-none")})),listenClick("#videobtn",(function(){window.location.href="facetime://"})),listenClick(".share-wp-btn",(function(){var e="https://wa.me/"+$("#wpNumber").val()+"?text="+document.URL;$("#wpNumber").val(""),$(".vcard11-input").val(""),$(".share-wp-btn").addClass("d-none"),window.open(e,"_blank")})),$(document).on("keyup","#wpNumber",(function(){var e=$(".share-wp-btn");$(this).val().length>0?e.removeClass("d-none"):e.addClass("d-none")})),listenClick(".buy-product",(function(e){e.preventDefault(),$("#productPaymentMethod").select2({dropdownParent:$("#buyProductModal")});var a=$(this).attr("data-id");$("#productId").val(a),$("#price").text($(".product-price-"+a).text()),$("#buyProductModal").modal("show")})),listenChange("#productPaymentMethod",(function(){3==$(this).val()?$(".manual-payment-guide").removeClass("d-none"):$(".manual-payment-guide").addClass("d-none")})),listenSubmit("#productBuyForm",(function(e){e.preventDefault(),$("#buyProductBtn").attr("disabled",!0),$.ajax({url:route("buy.product"),type:"POST",data:$(this).serialize(),success:function(e){if(e.success){if(4==e.data.payment_method&&e.data[0].original.link&&(window.location.href=e.data[0].original.link),5==e.data.payment_method&&(window.location.href=e.data[0]),7!=e.data.payment_method&&8!=e.data.payment_method&&11!=e.data.payment_method||(window.location.href=e.data[0]),!isEmpty(e.data)){if(1==e.data.payment_method){var a=e.data[0].sessionId;stripe.redirectToCheckout({sessionId:a})}if(6==e.data[0].payment_method){var n=e.data[0];n.id,n.amount,n.name,n.email,n.contact;if(e.data[0]){var o=e.data[0],r=o.id,t=o.amount,i=o.name,d=o.email,s=o.contact;options.amount=t,options.order_id=r,options.prefill={name:i,email:d,contact:s};var l=new Razorpay(options);return l.open(),l.on("product.payment.failed"),!1}}if(2==e.data.payment_method&&(e.data[0].original.link&&(window.location.href=e.data[0].original.link),201===e.data[0].original.statusCode)){var h="";$.each(e.data[0].original.result.links,(function(e,a){"approve"==a.rel&&(h=a.href)})),location.href=h}9==e.data.payment_method&&e.data[0].id&&productMercadoPagoPublicKey.checkout({preference:{id:e.data[0].id},autoOpen:!0})}displaySuccessMessage(e.message),$("#productBuyForm")[0].reset(),$("#buyProductModal").modal("hide"),$("#buyProductBtn").attr("disabled",!1)}},error:function(e){displayErrorMessage(e.responseJSON.message),$("#buyProductBtn").attr("disabled",!1)}})})),listenHiddenBsModal("#buyProductModal",(function(){resetModalForm("#productBuyForm")})),window.onload=function(){var e=window.location.href;$.ajax({url:route("getCookie"),type:"GET",data:{url:e},success:function(e){e.success&&setTimeout((function(){document.cookie.includes("newsletter_popup")?$("#newsLatterModal").modal("hide"):$("#newsLatterModal").modal("show")}),e.data)},error:function(e){displayErrorMessage(e.responseJSON.message)}})},listenClick("#closeNewsLatterModal",(function(){$("#newsLatterModal").modal("hide")})),listenHiddenBsModal("#newsLatterModal",(function(){var e=new Date,a=new Date(e.getTime()+6048e5);document.cookie="newsletter_popup=2; expires="+a.toUTCString()})),document.addEventListener("DOMContentLoaded",(function(){$("#reelContent").addClass("d-none"),$("#reelContent").removeClass("d-block")})),listenClick(".postbtn",(function(){$("#postContent").addClass("d-block"),$("#postContent").removeClass("d-none"),$("#reelContent").addClass("d-none"),$("#reelContent").removeClass("d-block")})),listenClick(".reelsbtn",(function(){$("#postContent").addClass("d-none"),$("#postContent").removeClass("d-block"),$("#reelContent").removeClass("d-none"),$("#reelContent").addClass("d-block")})),listenClick(".banner-close",(function(){$(".support-banner").addClass("d-none")})),listenClick(".pwa-close",(function(){$(".pwa-support").addClass("d-none")})),document.addEventListener("DOMContentLoaded",(function(){if("Arabic"==userlanguage||"Persian"==userlanguage){var e=$(".language-btn");e.removeClass("end-0"),e.addClass("start-0")}})),$(document).on("click",".auth-contact-btn",(function(e){e.preventDefault();var a=$(this).data("action");"show-modal"===a?$("#askContactDetailFormModel").modal("show"):($("#askContactDetailForm").attr("action",a),$("#askContactDetailForm").submit())})),listenClick(".ask-contact-detail-form",(function(){$("#askContactDetailFormModel").modal("show")})),listenSubmit("#askContactDetailForm",(function(e){e.preventDefault();var a=$("#vcard_id").val();$.ajax({headers:{"X-CSRF-TOKEN":$('meta[name="csrf-token"]').attr("content")},url:route("contact-request.store",{alias:vcardAlias}),type:"POST",data:$(this).serialize(),success:function(e){$("#askContactDetailForm")[0].reset(),$("#askContactDetailFormModel").modal("hide"),window.location.href=route("add-contact",a)},error:function(e){displayErrorMessage(e.responseJSON.message)}})}))},7908:function(e,a){!function(e){"use strict";var a=function(){return a=Object.assign||function(e){for(var a,n=1,o=arguments.length;n<o;n++)for(var r in a=arguments[n])Object.prototype.hasOwnProperty.call(a,r)&&(e[r]=a[r]);return e},a.apply(this,arguments)},n="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},o={weekdays:{shorthand:["أحد","اثنين","ثلاثاء","أربعاء","خميس","جمعة","سبت"],longhand:["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"]},months:{shorthand:["1","2","3","4","5","6","7","8","9","10","11","12"],longhand:["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"]},firstDayOfWeek:6,rangeSeparator:" إلى ",weekAbbreviation:"Wk",scrollTitle:"قم بالتمرير للزيادة",toggleTitle:"اضغط للتبديل",amPM:["ص","م"],yearAriaLabel:"سنة",monthAriaLabel:"شهر",hourAriaLabel:"ساعة",minuteAriaLabel:"دقيقة",time_24hr:!1};n.l10ns.ar=o,n.l10ns;var r="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},t={weekdays:{shorthand:["So","Mo","Di","Mi","Do","Fr","Sa"],longhand:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"]},months:{shorthand:["Jän","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],longhand:["Jänner","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]},firstDayOfWeek:1,weekAbbreviation:"KW",rangeSeparator:" bis ",scrollTitle:"Zum Ändern scrollen",toggleTitle:"Zum Umschalten klicken",time_24hr:!0};r.l10ns.at=t,r.l10ns;var i="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},d={weekdays:{shorthand:["B.","B.e.","Ç.a.","Ç.","C.a.","C.","Ş."],longhand:["Bazar","Bazar ertəsi","Çərşənbə axşamı","Çərşənbə","Cümə axşamı","Cümə","Şənbə"]},months:{shorthand:["Yan","Fev","Mar","Apr","May","İyn","İyl","Avq","Sen","Okt","Noy","Dek"],longhand:["Yanvar","Fevral","Mart","Aprel","May","İyun","İyul","Avqust","Sentyabr","Oktyabr","Noyabr","Dekabr"]},firstDayOfWeek:1,ordinal:function(){return"."},rangeSeparator:" - ",weekAbbreviation:"Hf",scrollTitle:"Artırmaq üçün sürüşdürün",toggleTitle:"Aç / Bağla",amPM:["GƏ","GS"],time_24hr:!0};i.l10ns.az=d,i.l10ns;var s="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},l={weekdays:{shorthand:["Нд","Пн","Аў","Ср","Чц","Пт","Сб"],longhand:["Нядзеля","Панядзелак","Аўторак","Серада","Чацвер","Пятніца","Субота"]},months:{shorthand:["Сту","Лют","Сак","Кра","Тра","Чэр","Ліп","Жні","Вер","Кас","Ліс","Сне"],longhand:["Студзень","Люты","Сакавік","Красавік","Травень","Чэрвень","Ліпень","Жнівень","Верасень","Кастрычнік","Лістапад","Снежань"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"Тыд.",scrollTitle:"Пракруціце для павелічэння",toggleTitle:"Націсніце для пераключэння",amPM:["ДП","ПП"],yearAriaLabel:"Год",time_24hr:!0};s.l10ns.be=l,s.l10ns;var h="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},c={firstDayOfWeek:1,weekdays:{shorthand:["Ned","Pon","Uto","Sri","Čet","Pet","Sub"],longhand:["Nedjelja","Ponedjeljak","Utorak","Srijeda","Četvrtak","Petak","Subota"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],longhand:["Januar","Februar","Mart","April","Maj","Juni","Juli","Avgust","Septembar","Oktobar","Novembar","Decembar"]},time_24hr:!0};h.l10ns.bs=c,h.l10ns;var u="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},m={weekdays:{shorthand:["Нд","Пн","Вт","Ср","Чт","Пт","Сб"],longhand:["Неделя","Понеделник","Вторник","Сряда","Четвъртък","Петък","Събота"]},months:{shorthand:["Яну","Фев","Март","Апр","Май","Юни","Юли","Авг","Сеп","Окт","Ное","Дек"],longhand:["Януари","Февруари","Март","Април","Май","Юни","Юли","Август","Септември","Октомври","Ноември","Декември"]},time_24hr:!0,firstDayOfWeek:1};u.l10ns.bg=m,u.l10ns;var f="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},p={weekdays:{shorthand:["রবি","সোম","মঙ্গল","বুধ","বৃহস্পতি","শুক্র","শনি"],longhand:["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"]},months:{shorthand:["জানু","ফেব্রু","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগ","সেপ্টে","অক্টো","নভে","ডিসে"],longhand:["জানুয়ারী","ফেব্রুয়ারী","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্টেম্বর","অক্টোবর","নভেম্বর","ডিসেম্বর"]}};f.l10ns.bn=p,f.l10ns;var v="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},w={weekdays:{shorthand:["Dg","Dl","Dt","Dc","Dj","Dv","Ds"],longhand:["Diumenge","Dilluns","Dimarts","Dimecres","Dijous","Divendres","Dissabte"]},months:{shorthand:["Gen","Febr","Març","Abr","Maig","Juny","Jul","Ag","Set","Oct","Nov","Des"],longhand:["Gener","Febrer","Març","Abril","Maig","Juny","Juliol","Agost","Setembre","Octubre","Novembre","Desembre"]},ordinal:function(e){var a=e%100;if(a>3&&a<21)return"è";switch(a%10){case 1:case 3:return"r";case 2:return"n";case 4:return"t";default:return"è"}},firstDayOfWeek:1,rangeSeparator:" a ",time_24hr:!0};v.l10ns.cat=v.l10ns.ca=w,v.l10ns;var k="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},g={weekdays:{shorthand:["یەکشەممە","دووشەممە","سێشەممە","چوارشەممە","پێنجشەممە","هەینی","شەممە"],longhand:["یەکشەممە","دووشەممە","سێشەممە","چوارشەممە","پێنجشەممە","هەینی","شەممە"]},months:{shorthand:["ڕێبەندان","ڕەشەمە","نەورۆز","گوڵان","جۆزەردان","پووشپەڕ","گەلاوێژ","خەرمانان","ڕەزبەر","گەڵاڕێزان","سەرماوەز","بەفرانبار"],longhand:["ڕێبەندان","ڕەشەمە","نەورۆز","گوڵان","جۆزەردان","پووشپەڕ","گەلاوێژ","خەرمانان","ڕەزبەر","گەڵاڕێزان","سەرماوەز","بەفرانبار"]},firstDayOfWeek:6,ordinal:function(){return""}};k.l10ns.ckb=g,k.l10ns;var b="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},y={weekdays:{shorthand:["Ne","Po","Út","St","Čt","Pá","So"],longhand:["Neděle","Pondělí","Úterý","Středa","Čtvrtek","Pátek","Sobota"]},months:{shorthand:["Led","Ún","Bře","Dub","Kvě","Čer","Čvc","Srp","Zář","Říj","Lis","Pro"],longhand:["Leden","Únor","Březen","Duben","Květen","Červen","Červenec","Srpen","Září","Říjen","Listopad","Prosinec"]},firstDayOfWeek:1,ordinal:function(){return"."},rangeSeparator:" do ",weekAbbreviation:"Týd.",scrollTitle:"Rolujte pro změnu",toggleTitle:"Přepnout dopoledne/odpoledne",amPM:["dop.","odp."],yearAriaLabel:"Rok",time_24hr:!0};b.l10ns.cs=y,b.l10ns;var M="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},$={weekdays:{shorthand:["Sul","Llun","Maw","Mer","Iau","Gwe","Sad"],longhand:["Dydd Sul","Dydd Llun","Dydd Mawrth","Dydd Mercher","Dydd Iau","Dydd Gwener","Dydd Sadwrn"]},months:{shorthand:["Ion","Chwef","Maw","Ebr","Mai","Meh","Gorff","Awst","Medi","Hyd","Tach","Rhag"],longhand:["Ionawr","Chwefror","Mawrth","Ebrill","Mai","Mehefin","Gorffennaf","Awst","Medi","Hydref","Tachwedd","Rhagfyr"]},firstDayOfWeek:1,ordinal:function(e){return 1===e?"af":2===e?"ail":3===e||4===e?"ydd":5===e||6===e?"ed":e>=7&&e<=10||12==e||15==e||18==e||20==e?"fed":11==e||13==e||14==e||16==e||17==e||19==e?"eg":e>=21&&e<=39?"ain":""},time_24hr:!0};M.l10ns.cy=$,M.l10ns;var S="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},O={weekdays:{shorthand:["søn","man","tir","ons","tors","fre","lør"],longhand:["søndag","mandag","tirsdag","onsdag","torsdag","fredag","lørdag"]},months:{shorthand:["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"],longhand:["januar","februar","marts","april","maj","juni","juli","august","september","oktober","november","december"]},ordinal:function(){return"."},firstDayOfWeek:1,rangeSeparator:" til ",weekAbbreviation:"uge",time_24hr:!0};S.l10ns.da=O,S.l10ns;var C="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},D={weekdays:{shorthand:["So","Mo","Di","Mi","Do","Fr","Sa"],longhand:["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"]},months:{shorthand:["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"],longhand:["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"]},firstDayOfWeek:1,weekAbbreviation:"KW",rangeSeparator:" bis ",scrollTitle:"Zum Ändern scrollen",toggleTitle:"Zum Umschalten klicken",time_24hr:!0};C.l10ns.de=D,C.l10ns;var A={weekdays:{shorthand:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],longhand:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]},months:{shorthand:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],longhand:["January","February","March","April","May","June","July","August","September","October","November","December"]},daysInMonth:[31,28,31,30,31,30,31,31,30,31,30,31],firstDayOfWeek:0,ordinal:function(e){var a=e%100;if(a>3&&a<21)return"th";switch(a%10){case 1:return"st";case 2:return"nd";case 3:return"rd";default:return"th"}},rangeSeparator:" to ",weekAbbreviation:"Wk",scrollTitle:"Scroll to increment",toggleTitle:"Click to toggle",amPM:["AM","PM"],yearAriaLabel:"Year",monthAriaLabel:"Month",hourAriaLabel:"Hour",minuteAriaLabel:"Minute",time_24hr:!1},T="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},J={firstDayOfWeek:1,rangeSeparator:" ĝis ",weekAbbreviation:"Sem",scrollTitle:"Rulumu por pligrandigi la valoron",toggleTitle:"Klaku por ŝalti",weekdays:{shorthand:["Dim","Lun","Mar","Mer","Ĵaŭ","Ven","Sab"],longhand:["dimanĉo","lundo","mardo","merkredo","ĵaŭdo","vendredo","sabato"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Aŭg","Sep","Okt","Nov","Dec"],longhand:["januaro","februaro","marto","aprilo","majo","junio","julio","aŭgusto","septembro","oktobro","novembro","decembro"]},ordinal:function(){return"-a"},time_24hr:!0};T.l10ns.eo=J,T.l10ns;var j="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},P={weekdays:{shorthand:["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"],longhand:["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"]},months:{shorthand:["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"],longhand:["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]},ordinal:function(){return"º"},firstDayOfWeek:1,rangeSeparator:" a ",time_24hr:!0};j.l10ns.es=P,j.l10ns;var L="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},_={weekdays:{shorthand:["P","E","T","K","N","R","L"],longhand:["Pühapäev","Esmaspäev","Teisipäev","Kolmapäev","Neljapäev","Reede","Laupäev"]},months:{shorthand:["Jaan","Veebr","Märts","Apr","Mai","Juuni","Juuli","Aug","Sept","Okt","Nov","Dets"],longhand:["Jaanuar","Veebruar","Märts","Aprill","Mai","Juuni","Juuli","August","September","Oktoober","November","Detsember"]},firstDayOfWeek:1,ordinal:function(){return"."},weekAbbreviation:"Näd",rangeSeparator:" kuni ",scrollTitle:"Keri, et suurendada",toggleTitle:"Klõpsa, et vahetada",time_24hr:!0};L.l10ns.et=_,L.l10ns;var N="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},F={weekdays:{shorthand:["یک","دو","سه","چهار","پنج","جمعه","شنبه"],longhand:["یک‌شنبه","دوشنبه","سه‌شنبه","چهارشنبه","پنچ‌شنبه","جمعه","شنبه"]},months:{shorthand:["ژانویه","فوریه","مارس","آوریل","مه","ژوئن","ژوئیه","اوت","سپتامبر","اکتبر","نوامبر","دسامبر"],longhand:["ژانویه","فوریه","مارس","آوریل","مه","ژوئن","ژوئیه","اوت","سپتامبر","اکتبر","نوامبر","دسامبر"]},firstDayOfWeek:6,ordinal:function(){return""}};N.l10ns.fa=F,N.l10ns;var z="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},W={firstDayOfWeek:1,weekdays:{shorthand:["su","ma","ti","ke","to","pe","la"],longhand:["sunnuntai","maanantai","tiistai","keskiviikko","torstai","perjantai","lauantai"]},months:{shorthand:["tammi","helmi","maalis","huhti","touko","kesä","heinä","elo","syys","loka","marras","joulu"],longhand:["tammikuu","helmikuu","maaliskuu","huhtikuu","toukokuu","kesäkuu","heinäkuu","elokuu","syyskuu","lokakuu","marraskuu","joulukuu"]},ordinal:function(){return"."},time_24hr:!0};z.l10ns.fi=W,z.l10ns;var E="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},x={weekdays:{shorthand:["Sun","Mán","Týs","Mik","Hós","Frí","Ley"],longhand:["Sunnudagur","Mánadagur","Týsdagur","Mikudagur","Hósdagur","Fríggjadagur","Leygardagur"]},months:{shorthand:["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],longhand:["Januar","Februar","Mars","Apríl","Mai","Juni","Juli","August","Septembur","Oktobur","Novembur","Desembur"]},ordinal:function(){return"."},firstDayOfWeek:1,rangeSeparator:" til ",weekAbbreviation:"vika",scrollTitle:"Rulla fyri at broyta",toggleTitle:"Trýst fyri at skifta",yearAriaLabel:"Ár",time_24hr:!0};E.l10ns.fo=x,E.l10ns;var K="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},I={firstDayOfWeek:1,weekdays:{shorthand:["dim","lun","mar","mer","jeu","ven","sam"],longhand:["dimanche","lundi","mardi","mercredi","jeudi","vendredi","samedi"]},months:{shorthand:["janv","févr","mars","avr","mai","juin","juil","août","sept","oct","nov","déc"],longhand:["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"]},ordinal:function(e){return e>1?"":"er"},rangeSeparator:" au ",weekAbbreviation:"Sem",scrollTitle:"Défiler pour augmenter la valeur",toggleTitle:"Cliquer pour basculer",time_24hr:!0};K.l10ns.fr=I,K.l10ns;var R="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},G={weekdays:{shorthand:["Κυ","Δε","Τρ","Τε","Πέ","Πα","Σά"],longhand:["Κυριακή","Δευτέρα","Τρίτη","Τετάρτη","Πέμπτη","Παρασκευή","Σάββατο"]},months:{shorthand:["Ιαν","Φεβ","Μάρ","Απρ","Μάι","Ιούν","Ιούλ","Αύγ","Σεπ","Οκτ","Νοέ","Δεκ"],longhand:["Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μάιος","Ιούνιος","Ιούλιος","Αύγουστος","Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος"]},firstDayOfWeek:1,ordinal:function(){return""},weekAbbreviation:"Εβδ",rangeSeparator:" έως ",scrollTitle:"Μετακυλήστε για προσαύξηση",toggleTitle:"Κάντε κλικ για αλλαγή",amPM:["ΠΜ","ΜΜ"],yearAriaLabel:"χρόνος",monthAriaLabel:"μήνας",hourAriaLabel:"ώρα",minuteAriaLabel:"λεπτό"};R.l10ns.gr=G,R.l10ns;var B="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},U={weekdays:{shorthand:["א","ב","ג","ד","ה","ו","ש"],longhand:["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"]},months:{shorthand:["ינו׳","פבר׳","מרץ","אפר׳","מאי","יוני","יולי","אוג׳","ספט׳","אוק׳","נוב׳","דצמ׳"],longhand:["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"]},rangeSeparator:" אל ",time_24hr:!0};B.l10ns.he=U,B.l10ns;var H="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},V={weekdays:{shorthand:["रवि","सोम","मंगल","बुध","गुरु","शुक्र","शनि"],longhand:["रविवार","सोमवार","मंगलवार","बुधवार","गुरुवार","शुक्रवार","शनिवार"]},months:{shorthand:["जन","फर","मार्च","अप्रेल","मई","जून","जूलाई","अग","सित","अक्ट","नव","दि"],longhand:["जनवरी ","फरवरी","मार्च","अप्रेल","मई","जून","जूलाई","अगस्त ","सितम्बर","अक्टूबर","नवम्बर","दिसम्बर"]}};H.l10ns.hi=V,H.l10ns;var q="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Y={firstDayOfWeek:1,weekdays:{shorthand:["Ned","Pon","Uto","Sri","Čet","Pet","Sub"],longhand:["Nedjelja","Ponedjeljak","Utorak","Srijeda","Četvrtak","Petak","Subota"]},months:{shorthand:["Sij","Velj","Ožu","Tra","Svi","Lip","Srp","Kol","Ruj","Lis","Stu","Pro"],longhand:["Siječanj","Veljača","Ožujak","Travanj","Svibanj","Lipanj","Srpanj","Kolovoz","Rujan","Listopad","Studeni","Prosinac"]},time_24hr:!0};q.l10ns.hr=Y,q.l10ns;var Q="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Z={firstDayOfWeek:1,weekdays:{shorthand:["V","H","K","Sz","Cs","P","Szo"],longhand:["Vasárnap","Hétfő","Kedd","Szerda","Csütörtök","Péntek","Szombat"]},months:{shorthand:["Jan","Feb","Már","Ápr","Máj","Jún","Júl","Aug","Szep","Okt","Nov","Dec"],longhand:["Január","Február","Március","Április","Május","Június","Július","Augusztus","Szeptember","Október","November","December"]},ordinal:function(){return"."},weekAbbreviation:"Hét",scrollTitle:"Görgessen",toggleTitle:"Kattintson a váltáshoz",rangeSeparator:" - ",time_24hr:!0};Q.l10ns.hu=Z,Q.l10ns;var X="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ee={weekdays:{shorthand:["Կիր","Երկ","Երք","Չրք","Հնգ","Ուրբ","Շբթ"],longhand:["Կիրակի","Եկուշաբթի","Երեքշաբթի","Չորեքշաբթի","Հինգշաբթի","Ուրբաթ","Շաբաթ"]},months:{shorthand:["Հնվ","Փտր","Մար","Ապր","Մայ","Հնս","Հլս","Օգս","Սեպ","Հոկ","Նմբ","Դեկ"],longhand:["Հունվար","Փետրվար","Մարտ","Ապրիլ","Մայիս","Հունիս","Հուլիս","Օգոստոս","Սեպտեմբեր","Հոկտեմբեր","Նոյեմբեր","Դեկտեմբեր"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"ՇԲՏ",scrollTitle:"Ոլորեք՝ մեծացնելու համար",toggleTitle:"Սեղմեք՝ փոխելու համար",amPM:["ՄԿ","ԿՀ"],yearAriaLabel:"Տարի",monthAriaLabel:"Ամիս",hourAriaLabel:"Ժամ",minuteAriaLabel:"Րոպե",time_24hr:!0};X.l10ns.hy=ee,X.l10ns;var ae="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ne={weekdays:{shorthand:["Min","Sen","Sel","Rab","Kam","Jum","Sab"],longhand:["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"]},months:{shorthand:["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"],longhand:["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"]},firstDayOfWeek:1,ordinal:function(){return""},time_24hr:!0,rangeSeparator:" - "};ae.l10ns.id=ne,ae.l10ns;var oe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},re={weekdays:{shorthand:["Sun","Mán","Þri","Mið","Fim","Fös","Lau"],longhand:["Sunnudagur","Mánudagur","Þriðjudagur","Miðvikudagur","Fimmtudagur","Föstudagur","Laugardagur"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maí","Jún","Júl","Ágú","Sep","Okt","Nóv","Des"],longhand:["Janúar","Febrúar","Mars","Apríl","Maí","Júní","Júlí","Ágúst","September","Október","Nóvember","Desember"]},ordinal:function(){return"."},firstDayOfWeek:1,rangeSeparator:" til ",weekAbbreviation:"vika",yearAriaLabel:"Ár",time_24hr:!0};oe.l10ns.is=re,oe.l10ns;var te="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ie={weekdays:{shorthand:["Dom","Lun","Mar","Mer","Gio","Ven","Sab"],longhand:["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"]},months:{shorthand:["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"],longhand:["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"]},firstDayOfWeek:1,ordinal:function(){return"°"},rangeSeparator:" al ",weekAbbreviation:"Se",scrollTitle:"Scrolla per aumentare",toggleTitle:"Clicca per cambiare",time_24hr:!0};te.l10ns.it=ie,te.l10ns;var de="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},se={weekdays:{shorthand:["日","月","火","水","木","金","土"],longhand:["日曜日","月曜日","火曜日","水曜日","木曜日","金曜日","土曜日"]},months:{shorthand:["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"],longhand:["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"]},time_24hr:!0,rangeSeparator:" から ",monthAriaLabel:"月",amPM:["午前","午後"],yearAriaLabel:"年",hourAriaLabel:"時間",minuteAriaLabel:"分"};de.l10ns.ja=se,de.l10ns;var le="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},he={weekdays:{shorthand:["კვ","ორ","სა","ოთ","ხუ","პა","შა"],longhand:["კვირა","ორშაბათი","სამშაბათი","ოთხშაბათი","ხუთშაბათი","პარასკევი","შაბათი"]},months:{shorthand:["იან","თებ","მარ","აპრ","მაი","ივნ","ივლ","აგვ","სექ","ოქტ","ნოე","დეკ"],longhand:["იანვარი","თებერვალი","მარტი","აპრილი","მაისი","ივნისი","ივლისი","აგვისტო","სექტემბერი","ოქტომბერი","ნოემბერი","დეკემბერი"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"კვ.",scrollTitle:"დასქროლეთ გასადიდებლად",toggleTitle:"დააკლიკეთ გადართვისთვის",amPM:["AM","PM"],yearAriaLabel:"წელი",time_24hr:!0};le.l10ns.ka=he,le.l10ns;var ce="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ue={weekdays:{shorthand:["일","월","화","수","목","금","토"],longhand:["일요일","월요일","화요일","수요일","목요일","금요일","토요일"]},months:{shorthand:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],longhand:["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"]},ordinal:function(){return"일"},rangeSeparator:" ~ ",amPM:["오전","오후"]};ce.l10ns.ko=ue,ce.l10ns;var me="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},fe={weekdays:{shorthand:["អាទិត្យ","ចន្ទ","អង្គារ","ពុធ","ព្រហស.","សុក្រ","សៅរ៍"],longhand:["អាទិត្យ","ចន្ទ","អង្គារ","ពុធ","ព្រហស្បតិ៍","សុក្រ","សៅរ៍"]},months:{shorthand:["មករា","កុម្ភះ","មីនា","មេសា","ឧសភា","មិថុនា","កក្កដា","សីហា","កញ្ញា","តុលា","វិច្ឆិកា","ធ្នូ"],longhand:["មករា","កុម្ភះ","មីនា","មេសា","ឧសភា","មិថុនា","កក្កដា","សីហា","កញ្ញា","តុលា","វិច្ឆិកា","ធ្នូ"]},ordinal:function(){return""},firstDayOfWeek:1,rangeSeparator:" ដល់ ",weekAbbreviation:"សប្តាហ៍",scrollTitle:"រំកិលដើម្បីបង្កើន",toggleTitle:"ចុចដើម្បីផ្លាស់ប្ដូរ",yearAriaLabel:"ឆ្នាំ",time_24hr:!0};me.l10ns.km=fe,me.l10ns;var pe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ve={weekdays:{shorthand:["Жс","Дс","Сc","Ср","Бс","Жм","Сб"],longhand:["Жексенбi","Дүйсенбi","Сейсенбi","Сәрсенбi","Бейсенбi","Жұма","Сенбi"]},months:{shorthand:["Қаң","Ақп","Нау","Сәу","Мам","Мау","Шiл","Там","Қыр","Қаз","Қар","Жел"],longhand:["Қаңтар","Ақпан","Наурыз","Сәуiр","Мамыр","Маусым","Шiлде","Тамыз","Қыркүйек","Қазан","Қараша","Желтоқсан"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"Апта",scrollTitle:"Үлкейту үшін айналдырыңыз",toggleTitle:"Ауыстыру үшін басыңыз",amPM:["ТД","ТК"],yearAriaLabel:"Жыл"};pe.l10ns.kz=ve,pe.l10ns;var we="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ke={weekdays:{shorthand:["S","Pr","A","T","K","Pn","Š"],longhand:["Sekmadienis","Pirmadienis","Antradienis","Trečiadienis","Ketvirtadienis","Penktadienis","Šeštadienis"]},months:{shorthand:["Sau","Vas","Kov","Bal","Geg","Bir","Lie","Rgp","Rgs","Spl","Lap","Grd"],longhand:["Sausis","Vasaris","Kovas","Balandis","Gegužė","Birželis","Liepa","Rugpjūtis","Rugsėjis","Spalis","Lapkritis","Gruodis"]},firstDayOfWeek:1,ordinal:function(){return"-a"},rangeSeparator:" iki ",weekAbbreviation:"Sav",scrollTitle:"Keisti laiką pelės rateliu",toggleTitle:"Perjungti laiko formatą",time_24hr:!0};we.l10ns.lt=ke,we.l10ns;var ge="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},be={firstDayOfWeek:1,weekdays:{shorthand:["Sv","Pr","Ot","Tr","Ce","Pk","Se"],longhand:["Svētdiena","Pirmdiena","Otrdiena","Trešdiena","Ceturtdiena","Piektdiena","Sestdiena"]},months:{shorthand:["Jan","Feb","Mar","Apr","Mai","Jūn","Jūl","Aug","Sep","Okt","Nov","Dec"],longhand:["Janvāris","Februāris","Marts","Aprīlis","Maijs","Jūnijs","Jūlijs","Augusts","Septembris","Oktobris","Novembris","Decembris"]},rangeSeparator:" līdz ",time_24hr:!0};ge.l10ns.lv=be,ge.l10ns;var ye="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Me={weekdays:{shorthand:["Не","По","Вт","Ср","Че","Пе","Са"],longhand:["Недела","Понеделник","Вторник","Среда","Четврток","Петок","Сабота"]},months:{shorthand:["Јан","Фев","Мар","Апр","Мај","Јун","Јул","Авг","Сеп","Окт","Ное","Дек"],longhand:["Јануари","Февруари","Март","Април","Мај","Јуни","Јули","Август","Септември","Октомври","Ноември","Декември"]},firstDayOfWeek:1,weekAbbreviation:"Нед.",rangeSeparator:" до ",time_24hr:!0};ye.l10ns.mk=Me,ye.l10ns;var $e="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Se={firstDayOfWeek:1,weekdays:{shorthand:["Да","Мя","Лх","Пү","Ба","Бя","Ня"],longhand:["Даваа","Мягмар","Лхагва","Пүрэв","Баасан","Бямба","Ням"]},months:{shorthand:["1-р сар","2-р сар","3-р сар","4-р сар","5-р сар","6-р сар","7-р сар","8-р сар","9-р сар","10-р сар","11-р сар","12-р сар"],longhand:["Нэгдүгээр сар","Хоёрдугаар сар","Гуравдугаар сар","Дөрөвдүгээр сар","Тавдугаар сар","Зургаадугаар сар","Долдугаар сар","Наймдугаар сар","Есдүгээр сар","Аравдугаар сар","Арваннэгдүгээр сар","Арванхоёрдугаар сар"]},rangeSeparator:"-с ",time_24hr:!0};$e.l10ns.mn=Se,$e.l10ns;var Oe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ce={weekdays:{shorthand:["Aha","Isn","Sel","Rab","Kha","Jum","Sab"],longhand:["Ahad","Isnin","Selasa","Rabu","Khamis","Jumaat","Sabtu"]},months:{shorthand:["Jan","Feb","Mac","Apr","Mei","Jun","Jul","Ogo","Sep","Okt","Nov","Dis"],longhand:["Januari","Februari","Mac","April","Mei","Jun","Julai","Ogos","September","Oktober","November","Disember"]},firstDayOfWeek:1,ordinal:function(){return""}};Oe.l10ns;var De="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ae={weekdays:{shorthand:["နွေ","လာ","ဂါ","ဟူး","ကြာ","သော","နေ"],longhand:["တနင်္ဂနွေ","တနင်္လာ","အင်္ဂါ","ဗုဒ္ဓဟူး","ကြာသပတေး","သောကြာ","စနေ"]},months:{shorthand:["ဇန်","ဖေ","မတ်","ပြီ","မေ","ဇွန်","လိုင်","သြ","စက်","အောက်","နို","ဒီ"],longhand:["ဇန်နဝါရီ","ဖေဖော်ဝါရီ","မတ်","ဧပြီ","မေ","ဇွန်","ဇူလိုင်","သြဂုတ်","စက်တင်ဘာ","အောက်တိုဘာ","နိုဝင်ဘာ","ဒီဇင်ဘာ"]},firstDayOfWeek:1,ordinal:function(){return""},time_24hr:!0};De.l10ns.my=Ae,De.l10ns;var Te="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Je={weekdays:{shorthand:["zo","ma","di","wo","do","vr","za"],longhand:["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"]},months:{shorthand:["jan","feb","mrt","apr","mei","jun","jul","aug","sept","okt","nov","dec"],longhand:["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"]},firstDayOfWeek:1,weekAbbreviation:"wk",rangeSeparator:" t/m ",scrollTitle:"Scroll voor volgende / vorige",toggleTitle:"Klik om te wisselen",time_24hr:!0,ordinal:function(e){return 1===e||8===e||e>=20?"ste":"de"}};Te.l10ns.nl=Je,Te.l10ns;var je="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Pe={weekdays:{shorthand:["Sø.","Må.","Ty.","On.","To.","Fr.","La."],longhand:["Søndag","Måndag","Tysdag","Onsdag","Torsdag","Fredag","Laurdag"]},months:{shorthand:["Jan","Feb","Mars","Apr","Mai","Juni","Juli","Aug","Sep","Okt","Nov","Des"],longhand:["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]},firstDayOfWeek:1,rangeSeparator:" til ",weekAbbreviation:"Veke",scrollTitle:"Scroll for å endre",toggleTitle:"Klikk for å veksle",time_24hr:!0,ordinal:function(){return"."}};je.l10ns.nn=Pe,je.l10ns;var Le="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},_e={weekdays:{shorthand:["Søn","Man","Tir","Ons","Tor","Fre","Lør"],longhand:["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"]},months:{shorthand:["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"],longhand:["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"]},firstDayOfWeek:1,rangeSeparator:" til ",weekAbbreviation:"Uke",scrollTitle:"Scroll for å endre",toggleTitle:"Klikk for å veksle",time_24hr:!0,ordinal:function(){return"."}};Le.l10ns.no=_e,Le.l10ns;var Ne="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Fe={weekdays:{shorthand:["ਐਤ","ਸੋਮ","ਮੰਗਲ","ਬੁੱਧ","ਵੀਰ","ਸ਼ੁੱਕਰ","ਸ਼ਨਿੱਚਰ"],longhand:["ਐਤਵਾਰ","ਸੋਮਵਾਰ","ਮੰਗਲਵਾਰ","ਬੁੱਧਵਾਰ","ਵੀਰਵਾਰ","ਸ਼ੁੱਕਰਵਾਰ","ਸ਼ਨਿੱਚਰਵਾਰ"]},months:{shorthand:["ਜਨ","ਫ਼ਰ","ਮਾਰ","ਅਪ੍ਰੈ","ਮਈ","ਜੂਨ","ਜੁਲਾ","ਅਗ","ਸਤੰ","ਅਕ","ਨਵੰ","ਦਸੰ"],longhand:["ਜਨਵਰੀ","ਫ਼ਰਵਰੀ","ਮਾਰਚ","ਅਪ੍ਰੈਲ","ਮਈ","ਜੂਨ","ਜੁਲਾਈ","ਅਗਸਤ","ਸਤੰਬਰ","ਅਕਤੂਬਰ","ਨਵੰਬਰ","ਦਸੰਬਰ"]},time_24hr:!0};Ne.l10ns.pa=Fe,Ne.l10ns;var ze="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},We={weekdays:{shorthand:["Nd","Pn","Wt","Śr","Cz","Pt","So"],longhand:["Niedziela","Poniedziałek","Wtorek","Środa","Czwartek","Piątek","Sobota"]},months:{shorthand:["Sty","Lut","Mar","Kwi","Maj","Cze","Lip","Sie","Wrz","Paź","Lis","Gru"],longhand:["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"]},rangeSeparator:" do ",weekAbbreviation:"tydz.",scrollTitle:"Przewiń, aby zwiększyć",toggleTitle:"Kliknij, aby przełączyć",firstDayOfWeek:1,time_24hr:!0,ordinal:function(){return"."}};ze.l10ns.pl=We,ze.l10ns;var Ee="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},xe={weekdays:{shorthand:["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"],longhand:["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"]},months:{shorthand:["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"],longhand:["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"]},rangeSeparator:" até ",time_24hr:!0};Ee.l10ns.pt=xe,Ee.l10ns;var Ke="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ie={weekdays:{shorthand:["Dum","Lun","Mar","Mie","Joi","Vin","Sâm"],longhand:["Duminică","Luni","Marți","Miercuri","Joi","Vineri","Sâmbătă"]},months:{shorthand:["Ian","Feb","Mar","Apr","Mai","Iun","Iul","Aug","Sep","Oct","Noi","Dec"],longhand:["Ianuarie","Februarie","Martie","Aprilie","Mai","Iunie","Iulie","August","Septembrie","Octombrie","Noiembrie","Decembrie"]},firstDayOfWeek:1,time_24hr:!0,ordinal:function(){return""}};Ke.l10ns.ro=Ie,Ke.l10ns;var Re="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ge={weekdays:{shorthand:["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],longhand:["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"]},months:{shorthand:["Янв","Фев","Март","Апр","Май","Июнь","Июль","Авг","Сен","Окт","Ноя","Дек"],longhand:["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"Нед.",scrollTitle:"Прокрутите для увеличения",toggleTitle:"Нажмите для переключения",amPM:["ДП","ПП"],yearAriaLabel:"Год",time_24hr:!0};Re.l10ns.ru=Ge,Re.l10ns;var Be="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ue={weekdays:{shorthand:["ඉ","ස","අ","බ","බ්‍ර","සි","සෙ"],longhand:["ඉරිදා","සඳුදා","අඟහරුවාදා","බදාදා","බ්‍රහස්පතින්දා","සිකුරාදා","සෙනසුරාදා"]},months:{shorthand:["ජන","පෙබ","මාර්","අප්‍රේ","මැයි","ජුනි","ජූලි","අගෝ","සැප්","ඔක්","නොවැ","දෙසැ"],longhand:["ජනවාරි","පෙබරවාරි","මාර්තු","අප්‍රේල්","මැයි","ජුනි","ජූලි","අගෝස්තු","සැප්තැම්බර්","ඔක්තෝබර්","නොවැම්බර්","දෙසැම්බර්"]},time_24hr:!0};Be.l10ns.si=Ue,Be.l10ns;var He="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ve={weekdays:{shorthand:["Ned","Pon","Ut","Str","Štv","Pia","Sob"],longhand:["Nedeľa","Pondelok","Utorok","Streda","Štvrtok","Piatok","Sobota"]},months:{shorthand:["Jan","Feb","Mar","Apr","Máj","Jún","Júl","Aug","Sep","Okt","Nov","Dec"],longhand:["Január","Február","Marec","Apríl","Máj","Jún","Júl","August","September","Október","November","December"]},firstDayOfWeek:1,rangeSeparator:" do ",time_24hr:!0,ordinal:function(){return"."}};He.l10ns.sk=Ve,He.l10ns;var qe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ye={weekdays:{shorthand:["Ned","Pon","Tor","Sre","Čet","Pet","Sob"],longhand:["Nedelja","Ponedeljek","Torek","Sreda","Četrtek","Petek","Sobota"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],longhand:["Januar","Februar","Marec","April","Maj","Junij","Julij","Avgust","September","Oktober","November","December"]},firstDayOfWeek:1,rangeSeparator:" do ",time_24hr:!0,ordinal:function(){return"."}};qe.l10ns.sl=Ye,qe.l10ns;var Qe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},Ze={weekdays:{shorthand:["Di","Hë","Ma","Më","En","Pr","Sh"],longhand:["E Diel","E Hënë","E Martë","E Mërkurë","E Enjte","E Premte","E Shtunë"]},months:{shorthand:["Jan","Shk","Mar","Pri","Maj","Qer","Kor","Gus","Sht","Tet","Nën","Dhj"],longhand:["Janar","Shkurt","Mars","Prill","Maj","Qershor","Korrik","Gusht","Shtator","Tetor","Nëntor","Dhjetor"]},firstDayOfWeek:1,rangeSeparator:" deri ",weekAbbreviation:"Java",yearAriaLabel:"Viti",monthAriaLabel:"Muaji",hourAriaLabel:"Ora",minuteAriaLabel:"Minuta",time_24hr:!0};Qe.l10ns.sq=Ze,Qe.l10ns;var Xe="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ea={weekdays:{shorthand:["Ned","Pon","Uto","Sre","Čet","Pet","Sub"],longhand:["Nedelja","Ponedeljak","Utorak","Sreda","Četvrtak","Petak","Subota"]},months:{shorthand:["Jan","Feb","Mar","Apr","Maj","Jun","Jul","Avg","Sep","Okt","Nov","Dec"],longhand:["Januar","Februar","Mart","April","Maj","Jun","Jul","Avgust","Septembar","Oktobar","Novembar","Decembar"]},firstDayOfWeek:1,weekAbbreviation:"Ned.",rangeSeparator:" do ",time_24hr:!0};Xe.l10ns.sr=ea,Xe.l10ns;var aa="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},na={firstDayOfWeek:1,weekAbbreviation:"v",weekdays:{shorthand:["sön","mån","tis","ons","tor","fre","lör"],longhand:["söndag","måndag","tisdag","onsdag","torsdag","fredag","lördag"]},months:{shorthand:["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"],longhand:["januari","februari","mars","april","maj","juni","juli","augusti","september","oktober","november","december"]},rangeSeparator:" till ",time_24hr:!0,ordinal:function(){return"."}};aa.l10ns.sv=na,aa.l10ns;var oa="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ra={weekdays:{shorthand:["อา","จ","อ","พ","พฤ","ศ","ส"],longhand:["อาทิตย์","จันทร์","อังคาร","พุธ","พฤหัสบดี","ศุกร์","เสาร์"]},months:{shorthand:["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],longhand:["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"]},firstDayOfWeek:1,rangeSeparator:" ถึง ",scrollTitle:"เลื่อนเพื่อเพิ่มหรือลด",toggleTitle:"คลิกเพื่อเปลี่ยน",time_24hr:!0,ordinal:function(){return""}};oa.l10ns.th=ra,oa.l10ns;var ta="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ia={weekdays:{shorthand:["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"],longhand:["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"]},months:{shorthand:["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"],longhand:["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"]},firstDayOfWeek:1,ordinal:function(){return"."},rangeSeparator:" - ",weekAbbreviation:"Hf",scrollTitle:"Artırmak için kaydırın",toggleTitle:"Aç/Kapa",amPM:["ÖÖ","ÖS"],time_24hr:!0};ta.l10ns.tr=ia,ta.l10ns;var da="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},sa={firstDayOfWeek:1,weekdays:{shorthand:["Нд","Пн","Вт","Ср","Чт","Пт","Сб"],longhand:["Неділя","Понеділок","Вівторок","Середа","Четвер","П'ятниця","Субота"]},months:{shorthand:["Січ","Лют","Бер","Кві","Тра","Чер","Лип","Сер","Вер","Жов","Лис","Гру"],longhand:["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]},time_24hr:!0};da.l10ns.uk=sa,da.l10ns;var la="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ha={weekdays:{shorthand:["Якш","Душ","Сеш","Чор","Пай","Жум","Шан"],longhand:["Якшанба","Душанба","Сешанба","Чоршанба","Пайшанба","Жума","Шанба"]},months:{shorthand:["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],longhand:["Январ","Феврал","Март","Апрел","Май","Июн","Июл","Август","Сентябр","Октябр","Ноябр","Декабр"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"Ҳафта",scrollTitle:"Катталаштириш учун айлантиринг",toggleTitle:"Ўтиш учун босинг",amPM:["AM","PM"],yearAriaLabel:"Йил",time_24hr:!0};la.l10ns.uz=ha,la.l10ns;var ca="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ua={weekdays:{shorthand:["Ya","Du","Se","Cho","Pa","Ju","Sha"],longhand:["Yakshanba","Dushanba","Seshanba","Chorshanba","Payshanba","Juma","Shanba"]},months:{shorthand:["Yan","Fev","Mar","Apr","May","Iyun","Iyul","Avg","Sen","Okt","Noy","Dek"],longhand:["Yanvar","Fevral","Mart","Aprel","May","Iyun","Iyul","Avgust","Sentabr","Oktabr","Noyabr","Dekabr"]},firstDayOfWeek:1,ordinal:function(){return""},rangeSeparator:" — ",weekAbbreviation:"Hafta",scrollTitle:"Kattalashtirish uchun aylantiring",toggleTitle:"O‘tish uchun bosing",amPM:["AM","PM"],yearAriaLabel:"Yil",time_24hr:!0};ca.l10ns.uz_latn=ua,ca.l10ns;var ma="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},fa={weekdays:{shorthand:["CN","T2","T3","T4","T5","T6","T7"],longhand:["Chủ nhật","Thứ hai","Thứ ba","Thứ tư","Thứ năm","Thứ sáu","Thứ bảy"]},months:{shorthand:["Th1","Th2","Th3","Th4","Th5","Th6","Th7","Th8","Th9","Th10","Th11","Th12"],longhand:["Tháng một","Tháng hai","Tháng ba","Tháng tư","Tháng năm","Tháng sáu","Tháng bảy","Tháng tám","Tháng chín","Tháng mười","Tháng mười một","Tháng mười hai"]},firstDayOfWeek:1,rangeSeparator:" đến "};ma.l10ns.vn=fa,ma.l10ns;var pa="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},va={weekdays:{shorthand:["周日","周一","周二","周三","周四","周五","周六"],longhand:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"]},months:{shorthand:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],longhand:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]},rangeSeparator:" 至 ",weekAbbreviation:"周",scrollTitle:"滚动切换",toggleTitle:"点击切换 12/24 小时时制"};pa.l10ns.zh=va,pa.l10ns;var wa="undefined"!=typeof window&&void 0!==window.flatpickr?window.flatpickr:{l10ns:{}},ka={weekdays:{shorthand:["週日","週一","週二","週三","週四","週五","週六"],longhand:["星期日","星期一","星期二","星期三","星期四","星期五","星期六"]},months:{shorthand:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"],longhand:["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]},rangeSeparator:" 至 ",weekAbbreviation:"週",scrollTitle:"滾動切換",toggleTitle:"點擊切換 12/24 小時時制"};wa.l10ns.zh_tw=ka,wa.l10ns;var ga={ar:o,at:t,az:d,be:l,bg:m,bn:p,bs:c,ca:w,ckb:g,cat:w,cs:y,cy:$,da:O,de:D,default:a({},A),en:A,eo:J,es:P,et:_,fa:F,fi:W,fo:x,fr:I,gr:G,he:U,hi:V,hr:Y,hu:Z,hy:ee,id:ne,is:re,it:ie,ja:se,ka:he,ko:ue,km:fe,kz:ve,lt:ke,lv:be,mk:Me,mn:Se,ms:Ce,my:Ae,nl:Je,nn:Pe,no:_e,pa:Fe,pl:We,pt:xe,ro:Ie,ru:Ge,si:Ue,sk:Ve,sl:Ye,sq:Ze,sr:ea,sv:na,th:ra,tr:ia,uk:sa,vn:fa,zh:va,zh_tw:ka,uz:ha,uz_latn:ua};e.default=ga,Object.defineProperty(e,"__esModule",{value:!0})}(a)},105:()=>{},9418:()=>{},7583:()=>{},5833:()=>{},6078:()=>{},1323:()=>{},5708:()=>{},873:()=>{},6130:()=>{},7707:()=>{},7905:()=>{},1373:()=>{},2422:()=>{},783:()=>{},3982:()=>{},2294:()=>{},6987:()=>{},5700:()=>{},975:()=>{},8479:()=>{},5396:()=>{},4614:()=>{},809:()=>{},270:()=>{},9500:()=>{},1298:()=>{},2106:()=>{},4391:()=>{},3362:()=>{},8877:()=>{},3414:()=>{},1336:()=>{},7152:()=>{},916:()=>{},9607:()=>{},1777:()=>{},2882:()=>{},1112:()=>{},6565:()=>{},6261:()=>{},1653:()=>{},6941:()=>{},5936:()=>{},8580:()=>{},7099:()=>{},1752:()=>{},5892:()=>{},6037:()=>{},7407:()=>{},6432:()=>{},6414:()=>{},4077:()=>{},4370:()=>{},6634:()=>{},7245:()=>{},9980:()=>{},4234:()=>{},3578:()=>{},2098:()=>{},1136:()=>{},6112:()=>{},3633:()=>{},9532:()=>{},4790:()=>{},6968:()=>{},3883:()=>{},9559:()=>{},4599:()=>{},5298:()=>{},2001:()=>{},2814:()=>{},9322:()=>{},3615:()=>{},123:()=>{},4711:()=>{},8318:()=>{},8701:()=>{},2592:()=>{},3742:()=>{},2452:()=>{},2078:()=>{},1742:()=>{},9924:()=>{},8511:()=>{},2020:()=>{},1569:()=>{},1857:()=>{},5172:()=>{},9211:()=>{},156:()=>{},3548:()=>{},6461:()=>{},5173:()=>{},3897:()=>{},3555:()=>{},530:()=>{},2730:()=>{},5587:()=>{},3145:()=>{},5196:()=>{},3536:()=>{},8091:()=>{},2569:()=>{},3028:()=>{},4924:()=>{}},n={};function o(e){var r=n[e];if(void 0!==r)return r.exports;var t=n[e]={exports:{}};return a[e].call(t.exports,t,t.exports,o),t.exports}o.m=a,e=[],o.O=(a,n,r,t)=>{if(!n){var i=1/0;for(h=0;h<e.length;h++){for(var[n,r,t]=e[h],d=!0,s=0;s<n.length;s++)(!1&t||i>=t)&&Object.keys(o.O).every((e=>o.O[e](n[s])))?n.splice(s--,1):(d=!1,t<i&&(i=t));if(d){e.splice(h--,1);var l=r();void 0!==l&&(a=l)}}return a}t=t||0;for(var h=e.length;h>0&&e[h-1][2]>t;h--)e[h]=e[h-1];e[h]=[n,r,t]},o.n=e=>{var a=e&&e.__esModule?()=>e.default:()=>e;return o.d(a,{a}),a},o.d=(e,a)=>{for(var n in a)o.o(a,n)&&!o.o(e,n)&&Object.defineProperty(e,n,{enumerable:!0,get:a[n]})},o.o=(e,a)=>Object.prototype.hasOwnProperty.call(e,a),(()=>{var e={9035:0,8685:0,5550:0,7402:0,7837:0,4441:0,1191:0,606:0,2614:0,8875:0,5939:0,4403:0,1638:0,2126:0,4753:0,5406:0,3085:0,3961:0,6394:0,3732:0,3025:0,5869:0,6273:0,7849:0,8616:0,784:0,1021:0,5323:0,516:0,4037:0,6061:0,3960:0,6219:0,5554:0,1356:0,8773:0,8386:0,6441:0,5316:0,4084:0,8529:0,3393:0,2120:0,2176:0,3644:0,1061:0,6493:0,6019:0,5838:0,8344:0,7914:0,5328:0,8342:0,1942:0,1048:0,5832:0,4287:0,7729:0,5295:0,5709:0,5086:0,8964:0,5829:0,2373:0,8634:0,2977:0,7252:0,1523:0,2079:0,3352:0,440:0,1643:0,8419:0,453:0,1783:0,8294:0,2837:0,2578:0,19:0,1470:0,7129:0,1414:0,3206:0,1677:0,2460:0,8580:0,6699:0,9723:0,6764:0,7734:0,3145:0,1221:0,9893:0,3198:0,1696:0,4539:0,4222:0,7915:0,7269:0,772:0,493:0,4591:0,9045:0,6899:0,8098:0};o.O.j=a=>0===e[a];var a=(a,n)=>{var r,t,[i,d,s]=n,l=0;if(i.some((a=>0!==e[a]))){for(r in d)o.o(d,r)&&(o.m[r]=d[r]);if(s)var h=s(o)}for(a&&a(n);l<i.length;l++)t=i[l],o.o(e,t)&&e[t]&&e[t][0](),e[t]=0;return o.O(h)},n=self.webpackChunk=self.webpackChunk||[];n.forEach(a.bind(null,0)),n.push=a.bind(null,n.push.bind(n))})(),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3297))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6112))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(9322))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(9924))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3897))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(4924))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(7905))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1373))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2422))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(783))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3982))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2294))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6987))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5700))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(975))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(8479))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5396))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(4614))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(809))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(270))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(9500))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1298))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2106))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(4391))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3362))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(8877))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3414))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1336))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(7152))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(916))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(9607))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1777))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2882))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1112))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6565))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6261))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1653))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6941))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5936))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(8580))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(7099))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1752))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5892))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6037))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(7407))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6432))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6414))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(4077))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(4370))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6634))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(7245))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(9980))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(4234))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3578))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2098))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1136))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3633))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(9532))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(4790))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6968))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3883))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(9559))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(4599))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5298))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2001))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2814))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3615))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(123))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(4711))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(8318))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(8701))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2592))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3742))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2452))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2078))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1742))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(8511))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2020))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1569))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1857))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5172))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(9211))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(156))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3548))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6461))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5173))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3555))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(530))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2730))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5587))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3145))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5196))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3536))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(8091))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(2569))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(3028))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(105))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(9418))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(7583))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5833))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6078))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(1323))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(5708))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(873))),o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(6130)));var r=o.O(void 0,[8685,5550,7402,7837,4441,1191,606,2614,8875,5939,4403,1638,2126,4753,5406,3085,3961,6394,3732,3025,5869,6273,7849,8616,784,1021,5323,516,4037,6061,3960,6219,5554,1356,8773,8386,6441,5316,4084,8529,3393,2120,2176,3644,1061,6493,6019,5838,8344,7914,5328,8342,1942,1048,5832,4287,7729,5295,5709,5086,8964,5829,2373,8634,2977,7252,1523,2079,3352,440,1643,8419,453,1783,8294,2837,2578,19,1470,7129,1414,3206,1677,2460,8580,6699,9723,6764,7734,3145,1221,9893,3198,1696,4539,4222,7915,7269,772,493,4591,9045,6899,8098],(()=>o(7707)));r=o.O(r)})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./resources/assets/js/vcards/vcard-view.js":
+/*!**************************************************!*\
+  !*** ./resources/assets/js/vcards/vcard-view.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var flatpickr_dist_l10n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! flatpickr/dist/l10n */ "./node_modules/flatpickr/dist/l10n/index.js");
+/* harmony import */ var flatpickr_dist_l10n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(flatpickr_dist_l10n__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
+document.addEventListener("DOMContentLoaded", displayError);
+document.addEventListener("DOMContentLoaded", loadVcardView);
+document.addEventListener("DOMContentLoaded", passwordLoad);
+document.addEventListener("DOMContentLoaded", langDropdown);
+document.addEventListener("DOMContentLoaded", loadPhoneInput);
+// if (typeof oneSignalNotification != 'undefined' && oneSignalNotification == 1) {
+//     document.addEventListener("DOMContentLoaded", OneSignalFunction);
+// }
+
+$(document).ready(function () {
+  $('html, body').animate({
+    scrollTop: $('html').offset().top
+  });
+});
+function displayError(selector, msg) {
+  var selectorAttr = $(selector);
+  selectorAttr.removeClass("d-none");
+  selectorAttr.show();
+  selectorAttr.text(msg);
+  setTimeout(function () {
+    $(selector).slideUp();
+  }, 3000);
+}
+var selectedDate;
+var selectedSlotTime;
+var timezone_offset_minutes;
+var flatpickrInstances = [];
+function loadVcardView() {
+  var urlStr = window.location.href;
+  if (urlStr.indexOf("?") != -1) {
+    window.history.pushState(null, "", route("vcard.show", vcardAlias));
+    var message = urlStr.split("?").pop();
+    // displaySuccessMessage(message.replace(/%20/g, ' '))
+    displaySuccessMessage(decodeURIComponent(message));
+  }
+  if (!$(".date").length) {
+    return;
+  }
+  timezone_offset_minutes = new Date().getTimezoneOffset();
+  timezone_offset_minutes = timezone_offset_minutes === 0 ? 0 : -timezone_offset_minutes;
+
+  // Destroy existing flatpickr instances if they exist
+  flatpickrInstances.forEach(function (instance) {
+    if (instance) {
+      instance.destroy();
+    }
+  });
+  flatpickrInstances = []; // Clear the array
+
+  // Fetch available days first
+  $.ajax({
+    url: route('get.available.days'),
+    type: 'GET',
+    data: {
+      vcardId: vcardId
+    },
+    success: function success(result) {
+      if (result.success) {
+        var availableWeekdays = result.data;
+
+        // Initialize Flatpickr for each .date element
+        $(".date").each(function () {
+          var instance = $(this).flatpickr({
+            locale: lang,
+            minDate: new Date(),
+            disableMobile: true,
+            disable: [function (date) {
+              var jsDay = date.getDay();
+              var systemDay = jsDay === 0 ? 7 : jsDay;
+              return !availableWeekdays.includes(systemDay);
+            }]
+          });
+          flatpickrInstances.push(instance);
+        });
+      } else {
+        // Fallback: Initialize without disable function
+        $(".date").each(function () {
+          var instance = $(this).flatpickr({
+            locale: lang,
+            minDate: new Date(),
+            disableMobile: true
+          });
+          flatpickrInstances.push(instance);
+        });
+      }
+    },
+    error: function error() {
+      // Fallback: Initialize without disable function
+      $(".date").each(function () {
+        var instance = $(this).flatpickr({
+          locale: lang,
+          minDate: new Date(),
+          disableMobile: true
+        });
+        flatpickrInstances.push(instance);
+      });
+    }
+  });
+  setTimeout(function () {
+    if (isEdit) {
+      $(".date").val(date).trigger("change");
+    }
+  }, 1000);
+  if (!$(".no-time-slot").length) {
+    return;
+  }
+  $(".no-time-slot").removeClass("d-none");
+}
+listenChange(".date, .appoint-input", function () {
+  var _data;
+  $("#slotData").empty();
+  var templateId = $("#templateId").length == 1 ? "#appoitmentTemplateV11" : "#appoitmentTemplate";
+  selectedDate = $(this).val();
+  var formattedDate = moment(selectedDate).format(getFormattedDateTime(userDateFormate, 1));
+  $("#Date").val(formattedDate);
+  $(".date").val(formattedDate);
+  $.ajax({
+    url: slotUrl,
+    type: "GET",
+    data: (_data = {
+      date: formattedDate
+    }, _defineProperty(_data, "date", selectedDate), _defineProperty(_data, "timezone_offset_minutes", timezone_offset_minutes), _defineProperty(_data, "vcardId", vcardId), _data),
+    success: function success(result) {
+      if (result.success) {
+        $(".appointmentAdd").addClass("d-none");
+        $.each(result.data, function (index, value) {
+          var data = [{
+            value: value
+          }];
+          var buttonStyle = result.message;
+          var $slotElement = $(prepareTemplateRender(templateId, data));
+          $slotElement.addClass("dynamic-btn-".concat(buttonStyle));
+          $slotElement.on("click", function () {
+            var $child = $(this).find(".time-slot");
+            if ($child.hasClass("activeSlot")) {
+              $(".appointmentAdd").addClass("d-none");
+            } else {
+              $(".appointmentAdd").removeClass("d-none");
+            }
+          });
+          $("#slotData").append($slotElement);
+        });
+      }
+    },
+    error: function error(result) {
+      $("#slotData").html("");
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+});
+listenClick(".appointmentAdd", function () {
+  if (!$(".time-slot").hasClass("activeSlot")) {
+    displayErrorMessage(Lang.get("js.select_hour"));
+  } else {
+    $("#AppointmentModal").modal("show");
+    $("#appointmentPaymentMethod").select2({
+      dropdownParent: $("#AppointmentModal")
+    });
+  }
+});
+listenChange('#appointmentPaymentMethod', function () {
+  var value = $(this).val();
+  if (value == 7)
+    // if  Manually payment method
+    {
+      $('.manual-payment-guide').removeClass('d-none');
+    } else {
+    $('.manual-payment-guide').addClass('d-none');
+  }
+});
+listenClick(".time-slot", function () {
+  if ($("#templateId").length) {
+    if ($(this).hasClass("btn-primary")) {
+      $(".time-slot").removeClass("btn-primary");
+      $(this).removeClass("btn-primary");
+      selectedSlotTime = $(this).addClass("btn-primary");
+      if (selectedSlotTime) {
+        $(this).removeClass("btn-primary");
+      }
+    } else {
+      $(".time-slot").removeClass("btn-primary");
+      selectedSlotTime = $(this).addClass("btn-primary");
+    }
+  }
+  if ($(this).hasClass("activeSlot")) {
+    $(".time-slot").removeClass("activeSlot");
+    $(this).removeClass("activeSlot");
+    selectedSlotTime = $(this).addClass("activeSlot");
+    if (selectedSlotTime) {
+      $(this).removeClass("activeSlot");
+    }
+  } else {
+    $(".time-slot").removeClass("activeSlot");
+    selectedSlotTime = $(this).addClass("activeSlot");
+  }
+  var fromToTime = $(this).attr("data-id").split("-");
+  var fromTime = fromToTime[0];
+  var toTime = fromToTime[1];
+  $("#timeSlot").val("");
+  $("#toTime").val("");
+  $("#timeSlot").val(fromTime);
+  $("#toTime").val(toTime);
+});
+listenHiddenBsModal("#AppointmentModal", function () {
+  resetModalForm("#addAppointmentForm");
+});
+listenSubmit("#addAppointmentForm", function (event) {
+  event.preventDefault();
+  $("#serviceSave").prop("disabled", true);
+  $.ajax({
+    url: appointmentUrl,
+    type: "POST",
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        if (!isEmpty(result.data)) {
+          if (result.data.payment_method == 1) {
+            var sessionId = result.data[0].sessionId;
+            stripe.redirectToCheckout({
+              sessionId: sessionId
+            });
+          }
+          if (result.data.payment_method == 2) {
+            if (result.data[0].original.link) {
+              window.location.href = result.data[0].original.link;
+            }
+            if (result.data[0].original.statusCode === 201) {
+              var redirectTo = "";
+              $.each(result.data[0].original.result.links, function (key, val) {
+                if (val.rel == "approve") {
+                  redirectTo = val.href;
+                }
+              });
+              location.href = redirectTo;
+            }
+          }
+          if (result.data.payment_method == 3) {
+            if (result) {
+              window.location.href = result.data[0];
+            }
+          }
+          if (result.data.payment_method == 8 || result.data.payment_method == 10 || result.data.payment_method == 12) {
+            window.location.href = result.data[0];
+          }
+          if (result.data.payment_method == 4) {
+            if (result.data[0].original.link) {
+              window.location.href = result.data[0].original.link;
+            }
+          }
+          if (result.data.payment_method == 13) {
+            $("#AppointmentModal").modal("hide");
+            if (result.data.result) {
+              var _result$data$result = result.data.result,
+                id = _result$data$result.id,
+                amount = _result$data$result.amount,
+                name = _result$data$result.name,
+                email = _result$data$result.email,
+                contact = _result$data$result.contact,
+                key = _result$data$result.key;
+              var _options = {};
+              _options.key = key;
+              _options.amount = amount;
+              _options.order_id = id;
+              _options.prefill = {
+                name: name,
+                email: email,
+                contact: contact
+              };
+              _options.callback_url = route('razorpay.payment.success');
+              var razorPay = new Razorpay(_options);
+              razorPay.open();
+              razorPay.on("payment.failed", function (response) {
+                $("#AppointmentModal").modal("hide");
+                displayErrorMessage("Payment Failed");
+              });
+              return false;
+            }
+          }
+          if (result.data.payment_method == 9 && result.data[0].id) {
+            appointmentMercadoPagoPublicKey.checkout({
+              preference: {
+                id: result.data[0].id
+              },
+              autoOpen: true
+            });
+          }
+          // if (result.data.payment_method == 11) {
+          //     if (result.data.gateway_url) {
+          //             window.location.href = result.data.gateway_url;
+          //             return;
+          //     }
+          // }
+        }
+
+        $("#addAppointmentForm")[0].reset();
+        $("#AppointmentModal").modal("hide");
+        $("#slotData").empty();
+        setTimeout(function () {
+          loadVcardView();
+        }, 500);
+        var pickUpDate = $("#pickUpDate").val();
+        $("#pickUpDate").val("");
+        displaySuccessMessage(Lang.get('js.book_successfully') + pickUpDate);
+        $("#serviceSave").prop("disabled", false);
+        $(".appointmentAdd").addClass("d-none");
+      }
+    },
+    error: function error(result) {
+      $("#addAppointmentForm")[0].reset();
+      $("#AppointmentModal").modal("hide");
+      $("#slotData").empty();
+      displayErrorMessage(result.responseJSON.message);
+      $("#serviceSave").prop("disabled", false);
+    }
+  });
+});
+function langDropdown() {
+  if (!$(".dropdown1").length) {
+    return;
+  }
+  $(".dropdown1").hover(function () {
+    $(this).find(".dropdown-menu").stop(true, true).delay(100).fadeIn(100);
+  }, function () {
+    $(this).find(".dropdown-menu").stop(true, true).delay(100).fadeOut(100);
+  });
+}
+listenClick("#languageName", function () {
+  var languageName = $(this).attr("data-name");
+  $.ajax({
+    url: languageChange + "/" + languageName + "/" + vcardAlias,
+    type: "GET",
+    success: function success(result) {
+      displaySuccessMessage(result.message);
+      setTimeout(function () {
+        location.reload();
+      }, 2000);
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+});
+listenClick(".share", function () {
+  $("#vcard1-shareModel").modal("hide");
+});
+listenClick(".share2", function () {
+  $("#vcard2-shareModel").modal("hide");
+});
+listenClick(".share3", function () {
+  $("#vcard3-shareModel").modal("hide");
+});
+listenClick(".share4", function () {
+  $("#vcard4-shareModel").modal("hide");
+});
+listenClick(".share5", function () {
+  $("#vcard5-shareModel").modal("hide");
+});
+listenClick(".share6", function () {
+  $("#vcard6-shareModel").modal("hide");
+});
+listenClick(".share7", function () {
+  $("#vcard7-shareModel").modal("hide");
+});
+listenClick(".share8", function () {
+  $("#vcard8-shareModel").modal("hide");
+});
+listenClick("share9", function () {
+  $("#vcard9-shareModel").modal("hide");
+});
+listenClick(".share10", function () {
+  $("#vcard10-shareModel").modal("hide");
+});
+listenClick(".share13", function () {
+  $("#vcard13-shareModel").modal("hide");
+});
+listenClick(".share17", function () {
+  $("#vcard17-shareModel").modal("hide");
+});
+listenClick(".share21", function () {
+  $("#vcard21-shareModel").modal("hide");
+});
+listenClick(".share31", function () {
+  $("#vcard31-shareModel").modal("hide");
+});
+listenClick(".share32", function () {
+  $("#vcard32-shareModel").modal("hide");
+});
+listenClick(".share34", function () {
+  $("#vcard34-shareModel").modal("hide");
+});
+listenClick(".share35", function () {
+  $("#vcard35-shareModel").modal("hide");
+});
+listenClick(".share36", function () {
+  $("#vcard36-shareModel").modal("hide");
+});
+listenClick(".share37", function () {
+  $("#vcard37-shareModel").modal("hide");
+});
+listenClick(".share38", function () {
+  $("#vcard38-shareModel").modal("hide");
+});
+listenClick(".share39", function () {
+  $("#vcard39-shareModel").modal("hide");
+});
+listenClick(".share29", function () {
+  $("#vcard29-shareModel").modal("hide");
+});
+listenClick(".share27", function () {
+  $("#vcard27-shareModel").modal("hide");
+});
+listenClick(".share26", function () {
+  $("#vcard26-shareModel").modal("hide");
+});
+listenClick(".share28", function () {
+  $("#vcard28-shareModel").modal("hide");
+});
+listenClick(".share30", function () {
+  $("#vcard30-shareModel").modal("hide");
+});
+listenClick(".share33", function () {
+  $("#vcard33-shareModel").modal("hide");
+});
+listenClick(".share35", function () {
+  $("#vcard35-shareModel").modal("hide");
+});
+listenClick(".share36", function () {
+  $("#vcard36-shareModel").modal("hide");
+});
+listenClick(".share37", function () {
+  $("#vcard37-shareModel").modal("hide");
+});
+listenClick(".share38", function () {
+  $("#vcard38-shareModel").modal("hide");
+});
+listenClick(".share24", function () {
+  $("#vcard24-shareModel").modal("hide");
+});
+listenClick(".share25", function () {
+  $("#vcard25-shareModel").modal("hide");
+});
+listenClick(".share22", function () {
+  $("#vcard22-shareModel").modal("hide");
+});
+listenClick(".vcard23-share", function () {
+  $("#vcard23-shareModel").modal("show");
+});
+listenClick(".share20", function () {
+  $("#vcard20-shareModel").modal("hide");
+});
+listenClick(".share14", function () {
+  $("#vcard14-shareModel").modal("hide");
+});
+listenClick(".share12", function () {
+  $("#vcard12-shareModel").modal("hide");
+});
+listenClick(".share15", function () {
+  $("#vcard15-shareModel").modal("hide");
+});
+listenClick(".share18", function () {
+  $("#vcard18-shareModel").modal("hide");
+});
+listenClick(".share19", function () {
+  $("#vcard19-shareModel").modal("hide");
+});
+listenClick(".copy-referral-btn", function () {
+  var code = $(this).attr("data-id");
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val(route("register") + "?referral-code=" + code).select();
+  document.execCommand("copy");
+  $temp.remove();
+  displaySuccessMessage(Lang.get("js.copied_successfully"));
+});
+$(window).resize(function () {
+  if ($(window).width() < 1025) {
+    $(".vcard11-referral-text").addClass("d-none");
+    $(".vcard11-referral-icon").removeClass("me-2");
+  } else {
+    $(".vcard11-referral-text").removeClass("d-none");
+    $(".vcard11-referral-icon").addClass("me-2");
+  }
+});
+$(window).trigger("resize");
+function passwordLoad() {
+  if (password) {
+    var passwordAttr = $("#passwordModal");
+    passwordAttr.appendTo("body").modal("show");
+  } else {
+    $(".content-blur").removeClass("content-blur");
+  }
+}
+listenHiddenBsModal("#passwordModal", function () {
+  $(this).find("#password").focus();
+});
+listenSubmit("#passwordForm", function (event) {
+  event.preventDefault();
+  $.ajax({
+    url: passwordUrl,
+    type: "POST",
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        $("#passwordModal").modal("hide");
+        $(".content-blur").removeClass("content-blur");
+      }
+    },
+    error: function error(result) {
+      displayError("#passwordError", result.responseJSON.message);
+    }
+  });
+});
+
+// var $window = $(window), previousScrollTop = 0, scrollLock = true;
+//
+// $window.scroll(function (event) {
+//     if (scrollLock) {
+//         previousScrollTop = $window.scrollTop();
+//     }
+//     $window.scrollTop(previousScrollTop);
+//
+// });
+
+listenSubmit("#enquiryForm", function (event) {
+  event.preventDefault();
+  $(".contact-btn").prop("disabled", true);
+  var formData = new FormData($("#enquiryForm")[0]);
+  $.ajax({
+    url: enquiryUrl,
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $("#enquiryForm")[0].reset();
+        $(".contact-btn").prop("disabled", false);
+        $("#selectedFilesSection").hide();
+      }
+    },
+    error: function error(result) {
+      displayError("#enquiryError", result.responseJSON.message);
+      $(".contact-btn").prop("disabled", false);
+    }
+  });
+});
+listenSubmit('#newsLatterForm', function (event) {
+  event.preventDefault();
+  $('#newsLatterModal').prop('disabled', true);
+  $.ajax({
+    url: 'emailSubscriprion-store',
+    type: 'POST',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#emailSubscription').val('');
+        $('#newsLatterModal').modal('hide');
+        $('#newsLatterModal').addClass('d-none');
+        //  window.location.reload();
+
+        var now = new Date();
+        var expires = new Date(now.getTime() + 10 * 365 * 24 * 60 * 60 * 1000);
+        document.cookie = "newsletter_popup=2; expires=" + expires.toUTCString();
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+});
+listenClick('.vcard1-share', function () {
+  $('#vcard1-shareModel').modal('show');
+});
+listenClick(".vcard2-share", function () {
+  $("#vcard2-shareModel").modal("show");
+});
+listenClick(".vcard3-share", function () {
+  $("#vcard3-shareModel").modal("show");
+});
+listenClick(".vcard4-share", function () {
+  $("#vcard4-shareModel").modal("show");
+});
+listenClick(".vcard5-share", function () {
+  $("#vcard5-shareModel").modal("show");
+});
+listenClick(".vcard6-share", function () {
+  $("#vcard6-shareModel").modal("show");
+});
+listenClick(".vcard7-share", function () {
+  $("#vcard7-shareModel").modal("show");
+});
+listenClick(".vcard8-share", function () {
+  $("#vcard8-shareModel").modal("show");
+});
+listenClick(".vcard9-share", function () {
+  $("#vcard9-shareModel").modal("show");
+});
+listenClick(".vcard10-share", function () {
+  $("#vcard10-shareModel").modal("show");
+});
+listenClick(".vcard13-share", function () {
+  $("#vcard13-shareModel").modal("show");
+});
+listenClick(".vcard17-share", function () {
+  $("#vcard17-shareModel").modal("show");
+});
+listenClick(".vcard21-share", function () {
+  $("#vcard21-shareModel").modal("show");
+});
+listenClick(".vcard31-share", function () {
+  $("#vcard31-shareModel").modal("show");
+});
+listenClick(".vcard32-share", function () {
+  $("#vcard32-shareModel").modal("show");
+});
+listenClick(".vcard34-share", function () {
+  $("#vcard34-shareModel").modal("show");
+});
+listenClick(".vcard35-share", function () {
+  $("#vcard35-shareModel").modal("show");
+});
+listenClick(".vcard36-share", function () {
+  $("#vcard36-shareModel").modal("show");
+});
+listenClick(".vcard37-share", function () {
+  $("#vcard37-shareModel").modal("show");
+});
+listenClick(".vcard38-share", function () {
+  $("#vcard38-shareModel").modal("show");
+});
+listenClick(".vcard39-share", function () {
+  $("#vcard39-shareModel").modal("show");
+});
+listenClick(".vcard29-share", function () {
+  $("#vcard29-shareModel").modal("show");
+});
+listenClick(".vcard27-share", function () {
+  $("#vcard27-shareModel").modal("show");
+});
+listenClick(".vcard22-share", function () {
+  $("#vcard22-shareModel").modal("show");
+});
+listenClick(".vcard26-share", function () {
+  $("#vcard26-shareModel").modal("show");
+});
+listenClick(".vcard28-share", function () {
+  $("#vcard28-shareModel").modal("show");
+});
+listenClick(".vcard30-share", function () {
+  $("#vcard30-shareModel").modal("show");
+});
+listenClick(".vcard33-share", function () {
+  $("#vcard33-shareModel").modal("show");
+});
+listenClick(".vcard25-share", function () {
+  $("#vcard25-shareModel").modal("show");
+});
+listenClick(".vcard24-share", function () {
+  $("#vcard24-shareModel").modal("show");
+});
+listenClick(".vcard23-share", function () {
+  $("#vcard23-shareModel").modal("show");
+});
+listenClick(".vcard20-share", function () {
+  $("#vcard20-shareModel").modal("show");
+});
+listenClick(".vcard14-share", function () {
+  $("#vcard14-shareModel").modal("show");
+});
+listenClick(".vcard12-share", function () {
+  $("#vcard12-shareModel").modal("show");
+});
+listenClick(".vcard15-share", function () {
+  $("#vcard15-shareModel").modal("show");
+});
+listenClick(".vcard18-share", function () {
+  $("#vcard18-shareModel").modal("show");
+});
+listenClick(".vcard19-share", function () {
+  $("#vcard19-shareModel").modal("show");
+});
+listenClick(".gallery-link", function () {
+  var url = $(this).data("id");
+  $("#video").attr("src", url);
+});
+listenHiddenBsModal("#exampleModal", function () {
+  $("#video").attr("src", "");
+});
+listen("click", ".paymentByPaypal", function () {
+  var campaignId = $("#campaignId").val();
+  var firstName = $("#firstName").val();
+  var LastName = $("#lastName").val();
+  var email = $("#email").val();
+  var currencyCode = $("#currencyCode").val();
+  var amount = $("#amount").val();
+  if (amount.trim().length === 0) {
+    iziToast.error({
+      title: "Error",
+      message: "The amount field is required",
+      position: "topRight"
+    });
+    return false;
+  } else if (amount === "0") {
+    iziToast.error({
+      title: "Error",
+      message: "The amount is required greater than zero",
+      position: "topRight"
+    });
+    return false;
+  } else if (firstName.trim().length === 0) {
+    iziToast.error({
+      title: "Error",
+      message: "The first name field is required",
+      position: "topRight"
+    });
+    return false;
+  } else if (LastName.trim().length === 0) {
+    iziToast.error({
+      title: "Error",
+      message: "The last name field is required",
+      position: "topRight"
+    });
+    return false;
+  }
+  $(this).addClass("disabled");
+  $(".donate-btn").text(Lang.get("js.please_wait"));
+  $.ajax({
+    type: "GET",
+    url: route("paypal.init"),
+    data: {
+      amount: parseFloat($("#amount").val()),
+      currency_code: $("#currencyCode").val(),
+      campaign_id: campaignId,
+      first_name: firstName,
+      last_name: LastName,
+      email: email
+    },
+    success: function success(result) {
+      if (result.link) {
+        window.location.href = result.link;
+      }
+      if (result.statusCode === 201) {
+        var redirectTo = "";
+        $.each(result.result.links, function (key, val) {
+          if (val.rel == "approve") {
+            redirectTo = val.href;
+          }
+        });
+        location.href = redirectTo;
+      }
+    },
+    error: function error(_error) {
+      iziToast.error({
+        title: "Error",
+        message: _error.responseJSON.message,
+        position: "topRight"
+      });
+    },
+    complete: function complete() {}
+  });
+});
+listenClick(".copy-vcard-clipboard", function () {
+  var vcardId = $(this).data("id");
+  var $temp = $("<input>");
+  $(".modal-body").append($temp);
+  $temp.val($("#vcardUrlCopy" + vcardId).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+  displaySuccessMessage(Lang.get("js.copied_successfully"));
+});
+
+// $(document).ready(function() {
+// Configure/customize these variables.
+var showChar = 80; // How many characters are shown by default
+var ellipsestext = "...";
+var moretext = "Show more";
+var lesstext = "Show less";
+
+// $('.more').each(function (key) {
+// var content = $(this).html()
+
+// if (content.length > showChar) {
+
+//     var c = content.substr(0, showChar)
+//     var h = content.substr(showChar, content.length - showChar)
+
+// var html = c + '<span class="moreellipses">' + ellipsestext +
+//     '&nbsp;</span><span class="morecontent"><span>' + h +
+//     '</span>&nbsp;&nbsp;<a class="morelink text-decoration-none fw-bold">' +
+//     moretext + '</a></span>'
+//    var html =  '<p>' + c +  '<span id="dots-'+ key +'">...</span><span class="d-none" id="moreContent-'+ key +'">' + h  + '</span>&nbsp;<a href="javascript:void(0)" data-id="'+ key +'" class="toggle-description toggle-description-'+ key +' text-primary text-decoration-none" id="myBtn-'+ key +'">Show more</a></p>';
+
+//     $(this).html(html)
+// }
+
+// })
+
+listenClick(".toggle-description", function () {
+  var index = $(this).attr("data-id");
+  var dots = $("#dots-" + index);
+  var moreText = $("#moreContent-" + index);
+  var btnText = $("#myBtn-" + index);
+  if (moreText.hasClass("d-none")) {
+    moreText.removeClass("d-none");
+    dots.addClass("d-none");
+    btnText.html("Show less");
+  } else {
+    dots.removeClass("d-none");
+    moreText.addClass("d-none");
+    btnText.html("Show More");
+  }
+});
+$(".morelink").click(function () {
+  if ($(this).hasClass("less")) {
+    $(this).removeClass("less");
+    $(this).html(moretext);
+  } else {
+    $(this).addClass("less");
+    $(this).html(lesstext);
+  }
+  $(this).parent().prev().toggle();
+  $(this).prev().toggle();
+  return false;
+});
+$(".next-arrow , .prev-arrow").click(function () {
+  $(".morelink").removeClass("less");
+  $(".morelink").html(moretext);
+  $(".morecontent span").css("display", "none");
+});
+$(".testimonial-slider, .testimonials-section, .testimonial-box").on("swipe", function () {
+  $(".morelink").removeClass("less");
+  $(".morelink").html(moretext);
+  $(".morecontent span").css("display", "none");
+});
+$(".testimonial-slider, .testimonials-section, .testimonial-box, .testimonial-card, .testimonial-vcard").on("beforeChange", function () {
+  $(".morelink").removeClass("less");
+  $(".morelink").html(moretext);
+  $(".morecontent span").css("display", "none");
+});
+listenClick(".share-to-wp-btn", function () {
+  var number = $("#wpNumber");
+  if (number.hasClass("d-none")) {
+    $(".underline").css("transition", "all 0.5s linear");
+    number.removeClass("d-none");
+  } else {
+    $(".underline").css("transition", "none");
+    number.addClass("d-none");
+    $(".share-wp-btn").addClass("d-none");
+    number.val("");
+  }
+});
+listenClick(".bars-btn", function () {
+  $(".sub-btn").fadeToggle();
+  var sub_btn = $(".sub-btn");
+  if (sub_btn.hasClass("d-none")) {
+    sub_btn.removeClass("d-none");
+  }
+});
+listenClick(".bars-btn", function () {
+  var os = navigator.platform;
+  if (os == "MacIntel" || "ios" || 0) {
+    $("#videobtn").removeClass("d-none");
+  }
+});
+listenClick("#videobtn", function () {
+  window.location.href = "facetime://";
+});
+listenClick(".share-wp-btn", function () {
+  var number = $("#wpNumber").val();
+  var url = "https://wa.me/" + number + "?text=" + document.URL;
+  $("#wpNumber").val("");
+  $(".vcard11-input").val("");
+  $(".share-wp-btn").addClass("d-none");
+  window.open(url, "_blank");
+});
+$(document).on("keyup", "#wpNumber", function () {
+  var btn = $(".share-wp-btn");
+  if ($(this).val().length > 0) {
+    btn.removeClass("d-none");
+  } else {
+    btn.addClass("d-none");
+  }
+});
+listenClick(".buy-product", function (e) {
+  e.preventDefault();
+  $("#productPaymentMethod").select2({
+    dropdownParent: $("#buyProductModal")
+  });
+  var id = $(this).attr("data-id");
+  $("#productId").val(id);
+  $("#price").text($(".product-price-" + id).text());
+  $("#buyProductModal").modal("show");
+});
+listenChange('#productPaymentMethod', function () {
+  var value = $(this).val();
+  if (value == 3)
+    // if  Manually payment method
+    {
+      $('.manual-payment-guide').removeClass('d-none');
+    } else {
+    $('.manual-payment-guide').addClass('d-none');
+  }
+});
+listenSubmit("#productBuyForm", function (event) {
+  event.preventDefault();
+  $("#buyProductBtn").attr("disabled", true);
+  $.ajax({
+    url: route("buy.product"),
+    type: "POST",
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        if (result.data.payment_method == 4) {
+          if (result.data[0].original.link) {
+            window.location.href = result.data[0].original.link;
+          }
+        }
+        if (result.data.payment_method == 5) {
+          window.location.href = result.data[0];
+        }
+        if (result.data.payment_method == 7 || result.data.payment_method == 8 || result.data.payment_method == 11) {
+          window.location.href = result.data[0];
+        }
+        if (!isEmpty(result.data)) {
+          if (result.data.payment_method == 1) {
+            var sessionId = result.data[0].sessionId;
+            stripe.redirectToCheckout({
+              sessionId: sessionId
+            });
+          }
+          if (result.data[0].payment_method == 6) {
+            var _result$data$ = result.data[0],
+              id = _result$data$.id,
+              amount = _result$data$.amount,
+              name = _result$data$.name,
+              email = _result$data$.email,
+              contact = _result$data$.contact;
+            if (result.data[0]) {
+              var _result$data$2 = result.data[0],
+                _id = _result$data$2.id,
+                _amount = _result$data$2.amount,
+                _name = _result$data$2.name,
+                _email = _result$data$2.email,
+                _contact = _result$data$2.contact;
+              options.amount = _amount;
+              options.order_id = _id;
+              options.prefill = {
+                name: _name,
+                email: _email,
+                contact: _contact
+              };
+              var razorPay = new Razorpay(options);
+              razorPay.open();
+              razorPay.on("product.payment.failed");
+              return false;
+            }
+          }
+          if (result.data.payment_method == 2) {
+            if (result.data[0].original.link) {
+              window.location.href = result.data[0].original.link;
+            }
+            if (result.data[0].original.statusCode === 201) {
+              var redirectTo = "";
+              $.each(result.data[0].original.result.links, function (key, val) {
+                if (val.rel == "approve") {
+                  redirectTo = val.href;
+                }
+              });
+              location.href = redirectTo;
+            }
+          }
+          if (result.data.payment_method == 9 && result.data[0].id) {
+            productMercadoPagoPublicKey.checkout({
+              preference: {
+                id: result.data[0].id
+              },
+              autoOpen: true
+            });
+          }
+
+          // if (result.data.payment_method == 10) {
+          //     window.location.href = result.data[0];
+          // }
+        }
+
+        displaySuccessMessage(result.message);
+        $("#productBuyForm")[0].reset();
+        $("#buyProductModal").modal("hide");
+        $("#buyProductBtn").attr("disabled", false);
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+      $("#buyProductBtn").attr("disabled", false);
+    }
+  });
+});
+listenHiddenBsModal('#buyProductModal', function () {
+  resetModalForm('#productBuyForm');
+});
+window.onload = function () {
+  var currentPageUrl = window.location.href;
+  $.ajax({
+    url: route("getCookie"),
+    type: "GET",
+    data: {
+      url: currentPageUrl
+    },
+    success: function success(result) {
+      if (result.success) {
+        setTimeout(function () {
+          if (document.cookie.includes("newsletter_popup")) {
+            $('#newsLatterModal').modal('hide');
+          } else {
+            $('#newsLatterModal').modal('show');
+          }
+        }, result.data);
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+};
+listenClick('#closeNewsLatterModal', function () {
+  $('#newsLatterModal').modal('hide');
+});
+listenHiddenBsModal("#newsLatterModal", function () {
+  var now = new Date();
+  var expires = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  document.cookie = "newsletter_popup=2; expires=" + expires.toUTCString();
+});
+document.addEventListener("DOMContentLoaded", function () {
+  $('#reelContent').addClass('d-none');
+  $('#reelContent').removeClass('d-block');
+});
+listenClick('.postbtn', function () {
+  $('#postContent').addClass('d-block');
+  $('#postContent').removeClass('d-none');
+  $('#reelContent').addClass('d-none');
+  $('#reelContent').removeClass('d-block');
+});
+listenClick('.reelsbtn', function () {
+  $('#postContent').addClass('d-none');
+  $('#postContent').removeClass('d-block');
+  $('#reelContent').removeClass('d-none');
+  $('#reelContent').addClass('d-block');
+});
+listenClick(".banner-close", function () {
+  $(".support-banner").addClass("d-none");
+});
+listenClick(".pwa-close", function () {
+  $(".pwa-support").addClass("d-none");
+});
+
+// setSubscription popup
+
+//     var playerId = '';
+//     function OneSignalFunction() {
+//         window.OneSignal = window.OneSignal || [];
+//         OneSignal.push(function () {
+//             OneSignal.init({
+//                 appId: oneSignalAppId,
+//             });
+
+//             window.OneSignal.getUserId(function (userId) {
+//                 playerId = userId;
+//                 console.log('Player id is : ' + playerId);
+//                 if (playerId) {
+//                     console.log("Calling")
+//                     setTimeout(function () {
+//                         updateWebPushNotification(playerId)
+//                     }, 1000);
+
+//                 }
+//             });
+
+//             OneSignal.isPushNotificationsEnabled(function (isEnabled) {
+//                 if (isEnabled) {
+//                     return;
+//                 }
+//                 OneSignal.showSlidedownPrompt({ force: true });
+//             });
+
+//             OneSignal.on('popoverCancelClick', function (promptClickResult) {
+//                 console.log('popoverCancelClick');
+//                 OneSignal.setSubscription(false);
+//             });
+
+//             OneSignal.on('popoverAllowClick', function (promptClickResult) {
+//                 console.log('popoverAllowClick');
+
+//                 OneSignal.setSubscription(true);
+//                 setTimeout(function () {
+//                     window.location.reload();
+//                 }, 8000)
+//             });
+
+//         });
+//     }
+
+// function updateWebPushNotification(playerID, subscribe = false) {
+//     /** Change Web notification Status */
+//     let data = {};
+//     data.subscribe = subscribe;
+//     data.player_id = playerID;
+//     data.vcard_alias = window.location.pathname.replace('/', '');
+
+//     if (!playerID) {
+//         return;
+//     }
+
+//     $.ajax({
+//         headers: { 'X-CSRF-TOKEN': $('meta[name="csrf_token"]').attr('content') },
+//         url: route('subscribe.vcard'),
+//         type: 'post',
+//         data: data,
+//         success: function (result) {
+//             if (result.success) {
+//                 // if (reload) {
+//                 //     setTimeout(function () {
+//                 //         location.reload(); // need timeout here, because we can't direct reload while one signal is processing its data
+//                 //     }, 3000);
+//                 // }
+//                 // $('#editProfileModal').modal('hide');
+//             }
+//         },
+//         error: function (result) {
+//             // swal({
+//             //     title: 'Subscribe Vcard',
+//             //     text: 'Stay up-to-date! Click to uncover the latest update - Simple Tap',
+//             //     buttons: {
+//             //         confirm:Lang.get('Yes'),
+//             //         cancel: Lang.get('No'),
+//             //     },
+//             //     reverseButtons: true,
+//             //     icon: 'assets/img/aboutemail.png',
+//             //     }).then(function (success) {
+//             //         if (success) {
+//             //             updateWebPushNotification(playerID, true)
+//             //         }
+//             //     });
+//         },
+//     });
+// }
+
+document.addEventListener("DOMContentLoaded", function () {
+  if (userlanguage == 'Arabic' || userlanguage == 'Persian') {
+    var languageBtn = $('.language-btn');
+    // languageBtn.append('dir', 'rtl');
+    languageBtn.removeClass('end-0');
+    languageBtn.addClass('start-0');
+  }
+});
+$(document).on('click', '.auth-contact-btn', function (event) {
+  event.preventDefault();
+  var actionUrl = $(this).data('action');
+  if (actionUrl === 'show-modal') {
+    $('#askContactDetailFormModel').modal('show');
+  } else {
+    $('#askContactDetailForm').attr('action', actionUrl);
+    $('#askContactDetailForm').submit();
+  }
+});
+listenClick('.ask-contact-detail-form', function () {
+  $('#askContactDetailFormModel').modal('show');
+});
+listenSubmit("#askContactDetailForm", function (event) {
+  event.preventDefault();
+  var vcard_id = $("#vcard_id").val();
+  $.ajax({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    url: route("contact-request.store", {
+      "alias": vcardAlias
+    }),
+    type: "POST",
+    data: $(this).serialize(),
+    success: function success(result) {
+      $("#askContactDetailForm")[0].reset();
+      $("#askContactDetailFormModel").modal("hide");
+      window.location.href = route('add-contact', vcard_id);
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+});
+function loadPhoneInput() {
+  var phoneInput = document.querySelector("#contactrPhone");
+  var regionCodeInput = document.querySelector("#prefix_code");
+  if (phoneInput) {
+    var iti = window.intlTelInput(phoneInput, {
+      initialCountry: defaultCountryCodeValue,
+      preferredCountries: ["us", "gb", "in"],
+      separateDialCode: true
+    });
+    var currentCountryData = iti.getSelectedCountryData();
+    regionCodeInput.value = currentCountryData.dialCode;
+    phoneInput.addEventListener("countrychange", function () {
+      var countryData = iti.getSelectedCountryData();
+      regionCodeInput.value = countryData.dialCode;
+    });
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/flatpickr/dist/l10n/index.js":
+/*!***************************************************!*\
+  !*** ./node_modules/flatpickr/dist/l10n/index.js ***!
+  \***************************************************/
+/***/ (function(__unused_webpack_module, exports) {
+
+(function (global, factory) {
+     true ? factory(exports) :
+    0;
+}(this, (function (exports) { 'use strict';
+
+    /*! *****************************************************************************
+    Copyright (c) Microsoft Corporation.
+
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
+
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
+    ***************************************************************************** */
+
+    var __assign = function() {
+        __assign = Object.assign || function __assign(t) {
+            for (var s, i = 1, n = arguments.length; i < n; i++) {
+                s = arguments[i];
+                for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+            return t;
+        };
+        return __assign.apply(this, arguments);
+    };
+
+    var fp = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Arabic = {
+        weekdays: {
+            shorthand: ["أحد", "اثنين", "ثلاثاء", "أربعاء", "خميس", "جمعة", "سبت"],
+            longhand: [
+                "الأحد",
+                "الاثنين",
+                "الثلاثاء",
+                "الأربعاء",
+                "الخميس",
+                "الجمعة",
+                "السبت",
+            ],
+        },
+        months: {
+            shorthand: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+            longhand: [
+                "يناير",
+                "فبراير",
+                "مارس",
+                "أبريل",
+                "مايو",
+                "يونيو",
+                "يوليو",
+                "أغسطس",
+                "سبتمبر",
+                "أكتوبر",
+                "نوفمبر",
+                "ديسمبر",
+            ],
+        },
+        firstDayOfWeek: 6,
+        rangeSeparator: " إلى ",
+        weekAbbreviation: "Wk",
+        scrollTitle: "قم بالتمرير للزيادة",
+        toggleTitle: "اضغط للتبديل",
+        amPM: ["ص", "م"],
+        yearAriaLabel: "سنة",
+        monthAriaLabel: "شهر",
+        hourAriaLabel: "ساعة",
+        minuteAriaLabel: "دقيقة",
+        time_24hr: false,
+    };
+    fp.l10ns.ar = Arabic;
+    fp.l10ns;
+
+    var fp$1 = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Austria = {
+        weekdays: {
+            shorthand: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+            longhand: [
+                "Sonntag",
+                "Montag",
+                "Dienstag",
+                "Mittwoch",
+                "Donnerstag",
+                "Freitag",
+                "Samstag",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jän",
+                "Feb",
+                "Mär",
+                "Apr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Dez",
+            ],
+            longhand: [
+                "Jänner",
+                "Februar",
+                "März",
+                "April",
+                "Mai",
+                "Juni",
+                "Juli",
+                "August",
+                "September",
+                "Oktober",
+                "November",
+                "Dezember",
+            ],
+        },
+        firstDayOfWeek: 1,
+        weekAbbreviation: "KW",
+        rangeSeparator: " bis ",
+        scrollTitle: "Zum Ändern scrollen",
+        toggleTitle: "Zum Umschalten klicken",
+        time_24hr: true,
+    };
+    fp$1.l10ns.at = Austria;
+    fp$1.l10ns;
+
+    var fp$2 = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Azerbaijan = {
+        weekdays: {
+            shorthand: ["B.", "B.e.", "Ç.a.", "Ç.", "C.a.", "C.", "Ş."],
+            longhand: [
+                "Bazar",
+                "Bazar ertəsi",
+                "Çərşənbə axşamı",
+                "Çərşənbə",
+                "Cümə axşamı",
+                "Cümə",
+                "Şənbə",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Yan",
+                "Fev",
+                "Mar",
+                "Apr",
+                "May",
+                "İyn",
+                "İyl",
+                "Avq",
+                "Sen",
+                "Okt",
+                "Noy",
+                "Dek",
+            ],
+            longhand: [
+                "Yanvar",
+                "Fevral",
+                "Mart",
+                "Aprel",
+                "May",
+                "İyun",
+                "İyul",
+                "Avqust",
+                "Sentyabr",
+                "Oktyabr",
+                "Noyabr",
+                "Dekabr",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return ".";
+        },
+        rangeSeparator: " - ",
+        weekAbbreviation: "Hf",
+        scrollTitle: "Artırmaq üçün sürüşdürün",
+        toggleTitle: "Aç / Bağla",
+        amPM: ["GƏ", "GS"],
+        time_24hr: true,
+    };
+    fp$2.l10ns.az = Azerbaijan;
+    fp$2.l10ns;
+
+    var fp$3 = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Belarusian = {
+        weekdays: {
+            shorthand: ["Нд", "Пн", "Аў", "Ср", "Чц", "Пт", "Сб"],
+            longhand: [
+                "Нядзеля",
+                "Панядзелак",
+                "Аўторак",
+                "Серада",
+                "Чацвер",
+                "Пятніца",
+                "Субота",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Сту",
+                "Лют",
+                "Сак",
+                "Кра",
+                "Тра",
+                "Чэр",
+                "Ліп",
+                "Жні",
+                "Вер",
+                "Кас",
+                "Ліс",
+                "Сне",
+            ],
+            longhand: [
+                "Студзень",
+                "Люты",
+                "Сакавік",
+                "Красавік",
+                "Травень",
+                "Чэрвень",
+                "Ліпень",
+                "Жнівень",
+                "Верасень",
+                "Кастрычнік",
+                "Лістапад",
+                "Снежань",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+        rangeSeparator: " — ",
+        weekAbbreviation: "Тыд.",
+        scrollTitle: "Пракруціце для павелічэння",
+        toggleTitle: "Націсніце для пераключэння",
+        amPM: ["ДП", "ПП"],
+        yearAriaLabel: "Год",
+        time_24hr: true,
+    };
+    fp$3.l10ns.be = Belarusian;
+    fp$3.l10ns;
+
+    var fp$4 = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Bosnian = {
+        firstDayOfWeek: 1,
+        weekdays: {
+            shorthand: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
+            longhand: [
+                "Nedjelja",
+                "Ponedjeljak",
+                "Utorak",
+                "Srijeda",
+                "Četvrtak",
+                "Petak",
+                "Subota",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Maj",
+                "Jun",
+                "Jul",
+                "Avg",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Dec",
+            ],
+            longhand: [
+                "Januar",
+                "Februar",
+                "Mart",
+                "April",
+                "Maj",
+                "Juni",
+                "Juli",
+                "Avgust",
+                "Septembar",
+                "Oktobar",
+                "Novembar",
+                "Decembar",
+            ],
+        },
+        time_24hr: true,
+    };
+    fp$4.l10ns.bs = Bosnian;
+    fp$4.l10ns;
+
+    var fp$5 = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Bulgarian = {
+        weekdays: {
+            shorthand: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+            longhand: [
+                "Неделя",
+                "Понеделник",
+                "Вторник",
+                "Сряда",
+                "Четвъртък",
+                "Петък",
+                "Събота",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Яну",
+                "Фев",
+                "Март",
+                "Апр",
+                "Май",
+                "Юни",
+                "Юли",
+                "Авг",
+                "Сеп",
+                "Окт",
+                "Ное",
+                "Дек",
+            ],
+            longhand: [
+                "Януари",
+                "Февруари",
+                "Март",
+                "Април",
+                "Май",
+                "Юни",
+                "Юли",
+                "Август",
+                "Септември",
+                "Октомври",
+                "Ноември",
+                "Декември",
+            ],
+        },
+        time_24hr: true,
+        firstDayOfWeek: 1,
+    };
+    fp$5.l10ns.bg = Bulgarian;
+    fp$5.l10ns;
+
+    var fp$6 = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Bangla = {
+        weekdays: {
+            shorthand: ["রবি", "সোম", "মঙ্গল", "বুধ", "বৃহস্পতি", "শুক্র", "শনি"],
+            longhand: [
+                "রবিবার",
+                "সোমবার",
+                "মঙ্গলবার",
+                "বুধবার",
+                "বৃহস্পতিবার",
+                "শুক্রবার",
+                "শনিবার",
+            ],
+        },
+        months: {
+            shorthand: [
+                "জানু",
+                "ফেব্রু",
+                "মার্চ",
+                "এপ্রিল",
+                "মে",
+                "জুন",
+                "জুলাই",
+                "আগ",
+                "সেপ্টে",
+                "অক্টো",
+                "নভে",
+                "ডিসে",
+            ],
+            longhand: [
+                "জানুয়ারী",
+                "ফেব্রুয়ারী",
+                "মার্চ",
+                "এপ্রিল",
+                "মে",
+                "জুন",
+                "জুলাই",
+                "আগস্ট",
+                "সেপ্টেম্বর",
+                "অক্টোবর",
+                "নভেম্বর",
+                "ডিসেম্বর",
+            ],
+        },
+    };
+    fp$6.l10ns.bn = Bangla;
+    fp$6.l10ns;
+
+    var fp$7 = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Catalan = {
+        weekdays: {
+            shorthand: ["Dg", "Dl", "Dt", "Dc", "Dj", "Dv", "Ds"],
+            longhand: [
+                "Diumenge",
+                "Dilluns",
+                "Dimarts",
+                "Dimecres",
+                "Dijous",
+                "Divendres",
+                "Dissabte",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Gen",
+                "Febr",
+                "Març",
+                "Abr",
+                "Maig",
+                "Juny",
+                "Jul",
+                "Ag",
+                "Set",
+                "Oct",
+                "Nov",
+                "Des",
+            ],
+            longhand: [
+                "Gener",
+                "Febrer",
+                "Març",
+                "Abril",
+                "Maig",
+                "Juny",
+                "Juliol",
+                "Agost",
+                "Setembre",
+                "Octubre",
+                "Novembre",
+                "Desembre",
+            ],
+        },
+        ordinal: function (nth) {
+            var s = nth % 100;
+            if (s > 3 && s < 21)
+                return "è";
+            switch (s % 10) {
+                case 1:
+                    return "r";
+                case 2:
+                    return "n";
+                case 3:
+                    return "r";
+                case 4:
+                    return "t";
+                default:
+                    return "è";
+            }
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " a ",
+        time_24hr: true,
+    };
+    fp$7.l10ns.cat = fp$7.l10ns.ca = Catalan;
+    fp$7.l10ns;
+
+    var fp$8 = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Kurdish = {
+        weekdays: {
+            shorthand: [
+                "یەکشەممە",
+                "دووشەممە",
+                "سێشەممە",
+                "چوارشەممە",
+                "پێنجشەممە",
+                "هەینی",
+                "شەممە",
+            ],
+            longhand: [
+                "یەکشەممە",
+                "دووشەممە",
+                "سێشەممە",
+                "چوارشەممە",
+                "پێنجشەممە",
+                "هەینی",
+                "شەممە",
+            ],
+        },
+        months: {
+            shorthand: [
+                "ڕێبەندان",
+                "ڕەشەمە",
+                "نەورۆز",
+                "گوڵان",
+                "جۆزەردان",
+                "پووشپەڕ",
+                "گەلاوێژ",
+                "خەرمانان",
+                "ڕەزبەر",
+                "گەڵاڕێزان",
+                "سەرماوەز",
+                "بەفرانبار",
+            ],
+            longhand: [
+                "ڕێبەندان",
+                "ڕەشەمە",
+                "نەورۆز",
+                "گوڵان",
+                "جۆزەردان",
+                "پووشپەڕ",
+                "گەلاوێژ",
+                "خەرمانان",
+                "ڕەزبەر",
+                "گەڵاڕێزان",
+                "سەرماوەز",
+                "بەفرانبار",
+            ],
+        },
+        firstDayOfWeek: 6,
+        ordinal: function () {
+            return "";
+        },
+    };
+    fp$8.l10ns.ckb = Kurdish;
+    fp$8.l10ns;
+
+    var fp$9 = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Czech = {
+        weekdays: {
+            shorthand: ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"],
+            longhand: [
+                "Neděle",
+                "Pondělí",
+                "Úterý",
+                "Středa",
+                "Čtvrtek",
+                "Pátek",
+                "Sobota",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Led",
+                "Ún",
+                "Bře",
+                "Dub",
+                "Kvě",
+                "Čer",
+                "Čvc",
+                "Srp",
+                "Zář",
+                "Říj",
+                "Lis",
+                "Pro",
+            ],
+            longhand: [
+                "Leden",
+                "Únor",
+                "Březen",
+                "Duben",
+                "Květen",
+                "Červen",
+                "Červenec",
+                "Srpen",
+                "Září",
+                "Říjen",
+                "Listopad",
+                "Prosinec",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return ".";
+        },
+        rangeSeparator: " do ",
+        weekAbbreviation: "Týd.",
+        scrollTitle: "Rolujte pro změnu",
+        toggleTitle: "Přepnout dopoledne/odpoledne",
+        amPM: ["dop.", "odp."],
+        yearAriaLabel: "Rok",
+        time_24hr: true,
+    };
+    fp$9.l10ns.cs = Czech;
+    fp$9.l10ns;
+
+    var fp$a = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Welsh = {
+        weekdays: {
+            shorthand: ["Sul", "Llun", "Maw", "Mer", "Iau", "Gwe", "Sad"],
+            longhand: [
+                "Dydd Sul",
+                "Dydd Llun",
+                "Dydd Mawrth",
+                "Dydd Mercher",
+                "Dydd Iau",
+                "Dydd Gwener",
+                "Dydd Sadwrn",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Ion",
+                "Chwef",
+                "Maw",
+                "Ebr",
+                "Mai",
+                "Meh",
+                "Gorff",
+                "Awst",
+                "Medi",
+                "Hyd",
+                "Tach",
+                "Rhag",
+            ],
+            longhand: [
+                "Ionawr",
+                "Chwefror",
+                "Mawrth",
+                "Ebrill",
+                "Mai",
+                "Mehefin",
+                "Gorffennaf",
+                "Awst",
+                "Medi",
+                "Hydref",
+                "Tachwedd",
+                "Rhagfyr",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function (nth) {
+            if (nth === 1)
+                return "af";
+            if (nth === 2)
+                return "ail";
+            if (nth === 3 || nth === 4)
+                return "ydd";
+            if (nth === 5 || nth === 6)
+                return "ed";
+            if ((nth >= 7 && nth <= 10) ||
+                nth == 12 ||
+                nth == 15 ||
+                nth == 18 ||
+                nth == 20)
+                return "fed";
+            if (nth == 11 ||
+                nth == 13 ||
+                nth == 14 ||
+                nth == 16 ||
+                nth == 17 ||
+                nth == 19)
+                return "eg";
+            if (nth >= 21 && nth <= 39)
+                return "ain";
+            // Inconclusive.
+            return "";
+        },
+        time_24hr: true,
+    };
+    fp$a.l10ns.cy = Welsh;
+    fp$a.l10ns;
+
+    var fp$b = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Danish = {
+        weekdays: {
+            shorthand: ["søn", "man", "tir", "ons", "tors", "fre", "lør"],
+            longhand: [
+                "søndag",
+                "mandag",
+                "tirsdag",
+                "onsdag",
+                "torsdag",
+                "fredag",
+                "lørdag",
+            ],
+        },
+        months: {
+            shorthand: [
+                "jan",
+                "feb",
+                "mar",
+                "apr",
+                "maj",
+                "jun",
+                "jul",
+                "aug",
+                "sep",
+                "okt",
+                "nov",
+                "dec",
+            ],
+            longhand: [
+                "januar",
+                "februar",
+                "marts",
+                "april",
+                "maj",
+                "juni",
+                "juli",
+                "august",
+                "september",
+                "oktober",
+                "november",
+                "december",
+            ],
+        },
+        ordinal: function () {
+            return ".";
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " til ",
+        weekAbbreviation: "uge",
+        time_24hr: true,
+    };
+    fp$b.l10ns.da = Danish;
+    fp$b.l10ns;
+
+    var fp$c = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var German = {
+        weekdays: {
+            shorthand: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
+            longhand: [
+                "Sonntag",
+                "Montag",
+                "Dienstag",
+                "Mittwoch",
+                "Donnerstag",
+                "Freitag",
+                "Samstag",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mär",
+                "Apr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Dez",
+            ],
+            longhand: [
+                "Januar",
+                "Februar",
+                "März",
+                "April",
+                "Mai",
+                "Juni",
+                "Juli",
+                "August",
+                "September",
+                "Oktober",
+                "November",
+                "Dezember",
+            ],
+        },
+        firstDayOfWeek: 1,
+        weekAbbreviation: "KW",
+        rangeSeparator: " bis ",
+        scrollTitle: "Zum Ändern scrollen",
+        toggleTitle: "Zum Umschalten klicken",
+        time_24hr: true,
+    };
+    fp$c.l10ns.de = German;
+    fp$c.l10ns;
+
+    var english = {
+        weekdays: {
+            shorthand: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            longhand: [
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+                "Saturday",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+            ],
+            longhand: [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+            ],
+        },
+        daysInMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
+        firstDayOfWeek: 0,
+        ordinal: function (nth) {
+            var s = nth % 100;
+            if (s > 3 && s < 21)
+                return "th";
+            switch (s % 10) {
+                case 1:
+                    return "st";
+                case 2:
+                    return "nd";
+                case 3:
+                    return "rd";
+                default:
+                    return "th";
+            }
+        },
+        rangeSeparator: " to ",
+        weekAbbreviation: "Wk",
+        scrollTitle: "Scroll to increment",
+        toggleTitle: "Click to toggle",
+        amPM: ["AM", "PM"],
+        yearAriaLabel: "Year",
+        monthAriaLabel: "Month",
+        hourAriaLabel: "Hour",
+        minuteAriaLabel: "Minute",
+        time_24hr: false,
+    };
+
+    var fp$d = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Esperanto = {
+        firstDayOfWeek: 1,
+        rangeSeparator: " ĝis ",
+        weekAbbreviation: "Sem",
+        scrollTitle: "Rulumu por pligrandigi la valoron",
+        toggleTitle: "Klaku por ŝalti",
+        weekdays: {
+            shorthand: ["Dim", "Lun", "Mar", "Mer", "Ĵaŭ", "Ven", "Sab"],
+            longhand: [
+                "dimanĉo",
+                "lundo",
+                "mardo",
+                "merkredo",
+                "ĵaŭdo",
+                "vendredo",
+                "sabato",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Maj",
+                "Jun",
+                "Jul",
+                "Aŭg",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Dec",
+            ],
+            longhand: [
+                "januaro",
+                "februaro",
+                "marto",
+                "aprilo",
+                "majo",
+                "junio",
+                "julio",
+                "aŭgusto",
+                "septembro",
+                "oktobro",
+                "novembro",
+                "decembro",
+            ],
+        },
+        ordinal: function () {
+            return "-a";
+        },
+        time_24hr: true,
+    };
+    fp$d.l10ns.eo = Esperanto;
+    fp$d.l10ns;
+
+    var fp$e = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Spanish = {
+        weekdays: {
+            shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+            longhand: [
+                "Domingo",
+                "Lunes",
+                "Martes",
+                "Miércoles",
+                "Jueves",
+                "Viernes",
+                "Sábado",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Ene",
+                "Feb",
+                "Mar",
+                "Abr",
+                "May",
+                "Jun",
+                "Jul",
+                "Ago",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dic",
+            ],
+            longhand: [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre",
+            ],
+        },
+        ordinal: function () {
+            return "º";
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " a ",
+        time_24hr: true,
+    };
+    fp$e.l10ns.es = Spanish;
+    fp$e.l10ns;
+
+    var fp$f = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Estonian = {
+        weekdays: {
+            shorthand: ["P", "E", "T", "K", "N", "R", "L"],
+            longhand: [
+                "Pühapäev",
+                "Esmaspäev",
+                "Teisipäev",
+                "Kolmapäev",
+                "Neljapäev",
+                "Reede",
+                "Laupäev",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jaan",
+                "Veebr",
+                "Märts",
+                "Apr",
+                "Mai",
+                "Juuni",
+                "Juuli",
+                "Aug",
+                "Sept",
+                "Okt",
+                "Nov",
+                "Dets",
+            ],
+            longhand: [
+                "Jaanuar",
+                "Veebruar",
+                "Märts",
+                "Aprill",
+                "Mai",
+                "Juuni",
+                "Juuli",
+                "August",
+                "September",
+                "Oktoober",
+                "November",
+                "Detsember",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return ".";
+        },
+        weekAbbreviation: "Näd",
+        rangeSeparator: " kuni ",
+        scrollTitle: "Keri, et suurendada",
+        toggleTitle: "Klõpsa, et vahetada",
+        time_24hr: true,
+    };
+    fp$f.l10ns.et = Estonian;
+    fp$f.l10ns;
+
+    var fp$g = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Persian = {
+        weekdays: {
+            shorthand: ["یک", "دو", "سه", "چهار", "پنج", "جمعه", "شنبه"],
+            longhand: [
+                "یک‌شنبه",
+                "دوشنبه",
+                "سه‌شنبه",
+                "چهارشنبه",
+                "پنچ‌شنبه",
+                "جمعه",
+                "شنبه",
+            ],
+        },
+        months: {
+            shorthand: [
+                "ژانویه",
+                "فوریه",
+                "مارس",
+                "آوریل",
+                "مه",
+                "ژوئن",
+                "ژوئیه",
+                "اوت",
+                "سپتامبر",
+                "اکتبر",
+                "نوامبر",
+                "دسامبر",
+            ],
+            longhand: [
+                "ژانویه",
+                "فوریه",
+                "مارس",
+                "آوریل",
+                "مه",
+                "ژوئن",
+                "ژوئیه",
+                "اوت",
+                "سپتامبر",
+                "اکتبر",
+                "نوامبر",
+                "دسامبر",
+            ],
+        },
+        firstDayOfWeek: 6,
+        ordinal: function () {
+            return "";
+        },
+    };
+    fp$g.l10ns.fa = Persian;
+    fp$g.l10ns;
+
+    var fp$h = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Finnish = {
+        firstDayOfWeek: 1,
+        weekdays: {
+            shorthand: ["su", "ma", "ti", "ke", "to", "pe", "la"],
+            longhand: [
+                "sunnuntai",
+                "maanantai",
+                "tiistai",
+                "keskiviikko",
+                "torstai",
+                "perjantai",
+                "lauantai",
+            ],
+        },
+        months: {
+            shorthand: [
+                "tammi",
+                "helmi",
+                "maalis",
+                "huhti",
+                "touko",
+                "kesä",
+                "heinä",
+                "elo",
+                "syys",
+                "loka",
+                "marras",
+                "joulu",
+            ],
+            longhand: [
+                "tammikuu",
+                "helmikuu",
+                "maaliskuu",
+                "huhtikuu",
+                "toukokuu",
+                "kesäkuu",
+                "heinäkuu",
+                "elokuu",
+                "syyskuu",
+                "lokakuu",
+                "marraskuu",
+                "joulukuu",
+            ],
+        },
+        ordinal: function () {
+            return ".";
+        },
+        time_24hr: true,
+    };
+    fp$h.l10ns.fi = Finnish;
+    fp$h.l10ns;
+
+    var fp$i = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Faroese = {
+        weekdays: {
+            shorthand: ["Sun", "Mán", "Týs", "Mik", "Hós", "Frí", "Ley"],
+            longhand: [
+                "Sunnudagur",
+                "Mánadagur",
+                "Týsdagur",
+                "Mikudagur",
+                "Hósdagur",
+                "Fríggjadagur",
+                "Leygardagur",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Des",
+            ],
+            longhand: [
+                "Januar",
+                "Februar",
+                "Mars",
+                "Apríl",
+                "Mai",
+                "Juni",
+                "Juli",
+                "August",
+                "Septembur",
+                "Oktobur",
+                "Novembur",
+                "Desembur",
+            ],
+        },
+        ordinal: function () {
+            return ".";
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " til ",
+        weekAbbreviation: "vika",
+        scrollTitle: "Rulla fyri at broyta",
+        toggleTitle: "Trýst fyri at skifta",
+        yearAriaLabel: "Ár",
+        time_24hr: true,
+    };
+    fp$i.l10ns.fo = Faroese;
+    fp$i.l10ns;
+
+    var fp$j = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var French = {
+        firstDayOfWeek: 1,
+        weekdays: {
+            shorthand: ["dim", "lun", "mar", "mer", "jeu", "ven", "sam"],
+            longhand: [
+                "dimanche",
+                "lundi",
+                "mardi",
+                "mercredi",
+                "jeudi",
+                "vendredi",
+                "samedi",
+            ],
+        },
+        months: {
+            shorthand: [
+                "janv",
+                "févr",
+                "mars",
+                "avr",
+                "mai",
+                "juin",
+                "juil",
+                "août",
+                "sept",
+                "oct",
+                "nov",
+                "déc",
+            ],
+            longhand: [
+                "janvier",
+                "février",
+                "mars",
+                "avril",
+                "mai",
+                "juin",
+                "juillet",
+                "août",
+                "septembre",
+                "octobre",
+                "novembre",
+                "décembre",
+            ],
+        },
+        ordinal: function (nth) {
+            if (nth > 1)
+                return "";
+            return "er";
+        },
+        rangeSeparator: " au ",
+        weekAbbreviation: "Sem",
+        scrollTitle: "Défiler pour augmenter la valeur",
+        toggleTitle: "Cliquer pour basculer",
+        time_24hr: true,
+    };
+    fp$j.l10ns.fr = French;
+    fp$j.l10ns;
+
+    var fp$k = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Greek = {
+        weekdays: {
+            shorthand: ["Κυ", "Δε", "Τρ", "Τε", "Πέ", "Πα", "Σά"],
+            longhand: [
+                "Κυριακή",
+                "Δευτέρα",
+                "Τρίτη",
+                "Τετάρτη",
+                "Πέμπτη",
+                "Παρασκευή",
+                "Σάββατο",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Ιαν",
+                "Φεβ",
+                "Μάρ",
+                "Απρ",
+                "Μάι",
+                "Ιούν",
+                "Ιούλ",
+                "Αύγ",
+                "Σεπ",
+                "Οκτ",
+                "Νοέ",
+                "Δεκ",
+            ],
+            longhand: [
+                "Ιανουάριος",
+                "Φεβρουάριος",
+                "Μάρτιος",
+                "Απρίλιος",
+                "Μάιος",
+                "Ιούνιος",
+                "Ιούλιος",
+                "Αύγουστος",
+                "Σεπτέμβριος",
+                "Οκτώβριος",
+                "Νοέμβριος",
+                "Δεκέμβριος",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+        weekAbbreviation: "Εβδ",
+        rangeSeparator: " έως ",
+        scrollTitle: "Μετακυλήστε για προσαύξηση",
+        toggleTitle: "Κάντε κλικ για αλλαγή",
+        amPM: ["ΠΜ", "ΜΜ"],
+        yearAriaLabel: "χρόνος",
+        monthAriaLabel: "μήνας",
+        hourAriaLabel: "ώρα",
+        minuteAriaLabel: "λεπτό",
+    };
+    fp$k.l10ns.gr = Greek;
+    fp$k.l10ns;
+
+    var fp$l = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Hebrew = {
+        weekdays: {
+            shorthand: ["א", "ב", "ג", "ד", "ה", "ו", "ש"],
+            longhand: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"],
+        },
+        months: {
+            shorthand: [
+                "ינו׳",
+                "פבר׳",
+                "מרץ",
+                "אפר׳",
+                "מאי",
+                "יוני",
+                "יולי",
+                "אוג׳",
+                "ספט׳",
+                "אוק׳",
+                "נוב׳",
+                "דצמ׳",
+            ],
+            longhand: [
+                "ינואר",
+                "פברואר",
+                "מרץ",
+                "אפריל",
+                "מאי",
+                "יוני",
+                "יולי",
+                "אוגוסט",
+                "ספטמבר",
+                "אוקטובר",
+                "נובמבר",
+                "דצמבר",
+            ],
+        },
+        rangeSeparator: " אל ",
+        time_24hr: true,
+    };
+    fp$l.l10ns.he = Hebrew;
+    fp$l.l10ns;
+
+    var fp$m = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Hindi = {
+        weekdays: {
+            shorthand: ["रवि", "सोम", "मंगल", "बुध", "गुरु", "शुक्र", "शनि"],
+            longhand: [
+                "रविवार",
+                "सोमवार",
+                "मंगलवार",
+                "बुधवार",
+                "गुरुवार",
+                "शुक्रवार",
+                "शनिवार",
+            ],
+        },
+        months: {
+            shorthand: [
+                "जन",
+                "फर",
+                "मार्च",
+                "अप्रेल",
+                "मई",
+                "जून",
+                "जूलाई",
+                "अग",
+                "सित",
+                "अक्ट",
+                "नव",
+                "दि",
+            ],
+            longhand: [
+                "जनवरी ",
+                "फरवरी",
+                "मार्च",
+                "अप्रेल",
+                "मई",
+                "जून",
+                "जूलाई",
+                "अगस्त ",
+                "सितम्बर",
+                "अक्टूबर",
+                "नवम्बर",
+                "दिसम्बर",
+            ],
+        },
+    };
+    fp$m.l10ns.hi = Hindi;
+    fp$m.l10ns;
+
+    var fp$n = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Croatian = {
+        firstDayOfWeek: 1,
+        weekdays: {
+            shorthand: ["Ned", "Pon", "Uto", "Sri", "Čet", "Pet", "Sub"],
+            longhand: [
+                "Nedjelja",
+                "Ponedjeljak",
+                "Utorak",
+                "Srijeda",
+                "Četvrtak",
+                "Petak",
+                "Subota",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Sij",
+                "Velj",
+                "Ožu",
+                "Tra",
+                "Svi",
+                "Lip",
+                "Srp",
+                "Kol",
+                "Ruj",
+                "Lis",
+                "Stu",
+                "Pro",
+            ],
+            longhand: [
+                "Siječanj",
+                "Veljača",
+                "Ožujak",
+                "Travanj",
+                "Svibanj",
+                "Lipanj",
+                "Srpanj",
+                "Kolovoz",
+                "Rujan",
+                "Listopad",
+                "Studeni",
+                "Prosinac",
+            ],
+        },
+        time_24hr: true,
+    };
+    fp$n.l10ns.hr = Croatian;
+    fp$n.l10ns;
+
+    var fp$o = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Hungarian = {
+        firstDayOfWeek: 1,
+        weekdays: {
+            shorthand: ["V", "H", "K", "Sz", "Cs", "P", "Szo"],
+            longhand: [
+                "Vasárnap",
+                "Hétfő",
+                "Kedd",
+                "Szerda",
+                "Csütörtök",
+                "Péntek",
+                "Szombat",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Már",
+                "Ápr",
+                "Máj",
+                "Jún",
+                "Júl",
+                "Aug",
+                "Szep",
+                "Okt",
+                "Nov",
+                "Dec",
+            ],
+            longhand: [
+                "Január",
+                "Február",
+                "Március",
+                "Április",
+                "Május",
+                "Június",
+                "Július",
+                "Augusztus",
+                "Szeptember",
+                "Október",
+                "November",
+                "December",
+            ],
+        },
+        ordinal: function () {
+            return ".";
+        },
+        weekAbbreviation: "Hét",
+        scrollTitle: "Görgessen",
+        toggleTitle: "Kattintson a váltáshoz",
+        rangeSeparator: " - ",
+        time_24hr: true,
+    };
+    fp$o.l10ns.hu = Hungarian;
+    fp$o.l10ns;
+
+    var fp$p = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Armenian = {
+        weekdays: {
+            shorthand: ["Կիր", "Երկ", "Երք", "Չրք", "Հնգ", "Ուրբ", "Շբթ"],
+            longhand: [
+                "Կիրակի",
+                "Եկուշաբթի",
+                "Երեքշաբթի",
+                "Չորեքշաբթի",
+                "Հինգշաբթի",
+                "Ուրբաթ",
+                "Շաբաթ",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Հնվ",
+                "Փտր",
+                "Մար",
+                "Ապր",
+                "Մայ",
+                "Հնս",
+                "Հլս",
+                "Օգս",
+                "Սեպ",
+                "Հոկ",
+                "Նմբ",
+                "Դեկ",
+            ],
+            longhand: [
+                "Հունվար",
+                "Փետրվար",
+                "Մարտ",
+                "Ապրիլ",
+                "Մայիս",
+                "Հունիս",
+                "Հուլիս",
+                "Օգոստոս",
+                "Սեպտեմբեր",
+                "Հոկտեմբեր",
+                "Նոյեմբեր",
+                "Դեկտեմբեր",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+        rangeSeparator: " — ",
+        weekAbbreviation: "ՇԲՏ",
+        scrollTitle: "Ոլորեք՝ մեծացնելու համար",
+        toggleTitle: "Սեղմեք՝ փոխելու համար",
+        amPM: ["ՄԿ", "ԿՀ"],
+        yearAriaLabel: "Տարի",
+        monthAriaLabel: "Ամիս",
+        hourAriaLabel: "Ժամ",
+        minuteAriaLabel: "Րոպե",
+        time_24hr: true,
+    };
+    fp$p.l10ns.hy = Armenian;
+    fp$p.l10ns;
+
+    var fp$q = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Indonesian = {
+        weekdays: {
+            shorthand: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
+            longhand: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Mei",
+                "Jun",
+                "Jul",
+                "Agu",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Des",
+            ],
+            longhand: [
+                "Januari",
+                "Februari",
+                "Maret",
+                "April",
+                "Mei",
+                "Juni",
+                "Juli",
+                "Agustus",
+                "September",
+                "Oktober",
+                "November",
+                "Desember",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+        time_24hr: true,
+        rangeSeparator: " - ",
+    };
+    fp$q.l10ns.id = Indonesian;
+    fp$q.l10ns;
+
+    var fp$r = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Icelandic = {
+        weekdays: {
+            shorthand: ["Sun", "Mán", "Þri", "Mið", "Fim", "Fös", "Lau"],
+            longhand: [
+                "Sunnudagur",
+                "Mánudagur",
+                "Þriðjudagur",
+                "Miðvikudagur",
+                "Fimmtudagur",
+                "Föstudagur",
+                "Laugardagur",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Maí",
+                "Jún",
+                "Júl",
+                "Ágú",
+                "Sep",
+                "Okt",
+                "Nóv",
+                "Des",
+            ],
+            longhand: [
+                "Janúar",
+                "Febrúar",
+                "Mars",
+                "Apríl",
+                "Maí",
+                "Júní",
+                "Júlí",
+                "Ágúst",
+                "September",
+                "Október",
+                "Nóvember",
+                "Desember",
+            ],
+        },
+        ordinal: function () {
+            return ".";
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " til ",
+        weekAbbreviation: "vika",
+        yearAriaLabel: "Ár",
+        time_24hr: true,
+    };
+    fp$r.l10ns.is = Icelandic;
+    fp$r.l10ns;
+
+    var fp$s = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Italian = {
+        weekdays: {
+            shorthand: ["Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab"],
+            longhand: [
+                "Domenica",
+                "Lunedì",
+                "Martedì",
+                "Mercoledì",
+                "Giovedì",
+                "Venerdì",
+                "Sabato",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Gen",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Mag",
+                "Giu",
+                "Lug",
+                "Ago",
+                "Set",
+                "Ott",
+                "Nov",
+                "Dic",
+            ],
+            longhand: [
+                "Gennaio",
+                "Febbraio",
+                "Marzo",
+                "Aprile",
+                "Maggio",
+                "Giugno",
+                "Luglio",
+                "Agosto",
+                "Settembre",
+                "Ottobre",
+                "Novembre",
+                "Dicembre",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () { return "°"; },
+        rangeSeparator: " al ",
+        weekAbbreviation: "Se",
+        scrollTitle: "Scrolla per aumentare",
+        toggleTitle: "Clicca per cambiare",
+        time_24hr: true,
+    };
+    fp$s.l10ns.it = Italian;
+    fp$s.l10ns;
+
+    var fp$t = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Japanese = {
+        weekdays: {
+            shorthand: ["日", "月", "火", "水", "木", "金", "土"],
+            longhand: [
+                "日曜日",
+                "月曜日",
+                "火曜日",
+                "水曜日",
+                "木曜日",
+                "金曜日",
+                "土曜日",
+            ],
+        },
+        months: {
+            shorthand: [
+                "1月",
+                "2月",
+                "3月",
+                "4月",
+                "5月",
+                "6月",
+                "7月",
+                "8月",
+                "9月",
+                "10月",
+                "11月",
+                "12月",
+            ],
+            longhand: [
+                "1月",
+                "2月",
+                "3月",
+                "4月",
+                "5月",
+                "6月",
+                "7月",
+                "8月",
+                "9月",
+                "10月",
+                "11月",
+                "12月",
+            ],
+        },
+        time_24hr: true,
+        rangeSeparator: " から ",
+        monthAriaLabel: "月",
+        amPM: ["午前", "午後"],
+        yearAriaLabel: "年",
+        hourAriaLabel: "時間",
+        minuteAriaLabel: "分",
+    };
+    fp$t.l10ns.ja = Japanese;
+    fp$t.l10ns;
+
+    var fp$u = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Georgian = {
+        weekdays: {
+            shorthand: ["კვ", "ორ", "სა", "ოთ", "ხუ", "პა", "შა"],
+            longhand: [
+                "კვირა",
+                "ორშაბათი",
+                "სამშაბათი",
+                "ოთხშაბათი",
+                "ხუთშაბათი",
+                "პარასკევი",
+                "შაბათი",
+            ],
+        },
+        months: {
+            shorthand: [
+                "იან",
+                "თებ",
+                "მარ",
+                "აპრ",
+                "მაი",
+                "ივნ",
+                "ივლ",
+                "აგვ",
+                "სექ",
+                "ოქტ",
+                "ნოე",
+                "დეკ",
+            ],
+            longhand: [
+                "იანვარი",
+                "თებერვალი",
+                "მარტი",
+                "აპრილი",
+                "მაისი",
+                "ივნისი",
+                "ივლისი",
+                "აგვისტო",
+                "სექტემბერი",
+                "ოქტომბერი",
+                "ნოემბერი",
+                "დეკემბერი",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+        rangeSeparator: " — ",
+        weekAbbreviation: "კვ.",
+        scrollTitle: "დასქროლეთ გასადიდებლად",
+        toggleTitle: "დააკლიკეთ გადართვისთვის",
+        amPM: ["AM", "PM"],
+        yearAriaLabel: "წელი",
+        time_24hr: true,
+    };
+    fp$u.l10ns.ka = Georgian;
+    fp$u.l10ns;
+
+    var fp$v = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Korean = {
+        weekdays: {
+            shorthand: ["일", "월", "화", "수", "목", "금", "토"],
+            longhand: [
+                "일요일",
+                "월요일",
+                "화요일",
+                "수요일",
+                "목요일",
+                "금요일",
+                "토요일",
+            ],
+        },
+        months: {
+            shorthand: [
+                "1월",
+                "2월",
+                "3월",
+                "4월",
+                "5월",
+                "6월",
+                "7월",
+                "8월",
+                "9월",
+                "10월",
+                "11월",
+                "12월",
+            ],
+            longhand: [
+                "1월",
+                "2월",
+                "3월",
+                "4월",
+                "5월",
+                "6월",
+                "7월",
+                "8월",
+                "9월",
+                "10월",
+                "11월",
+                "12월",
+            ],
+        },
+        ordinal: function () {
+            return "일";
+        },
+        rangeSeparator: " ~ ",
+        amPM: ["오전", "오후"],
+    };
+    fp$v.l10ns.ko = Korean;
+    fp$v.l10ns;
+
+    var fp$w = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Khmer = {
+        weekdays: {
+            shorthand: ["អាទិត្យ", "ចន្ទ", "អង្គារ", "ពុធ", "ព្រហស.", "សុក្រ", "សៅរ៍"],
+            longhand: [
+                "អាទិត្យ",
+                "ចន្ទ",
+                "អង្គារ",
+                "ពុធ",
+                "ព្រហស្បតិ៍",
+                "សុក្រ",
+                "សៅរ៍",
+            ],
+        },
+        months: {
+            shorthand: [
+                "មករា",
+                "កុម្ភះ",
+                "មីនា",
+                "មេសា",
+                "ឧសភា",
+                "មិថុនា",
+                "កក្កដា",
+                "សីហា",
+                "កញ្ញា",
+                "តុលា",
+                "វិច្ឆិកា",
+                "ធ្នូ",
+            ],
+            longhand: [
+                "មករា",
+                "កុម្ភះ",
+                "មីនា",
+                "មេសា",
+                "ឧសភា",
+                "មិថុនា",
+                "កក្កដា",
+                "សីហា",
+                "កញ្ញា",
+                "តុលា",
+                "វិច្ឆិកា",
+                "ធ្នូ",
+            ],
+        },
+        ordinal: function () {
+            return "";
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " ដល់ ",
+        weekAbbreviation: "សប្តាហ៍",
+        scrollTitle: "រំកិលដើម្បីបង្កើន",
+        toggleTitle: "ចុចដើម្បីផ្លាស់ប្ដូរ",
+        yearAriaLabel: "ឆ្នាំ",
+        time_24hr: true,
+    };
+    fp$w.l10ns.km = Khmer;
+    fp$w.l10ns;
+
+    var fp$x = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Kazakh = {
+        weekdays: {
+            shorthand: ["Жс", "Дс", "Сc", "Ср", "Бс", "Жм", "Сб"],
+            longhand: [
+                "Жексенбi",
+                "Дүйсенбi",
+                "Сейсенбi",
+                "Сәрсенбi",
+                "Бейсенбi",
+                "Жұма",
+                "Сенбi",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Қаң",
+                "Ақп",
+                "Нау",
+                "Сәу",
+                "Мам",
+                "Мау",
+                "Шiл",
+                "Там",
+                "Қыр",
+                "Қаз",
+                "Қар",
+                "Жел",
+            ],
+            longhand: [
+                "Қаңтар",
+                "Ақпан",
+                "Наурыз",
+                "Сәуiр",
+                "Мамыр",
+                "Маусым",
+                "Шiлде",
+                "Тамыз",
+                "Қыркүйек",
+                "Қазан",
+                "Қараша",
+                "Желтоқсан",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+        rangeSeparator: " — ",
+        weekAbbreviation: "Апта",
+        scrollTitle: "Үлкейту үшін айналдырыңыз",
+        toggleTitle: "Ауыстыру үшін басыңыз",
+        amPM: ["ТД", "ТК"],
+        yearAriaLabel: "Жыл",
+    };
+    fp$x.l10ns.kz = Kazakh;
+    fp$x.l10ns;
+
+    var fp$y = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Lithuanian = {
+        weekdays: {
+            shorthand: ["S", "Pr", "A", "T", "K", "Pn", "Š"],
+            longhand: [
+                "Sekmadienis",
+                "Pirmadienis",
+                "Antradienis",
+                "Trečiadienis",
+                "Ketvirtadienis",
+                "Penktadienis",
+                "Šeštadienis",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Sau",
+                "Vas",
+                "Kov",
+                "Bal",
+                "Geg",
+                "Bir",
+                "Lie",
+                "Rgp",
+                "Rgs",
+                "Spl",
+                "Lap",
+                "Grd",
+            ],
+            longhand: [
+                "Sausis",
+                "Vasaris",
+                "Kovas",
+                "Balandis",
+                "Gegužė",
+                "Birželis",
+                "Liepa",
+                "Rugpjūtis",
+                "Rugsėjis",
+                "Spalis",
+                "Lapkritis",
+                "Gruodis",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "-a";
+        },
+        rangeSeparator: " iki ",
+        weekAbbreviation: "Sav",
+        scrollTitle: "Keisti laiką pelės rateliu",
+        toggleTitle: "Perjungti laiko formatą",
+        time_24hr: true,
+    };
+    fp$y.l10ns.lt = Lithuanian;
+    fp$y.l10ns;
+
+    var fp$z = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Latvian = {
+        firstDayOfWeek: 1,
+        weekdays: {
+            shorthand: ["Sv", "Pr", "Ot", "Tr", "Ce", "Pk", "Se"],
+            longhand: [
+                "Svētdiena",
+                "Pirmdiena",
+                "Otrdiena",
+                "Trešdiena",
+                "Ceturtdiena",
+                "Piektdiena",
+                "Sestdiena",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Mai",
+                "Jūn",
+                "Jūl",
+                "Aug",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Dec",
+            ],
+            longhand: [
+                "Janvāris",
+                "Februāris",
+                "Marts",
+                "Aprīlis",
+                "Maijs",
+                "Jūnijs",
+                "Jūlijs",
+                "Augusts",
+                "Septembris",
+                "Oktobris",
+                "Novembris",
+                "Decembris",
+            ],
+        },
+        rangeSeparator: " līdz ",
+        time_24hr: true,
+    };
+    fp$z.l10ns.lv = Latvian;
+    fp$z.l10ns;
+
+    var fp$A = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Macedonian = {
+        weekdays: {
+            shorthand: ["Не", "По", "Вт", "Ср", "Че", "Пе", "Са"],
+            longhand: [
+                "Недела",
+                "Понеделник",
+                "Вторник",
+                "Среда",
+                "Четврток",
+                "Петок",
+                "Сабота",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Јан",
+                "Фев",
+                "Мар",
+                "Апр",
+                "Мај",
+                "Јун",
+                "Јул",
+                "Авг",
+                "Сеп",
+                "Окт",
+                "Ное",
+                "Дек",
+            ],
+            longhand: [
+                "Јануари",
+                "Февруари",
+                "Март",
+                "Април",
+                "Мај",
+                "Јуни",
+                "Јули",
+                "Август",
+                "Септември",
+                "Октомври",
+                "Ноември",
+                "Декември",
+            ],
+        },
+        firstDayOfWeek: 1,
+        weekAbbreviation: "Нед.",
+        rangeSeparator: " до ",
+        time_24hr: true,
+    };
+    fp$A.l10ns.mk = Macedonian;
+    fp$A.l10ns;
+
+    var fp$B = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Mongolian = {
+        firstDayOfWeek: 1,
+        weekdays: {
+            shorthand: ["Да", "Мя", "Лх", "Пү", "Ба", "Бя", "Ня"],
+            longhand: ["Даваа", "Мягмар", "Лхагва", "Пүрэв", "Баасан", "Бямба", "Ням"],
+        },
+        months: {
+            shorthand: [
+                "1-р сар",
+                "2-р сар",
+                "3-р сар",
+                "4-р сар",
+                "5-р сар",
+                "6-р сар",
+                "7-р сар",
+                "8-р сар",
+                "9-р сар",
+                "10-р сар",
+                "11-р сар",
+                "12-р сар",
+            ],
+            longhand: [
+                "Нэгдүгээр сар",
+                "Хоёрдугаар сар",
+                "Гуравдугаар сар",
+                "Дөрөвдүгээр сар",
+                "Тавдугаар сар",
+                "Зургаадугаар сар",
+                "Долдугаар сар",
+                "Наймдугаар сар",
+                "Есдүгээр сар",
+                "Аравдугаар сар",
+                "Арваннэгдүгээр сар",
+                "Арванхоёрдугаар сар",
+            ],
+        },
+        rangeSeparator: "-с ",
+        time_24hr: true,
+    };
+    fp$B.l10ns.mn = Mongolian;
+    fp$B.l10ns;
+
+    var fp$C = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Malaysian = {
+        weekdays: {
+            shorthand: ["Aha", "Isn", "Sel", "Rab", "Kha", "Jum", "Sab"],
+            longhand: ["Ahad", "Isnin", "Selasa", "Rabu", "Khamis", "Jumaat", "Sabtu"],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mac",
+                "Apr",
+                "Mei",
+                "Jun",
+                "Jul",
+                "Ogo",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Dis",
+            ],
+            longhand: [
+                "Januari",
+                "Februari",
+                "Mac",
+                "April",
+                "Mei",
+                "Jun",
+                "Julai",
+                "Ogos",
+                "September",
+                "Oktober",
+                "November",
+                "Disember",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+    };
+    fp$C.l10ns;
+
+    var fp$D = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Burmese = {
+        weekdays: {
+            shorthand: ["နွေ", "လာ", "ဂါ", "ဟူး", "ကြာ", "သော", "နေ"],
+            longhand: [
+                "တနင်္ဂနွေ",
+                "တနင်္လာ",
+                "အင်္ဂါ",
+                "ဗုဒ္ဓဟူး",
+                "ကြာသပတေး",
+                "သောကြာ",
+                "စနေ",
+            ],
+        },
+        months: {
+            shorthand: [
+                "ဇန်",
+                "ဖေ",
+                "မတ်",
+                "ပြီ",
+                "မေ",
+                "ဇွန်",
+                "လိုင်",
+                "သြ",
+                "စက်",
+                "အောက်",
+                "နို",
+                "ဒီ",
+            ],
+            longhand: [
+                "ဇန်နဝါရီ",
+                "ဖေဖော်ဝါရီ",
+                "မတ်",
+                "ဧပြီ",
+                "မေ",
+                "ဇွန်",
+                "ဇူလိုင်",
+                "သြဂုတ်",
+                "စက်တင်ဘာ",
+                "အောက်တိုဘာ",
+                "နိုဝင်ဘာ",
+                "ဒီဇင်ဘာ",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+        time_24hr: true,
+    };
+    fp$D.l10ns.my = Burmese;
+    fp$D.l10ns;
+
+    var fp$E = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Dutch = {
+        weekdays: {
+            shorthand: ["zo", "ma", "di", "wo", "do", "vr", "za"],
+            longhand: [
+                "zondag",
+                "maandag",
+                "dinsdag",
+                "woensdag",
+                "donderdag",
+                "vrijdag",
+                "zaterdag",
+            ],
+        },
+        months: {
+            shorthand: [
+                "jan",
+                "feb",
+                "mrt",
+                "apr",
+                "mei",
+                "jun",
+                "jul",
+                "aug",
+                "sept",
+                "okt",
+                "nov",
+                "dec",
+            ],
+            longhand: [
+                "januari",
+                "februari",
+                "maart",
+                "april",
+                "mei",
+                "juni",
+                "juli",
+                "augustus",
+                "september",
+                "oktober",
+                "november",
+                "december",
+            ],
+        },
+        firstDayOfWeek: 1,
+        weekAbbreviation: "wk",
+        rangeSeparator: " t/m ",
+        scrollTitle: "Scroll voor volgende / vorige",
+        toggleTitle: "Klik om te wisselen",
+        time_24hr: true,
+        ordinal: function (nth) {
+            if (nth === 1 || nth === 8 || nth >= 20)
+                return "ste";
+            return "de";
+        },
+    };
+    fp$E.l10ns.nl = Dutch;
+    fp$E.l10ns;
+
+    var fp$F = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var NorwegianNynorsk = {
+        weekdays: {
+            shorthand: ["Sø.", "Må.", "Ty.", "On.", "To.", "Fr.", "La."],
+            longhand: [
+                "Søndag",
+                "Måndag",
+                "Tysdag",
+                "Onsdag",
+                "Torsdag",
+                "Fredag",
+                "Laurdag",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mars",
+                "Apr",
+                "Mai",
+                "Juni",
+                "Juli",
+                "Aug",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Des",
+            ],
+            longhand: [
+                "Januar",
+                "Februar",
+                "Mars",
+                "April",
+                "Mai",
+                "Juni",
+                "Juli",
+                "August",
+                "September",
+                "Oktober",
+                "November",
+                "Desember",
+            ],
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " til ",
+        weekAbbreviation: "Veke",
+        scrollTitle: "Scroll for å endre",
+        toggleTitle: "Klikk for å veksle",
+        time_24hr: true,
+        ordinal: function () {
+            return ".";
+        },
+    };
+    fp$F.l10ns.nn = NorwegianNynorsk;
+    fp$F.l10ns;
+
+    var fp$G = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Norwegian = {
+        weekdays: {
+            shorthand: ["Søn", "Man", "Tir", "Ons", "Tor", "Fre", "Lør"],
+            longhand: [
+                "Søndag",
+                "Mandag",
+                "Tirsdag",
+                "Onsdag",
+                "Torsdag",
+                "Fredag",
+                "Lørdag",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Des",
+            ],
+            longhand: [
+                "Januar",
+                "Februar",
+                "Mars",
+                "April",
+                "Mai",
+                "Juni",
+                "Juli",
+                "August",
+                "September",
+                "Oktober",
+                "November",
+                "Desember",
+            ],
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " til ",
+        weekAbbreviation: "Uke",
+        scrollTitle: "Scroll for å endre",
+        toggleTitle: "Klikk for å veksle",
+        time_24hr: true,
+        ordinal: function () {
+            return ".";
+        },
+    };
+    fp$G.l10ns.no = Norwegian;
+    fp$G.l10ns;
+
+    var fp$H = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Punjabi = {
+        weekdays: {
+            shorthand: ["ਐਤ", "ਸੋਮ", "ਮੰਗਲ", "ਬੁੱਧ", "ਵੀਰ", "ਸ਼ੁੱਕਰ", "ਸ਼ਨਿੱਚਰ"],
+            longhand: [
+                "ਐਤਵਾਰ",
+                "ਸੋਮਵਾਰ",
+                "ਮੰਗਲਵਾਰ",
+                "ਬੁੱਧਵਾਰ",
+                "ਵੀਰਵਾਰ",
+                "ਸ਼ੁੱਕਰਵਾਰ",
+                "ਸ਼ਨਿੱਚਰਵਾਰ",
+            ],
+        },
+        months: {
+            shorthand: [
+                "ਜਨ",
+                "ਫ਼ਰ",
+                "ਮਾਰ",
+                "ਅਪ੍ਰੈ",
+                "ਮਈ",
+                "ਜੂਨ",
+                "ਜੁਲਾ",
+                "ਅਗ",
+                "ਸਤੰ",
+                "ਅਕ",
+                "ਨਵੰ",
+                "ਦਸੰ",
+            ],
+            longhand: [
+                "ਜਨਵਰੀ",
+                "ਫ਼ਰਵਰੀ",
+                "ਮਾਰਚ",
+                "ਅਪ੍ਰੈਲ",
+                "ਮਈ",
+                "ਜੂਨ",
+                "ਜੁਲਾਈ",
+                "ਅਗਸਤ",
+                "ਸਤੰਬਰ",
+                "ਅਕਤੂਬਰ",
+                "ਨਵੰਬਰ",
+                "ਦਸੰਬਰ",
+            ],
+        },
+        time_24hr: true,
+    };
+    fp$H.l10ns.pa = Punjabi;
+    fp$H.l10ns;
+
+    var fp$I = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Polish = {
+        weekdays: {
+            shorthand: ["Nd", "Pn", "Wt", "Śr", "Cz", "Pt", "So"],
+            longhand: [
+                "Niedziela",
+                "Poniedziałek",
+                "Wtorek",
+                "Środa",
+                "Czwartek",
+                "Piątek",
+                "Sobota",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Sty",
+                "Lut",
+                "Mar",
+                "Kwi",
+                "Maj",
+                "Cze",
+                "Lip",
+                "Sie",
+                "Wrz",
+                "Paź",
+                "Lis",
+                "Gru",
+            ],
+            longhand: [
+                "Styczeń",
+                "Luty",
+                "Marzec",
+                "Kwiecień",
+                "Maj",
+                "Czerwiec",
+                "Lipiec",
+                "Sierpień",
+                "Wrzesień",
+                "Październik",
+                "Listopad",
+                "Grudzień",
+            ],
+        },
+        rangeSeparator: " do ",
+        weekAbbreviation: "tydz.",
+        scrollTitle: "Przewiń, aby zwiększyć",
+        toggleTitle: "Kliknij, aby przełączyć",
+        firstDayOfWeek: 1,
+        time_24hr: true,
+        ordinal: function () {
+            return ".";
+        },
+    };
+    fp$I.l10ns.pl = Polish;
+    fp$I.l10ns;
+
+    var fp$J = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Portuguese = {
+        weekdays: {
+            shorthand: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],
+            longhand: [
+                "Domingo",
+                "Segunda-feira",
+                "Terça-feira",
+                "Quarta-feira",
+                "Quinta-feira",
+                "Sexta-feira",
+                "Sábado",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Fev",
+                "Mar",
+                "Abr",
+                "Mai",
+                "Jun",
+                "Jul",
+                "Ago",
+                "Set",
+                "Out",
+                "Nov",
+                "Dez",
+            ],
+            longhand: [
+                "Janeiro",
+                "Fevereiro",
+                "Março",
+                "Abril",
+                "Maio",
+                "Junho",
+                "Julho",
+                "Agosto",
+                "Setembro",
+                "Outubro",
+                "Novembro",
+                "Dezembro",
+            ],
+        },
+        rangeSeparator: " até ",
+        time_24hr: true,
+    };
+    fp$J.l10ns.pt = Portuguese;
+    fp$J.l10ns;
+
+    var fp$K = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Romanian = {
+        weekdays: {
+            shorthand: ["Dum", "Lun", "Mar", "Mie", "Joi", "Vin", "Sâm"],
+            longhand: [
+                "Duminică",
+                "Luni",
+                "Marți",
+                "Miercuri",
+                "Joi",
+                "Vineri",
+                "Sâmbătă",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Ian",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Mai",
+                "Iun",
+                "Iul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Noi",
+                "Dec",
+            ],
+            longhand: [
+                "Ianuarie",
+                "Februarie",
+                "Martie",
+                "Aprilie",
+                "Mai",
+                "Iunie",
+                "Iulie",
+                "August",
+                "Septembrie",
+                "Octombrie",
+                "Noiembrie",
+                "Decembrie",
+            ],
+        },
+        firstDayOfWeek: 1,
+        time_24hr: true,
+        ordinal: function () {
+            return "";
+        },
+    };
+    fp$K.l10ns.ro = Romanian;
+    fp$K.l10ns;
+
+    var fp$L = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Russian = {
+        weekdays: {
+            shorthand: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+            longhand: [
+                "Воскресенье",
+                "Понедельник",
+                "Вторник",
+                "Среда",
+                "Четверг",
+                "Пятница",
+                "Суббота",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Янв",
+                "Фев",
+                "Март",
+                "Апр",
+                "Май",
+                "Июнь",
+                "Июль",
+                "Авг",
+                "Сен",
+                "Окт",
+                "Ноя",
+                "Дек",
+            ],
+            longhand: [
+                "Январь",
+                "Февраль",
+                "Март",
+                "Апрель",
+                "Май",
+                "Июнь",
+                "Июль",
+                "Август",
+                "Сентябрь",
+                "Октябрь",
+                "Ноябрь",
+                "Декабрь",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+        rangeSeparator: " — ",
+        weekAbbreviation: "Нед.",
+        scrollTitle: "Прокрутите для увеличения",
+        toggleTitle: "Нажмите для переключения",
+        amPM: ["ДП", "ПП"],
+        yearAriaLabel: "Год",
+        time_24hr: true,
+    };
+    fp$L.l10ns.ru = Russian;
+    fp$L.l10ns;
+
+    var fp$M = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Sinhala = {
+        weekdays: {
+            shorthand: ["ඉ", "ස", "අ", "බ", "බ්‍ර", "සි", "සෙ"],
+            longhand: [
+                "ඉරිදා",
+                "සඳුදා",
+                "අඟහරුවාදා",
+                "බදාදා",
+                "බ්‍රහස්පතින්දා",
+                "සිකුරාදා",
+                "සෙනසුරාදා",
+            ],
+        },
+        months: {
+            shorthand: [
+                "ජන",
+                "පෙබ",
+                "මාර්",
+                "අප්‍රේ",
+                "මැයි",
+                "ජුනි",
+                "ජූලි",
+                "අගෝ",
+                "සැප්",
+                "ඔක්",
+                "නොවැ",
+                "දෙසැ",
+            ],
+            longhand: [
+                "ජනවාරි",
+                "පෙබරවාරි",
+                "මාර්තු",
+                "අප්‍රේල්",
+                "මැයි",
+                "ජුනි",
+                "ජූලි",
+                "අගෝස්තු",
+                "සැප්තැම්බර්",
+                "ඔක්තෝබර්",
+                "නොවැම්බර්",
+                "දෙසැම්බර්",
+            ],
+        },
+        time_24hr: true,
+    };
+    fp$M.l10ns.si = Sinhala;
+    fp$M.l10ns;
+
+    var fp$N = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Slovak = {
+        weekdays: {
+            shorthand: ["Ned", "Pon", "Ut", "Str", "Štv", "Pia", "Sob"],
+            longhand: [
+                "Nedeľa",
+                "Pondelok",
+                "Utorok",
+                "Streda",
+                "Štvrtok",
+                "Piatok",
+                "Sobota",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Máj",
+                "Jún",
+                "Júl",
+                "Aug",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Dec",
+            ],
+            longhand: [
+                "Január",
+                "Február",
+                "Marec",
+                "Apríl",
+                "Máj",
+                "Jún",
+                "Júl",
+                "August",
+                "September",
+                "Október",
+                "November",
+                "December",
+            ],
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " do ",
+        time_24hr: true,
+        ordinal: function () {
+            return ".";
+        },
+    };
+    fp$N.l10ns.sk = Slovak;
+    fp$N.l10ns;
+
+    var fp$O = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Slovenian = {
+        weekdays: {
+            shorthand: ["Ned", "Pon", "Tor", "Sre", "Čet", "Pet", "Sob"],
+            longhand: [
+                "Nedelja",
+                "Ponedeljek",
+                "Torek",
+                "Sreda",
+                "Četrtek",
+                "Petek",
+                "Sobota",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Maj",
+                "Jun",
+                "Jul",
+                "Avg",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Dec",
+            ],
+            longhand: [
+                "Januar",
+                "Februar",
+                "Marec",
+                "April",
+                "Maj",
+                "Junij",
+                "Julij",
+                "Avgust",
+                "September",
+                "Oktober",
+                "November",
+                "December",
+            ],
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " do ",
+        time_24hr: true,
+        ordinal: function () {
+            return ".";
+        },
+    };
+    fp$O.l10ns.sl = Slovenian;
+    fp$O.l10ns;
+
+    var fp$P = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Albanian = {
+        weekdays: {
+            shorthand: ["Di", "Hë", "Ma", "Më", "En", "Pr", "Sh"],
+            longhand: [
+                "E Diel",
+                "E Hënë",
+                "E Martë",
+                "E Mërkurë",
+                "E Enjte",
+                "E Premte",
+                "E Shtunë",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Shk",
+                "Mar",
+                "Pri",
+                "Maj",
+                "Qer",
+                "Kor",
+                "Gus",
+                "Sht",
+                "Tet",
+                "Nën",
+                "Dhj",
+            ],
+            longhand: [
+                "Janar",
+                "Shkurt",
+                "Mars",
+                "Prill",
+                "Maj",
+                "Qershor",
+                "Korrik",
+                "Gusht",
+                "Shtator",
+                "Tetor",
+                "Nëntor",
+                "Dhjetor",
+            ],
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " deri ",
+        weekAbbreviation: "Java",
+        yearAriaLabel: "Viti",
+        monthAriaLabel: "Muaji",
+        hourAriaLabel: "Ora",
+        minuteAriaLabel: "Minuta",
+        time_24hr: true,
+    };
+    fp$P.l10ns.sq = Albanian;
+    fp$P.l10ns;
+
+    var fp$Q = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Serbian = {
+        weekdays: {
+            shorthand: ["Ned", "Pon", "Uto", "Sre", "Čet", "Pet", "Sub"],
+            longhand: [
+                "Nedelja",
+                "Ponedeljak",
+                "Utorak",
+                "Sreda",
+                "Četvrtak",
+                "Petak",
+                "Subota",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "Maj",
+                "Jun",
+                "Jul",
+                "Avg",
+                "Sep",
+                "Okt",
+                "Nov",
+                "Dec",
+            ],
+            longhand: [
+                "Januar",
+                "Februar",
+                "Mart",
+                "April",
+                "Maj",
+                "Jun",
+                "Jul",
+                "Avgust",
+                "Septembar",
+                "Oktobar",
+                "Novembar",
+                "Decembar",
+            ],
+        },
+        firstDayOfWeek: 1,
+        weekAbbreviation: "Ned.",
+        rangeSeparator: " do ",
+        time_24hr: true,
+    };
+    fp$Q.l10ns.sr = Serbian;
+    fp$Q.l10ns;
+
+    var fp$R = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Swedish = {
+        firstDayOfWeek: 1,
+        weekAbbreviation: "v",
+        weekdays: {
+            shorthand: ["sön", "mån", "tis", "ons", "tor", "fre", "lör"],
+            longhand: [
+                "söndag",
+                "måndag",
+                "tisdag",
+                "onsdag",
+                "torsdag",
+                "fredag",
+                "lördag",
+            ],
+        },
+        months: {
+            shorthand: [
+                "jan",
+                "feb",
+                "mar",
+                "apr",
+                "maj",
+                "jun",
+                "jul",
+                "aug",
+                "sep",
+                "okt",
+                "nov",
+                "dec",
+            ],
+            longhand: [
+                "januari",
+                "februari",
+                "mars",
+                "april",
+                "maj",
+                "juni",
+                "juli",
+                "augusti",
+                "september",
+                "oktober",
+                "november",
+                "december",
+            ],
+        },
+        rangeSeparator: " till ",
+        time_24hr: true,
+        ordinal: function () {
+            return ".";
+        },
+    };
+    fp$R.l10ns.sv = Swedish;
+    fp$R.l10ns;
+
+    var fp$S = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Thai = {
+        weekdays: {
+            shorthand: ["อา", "จ", "อ", "พ", "พฤ", "ศ", "ส"],
+            longhand: [
+                "อาทิตย์",
+                "จันทร์",
+                "อังคาร",
+                "พุธ",
+                "พฤหัสบดี",
+                "ศุกร์",
+                "เสาร์",
+            ],
+        },
+        months: {
+            shorthand: [
+                "ม.ค.",
+                "ก.พ.",
+                "มี.ค.",
+                "เม.ย.",
+                "พ.ค.",
+                "มิ.ย.",
+                "ก.ค.",
+                "ส.ค.",
+                "ก.ย.",
+                "ต.ค.",
+                "พ.ย.",
+                "ธ.ค.",
+            ],
+            longhand: [
+                "มกราคม",
+                "กุมภาพันธ์",
+                "มีนาคม",
+                "เมษายน",
+                "พฤษภาคม",
+                "มิถุนายน",
+                "กรกฎาคม",
+                "สิงหาคม",
+                "กันยายน",
+                "ตุลาคม",
+                "พฤศจิกายน",
+                "ธันวาคม",
+            ],
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " ถึง ",
+        scrollTitle: "เลื่อนเพื่อเพิ่มหรือลด",
+        toggleTitle: "คลิกเพื่อเปลี่ยน",
+        time_24hr: true,
+        ordinal: function () {
+            return "";
+        },
+    };
+    fp$S.l10ns.th = Thai;
+    fp$S.l10ns;
+
+    var fp$T = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Turkish = {
+        weekdays: {
+            shorthand: ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"],
+            longhand: [
+                "Pazar",
+                "Pazartesi",
+                "Salı",
+                "Çarşamba",
+                "Perşembe",
+                "Cuma",
+                "Cumartesi",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Oca",
+                "Şub",
+                "Mar",
+                "Nis",
+                "May",
+                "Haz",
+                "Tem",
+                "Ağu",
+                "Eyl",
+                "Eki",
+                "Kas",
+                "Ara",
+            ],
+            longhand: [
+                "Ocak",
+                "Şubat",
+                "Mart",
+                "Nisan",
+                "Mayıs",
+                "Haziran",
+                "Temmuz",
+                "Ağustos",
+                "Eylül",
+                "Ekim",
+                "Kasım",
+                "Aralık",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return ".";
+        },
+        rangeSeparator: " - ",
+        weekAbbreviation: "Hf",
+        scrollTitle: "Artırmak için kaydırın",
+        toggleTitle: "Aç/Kapa",
+        amPM: ["ÖÖ", "ÖS"],
+        time_24hr: true,
+    };
+    fp$T.l10ns.tr = Turkish;
+    fp$T.l10ns;
+
+    var fp$U = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Ukrainian = {
+        firstDayOfWeek: 1,
+        weekdays: {
+            shorthand: ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+            longhand: [
+                "Неділя",
+                "Понеділок",
+                "Вівторок",
+                "Середа",
+                "Четвер",
+                "П'ятниця",
+                "Субота",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Січ",
+                "Лют",
+                "Бер",
+                "Кві",
+                "Тра",
+                "Чер",
+                "Лип",
+                "Сер",
+                "Вер",
+                "Жов",
+                "Лис",
+                "Гру",
+            ],
+            longhand: [
+                "Січень",
+                "Лютий",
+                "Березень",
+                "Квітень",
+                "Травень",
+                "Червень",
+                "Липень",
+                "Серпень",
+                "Вересень",
+                "Жовтень",
+                "Листопад",
+                "Грудень",
+            ],
+        },
+        time_24hr: true,
+    };
+    fp$U.l10ns.uk = Ukrainian;
+    fp$U.l10ns;
+
+    var fp$V = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Uzbek = {
+        weekdays: {
+            shorthand: ["Якш", "Душ", "Сеш", "Чор", "Пай", "Жум", "Шан"],
+            longhand: [
+                "Якшанба",
+                "Душанба",
+                "Сешанба",
+                "Чоршанба",
+                "Пайшанба",
+                "Жума",
+                "Шанба",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Янв",
+                "Фев",
+                "Мар",
+                "Апр",
+                "Май",
+                "Июн",
+                "Июл",
+                "Авг",
+                "Сен",
+                "Окт",
+                "Ноя",
+                "Дек",
+            ],
+            longhand: [
+                "Январ",
+                "Феврал",
+                "Март",
+                "Апрел",
+                "Май",
+                "Июн",
+                "Июл",
+                "Август",
+                "Сентябр",
+                "Октябр",
+                "Ноябр",
+                "Декабр",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+        rangeSeparator: " — ",
+        weekAbbreviation: "Ҳафта",
+        scrollTitle: "Катталаштириш учун айлантиринг",
+        toggleTitle: "Ўтиш учун босинг",
+        amPM: ["AM", "PM"],
+        yearAriaLabel: "Йил",
+        time_24hr: true,
+    };
+    fp$V.l10ns.uz = Uzbek;
+    fp$V.l10ns;
+
+    var fp$W = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var UzbekLatin = {
+        weekdays: {
+            shorthand: ["Ya", "Du", "Se", "Cho", "Pa", "Ju", "Sha"],
+            longhand: [
+                "Yakshanba",
+                "Dushanba",
+                "Seshanba",
+                "Chorshanba",
+                "Payshanba",
+                "Juma",
+                "Shanba",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Yan",
+                "Fev",
+                "Mar",
+                "Apr",
+                "May",
+                "Iyun",
+                "Iyul",
+                "Avg",
+                "Sen",
+                "Okt",
+                "Noy",
+                "Dek",
+            ],
+            longhand: [
+                "Yanvar",
+                "Fevral",
+                "Mart",
+                "Aprel",
+                "May",
+                "Iyun",
+                "Iyul",
+                "Avgust",
+                "Sentabr",
+                "Oktabr",
+                "Noyabr",
+                "Dekabr",
+            ],
+        },
+        firstDayOfWeek: 1,
+        ordinal: function () {
+            return "";
+        },
+        rangeSeparator: " — ",
+        weekAbbreviation: "Hafta",
+        scrollTitle: "Kattalashtirish uchun aylantiring",
+        toggleTitle: "O‘tish uchun bosing",
+        amPM: ["AM", "PM"],
+        yearAriaLabel: "Yil",
+        time_24hr: true,
+    };
+    fp$W.l10ns["uz_latn"] = UzbekLatin;
+    fp$W.l10ns;
+
+    var fp$X = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Vietnamese = {
+        weekdays: {
+            shorthand: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
+            longhand: [
+                "Chủ nhật",
+                "Thứ hai",
+                "Thứ ba",
+                "Thứ tư",
+                "Thứ năm",
+                "Thứ sáu",
+                "Thứ bảy",
+            ],
+        },
+        months: {
+            shorthand: [
+                "Th1",
+                "Th2",
+                "Th3",
+                "Th4",
+                "Th5",
+                "Th6",
+                "Th7",
+                "Th8",
+                "Th9",
+                "Th10",
+                "Th11",
+                "Th12",
+            ],
+            longhand: [
+                "Tháng một",
+                "Tháng hai",
+                "Tháng ba",
+                "Tháng tư",
+                "Tháng năm",
+                "Tháng sáu",
+                "Tháng bảy",
+                "Tháng tám",
+                "Tháng chín",
+                "Tháng mười",
+                "Tháng mười một",
+                "Tháng mười hai",
+            ],
+        },
+        firstDayOfWeek: 1,
+        rangeSeparator: " đến ",
+    };
+    fp$X.l10ns.vn = Vietnamese;
+    fp$X.l10ns;
+
+    var fp$Y = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var Mandarin = {
+        weekdays: {
+            shorthand: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+            longhand: [
+                "星期日",
+                "星期一",
+                "星期二",
+                "星期三",
+                "星期四",
+                "星期五",
+                "星期六",
+            ],
+        },
+        months: {
+            shorthand: [
+                "一月",
+                "二月",
+                "三月",
+                "四月",
+                "五月",
+                "六月",
+                "七月",
+                "八月",
+                "九月",
+                "十月",
+                "十一月",
+                "十二月",
+            ],
+            longhand: [
+                "一月",
+                "二月",
+                "三月",
+                "四月",
+                "五月",
+                "六月",
+                "七月",
+                "八月",
+                "九月",
+                "十月",
+                "十一月",
+                "十二月",
+            ],
+        },
+        rangeSeparator: " 至 ",
+        weekAbbreviation: "周",
+        scrollTitle: "滚动切换",
+        toggleTitle: "点击切换 12/24 小时时制",
+    };
+    fp$Y.l10ns.zh = Mandarin;
+    fp$Y.l10ns;
+
+    var fp$Z = typeof window !== "undefined" && window.flatpickr !== undefined
+        ? window.flatpickr
+        : {
+            l10ns: {},
+        };
+    var MandarinTraditional = {
+        weekdays: {
+            shorthand: ["週日", "週一", "週二", "週三", "週四", "週五", "週六"],
+            longhand: [
+                "星期日",
+                "星期一",
+                "星期二",
+                "星期三",
+                "星期四",
+                "星期五",
+                "星期六",
+            ],
+        },
+        months: {
+            shorthand: [
+                "一月",
+                "二月",
+                "三月",
+                "四月",
+                "五月",
+                "六月",
+                "七月",
+                "八月",
+                "九月",
+                "十月",
+                "十一月",
+                "十二月",
+            ],
+            longhand: [
+                "一月",
+                "二月",
+                "三月",
+                "四月",
+                "五月",
+                "六月",
+                "七月",
+                "八月",
+                "九月",
+                "十月",
+                "十一月",
+                "十二月",
+            ],
+        },
+        rangeSeparator: " 至 ",
+        weekAbbreviation: "週",
+        scrollTitle: "滾動切換",
+        toggleTitle: "點擊切換 12/24 小時時制",
+    };
+    fp$Z.l10ns.zh_tw = MandarinTraditional;
+    fp$Z.l10ns;
+
+    var l10n = {
+        ar: Arabic,
+        at: Austria,
+        az: Azerbaijan,
+        be: Belarusian,
+        bg: Bulgarian,
+        bn: Bangla,
+        bs: Bosnian,
+        ca: Catalan,
+        ckb: Kurdish,
+        cat: Catalan,
+        cs: Czech,
+        cy: Welsh,
+        da: Danish,
+        de: German,
+        default: __assign({}, english),
+        en: english,
+        eo: Esperanto,
+        es: Spanish,
+        et: Estonian,
+        fa: Persian,
+        fi: Finnish,
+        fo: Faroese,
+        fr: French,
+        gr: Greek,
+        he: Hebrew,
+        hi: Hindi,
+        hr: Croatian,
+        hu: Hungarian,
+        hy: Armenian,
+        id: Indonesian,
+        is: Icelandic,
+        it: Italian,
+        ja: Japanese,
+        ka: Georgian,
+        ko: Korean,
+        km: Khmer,
+        kz: Kazakh,
+        lt: Lithuanian,
+        lv: Latvian,
+        mk: Macedonian,
+        mn: Mongolian,
+        ms: Malaysian,
+        my: Burmese,
+        nl: Dutch,
+        nn: NorwegianNynorsk,
+        no: Norwegian,
+        pa: Punjabi,
+        pl: Polish,
+        pt: Portuguese,
+        ro: Romanian,
+        ru: Russian,
+        si: Sinhala,
+        sk: Slovak,
+        sl: Slovenian,
+        sq: Albanian,
+        sr: Serbian,
+        sv: Swedish,
+        th: Thai,
+        tr: Turkish,
+        uk: Ukrainian,
+        vn: Vietnamese,
+        zh: Mandarin,
+        zh_tw: MandarinTraditional,
+        uz: Uzbek,
+        uz_latn: UzbekLatin,
+    };
+
+    exports.default = l10n;
+
+    Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+
+
+/***/ }),
+
+/***/ "./resources/assets/css/front-main.scss":
+/*!**********************************************!*\
+  !*** ./resources/assets/css/front-main.scss ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/whatsappp_store/beauty-products.scss":
+/*!********************************************************************!*\
+  !*** ./resources/assets/scss/whatsappp_store/beauty-products.scss ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/whatsappp_store/custom.scss":
+/*!***********************************************************!*\
+  !*** ./resources/assets/scss/whatsappp_store/custom.scss ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/whatsappp_store/ecommerce.scss":
+/*!**************************************************************!*\
+  !*** ./resources/assets/scss/whatsappp_store/ecommerce.scss ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/whatsappp_store/restaurant.scss":
+/*!***************************************************************!*\
+  !*** ./resources/assets/scss/whatsappp_store/restaurant.scss ***!
+  \***************************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/whatsappp_store/cloth_store.scss":
+/*!****************************************************************!*\
+  !*** ./resources/assets/scss/whatsappp_store/cloth_store.scss ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/whatsappp_store/grocery_store.scss":
+/*!******************************************************************!*\
+  !*** ./resources/assets/scss/whatsappp_store/grocery_store.scss ***!
+  \******************************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/whatsappp_store/home_decor.scss":
+/*!***************************************************************!*\
+  !*** ./resources/assets/scss/whatsappp_store/home_decor.scss ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/whatsappp_store/jewellery.scss":
+/*!**************************************************************!*\
+  !*** ./resources/assets/scss/whatsappp_store/jewellery.scss ***!
+  \**************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/whatsappp_store/travel.scss":
+/*!***********************************************************!*\
+  !*** ./resources/assets/scss/whatsappp_store/travel.scss ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard6.scss":
+/*!*******************************************!*\
+  !*** ./resources/assets/scss/vcard6.scss ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard7.scss":
+/*!*******************************************!*\
+  !*** ./resources/assets/scss/vcard7.scss ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard8.scss":
+/*!*******************************************!*\
+  !*** ./resources/assets/scss/vcard8.scss ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard9.scss":
+/*!*******************************************!*\
+  !*** ./resources/assets/scss/vcard9.scss ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard10.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard10.scss ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard16.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard16.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:34:4)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard13.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard13.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:34:4)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard14.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard14.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard15.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard15.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard17.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard17.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard21.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard21.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:34:4)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard22.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard22.scss ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard26.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard26.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard20.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard20.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard18.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard18.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard19.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard19.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard24.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard24.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard25.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard25.scss ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard27.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard27.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard28.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard28.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard31.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard31.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard32.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard32.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard33.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard33.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard34.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard34.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard35.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard35.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard36.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard36.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard37.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard37.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard38.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard38.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard30.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard30.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard29.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard29.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard39.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard39.scss ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/dynamic-vcard.scss":
+/*!**************************************************!*\
+  !*** ./resources/assets/scss/dynamic-vcard.scss ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard23.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard23.scss ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard1.scss":
+/*!****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard1.scss ***!
+  \****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard12.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard12.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard13.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard13.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard14.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard14.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:34:4)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard15.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard15.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard16.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard16.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard17.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard17.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at processTicksAndRejections (node:internal/process/task_queues:89:21)\n    at runNextTicks (node:internal/process/task_queues:68:3)\n    at process.processImmediate (node:internal/timers:472:9)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard18.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard18.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard19.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard19.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard20.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard20.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at processTicksAndRejections (node:internal/process/task_queues:89:21)\n    at runNextTicks (node:internal/process/task_queues:68:3)\n    at process.processImmediate (node:internal/timers:472:9)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard21.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard21.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at processTicksAndRejections (node:internal/process/task_queues:89:21)\n    at runNextTicks (node:internal/process/task_queues:68:3)\n    at process.processImmediate (node:internal/timers:472:9)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard22.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard22.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard23.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard23.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard24.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard24.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard25.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard25.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard26.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard26.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at processTicksAndRejections (node:internal/process/task_queues:89:21)\n    at runNextTicks (node:internal/process/task_queues:68:3)\n    at process.processImmediate (node:internal/timers:472:9)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard27.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard27.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard1.scss":
+/*!*******************************************!*\
+  !*** ./resources/assets/scss/vcard1.scss ***!
+  \*******************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard28.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard28.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at processTicksAndRejections (node:internal/process/task_queues:89:21)\n    at runNextTicks (node:internal/process/task_queues:68:3)\n    at process.processImmediate (node:internal/timers:472:9)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard29.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard29.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard30.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard30.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard31.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard31.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard32.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard32.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard33.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard33.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at processTicksAndRejections (node:internal/process/task_queues:89:21)\n    at runNextTicks (node:internal/process/task_queues:68:3)\n    at process.processImmediate (node:internal/timers:472:9)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard34.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard34.scss ***!
+  \*****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at processTicksAndRejections (node:internal/process/task_queues:89:21)\n    at runNextTicks (node:internal/process/task_queues:68:3)\n    at process.processImmediate (node:internal/timers:472:9)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard35.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard35.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard36.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard36.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/vcard37.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/vcard37.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard2.scss":
+/*!*******************************************!*\
+  !*** ./resources/assets/scss/vcard2.scss ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/new_vcard/custom.scss":
+/*!*****************************************************!*\
+  !*** ./resources/assets/scss/new_vcard/custom.scss ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/new_vcard/slick.scss":
+/*!****************************************************!*\
+  !*** ./resources/assets/scss/new_vcard/slick.scss ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/new_vcard/slick-theme.scss":
+/*!**********************************************************!*\
+  !*** ./resources/assets/scss/new_vcard/slick-theme.scss ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/blog.scss":
+/*!*****************************************!*\
+  !*** ./resources/assets/scss/blog.scss ***!
+  \*****************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:34:4)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/oldVcard/blog.scss":
+/*!**************************************************!*\
+  !*** ./resources/assets/scss/oldVcard/blog.scss ***!
+  \**************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:34:4)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard12.scss":
+/*!********************************************!*\
+  !*** ./resources/assets/scss/vcard12.scss ***!
+  \********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/theme.scss":
+/*!******************************************!*\
+  !*** ./resources/assets/scss/theme.scss ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/front/main.scss":
+/*!***********************************************!*\
+  !*** ./resources/assets/scss/front/main.scss ***!
+  \***********************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:240:10)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:255:3\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:143:11)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/new_home/index.scss":
+/*!***************************************************!*\
+  !*** ./resources/assets/scss/new_home/index.scss ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/new_home/custom.scss":
+/*!****************************************************!*\
+  !*** ./resources/assets/scss/new_home/custom.scss ***!
+  \****************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard3.scss":
+/*!*******************************************!*\
+  !*** ./resources/assets/scss/vcard3.scss ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/faqs/faqs.scss":
+/*!**********************************************!*\
+  !*** ./resources/assets/scss/faqs/faqs.scss ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/blogs/blogs.scss":
+/*!************************************************!*\
+  !*** ./resources/assets/scss/blogs/blogs.scss ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/blogs/blogs1.scss":
+/*!*************************************************!*\
+  !*** ./resources/assets/scss/blogs/blogs1.scss ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/new_home/slick.scss":
+/*!***************************************************!*\
+  !*** ./resources/assets/scss/new_home/slick.scss ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/new_home/slick-theme.scss":
+/*!*********************************************************!*\
+  !*** ./resources/assets/scss/new_home/slick-theme.scss ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/new_home/layout.scss":
+/*!****************************************************!*\
+  !*** ./resources/assets/scss/new_home/layout.scss ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/variables.scss":
+/*!******************************************************!*\
+  !*** ./resources/assets/scss/vcard11/variables.scss ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/blog.scss":
+/*!*************************************************!*\
+  !*** ./resources/assets/scss/vcard11/blog.scss ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/blog-single.scss":
+/*!********************************************************!*\
+  !*** ./resources/assets/scss/vcard11/blog-single.scss ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/contact.scss":
+/*!****************************************************!*\
+  !*** ./resources/assets/scss/vcard11/contact.scss ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard4.scss":
+/*!*******************************************!*\
+  !*** ./resources/assets/scss/vcard4.scss ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/custom.scss":
+/*!***************************************************!*\
+  !*** ./resources/assets/scss/vcard11/custom.scss ***!
+  \***************************************************/
+/***/ (() => {
+
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/file-loader/dist/cjs.js):\nError: error:0308010C:digital envelope routines::unsupported\n    at new Hash (node:internal/crypto/hash:103:19)\n    at Object.createHash (node:crypto:145:10)\n    at getHashDigest (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\getHashDigest.js:46:34)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:113:11\n    at String.replace (<anonymous>)\n    at interpolateName (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\node_modules\\loader-utils\\lib\\interpolateName.js:110:8)\n    at Object.loader (C:\\xampp\\htdocs\\aalan\\node_modules\\file-loader\\dist\\index.js:29:48)\n    at processResult (C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:760:19)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:862:5\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:400:11\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:252:18\n    at runSyncOrAsync (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:156:3)\n    at iterateNormalLoaders (C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:251:2)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\loader-runner\\lib\\LoaderRunner.js:224:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\webpack\\lib\\NormalModule.js:836:15\n    at Array.eval (eval at create (C:\\xampp\\htdocs\\aalan\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:12:1)\n    at runCallbacks (C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:27:15)\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:200:4\n    at C:\\xampp\\htdocs\\aalan\\node_modules\\graceful-fs\\graceful-fs.js:123:16\n    at FSReqCallback.readFileAfterClose [as oncomplete] (node:internal/fs/read/context:68:3)");
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/home.scss":
+/*!*************************************************!*\
+  !*** ./resources/assets/scss/vcard11/home.scss ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/layout.scss":
+/*!***************************************************!*\
+  !*** ./resources/assets/scss/vcard11/layout.scss ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/portfolio.scss":
+/*!******************************************************!*\
+  !*** ./resources/assets/scss/vcard11/portfolio.scss ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/portfolio-single.scss":
+/*!*************************************************************!*\
+  !*** ./resources/assets/scss/vcard11/portfolio-single.scss ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/portfolio-single-2.scss":
+/*!***************************************************************!*\
+  !*** ./resources/assets/scss/vcard11/portfolio-single-2.scss ***!
+  \***************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard11/resume.scss":
+/*!***************************************************!*\
+  !*** ./resources/assets/scss/vcard11/resume.scss ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/css/custom-dark-mode.scss":
+/*!****************************************************!*\
+  !*** ./resources/assets/css/custom-dark-mode.scss ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/css/main.scss":
+/*!****************************************!*\
+  !*** ./resources/assets/css/main.scss ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/custom-vcard.scss":
+/*!*************************************************!*\
+  !*** ./resources/assets/scss/custom-vcard.scss ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./resources/assets/scss/vcard5.scss":
+/*!*******************************************!*\
+  !*** ./resources/assets/scss/vcard5.scss ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = __webpack_modules__;
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/chunk loaded */
+/******/ 	(() => {
+/******/ 		var deferred = [];
+/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
+/******/ 			if(chunkIds) {
+/******/ 				priority = priority || 0;
+/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
+/******/ 				deferred[i] = [chunkIds, fn, priority];
+/******/ 				return;
+/******/ 			}
+/******/ 			var notFulfilled = Infinity;
+/******/ 			for (var i = 0; i < deferred.length; i++) {
+/******/ 				var [chunkIds, fn, priority] = deferred[i];
+/******/ 				var fulfilled = true;
+/******/ 				for (var j = 0; j < chunkIds.length; j++) {
+/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
+/******/ 						chunkIds.splice(j--, 1);
+/******/ 					} else {
+/******/ 						fulfilled = false;
+/******/ 						if(priority < notFulfilled) notFulfilled = priority;
+/******/ 					}
+/******/ 				}
+/******/ 				if(fulfilled) {
+/******/ 					deferred.splice(i--, 1)
+/******/ 					var r = fn();
+/******/ 					if (r !== undefined) result = r;
+/******/ 				}
+/******/ 			}
+/******/ 			return result;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/jsonp chunk loading */
+/******/ 	(() => {
+/******/ 		// no baseURI
+/******/ 		
+/******/ 		// object to store loaded and loading chunks
+/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
+/******/ 		var installedChunks = {
+/******/ 			"/assets/js/vcards/vcard-view": 0,
+/******/ 			"assets/css/vcard3": 0,
+/******/ 			"assets/css/vcard2": 0,
+/******/ 			"assets/css/vcard10": 0,
+/******/ 			"assets/css/vcard9": 0,
+/******/ 			"assets/css/vcard8": 0,
+/******/ 			"assets/css/vcard5": 0,
+/******/ 			"assets/css/custom-vcard": 0,
+/******/ 			"assets/css/page": 0,
+/******/ 			"assets/css/custom-pages-dark": 0,
+/******/ 			"assets/css/resume": 0,
+/******/ 			"assets/css/portfolio-single-2": 0,
+/******/ 			"assets/css/portfolio-single": 0,
+/******/ 			"assets/css/portfolio": 0,
+/******/ 			"assets/css/layout": 0,
+/******/ 			"assets/css/home": 0,
+/******/ 			"assets/css/vcard4": 0,
+/******/ 			"assets/css/contact": 0,
+/******/ 			"assets/css/blog-single": 0,
+/******/ 			"assets/css/blog": 0,
+/******/ 			"assets/css/variables": 0,
+/******/ 			"assets/css/new_home/layout": 0,
+/******/ 			"assets/css/new_home/slick-theme": 0,
+/******/ 			"assets/css/new_home/slick": 0,
+/******/ 			"assets/css/blogs/blogs1": 0,
+/******/ 			"assets/css/blogs/blogs": 0,
+/******/ 			"assets/css/faqs/faqs": 0,
+/******/ 			"assets/css/new_home/index": 0,
+/******/ 			"assets/css/theme": 0,
+/******/ 			"assets/css/new_vcard/slick-theme": 0,
+/******/ 			"assets/css/new_vcard/slick": 0,
+/******/ 			"assets/css/new_vcard/custom": 0,
+/******/ 			"assets/css/oldVcard/vcard37": 0,
+/******/ 			"assets/css/oldVcard/vcard36": 0,
+/******/ 			"assets/css/oldVcard/vcard35": 0,
+/******/ 			"assets/css/oldVcard/vcard32": 0,
+/******/ 			"assets/css/oldVcard/vcard31": 0,
+/******/ 			"assets/css/oldVcard/vcard29": 0,
+/******/ 			"assets/css/oldVcard/vcard27": 0,
+/******/ 			"assets/css/oldVcard/vcard25": 0,
+/******/ 			"assets/css/oldVcard/vcard23": 0,
+/******/ 			"assets/css/oldVcard/vcard22": 0,
+/******/ 			"assets/css/oldVcard/vcard19": 0,
+/******/ 			"assets/css/vcard23": 0,
+/******/ 			"assets/css/dynamic-vcard": 0,
+/******/ 			"assets/css/vcard39": 0,
+/******/ 			"assets/css/vcard25": 0,
+/******/ 			"assets/css/vcard22": 0,
+/******/ 			"assets/css/vcard7": 0,
+/******/ 			"assets/css/vcard6": 0,
+/******/ 			"assets/css/whatsappp_store/travel": 0,
+/******/ 			"assets/css/whatsappp_store/jewellery": 0,
+/******/ 			"assets/css/whatsappp_store/home_decor": 0,
+/******/ 			"assets/css/whatsappp_store/cloth_store": 0,
+/******/ 			"assets/css/whatsappp_store/ecommerce": 0,
+/******/ 			"assets/css/whatsappp_store/custom": 0,
+/******/ 			"assets/css/whatsappp_store/beauty-products": 0,
+/******/ 			"assets/css/front-custom": 0
+/******/ 		};
+/******/ 		
+/******/ 		// no chunk on demand loading
+/******/ 		
+/******/ 		// no prefetching
+/******/ 		
+/******/ 		// no preloaded
+/******/ 		
+/******/ 		// no HMR
+/******/ 		
+/******/ 		// no HMR manifest
+/******/ 		
+/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
+/******/ 		
+/******/ 		// install a JSONP callback for chunk loading
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 			var [chunkIds, moreModules, runtime] = data;
+/******/ 			// add "moreModules" to the modules object,
+/******/ 			// then flag all "chunkIds" as loaded and fire callback
+/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
+/******/ 				for(moduleId in moreModules) {
+/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
+/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
+/******/ 					}
+/******/ 				}
+/******/ 				if(runtime) var result = runtime(__webpack_require__);
+/******/ 			}
+/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
+/******/ 			for(;i < chunkIds.length; i++) {
+/******/ 				chunkId = chunkIds[i];
+/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 					installedChunks[chunkId][0]();
+/******/ 				}
+/******/ 				installedChunks[chunkId] = 0;
+/******/ 			}
+/******/ 			return __webpack_require__.O(result);
+/******/ 		}
+/******/ 		
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"] = self["webpackChunk"] || [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+/******/ 	
+/******/ 	// startup
+/******/ 	// Load entry module and return exports
+/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/js/vcards/vcard-view.js")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard1.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard2.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard3.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard4.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard5.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard6.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard7.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard8.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard9.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard10.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard16.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard13.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard14.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard15.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard17.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard21.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard22.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard26.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard20.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard18.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard19.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard24.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard25.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard27.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard28.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard31.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard32.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard33.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard34.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard35.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard36.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard37.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard38.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard30.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard29.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard39.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/dynamic-vcard.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard23.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard1.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard12.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard13.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard14.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard15.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard16.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard17.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard18.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard19.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard20.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard21.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard22.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard23.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard24.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard25.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard26.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard27.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard28.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard29.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard30.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard31.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard32.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard33.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard34.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard35.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard36.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/vcard37.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/new_vcard/custom.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/new_vcard/slick.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/new_vcard/slick-theme.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/blog.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/oldVcard/blog.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard12.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/theme.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/front/main.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/new_home/index.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/new_home/custom.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/faqs/faqs.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/blogs/blogs.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/blogs/blogs1.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/new_home/slick.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/new_home/slick-theme.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/new_home/layout.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/variables.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/blog.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/blog-single.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/contact.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/custom.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/home.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/layout.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/portfolio.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/portfolio-single.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/portfolio-single-2.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/vcard11/resume.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/css/custom-dark-mode.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/css/main.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/custom-vcard.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/css/front-main.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/whatsappp_store/beauty-products.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/whatsappp_store/custom.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/whatsappp_store/ecommerce.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/whatsappp_store/restaurant.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/whatsappp_store/cloth_store.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/whatsappp_store/grocery_store.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/whatsappp_store/home_decor.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/whatsappp_store/jewellery.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["assets/css/vcard3","assets/css/vcard2","assets/css/vcard10","assets/css/vcard9","assets/css/vcard8","assets/css/vcard5","assets/css/custom-vcard","assets/css/page","assets/css/custom-pages-dark","assets/css/resume","assets/css/portfolio-single-2","assets/css/portfolio-single","assets/css/portfolio","assets/css/layout","assets/css/home","assets/css/vcard4","assets/css/contact","assets/css/blog-single","assets/css/blog","assets/css/variables","assets/css/new_home/layout","assets/css/new_home/slick-theme","assets/css/new_home/slick","assets/css/blogs/blogs1","assets/css/blogs/blogs","assets/css/faqs/faqs","assets/css/new_home/index","assets/css/theme","assets/css/new_vcard/slick-theme","assets/css/new_vcard/slick","assets/css/new_vcard/custom","assets/css/oldVcard/vcard37","assets/css/oldVcard/vcard36","assets/css/oldVcard/vcard35","assets/css/oldVcard/vcard32","assets/css/oldVcard/vcard31","assets/css/oldVcard/vcard29","assets/css/oldVcard/vcard27","assets/css/oldVcard/vcard25","assets/css/oldVcard/vcard23","assets/css/oldVcard/vcard22","assets/css/oldVcard/vcard19","assets/css/vcard23","assets/css/dynamic-vcard","assets/css/vcard39","assets/css/vcard25","assets/css/vcard22","assets/css/vcard7","assets/css/vcard6","assets/css/whatsappp_store/travel","assets/css/whatsappp_store/jewellery","assets/css/whatsappp_store/home_decor","assets/css/whatsappp_store/cloth_store","assets/css/whatsappp_store/ecommerce","assets/css/whatsappp_store/custom","assets/css/whatsappp_store/beauty-products","assets/css/front-custom"], () => (__webpack_require__("./resources/assets/scss/whatsappp_store/travel.scss")))
+/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
+/******/ 	
+/******/ })()
+;
