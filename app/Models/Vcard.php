@@ -342,6 +342,20 @@ class Vcard extends Model implements HasMedia
         'Prompt' => 'Prompt',
         'Work Sans' => 'Work Sans',
         'Concert One' => 'Concert One',
+        'Tajawal' => 'تجوال',
+        'Cairo' => 'القاهرة',
+        'Amiri' => 'أميري',
+        'Noto Sans Arabic' => 'نوتو سانز عربي',
+        'Noto Naskh Arabic' => 'نوتو نسخ عربي',
+        'Noto Kufi Arabic' => 'نوتو كوفي عربي',
+        'Scheherazade' => 'شهرزاد',
+        'Lateef' => 'لتيف',
+        'Harmattan' => 'هرمتان',
+        'Reem Kufi' => 'ريم كوفي',
+        'Jomhuria' => 'جمهورية',
+        'Mada' => 'مدى',
+        'Lemonada' => 'ليمونادا',
+        'Zain'=>'زين',
     ];
 
     const LINK = 0;
