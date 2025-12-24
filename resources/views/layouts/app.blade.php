@@ -10,28 +10,28 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
-        <!-- Tajawal Font for Arabic -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" />
+        <!-- Zain Font for Arabic -->
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zain:wght@200;300;400;500;700;800;900&display=swap" />
         <style>
-            /* تطبيق خط Tajawal على لوحة التحكم */
+            /* تطبيق خط Zain على لوحة التحكم */
             * {
-                font-family: "Tajawal", "Poppins", sans-serif !important;
+                font-family: "Zain", "Poppins", sans-serif !important;
             }
 
             /* تطبيق الخط على عناصر معينة */
             h1, h2, h3, h4, h5, h6 {
-                font-family: "Tajawal", sans-serif;
+                font-family: "Zain", sans-serif;
                 font-weight: 700;
             }
 
             body {
-                font-family: "Tajawal", sans-serif;
+                font-family: "Zain", sans-serif;
                 font-weight: 400;
             }
 
             /* لتطبيق الخط على النصوص العربية بشكل أفضل */
             body, p, span, div, a, li, button, input, textarea, select, label {
-                font-family: "Tajawal", sans-serif !important;
+                font-family: "Zain", sans-serif !important;
             }
         </style>
         <!-- General CSS Files -->
