@@ -43,12 +43,15 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/plugins.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom-vcard.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/lightbox.css') }}">
+    @if (checkFeature('custom-fonts') && $vcard->font_family)
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ urlencode($vcard->font_family) }}:wght@400;500;600;700&display=swap{{ in_array($vcard->font_family, ['Tajawal', 'Cairo', 'Amiri', 'Noto Sans Arabic', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Scheherazade', 'Lateef', 'Harmattan', 'Reem Kufi', 'Jomhuria', 'Mada', 'Lemonada', 'Zain']) ? '&subset=arabic' : '' }}">
+    @endif
     @if ($vcard->font_family || $vcard->font_size || $vcard->custom_css)
         <style>
             @if (checkFeature('custom-fonts'))
                 @if ($vcard->font_family)
                     body {
-                        font-family: {{ $vcard->font_family }};
+                        font-family: {{ $vcard->font_family }}  !important;
                     }
                 @endif
                 @if ($vcard->font_size)
@@ -68,6 +71,7 @@
     @if (checkFeature('password'))
         @include('vcards.password')
     @endif
+
     <div class="main-section position-relative m-auto">
         <div class="@if ($vcard->cover_type == 2) yt-main-img @endif main-img h-100 w-100 position-relative">
             {{-- <img src="{{ asset('assets/img/oldVcardTemplate/vcard37/main.png') }}" class="h-100 w-100 object-fit-cover"
