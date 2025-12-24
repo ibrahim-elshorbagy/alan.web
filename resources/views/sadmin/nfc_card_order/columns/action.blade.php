@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-center">
-    <a title="{{ __('messages.common.download') }}" class="btn px-1 text-primary fs-3" href="{{ route('sadmin.nfc-card-orders.download', $row->id) }}">
+    <a title="{{ __('messages.common.download') }}" class="btn px-1 text-primary fs-3" href="{{ route('sadmin.nfc-card-orders.print', $row->id) }}" target="_blank">
         <i class="fa-solid fa-download"></i>
     </a>
     <a title="{{ __('messages.common.view') }}" class="btn px-1 text-info fs-3" href="{{ route('nfc-card-orders.show', $row->id) }}">

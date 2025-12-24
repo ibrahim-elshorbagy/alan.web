@@ -696,6 +696,7 @@ Route::middleware(['freshInstall'])->group(function () {
             )->name('email.sub.destroy');
 
             Route::get('my-nfc-orders/{id}/download',[NfcOrdersController::class,'downloadNfcCardPdf'])->name('sadmin.nfc-card-orders.download');
+            Route::get('my-nfc-orders/{id}/print',[NfcOrdersController::class,'printNfcCardOrder'])->name('sadmin.nfc-card-orders.print');
 
             Route::middleware('permission:manage_language')->group(function () {
                 Route::resource('languages', LanguageController::class);
@@ -843,6 +844,7 @@ Route::middleware(['freshInstall'])->group(function () {
         Route::get('/nfc/stripe', [StripeController::class, 'nfcPurchase'])->name('stripe.nfc');
         Route::resource('/my-nfc-orders', NfcOrdersController::class)->only('index', 'show');
         Route::get('my-nfc-orders/{id}/download',[NfcOrdersController::class,'downloadNfcCardPdf'])->name('nfc-card-orders.download');
+        Route::get('my-nfc-orders/{id}/print',[NfcOrdersController::class,'printNfcCardOrder'])->name('nfc-card-orders.print');
 
         Route::get('/storage', [StorageLimitController::class, 'index'])->name('user.storage');
         Route::post('/storage-chart', [StorageLimitController::class, 'storageChart'])->name('user.storage.chart');
@@ -1108,7 +1110,7 @@ Route::middleware(['freshInstall'])->group(function () {
     Route::get('testing', function () {
         return "This is a test message!";
     });
-    
+
     Route::resource('contact-request', ContactRequestController::class);
     // razorpay product routes
     Route::post('product-razorpay-payment-success', [RazorpayController::class, 'productPaymentSuccess'])

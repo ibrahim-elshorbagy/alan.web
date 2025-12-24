@@ -548,4 +548,17 @@ class NfcOrdersController extends AppBaseController
 
         return $pdf->download('nfc-card-order-'.$order->id.'.pdf');
     }
+
+    public function printNfcCardOrder(Request $request, $id)
+    {
+        $order = NfcOrders::with(['user', 'vcard', 'nfcCard', 'nfcTransaction'])->findOrFail($id);
+        $user = getLogInUser();
+        if ($order->user_id !== $user->id && !$user->hasRole('super_admin')) {
+            abort(404);
+        }
+        return view('sadmin.nfc_card_order.nfc_card_order_print', [
+            'nfcOrder' => $order,
+            'appName' => getAppName(),
+        ]);
+    }
 }
