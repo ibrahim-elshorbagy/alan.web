@@ -1,2 +1,4339 @@
-/*! For license information please see custom.js.LICENSE.txt */
-(()=>{var __webpack_modules__={2743:e=>{!function(t,n){var r=n.jQuery;e.exports=r?t(n,r):function(e){if(e&&!e.fn)throw"Provide jQuery or null";return t(n,e)}}((function(e,t){"use strict";var n=!1===t;t=t&&t.fn?t:e.jQuery;var r,o,a,i,s,c,l,d,u,p,f,g,m,v,h,w,y,_,b,k,x,$,C="v1.0.11",E="_ocp",P=/[ \t]*(\r\n|\n|\r)/g,S=/\\(['"\\])/g,L=/['"\\]/g,j=/(?:\x08|^)(onerror:)?(?:(~?)(([\w$.]+):)?([^\x08]+))\x08(,)?([^\x08]+)/gi,T=/^if\s/,A=/<(\w+)[>\s]/,M=/[\x00`><\"'&=]/,F=/^on[A-Z]|^convert(Back)?$/,I=/^\#\d+_`[\s\S]*\/\d+_`$/,B=/[\x00`><"'&=]/g,N=/[&<>]/g,R=/&(amp|gt|lt);/g,O=/\[['"]?|['"]?\]/g,V=0,D={"&":"&amp;","<":"&lt;",">":"&gt;","\0":"&#0;","'":"&#39;",'"':"&#34;","`":"&#96;","=":"&#61;"},q={amp:"&",gt:">",lt:"<"},H="html",U="object",z="data-jsv-tmpl",X="jsvTmpl",K="For #index in nested block use #getIndex().",J={},Y={},Z=e.jsrender,Q=Z&&t&&!t.render,G={template:{compile:function e(n,r,o,a){function s(r){var i,s;if(""+r===r||r.nodeType>0&&(c=r)){if(!c)if(/^\.?\/[^\\:*?"<>]*$/.test(r))(s=d[n=n||r])?r=s:c=document.getElementById(r);else if("#"===r.charAt(0))c=document.getElementById(r.slice(1));else if(t.fn&&!g.rTmpl.test(r))try{c=t(r,document)[0]}catch(e){}c&&("SCRIPT"!==c.tagName&&ke(r+": Use script block, not "+c.tagName),a?r=c.innerHTML:((i=c.getAttribute(z))&&(i!==X?(r=d[i],delete d[i]):t.fn&&(r=t.data(c)[X])),i&&r||(n=n||(t.fn?X:r),r=e(n,c.innerHTML,o,a)),r.tmplName=n=n||i,n!==X&&(d[n]=r),c.setAttribute(z,n),t.fn&&t.data(c,X,r))),c=void 0}else r.fn||(r=void 0);return r}var c,l,p=r=r||"";g._html=u.html,0===a&&(a=void 0,p=s(p));(a=a||(r.markup?r.bnds?ae({},r):r:{})).tmplName=a.tmplName||n||"unnamed",o&&(a._parentTmpl=o);!p&&r.markup&&(p=s(r.markup))&&p.fn&&(p=p.markup);if(void 0!==p)return p.render||r.render?p.tmpls&&(l=p):(r=ve(p,a),$e(p.replace(L,"\\$&"),r)),l||(l=ae((function(){return l.render.apply(l,arguments)}),r),function(e){var t,n,r;for(t in G)e[n=t+"s"]&&(r=e[n],e[n]={},i[n](r,e))}(l)),l}},tag:{compile:function(e,t,n){var r,o,a,i=new g._tg;function s(){var t=this;t._={unlinked:!0},t.inline=!0,t.tagName=e}c(t)?t={depends:t.depends,render:t}:""+t===t&&(t={template:t});if(o=t.baseTag)for(a in t.flow=!!t.flow,(o=""+o===o?n&&n.tags[o]||f[o]:o)||ke('baseTag: "'+t.baseTag+'" not found'),i=ae(i,o),t)i[a]=ee(o[a],t[a]);else i=ae(i,t);void 0!==(r=i.template)&&(i.template=""+r===r?d[r]||d(r):r);(s.prototype=i).constructor=i._ctr=s,n&&(i._parentTmpl=n);return i}},viewModel:{compile:function(e,n){var r,o,a,i=this,d=n.getters,u=n.extend,p=n.id,f=t.extend({_is:e||"unnamed",unmap:x,merge:k},u),g="",m="",v=d?d.length:0,h=t.observable,w={};function y(e){o.apply(this,e)}function _(){return new y(arguments)}function b(e,t){for(var n,r,o,a,s,c=0;c<v;c++)n=void 0,(o=d[c])+""!==o&&(o=(n=o).getter,s=n.parentRef),void 0===(a=e[o])&&n&&void 0!==(r=n.defaultVal)&&(a=ge(r,e)),t(a,n&&i[n.type],o,s)}function k(e,t,n){e=e+""===e?JSON.parse(e):e;var r,o,a,i,c,d,u,f,g,m,v=0,y=this;if(l(y)){for(u={},g=[],o=e.length,a=y.length;v<o;v++){for(f=e[v],d=!1,r=0;r<a&&!d;r++)u[r]||(c=y[r],p&&(u[r]=d=p+""===p?f[p]&&(w[p]?c[p]():c[p])===f[p]:p(c,f)));d?(c.merge(f),g.push(c)):(g.push(m=_.map(f)),n&&me(m,n,t))}h?h(y).refresh(g,!0):y.splice.apply(y,[0,y.length].concat(g))}else for(i in b(e,(function(e,t,n,r){t?y[n]().merge(e,y,r):y[n]()!==e&&y[n](e)})),e)i===s||w[i]||(y[i]=e[i])}function x(){var e,t,n,r,o=0,a=this;function u(e){for(var t=[],n=0,r=e.length;n<r;n++)t.push(e[n].unmap());return t}if(l(a))return u(a);for(e={};o<v;o++)n=void 0,(t=d[o])+""!==t&&(t=(n=t).getter),r=a[t](),e[t]=n&&r&&i[n.type]?l(r)?u(r):r.unmap():r;for(t in a)!a.hasOwnProperty(t)||"_"===t.charAt(0)&&w[t.slice(1)]||t===s||c(a[t])||(e[t]=a[t]);return e}for(y.prototype=f,r=0;r<v;r++)!function(e){e=e.getter||e,w[e]=r+1;var t="_"+e;g+=(g?",":"")+e,m+="this."+t+" = "+e+";\n",f[e]=f[e]||function(n){if(!arguments.length)return this[t];h?h(this).setProperty(e,n):this[t]=n},h&&(f[e].set=f[e].set||function(e){this[t]=e})}(d[r]);return m=new Function(g,m),o=function(){m.apply(this,arguments),(a=arguments[v+1])&&me(this,arguments[v],a)},o.prototype=f,f.constructor=o,_.map=function(t){t=t+""===t?JSON.parse(t):t;var n,r,o,a,i=0,c=t,u=[];if(l(t)){for(n=(t=t||[]).length;i<n;i++)u.push(this.map(t[i]));return u._is=e,u.unmap=x,u.merge=k,u}if(t){for(b(t,(function(e,t){t&&(e=t.map(e)),u.push(e)})),c=this.apply(this,u),i=v;i--;)if(o=u[i],(a=d[i].parentRef)&&o&&o.unmap)if(l(o))for(n=o.length;n--;)me(o[n],a,c);else me(o,a,c);for(r in t)r===s||w[r]||(c[r]=t[r])}return c},_.getters=d,_.extend=u,_.id=p,_}},helper:{},converter:{}};function W(e,t){return function(){var n,r=this,o=r.base;return r.base=e,n=t.apply(r,arguments),r.base=o,n}}function ee(e,t){return c(t)&&((t=W(e?e._d?e:W(re,e):re,t))._d=(e&&e._d||0)+1),t}function te(e,t){var n,r=t.props;for(n in r)!F.test(n)||e[n]&&e[n].fix||(e[n]="convert"!==n?ee(e.constructor.prototype[n],r[n]):r[n])}function ne(e){return e}function re(){return""}function oe(e){this.name=(t.link?"JsViews":"JsRender")+" Error",this.message=e||this.name}function ae(e,t){if(e){for(var n in t)e[n]=t[n];return e}}function ie(){var e=this.get("item");return e?e.index:void 0}function se(){return this.index}function ce(e,t,n,r){var o,a,i,s=0;if(1===n&&(r=1,n=void 0),t)for(i=(a=t.split(".")).length;e&&s<i;s++)o=e,e=a[s]?e[a[s]]:e;return n&&(n.lt=n.lt||s<i),void 0===e?r?re:"":r?function(){return e.apply(o,arguments)}:e}function le(n,r,o){var a,i,s,l,d,u,f,m=this,v=!$&&arguments.length>1,h=m.ctx;if(n){if(m._||(d=m.index,m=m.tag),u=m,h&&h.hasOwnProperty(n)||(h=p).hasOwnProperty(n)){if(s=h[n],"tag"===n||"tagCtx"===n||"root"===n||"parentTags"===n)return s}else h=void 0;if((!$&&m.tagCtx||m.linked)&&(s&&s._cxp||(m=m.tagCtx||c(s)?m:!(m=m.scope||m).isTop&&m.ctx.tag||m,void 0!==s&&m.tagCtx&&(m=m.tagCtx.view.scope),h=m._ocps,(s=h&&h.hasOwnProperty(n)&&h[n]||s)&&s._cxp||!o&&!v||((h||(m._ocps=m._ocps||{}))[n]=s=[{_ocp:s,_vw:u,_key:n}],s._cxp={path:E,ind:0,updateValue:function(e,n){return t.observable(s[0]).setProperty(E,e),this}})),l=s&&s._cxp)){if(arguments.length>2)return(i=s[1]?g._ceo(s[1].deps):[E]).unshift(s[0]),i._cxp=l,i;if(d=l.tagElse,f=s[1]?l.tag&&l.tag.cvtArgs?l.tag.cvtArgs(d,1)[l.ind]:s[1](s[0].data,s[0],g):s[0]._ocp,v)return g._ucp(n,r,m,l),m;s=f}return s&&c(s)&&(a=function(){return s.apply(this&&this!==e?this:u,arguments)},ae(a,s)),a||s}}function de(e,t){var n,r,o,a,i,s,c,d=this;if(d.tagName){if(!(d=((s=d).tagCtxs||[d])[e||0]))return}else s=d.tag;if(i=s.bindFrom,a=d.args,(c=s.convert)&&""+c===c&&(c="true"===c?void 0:d.view.getRsc("converters",c)||ke("Unknown converter: '"+c+"'")),c&&!t&&(a=a.slice()),i){for(o=[],n=i.length;n--;)r=i[n],o.unshift(ue(d,r));t&&(a=o)}if(c){if(void 0===(c=c.apply(s,o||a)))return a;if(n=(i=i||[0]).length,l(c)&&(!1===c.arg0||1!==n&&c.length===n&&!c.arg0)||(c=[c],i=[0],n=1),t)a=c;else for(;n--;)+(r=i[n])===r&&(a[r]=c[n])}return a}function ue(e,t){return(e=e[+t===t?"args":"props"])&&e[t]}function pe(e){return this.cvtArgs(e,1)}function fe(e,t,n,r,o,a,i,s){var c,l,d,u=this,p="array"===t;u.content=s,u.views=p?[]:{},u.data=r,u.tmpl=o,d=u._={key:0,useKey:p?0:1,id:""+V++,onRender:i,bnds:{}},u.linked=!!i,u.type=t||"top",t&&(u.cache={_ct:m._cchCt}),n&&"top"!==n.type||((u.ctx=e||{}).root=u.data),(u.parent=n)?(u.root=n.root||u,c=n.views,l=n._,u.isTop=l.scp,u.scope=(!e.tag||e.tag===n.ctx.tag)&&!u.isTop&&n.scope||u,l.useKey?(c[d.key="_"+l.useKey++]=u,u.index=K,u.getIndex=ie):c.length===(d.key=u.index=a)?c.push(u):c.splice(a,0,u),u.ctx=e||n.ctx):t&&(u.root=u)}function ge(e,t){return c(e)?e.call(t):e}function me(e,t,n){Object.defineProperty(e,t,{value:n,configurable:!0})}function ve(e,n){var r,o=v._wm||{},a={tmpls:[],links:{},bnds:[],_is:"template",render:_e};return n&&(a=ae(a,n)),a.markup=e,a.htmlTag||(r=A.exec(e),a.htmlTag=r?r[1].toLowerCase():""),(r=o[a.htmlTag])&&r!==o.div&&(a.markup=t.trim(a.markup)),a}function he(e,t){var n=e+"s";i[n]=function r(o,a,s){var c,l,d,u=g.onStore[e];if(o&&typeof o===U&&!o.nodeType&&!o.markup&&!o.getTgt&&!("viewModel"===e&&o.getters||o.extend)){for(l in o)r(l,o[l],a);return a||i}return o&&""+o!==o&&(s=a,a=o,o=void 0),d=s?"viewModel"===e?s:s[n]=s[n]||{}:r,c=t.compile,void 0===a&&(a=c?o:d[o],o=void 0),null===a?o&&delete d[o]:(c&&((a=c.call(d,o,a,s,0)||{})._is=e),o&&(d[o]=a)),u&&u(o,a,s,c),a}}function we(e){h[e]=h[e]||function(t){return arguments.length?(m[e]=t,h):m[e]}}function ye(e){function t(t,n){this.tgt=e.getTgt(t,n),n.map=this}return c(e)&&(e={getTgt:e}),e.baseMap&&(e=ae(ae({},e.baseMap),e)),e.map=function(e,n){return new t(e,n)},e}function _e(e,t,n,r,o,i){var s,d,u,p,f,m,h,w=r,y="";if(!0===t?(n=t,t=void 0):typeof t!==U&&(t=void 0),(u=this.tag)?(this,p=(w=w||this.view)._getTmpl(u.template||this.tmpl),arguments.length||(e=u.contentCtx&&c(u.contentCtx)?e=u.contentCtx(e):w)):p=this,p){if(!r&&e&&"view"===e._is&&(w=e),w&&e===w&&(e=w.data),f=!w,$=$||f,f&&((t=t||{}).root=e),!$||v.useViews||p.useViews||w&&w!==a)y=be(p,e,t,n,w,o,i,u);else{if(w?(m=w.data,h=w.index,w.index=K):(m=(w=a).data,w.data=e,w.ctx=t),l(e)&&!n)for(s=0,d=e.length;s<d;s++)w.index=s,w.data=e[s],y+=p.fn(e[s],w,g);else w.data=e,y+=p.fn(e,w,g);w.data=m,w.index=h}f&&($=void 0)}return y}function be(e,t,n,r,o,a,i,s){var c,d,u,p,f,m,v,h,w,y,_,b,k,x="";if(s&&(w=s.tagName,b=s.tagCtx,n=n?Le(n,s.ctx):s.ctx,e===o.content?v=e!==o.ctx._wrp?o.ctx._wrp:void 0:e!==b.content?e===s.template?(v=b.tmpl,n._wrp=b.content):v=b.content||o.content:v=o.content,!1===b.props.link&&((n=n||{}).link=!1)),o&&(i=i||o._.onRender,(k=n&&!1===n.link)&&o._.nl&&(i=void 0),n=Le(n,o.ctx),b=!s&&o.tag?o.tag.tagCtxs[o.tagElse]:b),(y=b&&b.props.itemVar)&&("~"!==y[0]&&xe("Use itemVar='~myItem'"),y=y.slice(1)),!0===a&&(m=!0,a=0),i&&s&&s._.noVws&&(i=void 0),h=i,!0===i&&(h=void 0,i=o._.onRender),_=n=e.helpers?Le(e.helpers,n):n,l(t)&&!r)for((u=m?o:void 0!==a&&o||new fe(n,"array",o,t,e,a,i,v))._.nl=k,o&&o._.useKey&&(u._.bnd=!s||s._.bnd&&s,u.tag=s),c=0,d=t.length;c<d;c++)p=new fe(_,"item",u,t[c],e,(a||0)+c,i,u.content),y&&((p.ctx=ae({},_))[y]=g._cp(t[c],"#data",p)),f=e.fn(t[c],p,g),x+=u._.onRender?u._.onRender(f,p):f;else u=m?o:new fe(_,w||"data",o,t,e,a,i,v),y&&((u.ctx=ae({},_))[y]=g._cp(t,"#data",u)),u.tag=s,u._.nl=k,x+=e.fn(t,u,g);return s&&(u.tagElse=b.index,b.contentView=u),h?h(x,u):x}function ke(e){throw new g.Err(e)}function xe(e){ke("Syntax error\n"+e)}function $e(e,t,n,r,a){function i(t){(t-=v)&&k.push(e.substr(v,t).replace(P,"\\n"))}function s(t,n){t&&(t+="}}",xe((n?"{{"+n+"}} block has {{/"+t+" without {{"+t:"Unmatched or missing {{/"+t)+", in template:\n"+e))}var c,l,d,u,p,f=m.allowCode||t&&t.allowCode||!0===h.allowCode,g=[],v=0,y=[],k=g,x=[,,g];if(f&&t._is&&(t.allowCode=f),n&&(void 0!==r&&(e=e.slice(0,-r.length-2)+_),e=w+e+b),s(y[0]&&y[0][2].pop()[0]),e.replace(o,(function(o,c,l,p,g,m,h,w,_,b,$,C){(h&&c||_&&!l||w&&":"===w.slice(-1)||b)&&xe(o),m&&(g=":",p=H);var E,L,A,M=(c||n)&&[[]],I="",B="",N="",R="",O="",V="",D="",q="",U=!(_=_||n&&!a)&&!g;l=l||(w=w||"#data",g),i(C),v=C+o.length,h?f&&k.push(["*","\n"+w.replace(/^:/,"ret+= ").replace(S,"$1")+";\n"]):l?("else"===l&&(T.test(w)&&xe('For "{{else if expr}}" use "{{else expr}}"'),M=x[9]&&[[]],x[10]=e.substring(x[10],C),L=x[11]||x[0]||xe("Mismatched: "+o),x=y.pop(),k=x[2],U=!0),w&&Pe(w.replace(P," "),M,t,n).replace(j,(function(e,t,n,r,o,a,i,s){return"this:"===r&&(a="undefined"),s&&(A=A||"@"===s[0]),r="'"+o+"':",i?(B+=n+a+",",R+="'"+s+"',"):n?(N+=r+"j._cp("+a+',"'+s+'",view),',V+=r+"'"+s+"',"):t?D+=a:("trigger"===o&&(q+=a),"lateRender"===o&&(E="false"!==s),I+=r+a+",",O+=r+"'"+s+"',",u=u||F.test(o)),""})).slice(0,-1),M&&M[0]&&M.pop(),d=[l,p||!!r||u||"",U&&[],Ee(R||(":"===l?"'#data',":""),O,V),Ee(B||(":"===l?"data,":""),I,N),D,q,E,A,M||0],k.push(d),U&&(y.push(x),(x=d)[10]=v,x[11]=L)):$&&(s($!==x[0]&&$!==x[11]&&$,x[0]),x[10]=e.substring(x[10],C),x=y.pop()),s(!x&&$),k=x[2]})),i(e.length),(v=g[g.length-1])&&s(""+v!==v&&+v[10]===v[10]&&v[0]),n){for(l=Se(g,e,n),p=[],c=g.length;c--;)p.unshift(g[c][9]);Ce(l,p)}else l=Se(g,t);return l}function Ce(e,t){var n,r,o=0,a=t.length;for(e.deps=[],e.paths=[];o<a;o++)for(n in e.paths.push(r=t[o]),r)"_jsvto"!==n&&r.hasOwnProperty(n)&&r[n].length&&!r[n].skp&&(e.deps=e.deps.concat(r[n]))}function Ee(e,t,n){return[e.slice(0,-1),t.slice(0,-1),n.slice(0,-1)]}function Pe(e,n,r,o){var a,i,s,c,l,d=n&&n[0],u={bd:d},p={0:u},f=0,m=0,h=0,w={},y=0,_={},b={},k={},x={0:0},$={0:""},C=0;return"@"===e[0]&&(e=e.replace(O,".")),s=(e+(r?" ":"")).replace(g.rPrm,(function(r,s,E,P,S,j,T,A,M,F,I,B,N,R,O,V,D,q,H,U,z){P&&!A&&(S=P+S),j=j||"",N=N||"",E=E||s||N,S=S||M,F&&(F=!/\)|]/.test(z[U-1]))&&(S=S.slice(1).split(".").join("^")),I=I||q||"";var X,K,Y,Z,Q,G,W,ee=U;if(!l&&!c){if(T&&xe(e),D&&d){if(X=k[h-1],z.length-1>ee-(X||0)){if(X=t.trim(z.slice(X,ee+r.length)),K=i||p[h-1].bd,(Y=K[K.length-1])&&Y.prm){for(;Y.sb&&Y.sb.prm;)Y=Y.sb;Z=Y.sb={path:Y.sb,bnd:Y.bnd}}else K.push(Z={path:K.pop()});Y&&Y.sb===Z&&($[h]=$[h-1].slice(Y._cpPthSt)+$[h],$[h-1]=$[h-1].slice(0,Y._cpPthSt)),Z._cpPthSt=x[h-1],Z._cpKey=X,$[h]+=z.slice(C,U),C=U,Z._cpfn=J[X]=J[X]||new Function("data,view,j","//"+X+"\nvar v;\nreturn ((v="+$[h]+("]"===V?")]":V)+")!=null?v:null);"),$[h-1]+=b[m]&&v.cache?'view.getCache("'+X.replace(L,"\\$&")+'"':$[h],Z.prm=u.bd,Z.bnd=Z.bnd||Z.path&&Z.path.indexOf("^")>=0}$[h]=""}"["===I&&(I="[j._sq("),"["===E&&(E="[j._sq(")}return W=l?(l=!R)?r:N+'"':c?(c=!O)?r:N+'"':(E?(_[++m]=!0,w[m]=0,d&&(k[h++]=ee++,u=p[h]={bd:[]},$[h]="",x[h]=1),E):"")+(H?m?"":(f=z.slice(f,ee),(a?(a=i=!1,"\b"):"\b,")+f+(f=ee+r.length,d&&n.push(u.bd=[]),"\b")):A?(h&&xe(e),d&&n.pop(),a="_"+S,P,f=ee+r.length,d&&((d=u.bd=n[a]=[]).skp=!P),S+":"):S?S.split("^").join(".").replace(g.rPath,(function(e,t,r,s,c,l,p,f){if(Q="."===r,r&&(S=S.slice(t.length),/^\.?constructor$/.test(f||S)&&xe(e),Q||(e=(F?(o?"":"(ltOb.lt=ltOb.lt||")+"(ob=":"")+(s?'view.ctxPrm("'+s+'")':c?"view":"data")+(F?")===undefined"+(o?"":")")+'?"":view._getOb(ob,"':"")+(f?(l?"."+l:s||c?"":"."+r)+(p||""):(f=s?"":c?l||"":r,"")),e=t+("view.data"===(e+=f?"."+f:"").slice(0,9)?e.slice(5):e)+(F?(o?'"':'",ltOb')+(I?",1)":")"):"")),d)){if(K="_linkTo"===a?i=n._jsvto=n._jsvto||[]:u.bd,Y=Q&&K[K.length-1]){if(Y._cpfn){for(;Y.sb;)Y=Y.sb;Y.prm&&(Y.bnd&&(S="^"+S.slice(1)),Y.sb=S,Y.bnd=Y.bnd||"^"===S[0])}}else K.push(S);I&&!Q&&(k[h]=ee,x[h]=$[h].length)}return e}))+(I||j):j||(V?"]"===V?")]":")":B?(b[m]||xe(e),","):s?"":(l=R,c=O,'"'))),l||c||V&&(b[m]=!1,m--),d&&(l||c||(V&&(_[m+1]&&(u=p[--h],_[m+1]=!1),y=w[m+1]),I&&(w[m+1]=$[h].length+(E?1:0),(S||V)&&(u=p[++h]={bd:[]},_[m+1]=!0))),$[h]=($[h]||"")+z.slice(C,U),C=U+r.length,l||c||((G=E&&_[m+1])&&($[h-1]+=E,x[h-1]++),"("===I&&Q&&!Z&&($[h]=$[h-1].slice(y)+$[h],$[h-1]=$[h-1].slice(0,y))),$[h]+=G?W.slice(1):W),l||c||!I||(m++,S&&"("===I&&(b[m]=!0)),l||c||!q||(d&&($[h]+=I),W+=I),W})),d&&(s=$[0]),!m&&s||xe(e)}function Se(e,t,n){var r,o,a,i,s,c,l,d,u,p,g,h,w,y,_,b,k,x,$,C,E,L,j,T,A,M,F,I,B,N,R,O,V,D,q=0,U=v.useViews||t.useViews||t.tags||t.templates||t.helpers||t.converters,z="",X={},K=e.length;for(""+t===t?(k=n?'data-link="'+t.replace(P," ").slice(1,-1)+'"':t,t=0):(k=t.tmplName||"unnamed",t.allowCode&&(X.allowCode=!0),t.debug&&(X.debug=!0),p=t.bnds,b=t.tmpls),r=0;r<K;r++)if(""+(o=e[r])===o)z+='+"'+o+'"';else if("*"===(a=o[0]))z+=";\n"+o[1]+"\nret=ret";else{if(i=o[1],C=!n&&o[2],V=o[3],D=h=o[4],s="\n\tparams:{args:["+V[0]+"],\n\tprops:{"+V[1]+"}"+(V[2]?",\n\tctx:{"+V[2]+"}":"")+"},\n\targs:["+D[0]+"],\n\tprops:{"+D[1]+"}"+(D[2]?",\n\tctx:{"+D[2]+"}":""),B=o[6],N=o[7],o[8]?(R="\nvar ob,ltOb={},ctxs=",O=";\nctxs.lt=ltOb.lt;\nreturn ctxs;"):(R="\nreturn ",O=""),E=o[10]&&o[10].replace(S,"$1"),(T="else"===a)?g&&g.push(o[9]):(F=o[5]||!1!==m.debugMode&&"undefined",p&&(g=o[9])&&(g=[g],q=p.push(1))),U=U||h[1]||h[2]||g||/view.(?!index)/.test(h[0]),(A=":"===a)?i&&(a=i===H?">":i+a):(C&&((x=ve(E,X)).tmplName=k+"/"+a,x.useViews=x.useViews||U,Se(C,x),U=x.useViews,b.push(x)),T||($=a,U=U||a&&(!f[a]||!f[a].flow),j=z,z=""),L=(L=e[r+1])&&"else"===L[0]),I=F?";\ntry{\nret+=":"\n+",w="",y="",A&&(g||B||i&&i!==H||N)){if((M=new Function("data,view,j","// "+k+" "+ ++q+" "+a+R+"{"+s+"};"+O))._er=F,M._tag=a,M._bd=!!g,M._lr=N,n)return M;Ce(M,g),u=!0,w=(_='c("'+i+'",view,')+q+",",y=")"}if(z+=A?(n?(F?"try{\n":"")+"return ":I)+(u?(u=void 0,U=d=!0,_+(M?(p[q-1]=M,q):"{"+s+"}")+")"):">"===a?(l=!0,"h("+h[0]+")"):(!0,"((v="+h[0]+")!=null?v:"+(n?"null)":'"")'))):(c=!0,"\n{view:view,content:false,tmpl:"+(C?b.length:"false")+","+s+"},"),$&&!L){if(z="["+z.slice(0,-1)+"]",_='t("'+$+'",view,this,',n||g){if((z=new Function("data,view,j"," // "+k+" "+q+" "+$+R+z+O))._er=F,z._tag=$,g&&Ce(p[q-1]=z,g),z._lr=N,n)return z;w=_+q+",undefined,",y=")"}z=j+I+_+(g&&q||z)+")",g=0,$=0}F&&!L&&(U=!0,z+=";\n}catch(e){ret"+(n?"urn ":"+=")+w+"j._err(e,view,"+F+")"+y+";}"+(n?"":"\nret=ret"))}z="// "+k+(X.debug?"\ndebugger;":"")+"\nvar v"+(c?",t=j._tag":"")+(d?",c=j._cnvt":"")+(l?",h=j._html":"")+(n?(o[8]?", ob":"")+";\n":',ret=""')+z+(n?"\n":";\nreturn ret;");try{z=new Function("data,view,j",z)}catch(e){xe("Compiled template code:\n\n"+z+'\n: "'+(e.message||e)+'"')}return t&&(t.fn=z,t.useViews=!!U),z}function Le(e,t){return e&&e!==t?t?ae(ae({},t),e):e:t&&ae({},t)}function je(e,n){var r,o,a,i=n.tag,s=n.props,d=n.params.props,u=s.filter,p=s.sort,f=!0===p,g=parseInt(s.step),m=s.reverse?-1:1;if(!l(e))return e;if(f||p&&""+p===p?((r=e.map((function(e,t){return{i:t,v:""+(e=f?e:ce(e,p))===e?e.toLowerCase():e}}))).sort((function(e,t){return e.v>t.v?m:e.v<t.v?-m:0})),e=r.map((function(t){return e[t.i]}))):(p||m<0)&&!i.dataMap&&(e=e.slice()),c(p)&&(e=e.sort((function(){return p.apply(n,arguments)}))),m<0&&(!p||c(p))&&(e=e.reverse()),e.filter&&u&&(e=e.filter(u,n),n.tag.onFilter&&n.tag.onFilter(n)),d.sorted&&(r=p||m<0?e:e.slice(),i.sorted?t.observable(i.sorted).refresh(r):n.map.sorted=r),o=s.start,a=s.end,(d.start&&void 0===o||d.end&&void 0===a)&&(o=a=0),isNaN(o)&&isNaN(a)||(o=+o||0,a=void 0===a||a>e.length?e.length:+a,e=e.slice(o,a)),g>1){for(o=0,a=e.length,r=[];o<a;o+=g)r.push(e[o]);e=r}return d.paged&&i.paged&&$observable(i.paged).refresh(e),e}function Te(e,n,r){var o=this.jquery&&(this[0]||ke("Unknown template")),a=o.getAttribute(z);return _e.call(a&&t.data(o)[X]||d(o),e,n,r)}function Ae(e){return D[e]||(D[e]="&#"+e.charCodeAt(0)+";")}function Me(e,t){return q[t]||""}function Fe(e){return null!=e?M.test(e)&&(""+e).replace(B,Ae)||e:""}if(i={jsviews:C,sub:{rPath:/^(!*?)(?:null|true|false|\d[\d.]*|([\w$]+|\.|~([\w$]+)|#(view|([\w$]+))?)([\w$.^]*?)(?:[.[^]([\w$]+)\]?)?)$/g,rPrm:/(\()(?=\s*\()|(?:([([])\s*)?(?:(\^?)(~?[\w$.^]+)?\s*((\+\+|--)|\+|-|~(?![\w$])|&&|\|\||===|!==|==|!=|<=|>=|[<>%*:?\/]|(=))\s*|(!*?(@)?[#~]?[\w$.^]+)([([])?)|(,\s*)|(?:(\()\s*)?\\?(?:(')|("))|(?:\s*(([)\]])(?=[.^]|\s*$|[^([])|[)\]])([([]?))|(\s+)/g,View:fe,Err:oe,tmplFn:$e,parse:Pe,extend:ae,extendCtx:Le,syntaxErr:xe,onStore:{template:function(e,t){null===t?delete Y[e]:e&&(Y[e]=t)}},addSetting:we,settings:{allowCode:!1},advSet:re,_thp:te,_gm:ee,_tg:function(){},_cnvt:function(e,t,n,r){var o,a,i,s,c,l="number"==typeof n&&t.tmpl.bnds[n-1];void 0===r&&l&&l._lr&&(r="");void 0!==r?n=r={props:{},args:[r]}:l&&(n=l(t.data,t,g));if(l=l._bd&&l,e||l){if(o=(a=t._lc)&&a.tag,n.view=t,!o){if(o=ae(new g._tg,{_:{bnd:l,unlinked:!0,lt:n.lt},inline:!a,tagName:":",convert:e,onArrayChange:!0,flow:!0,tagCtx:n,tagCtxs:[n],_is:"tag"}),(s=n.args.length)>1)for(c=o.bindTo=[];s--;)c.unshift(s);a&&(a.tag=o,o.linkCtx=a),n.ctx=Le(n.ctx,(a?a.view:t).ctx),te(o,n)}o._er=r&&i,o.ctx=n.ctx||o.ctx||{},n.ctx=void 0,i=o.cvtArgs()[0],o._er=r&&i}else i=n.args[0];return null!=(i=l&&t._.onRender?t._.onRender(i,t,o):i)?i:""},_tag:function(e,t,n,r,o,i){function s(e){var t=c[e];if(void 0!==t)for(t=l(t)?t:[t],h=t.length;h--;)B=t[h],isNaN(parseInt(B))||(t[h]=parseInt(B));return t||[0]}var c,d,p,f,m,v,h,w,y,_,b,k,x,$,C,E,P,S,L,j,T,A,M,F,B,N,R,O,V,D=0,q="",U=(t=t||a)._lc||!1,z=t.ctx,X=n||t.tmpl,K="number"==typeof r&&t.tmpl.bnds[r-1];"tag"===e._is?(e=(c=e).tagName,r=c.tagCtxs,c.template):(d=t.getRsc("tags",e)||ke("Unknown tag: {{"+e+"}} ")).template;void 0===i&&K&&(K._lr=d.lateRender&&!1!==K._lr||K._lr)&&(i="");void 0!==i?(q+=i,r=i=[{props:{},args:[],params:{props:{}}}]):K&&(r=K(t.data,t,g));for(v=r.length;D<v;D++)E=(_=r[D]).tmpl,(!U||!U.tag||D&&!U.tag.inline||c._er||E&&+E===E)&&(E&&X.tmpls&&(_.tmpl=_.content=X.tmpls[E-1]),_.index=D,_.ctxPrm=le,_.render=_e,_.cvtArgs=de,_.bndArgs=pe,_.view=t,_.ctx=Le(Le(_.ctx,d&&d.ctx),z)),(n=_.props.tmpl)&&(_.tmpl=t._getTmpl(n),_.content=_.content||_.tmpl),c?U&&U.fn._lr&&(P=!!c.init):(P=!!(c=new d._ctr).init,c.parent=m=z&&z.tag,c.tagCtxs=r,U&&(c.inline=!1,U.tag=c),c.linkCtx=U,(c._.bnd=K||U.fn)?(c._.ths=_.params.props.this,c._.lt=r.lt,c._.arrVws={}):c.dataBoundOnly&&ke(e+" must be data-bound:\n{^{"+e+"}}")),M=c.dataMap,_.tag=c,M&&r&&(_.map=r[D].map),c.flow||(b=_.ctx=_.ctx||{},p=c.parents=b.parentTags=z&&Le(b.parentTags,z.parentTags)||{},m&&(p[m.tagName]=m),p[c.tagName]=b.tag=c,b.tagCtx=_);if(!(c._er=i)){for(te(c,r[0]),c.rendering={rndr:c.rendering},D=0;D<v;D++){if(A=(_=c.tagCtx=r[D]).props,c.ctx=_.ctx,!D){if(P&&(c.init(_,U,c.ctx),P=void 0),_.args.length||!1===_.argDefault||!1===c.argDefault||(_.args=j=[_.view.data],_.params.args=["#data"]),x=s("bindTo"),void 0!==c.bindTo&&(c.bindTo=x),void 0!==c.bindFrom?c.bindFrom=s("bindFrom"):c.bindTo&&(c.bindFrom=c.bindTo=x),$=c.bindFrom||x,R=x.length,N=$.length,c._.bnd&&(O=c.linkedElement)&&(c.linkedElement=O=l(O)?O:[O],R!==O.length&&ke("linkedElement not same length as bindTo")),(O=c.linkedCtxParam)&&(c.linkedCtxParam=O=l(O)?O:[O],N!==O.length&&ke("linkedCtxParam not same length as bindFrom/bindTo")),$)for(c._.fromIndex={},c._.toIndex={},w=N;w--;)for(B=$[w],h=R;h--;)B===x[h]&&(c._.fromIndex[h]=w,c._.toIndex[w]=h);U&&(U.attr=c.attr=U.attr||c.attr||U._dfAt),f=c.attr,c._.noVws=f&&f!==H}if(j=c.cvtArgs(D),c.linkedCtxParam)for(T=c.cvtArgs(D,1),h=N,V=c.constructor.prototype.ctx;h--;)(k=c.linkedCtxParam[h])&&(B=$[h],C=T[h],_.ctx[k]=g._cp(V&&void 0===C?V[k]:C,void 0!==C&&ue(_.params,B),_.view,c._.bnd&&{tag:c,cvt:c.convert,ind:h,tagElse:D}));(S=A.dataMap||M)&&(j.length||A.dataMap)&&((L=_.map)&&L.src===j[0]&&!o||(L&&L.src&&L.unmap(),S.map(j[0],_,L,!c._.bnd),L=_.map),j=[L.tgt]),y=void 0,c.render&&(y=c.render.apply(c,j),t.linked&&y&&!I.test(y)&&((n={links:[]}).render=n.fn=function(){return y},y=be(n,t.data,void 0,!0,t,void 0,void 0,c))),j.length||(j=[t]),void 0===y&&(F=j[0],c.contentCtx&&(F=!0===c.contentCtx?t:c.contentCtx(F)),y=_.render(F,!0)||(o?void 0:"")),q=q?q+(y||""):void 0!==y?""+y:void 0}c.rendering=c.rendering.rndr}c.tagCtx=r[0],c.ctx=c.tagCtx.ctx,c._.noVws&&c.inline&&(q="text"===f?u.html(q):"");return K&&t._.onRender?t._.onRender(q,t,c):q},_er:ke,_err:function(e,t,n){var r=void 0!==n?c(n)?n.call(t.data,e,t):n||"":"{Error: "+(e.message||e)+"}";m.onError&&void 0!==(n=m.onError.call(t.data,e,n&&r,t))&&(r=n);return t&&!t._lc?u.html(r):r},_cp:ne,_sq:function(e){return"constructor"===e&&xe(""),e}},settings:{delimiters:function e(t,n,r){if(!t)return m.delimiters;if(l(t))return e.apply(i,t);k=r?r[0]:k,/^(\W|_){5}$/.test(t+n+k)||ke("Invalid delimiters");return w=t[0],y=t[1],_=n[0],b=n[1],m.delimiters=[w+y,_+b,k],t="\\"+w+"(\\"+k+")?\\"+y,n="\\"+_+"\\"+b,o="(?:(\\w+(?=[\\/\\s\\"+_+"]))|(\\w+)?(:)|(>)|(\\*))\\s*((?:[^\\"+_+"]|\\"+_+"(?!\\"+b+"))*?)",g.rTag="(?:"+o+")",o=new RegExp("(?:"+t+o+"(\\/)?|\\"+w+"(\\"+k+")?\\"+y+"(?:(?:\\/(\\w+))\\s*|!--[\\s\\S]*?--))"+n,"g"),g.rTmpl=new RegExp("^\\s|\\s$|<.*>|([^\\\\]|^)[{}]|"+t+".*"+n),h},advanced:function(e){return e?(ae(v,e),g.advSet(),h):v}},map:ye},(oe.prototype=new Error).constructor=oe,ie.depends=function(){return[this.get("item"),"index"]},se.depends="index",fe.prototype={get:function(e,t){t||!0===e||(t=e,e=void 0);var n,r,o,a,i=this,s="root"===t;if(e){if(!(a=t&&i.type===t&&i))if(n=i.views,i._.useKey){for(r in n)if(a=t?n[r].get(e,t):n[r])break}else for(r=0,o=n.length;!a&&r<o;r++)a=t?n[r].get(e,t):n[r]}else if(s)a=i.root;else if(t)for(;i&&!a;)a=i.type===t?i:void 0,i=i.parent;else a=i.parent;return a||void 0},getIndex:se,ctxPrm:le,getRsc:function(e,t){var n,r,o=this;if(""+t===t){for(;void 0===n&&o;)n=(r=o.tmpl&&o.tmpl[e])&&r[t],o=o.parent;return n||i[e][t]}},_getTmpl:function(e){return e&&(e.fn?e:this.getRsc("templates",e)||d(e))},_getOb:ce,getCache:function(e){return m._cchCt>this.cache._ct&&(this.cache={_ct:m._cchCt}),void 0!==this.cache[e]?this.cache[e]:this.cache[e]=J[e](this.data,this,g)},_is:"view"},g=i.sub,h=i.settings,!(Z||t&&t.render)){for(r in G)he(r,G[r]);if(u=i.converters,p=i.helpers,f=i.tags,g._tg.prototype={baseApply:function(e){return this.base.apply(this,e)},cvtArgs:de,bndArgs:pe,ctxPrm:le},a=g.topView=new fe,t){if(t.fn.render=Te,s=t.expando,t.observable){if(C!==(C=t.views.jsviews))throw"jquery.observable.js requires jsrender.js "+C;ae(g,t.views.sub),i.map=t.views.map}}else t={},n&&(e.jsrender=t),t.renderFile=t.__express=t.compile=function(){throw"Node.js: use npm jsrender, or jsrender-node.js"},t.isFunction=function(e){return"function"==typeof e},t.isArray=Array.isArray||function(e){return"[object Array]"==={}.toString.call(e)},g._jq=function(e){e!==t&&(ae(e,t),(t=e).fn.render=Te,delete t.jsrender,s=t.expando)},t.jsrender=C;for(x in(m=g.settings).allowCode=!1,c=t.isFunction,t.render=Y,t.views=i,t.templates=d=i.templates,m)we(x);(h.debugMode=function(e){return void 0===e?m.debugMode:(m._clFns&&m._clFns(),m.debugMode=e,m.onError=e+""===e?function(){return e}:c(e)?e:void 0,h)})(!1),v=m.advanced={cache:!0,useViews:!1,_jsv:!1},f({if:{render:function(e){var t=this,n=t.tagCtx;return t.rendering.done||!e&&(n.args.length||!n.index)?"":(t.rendering.done=!0,void(t.selected=n.index))},contentCtx:!0,flow:!0},for:{sortDataMap:ye(je),init:function(e,t){this.setDataMap(this.tagCtxs)},render:function(e){var t,n,r,o,a,i=this,s=i.tagCtx,c=!1===s.argDefault,d=s.props,u=c||s.args.length,p="",f=0;if(!i.rendering.done){if(t=u?e:s.view.data,c)for(c=d.reverse?"unshift":"push",o=+d.end,a=+d.step||1,t=[],r=+d.start||0;(o-r)*a>0;r+=a)t[c](r);void 0!==t&&(n=l(t),p+=s.render(t,!u||d.noIteration),f+=n?t.length:1),(i.rendering.done=f)&&(i.selected=s.index)}return p},setDataMap:function(e){for(var t,n,r,o=e.length;o--;)n=(t=e[o]).props,r=t.params.props,t.argDefault=void 0===n.end||t.args.length>0,n.dataMap=!1!==t.argDefault&&l(t.args[0])&&(r.sort||r.start||r.end||r.step||r.filter||r.reverse||n.sort||n.start||n.end||n.step||n.filter||n.reverse)&&this.sortDataMap},flow:!0},props:{baseTag:"for",dataMap:ye((function(e,n){var r,o,a=n.map,i=a&&a.propsArr;if(!i){if(i=[],typeof e===U||c(e))for(r in e)o=e[r],r===s||!e.hasOwnProperty(r)||n.props.noFunctions&&t.isFunction(o)||i.push({key:r,prop:o});a&&(a.propsArr=a.options&&i)}return je(i,n)})),init:re,flow:!0},include:{flow:!0},"*":{render:ne,flow:!0},":*":{render:ne,flow:!0},dbg:p.dbg=u.dbg=function(e){try{throw console.log("JsRender dbg breakpoint: "+e),"dbg breakpoint"}catch(e){}return this.base?this.baseApply(arguments):e}}),u({html:Fe,attr:Fe,encode:function(e){return""+e===e?e.replace(N,Ae):e},unencode:function(e){return""+e===e?e.replace(R,Me):e},url:function(e){return null!=e?encodeURI(""+e):null===e?e:""}})}return m=g.settings,l=(t||Z).isArray,h.delimiters("{{","}}","^"),Q&&Z.views.sub._jq(t),t||Z}),window)}},__webpack_module_cache__={};function __webpack_require__(e){var t=__webpack_module_cache__[e];if(void 0!==t)return t.exports;var n=__webpack_module_cache__[e]={exports:{}};return __webpack_modules__[e](n,n.exports,__webpack_require__),n.exports}var __webpack_exports__={};(()=>{"use strict";var jsrender=__webpack_require__(2743),csrfToken=$('meta[name="csrf-token"]').attr("content");function initAllComponents(){select2initialize(),refreshCsrfToken(),alertInitialize(),modalInputFocus(),inputFocus(),IOInitImageComponent(),IOInitSidebar(),togglePassword(),vcardTableCardRemove(),tooltip(),frontTestimonials(),initializeColorPickers()}function tooltip(){[].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')).map((function(e){return new bootstrap.Tooltip(e)}))}function togglePassword(){$('[data-toggle="password"]').each((function(){var e=$(this),t=$(this).parent().find(".input-icon");t.css("cursor","pointer").addClass("input-password-hide"),t.on("click",(function(){t.hasClass("input-password-hide")?(t.removeClass("input-password-hide").addClass("input-password-show"),t.find(".bi").removeClass("bi-eye-slash-fill").addClass("bi-eye-fill"),e.attr("type","text")):(t.removeClass("input-password-show").addClass("input-password-hide"),t.find(".bi").removeClass("bi-eye-fill").addClass("bi-eye-slash-fill"),e.attr("type","password"))}))}))}function alertInitialize(){$(".alert").delay(5e3).slideUp(300)}function refreshCsrfToken(){csrfToken=$('meta[name="csrf-token"]').attr("content"),$.ajaxSetup({headers:{"X-CSRF-TOKEN":csrfToken}})}function select2initialize(){$('[data-control="select2"]').each((function(){$(this).select2()}))}document.addEventListener("DOMContentLoaded",initAllComponents),document.addEventListener("click",(function(e){var t=$(e.target).closest('.show[data-ic-dropdown-btn="true"]'),n=$(e.target).closest('.show[data-ic-dropdown="true"]');t.length>0||n.length>0||($('[data-ic-dropdown-btn="true"]').removeClass("show"),$('[data-ic-dropdown="true"]').removeClass("show"))})),document.addEventListener("livewire:load",(function(){window.livewire.hook("message.processed",(function(){$('[data-control="select2"]').each((function(){$(this).select2()}))}))}));var inputFocus=function(){$('input:text:not([readonly="readonly"]):not([name="search"]):not(.front-input)').first().focus()},modalInputFocus=function(){$((function(){$(".modal").on("shown.bs.modal",(function(){$(this).find("input:text")[0]&&$(this).find("input:text")[0].focus()}))}))};function deleteItemAjax(url,header){var callFunction=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null;$.ajax({url,type:"DELETE",dataType:"json",success:function success(obj){obj.success&&(Livewire.dispatch("resetPageTable"),Livewire.dispatch("refresh")),swal({icon:"success",title:Lang.get("js.deleted")+" !",text:header+" "+Lang.get("js.has_been_deleted"),timer:2e3,buttons:{confirm:Lang.get("js.ok")}}),callFunction&&eval(callFunction)},error:function(e){swal({title:Lang.get("js.error"),icon:"error",text:e.responseJSON.message,type:"error",timer:4e3,buttons:{confirm:Lang.get("js.ok")}})}})}function isEmailEditProfile(e){return/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(e)}function vcardTableCardRemove(){listenClick("#vcards-tab",(function(){$(".card-check").removeClass("card"),$(".card-body-check").removeClass("card-body")})),listenClick("#overview-tab",(function(){$(".card-check").addClass("card"),$(".card-body-check").addClass("card-body")}))}function frontTestimonials(){$(".pricing-carousel").length>0&&($("#toogler-icon").click((function(){$(this).toggleClass("open")})),$(".pricing-carousel").slick({dots:!0,centerMode:!0,centerPadding:"0",slidesToShow:3,slidesToScroll:1,responsive:[{breakpoint:1400,settings:{slidesToShow:1,centerMode:!0,centerPadding:"250px"}},{breakpoint:1200,settings:{slidesToShow:1,centerMode:!0,centerPadding:"150px"}},{breakpoint:992,settings:{slidesToShow:1,centerMode:!0,centerPadding:"100px"}},{breakpoint:768,settings:{slidesToShow:1,centerMode:!0,centerPadding:"50px",arrows:!1}},{breakpoint:576,settings:{slidesToShow:1,arrows:!1}}]}),$(".testimonial-carousel").slick({autoplaySpeed:1e3,speed:600,draggable:!0,infinite:!0,dots:!0,centerMode:!0,centerPadding:"0",slidesToShow:1,slidesToScroll:1,arrows:!1,rtl:"ar"==frontLanguage||"fa"==frontLanguage,responsive:[{breakpoint:1199,settings:{slidesToShow:1,centerMode:!0}},{breakpoint:992,settings:{slidesToShow:1}},{breakpoint:768,settings:{slidesToShow:1,centerMode:!0}},{breakpoint:576,settings:{slidesToShow:1}}]}))}function initializeColorPickers(){if(0!==$("#primary_color").length){var e=$("#primary_color").val();document.documentElement.style.setProperty("--primary-color",e);var t=$("#back_color").val();document.documentElement.style.setProperty("--green-100",t);var n=$("#back_seconds_color").val();document.documentElement.style.setProperty("--green",n);var r=$("#button_text_color").val();document.documentElement.style.setProperty("--black",r);var o=$("#cards_back").val();document.documentElement.style.setProperty("--light",o);var a=$("#social_icon_color").val();$(".soical-icon-color").attr("fill",a),$(".icon-color").attr("fill",a),document.documentElement.style.setProperty("--light-100",a);var i=$("#text_description_color").val();document.documentElement.style.setProperty("--gray-100",i);var s=$("#text_label_color").val();document.documentElement.style.setProperty("--white",s);var c=$("#primary_color").val(),l=Pickr.create({el:".color-picker",default:c,components:{preview:!1,opacity:!1,hue:!0,interaction:{hex:!0,rgba:!0,hsla:!0,hsva:!0,cmyk:!0,input:!0,save:!1}}});l.on("change",(function(e){var t=e.toHEXA().toString();document.documentElement.style.setProperty("--primary-color",t);var n=document.querySelector("#primary_color");n&&(n.value=t);var r=l.getRoot().interaction.save;r&&r.click();var o=document.querySelector(".color-picker");o&&(o.style.backgroundColor=t)}));var d=$("#back_color").val(),u=Pickr.create({el:".back-color-picker",default:d,components:{preview:!1,opacity:!1,hue:!0,interaction:{hex:!0,rgba:!0,hsla:!0,hsva:!0,cmyk:!0,input:!0,save:!1}}});u.on("change",(function(e){var t=e.toHEXA().toString();document.documentElement.style.setProperty("--green-100",t);var n=document.querySelector("#back_color");n&&(n.value=t);var r=u.getRoot().interaction.save;r&&r.click();var o=document.querySelector(".back-color-picker");o&&(o.style.backgroundColor=t)}));var p=$("#back_seconds_color").val(),f=Pickr.create({el:".back-seconds-color-picker",default:p,components:{preview:!1,opacity:!1,hue:!0,interaction:{hex:!0,rgba:!0,hsla:!0,hsva:!0,cmyk:!0,input:!0,save:!1}}});f.on("change",(function(e){var t=e.toHEXA().toString();document.documentElement.style.setProperty("--green",t);var n=document.querySelector("#back_seconds_color");n&&(n.value=t);var r=f.getRoot().interaction.save;r&&r.click();var o=document.querySelector(".back-seconds-color-picker");o&&(o.style.backgroundColor=t)}));var g=$("#button_text_color").val(),m=Pickr.create({el:".button-text-color-picker",default:g,components:{preview:!1,opacity:!1,hue:!0,interaction:{hex:!0,rgba:!0,hsla:!0,hsva:!0,cmyk:!0,input:!0,save:!1}}});m.on("change",(function(e){var t=e.toHEXA().toString();document.documentElement.style.setProperty("--black",t);var n=document.querySelector("#button_text_color");n&&(n.value=t);var r=m.getRoot().interaction.save;r&&r.click();var o=document.querySelector(".button-text-color-picker");o&&(o.style.backgroundColor=t)}));var v=$("#text_label_color").val(),h=Pickr.create({el:".text-label-color-picker",default:v,components:{preview:!1,opacity:!1,hue:!0,interaction:{hex:!0,rgba:!0,hsla:!0,hsva:!0,cmyk:!0,input:!0,save:!1}}});h.on("change",(function(e){var t=e.toHEXA().toString();document.documentElement.style.setProperty("--white",t);var n=document.querySelector("#text_label_color");n&&(n.value=t);var r=h.getRoot().interaction.save;r&&r.click();var o=document.querySelector(".text-label-color-picker");o&&(o.style.backgroundColor=t)}));var w=$("#text_description_color").val(),y=Pickr.create({el:".text-description-color-picker",default:w,components:{preview:!1,opacity:!1,hue:!0,interaction:{hex:!0,rgba:!0,hsla:!0,hsva:!0,cmyk:!0,input:!0,save:!1}}});y.on("change",(function(e){var t=e.toHEXA().toString();document.documentElement.style.setProperty("--gray-100",t);var n=document.querySelector("#text_description_color");n&&(n.value=t);var r=y.getRoot().interaction.save;r&&r.click();var o=document.querySelector(".text-description-color-picker");o&&(o.style.backgroundColor=t)}));var _=$("#cards_back").val(),b=Pickr.create({el:".cards-back-color-picker",default:_,components:{preview:!1,opacity:!1,hue:!0,interaction:{hex:!0,rgba:!0,hsla:!0,hsva:!0,cmyk:!0,input:!0,save:!1}}});b.on("change",(function(e){var t=e.toHEXA().toString();document.documentElement.style.setProperty("--light",t);var n=document.querySelector("#cards_back");n&&(n.value=t);var r=b.getRoot().interaction.save;r&&r.click();var o=document.querySelector(".cards-back-color-picker");o&&(o.style.backgroundColor=t)}));var k=$("#social_icon_color").val(),x=Pickr.create({el:".social-icon-color-picker",default:k,components:{preview:!1,opacity:!1,hue:!0,interaction:{hex:!0,rgba:!0,hsla:!0,hsva:!0,cmyk:!0,input:!0,save:!1}}});x.on("change",(function(e){var t=e.toHEXA().toString();$(".soical-icon-color").attr("fill",t),$(".icon-color").attr("fill",t),document.documentElement.style.setProperty("--light-100",t);var n=document.querySelector("#social_icon_color");n&&(n.value=t);var r=x.getRoot().interaction.save;r&&r.click();var o=document.querySelector(".social-icon-color-picker");o&&(o.style.backgroundColor=t)}))}}function applyButtonStyle(e){var t=document.getElementById(e);if(t){var n=t.getAttribute("data-button-style");"default"!==n&&n||(n="1"),t.classList.add("dynamic-btn-".concat(n))}}function previewButtonStyle(e){var t=document.getElementById(e);if(t){var n=$("input[name='button_style']:checked").val();"default"!==n&&n||(n="1"),t.className="dynamic-btn-".concat(n)}}$.ajaxSetup({headers:{"X-CSRF-TOKEN":$('meta[name="csrf-token"]').attr("content")}}),$(document).on("select2:open",(function(){document.querySelector(".select2-search__field").focus()})),toastr.options={closeButton:!0,debug:!1,newestOnTop:!1,progressBar:!0,positionClass:"toast-top-right",preventDuplicates:!1,onclick:null,showDuration:"300",hideDuration:"1000",timeOut:"5000",extendedTimeOut:"1000",showEasing:"swing",hideEasing:"linear",showMethod:"fadeIn",hideMethod:"fadeOut"},window.resetModalForm=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null;$(e)[0].reset(),$("select.select2Selector").each((function(e,t){var n="#"+$(this).attr("id");$(n).val(""),$(n).trigger("change")})),$(t).hide()},window.printErrorMessage=function(e,t){$(e).show().html(""),$(e).text(t.responseJSON.message)},window.manageAjaxErrors=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:"editValidationErrorsBox";404==e.status?toastr.error(e.responseJSON.message):printErrorMessage("#"+t,e)},window.displaySuccessMessage=function(e){"ar"==lang||"fa"==lang?(toastr.options.rtl="rtl",toastr.options.positionClass="toast-top-left"):toastr.options.positionClass="toast-top-right",toastr.success(e,Lang.get("js.successful"))},window.displayErrorMessage=function(e){"ar"==lang||"fa"==lang?(toastr.options.rtl="rtl",toastr.options.positionClass="toast-top-left"):toastr.options.positionClass="toast-top-right",toastr.error(e,Lang.get("js.error"))},window.deleteItem=function(e,t){var n=arguments.length>3&&void 0!==arguments[3]?arguments[3]:null;swal({title:Lang.get("js.delete")+" !",text:Lang.get("js.are_you_sure")+' "'+t+'" ?',buttons:{confirm:Lang.get("js.yes"),cancel:Lang.get("js.no")},reverseButtons:!0,icon:sweetAlertIcon}).then((function(r){r&&deleteItemAjax(e,t,n)}))},window.format=function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:arguments.length>1&&void 0!==arguments[1]?arguments[1]:"DD-MMM-YYYY";return moment(e).format(t)},window.processingBtn=function(e,t){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null,r=$(e).find(t);"loading"===n?r.button("loading"):r.button("reset")},window.prepareTemplateRender=function(e,t){return jsrender.templates(e).render(t)},window.changeImg=function(e,t,n,r){isValidFile($(e),t)?displayPhoto(e,n):$("#servicePreview").attr("src",r)},window.isValidFile=function(e,t){var n=$(e).val().split(".").pop().toLowerCase();return-1==$.inArray(n,["png","jpg","jpeg"])?($(e).val(""),$(t).removeClass("d-none"),$(t).html("The image must be a file of type: jpeg, jpg, png.").show(),$(t).delay(5e3).slideUp(300),!1):($(t).hide(),!0)},window.displayPhoto=function(e,t){var n=!0;if(e.files&&e.files[0]){var r=new FileReader;r.onload=function(e){var r=new Image;r.src=e.target.result,r.onload=function(){$(t).attr("src",e.target.result),n=!0}},n&&(r.readAsDataURL(e.files[0]),$(t).show())}},window.removeCommas=function(e){return e.replace(/,/g,"")},window.DatetimepickerDefaults=function(e){return $.extend({},{sideBySide:!0,ignoreReadonly:!0,icons:{close:"fa fa-times",time:"fa fa-clock-o",date:"fa fa-calendar",up:"fa fa-arrow-up",down:"fa fa-arrow-down",previous:"fa fa-chevron-left",next:"fa fa-chevron-right",today:"fa fa-clock-o",clear:"fa fa-trash-o"}},e)},window.isEmpty=function(e){return null==e||""===e},window.screenLock=function(){$("#overlay-screen-lock").show(),$("body").css({"pointer-events":"none",opacity:"0.6"})},window.screenUnLock=function(){$("body").css({"pointer-events":"auto",opacity:"1"}),$("#overlay-screen-lock").hide()},window.onload=function(){window.startLoader=function(){$(".infy-loader").show()},window.stopLoader=function(){$(".infy-loader").hide()},stopLoader()},$(document).ready((function(){$(document).find(".nav-item.dropdown ul li").hasClass("active")&&($(document).find(".nav-item.dropdown ul li.active").parent("ul").css("display","block"),$(document).find(".nav-item.dropdown ul li.active").parent("ul").parent("li").addClass("active"))})),window.urlValidation=function(e,t){return!(""!=e&&!e.match(t))},listenClick(".languageSelection",(function(){var e=$(this).data("prefix-value");$.ajax({type:"POST",url:"/change-language",headers:{"X-CSRF-TOKEN":$('meta[name="csrf-token"]').attr("content")},data:{languageName:e},success:function(){location.reload()}})})),$(window).width()>992&&$(".no-hover").on("click",(function(){$(this).toggleClass("open")})),$(document).on("click","#readNotification",(function(e){e.preventDefault();var t=$(this).data("id"),n=$(this);$.ajax({type:"POST",url:readNotification+"/"+t+"/read",data:{notificationId:t},success:function(){n.remove(),0==document.getElementsByClassName("readNotification").length&&($("#readAllNotification").addClass("d-none"),$(".empty-state").removeClass("d-none"),$(".notification-toggle").removeClass("beep"))},error:function(e){manageAjaxErrors(e)}})})),$("#register").on("click",(function(e){e.preventDefault(),$(".open #dropdownLanguage").trigger("click"),$(".open #dropdownLogin").trigger("click")})),$("#language").on("click",(function(e){e.preventDefault(),$(".open #dropdownRegister").trigger("click"),$(".open #dropdownLogin").trigger("click")})),$("#login").on("click",(function(e){e.preventDefault(),$(".open #dropdownRegister").trigger("click"),$(".open #dropdownLanguage").trigger("click")})),window.preparedTemplate=function(){var e=$("#actionTemplate").html();window.preparedTemplate=Handlebars.compile(e)},$(document).delegate("textarea","keydown",(function(e){if(9===(e.keyCode||e.which)){e.preventDefault();var t=this.selectionStart,n=this.selectionEnd,r=$(this).val(),o=r.substring(t,n);$(this).val(r.substring(0,t)+"\t"+o.replace(/\n/g,"\n\t")+r.substring(n)),this.selectionStart=this.selectionEnd=t+1}})),$(document).ready((function(){$("#languageDropdown").click((function(e){e.stopPropagation()}))})),listenSubmit("#userProfileEditForm",(function(){return""==$.trim($("#editProfileFirstName").val())?(displayErrorMessage(Lang.get("js.first_name_required")),!1):""==$.trim($("#editProfileLastName").val())?(displayErrorMessage(Lang.get("js.last_name_required")),!1):isEmailEditProfile($("#isEmailEditProfile").val())?!!$("#userProfileEditForm").find("#error-msg").hasClass("d-none")&&void 0:(displayErrorMessage(Lang.get("js.enter_valid_email")),!1)})),window.openDropdownManually=function(e,t){e.hasClass("show")?(e.removeClass("show"),t.removeClass("show")):(e.addClass("show"),t.addClass("show"))},window.hideDropdownManually=function(e,t){e.removeClass("show"),t.removeClass("show")},window.checkPhpFile=function(e,t){var n=$(e).val().split(".").pop().toLowerCase();return-1!==$.inArray(n,["php"])?($(e).val(""),$(t).removeClass("d-none"),$(t).html("PHP file is not valid type for attachment").show(),$(t).delay(5e3).slideUp(300),!1):($(t).hide(),!0)},window.allowAlphaNumeric=function(e){e.value=e.value.toUpperCase().split(/[^a-zA-Z0-9_-]/).join("")},window.getCurrencyAmount=function(e,t){var n=t+""+e;return 1==currencyAfterAmount&&(n=e+""+t),n},$(document).ready((function(){var e=$('[data-ic-class="search-trigger"]'),t=$('[data-ic-class="search-input"]'),n=$('[data-ic-class="search-clear"]');e.click((function(){$(".share-wp-btn").addClass("d-none"),$('[data-ic-class="search-trigger"]').addClass("active"),t.focus()})),t.blur((function(){if(t.val().length>0)return!1;e.removeClass("active")})),n.click((function(){t.val("")})),t.focus((function(){e.addClass("active")}))})),listenChange(".file-validation",(function(){var e=this.files[0],t=$(this).val().split(".").pop().toLowerCase();-1==$.inArray(t,["png","jpg","jpeg"])&&(displayErrorMessage(Lang.get("js.allowed_file_types")),$(this).val("")),e.size>1048576&&(displayErrorMessage(Lang.get("js.image_too_large")),$(this).val(""))})),document.addEventListener("bulk-delete-vcard",(function(e){var t=e.detail;if(!(t.length>0))return displayErrorMessage("Please select one or more records for multiples delete."),!1;swal({title:"Delete !",text:Lang.get("js.are_you_sure_want_to_delete_selected_Vcards"),buttons:{confirm:"Yes",cancel:"No"},reverseButtons:!0,icon:sweetAlertIcon}).then((function(e){e&&Livewire.dispatch("deleteVcard",t)}))})),document.addEventListener("delete-vcard-success",(function(){Livewire.dispatch("refresh"),Livewire.dispatch("resetPageTable"),swal({icon:"success",title:Lang.get("js.deleted")+" !",text:"Vcards "+Lang.get("js.has_been_deleted"),timer:3e3,buttons:{confirm:Lang.get("js.ok")}})})),document.addEventListener("bulk-delete-error",(function(){displayErrorMessage("Please select one or more records for multiples delete.")})),document.addEventListener("bulk-delete-vcard",(function(e){var t=e.detail;if(!(t.length>0))return displayErrorMessage("Please select one or more records for multiples delete."),!1;swal({title:"Delete !",text:Lang.get("js.are_you_sure_want_to_delete_selected_Vcards"),buttons:{confirm:"Yes",cancel:"No"},reverseButtons:!0,icon:sweetAlertIcon}).then((function(e){e&&Livewire.dispatch("deleteVcard",t)}))})),document.addEventListener("delete-vcard-success",(function(){Livewire.dispatch("refresh"),Livewire.dispatch("resetPageTable"),swal({icon:"success",title:Lang.get("messages.common.deleted")+" !",text:"Vcards "+Lang.get("messages.common.has_been_deleted"),timer:3e3,buttons:{confirm:Lang.get("messages.common.ok")}})})),document.addEventListener("bulk-delete-error",(function(){displayErrorMessage("Please select one or more records for multiples delete.")})),document.addEventListener("bulk-delete-vcard",(function(e){var t=e.detail;if(!(t.length>0))return displayErrorMessage("Please select one or more records for multiples delete."),!1;swal({title:"Delete !",text:Lang.get("js.are_you_sure_want_to_delete_selected_Vcards"),buttons:{confirm:"Yes",cancel:"No"},reverseButtons:!0,icon:sweetAlertIcon}).then((function(e){e&&Livewire.dispatch("deleteVcard",t)}))})),document.addEventListener("delete-vcard-success",(function(){Livewire.dispatch("refresh"),Livewire.dispatch("resetPageTable"),swal({icon:"success",title:Lang.get("js.deleted")+" !",text:"Vcards "+Lang.get("js.has_been_deleted"),timer:3e3,buttons:{confirm:Lang.get("js.ok")}})})),document.addEventListener("bulk-delete-error",(function(){displayErrorMessage("Please select one or more records for multiples delete.")})),listenChange("#primary_color",(function(){var e=$("#primary_color").val();document.documentElement.style.setProperty("--primary-color",e)})),listenChange("#back_color",(function(){var e=$("#back_color").val();document.documentElement.style.setProperty("--green-100",e)})),listenChange("#back_seconds_color",(function(){var e=$("#back_seconds_color").val();document.documentElement.style.setProperty("--green",e)})),listenChange("#cards_back",(function(){var e=$("#cards_back").val();document.documentElement.style.setProperty("--light",e)})),listenChange("#social_icon_color",(function(){var e=$("#social_icon_color").val();$(".soical-icon-color").attr("fill",e),$(".icon-color").attr("fill",e),document.documentElement.style.setProperty("--light-100",e)})),listenChange("#button_text_color",(function(){var e=$("#button_text_color").val();document.documentElement.style.setProperty("--black",e)})),listenChange("#text_description_color",(function(){var e=$("#text_description_color").val();document.documentElement.style.setProperty("--gray-100",e)})),listenChange("#text_label_color",(function(){var e=$("#text_label_color").val();document.documentElement.style.setProperty("--white",e)})),listenClick(".sticky-btn",(function(){1==$(this).val()?$("#sticky-dynamic-btn").removeClass("dynamic-sticky-left").addClass("dynamic-sticky-right"):$("#sticky-dynamic-btn").removeClass("dynamic-sticky-right").addClass("dynamic-sticky-left")})),document.addEventListener("DOMContentLoaded",(function(){applyButtonStyle("dynamic-btn"),applyButtonStyle("send-btn"),applyButtonStyle("appointment-btn"),applyButtonStyle("support-banner-btn"),previewButtonStyle("appointment-slot1"),previewButtonStyle("appointment-slot2"),previewButtonStyle("appointment-slot3"),previewButtonStyle("appointment-slot4")})),listenClick(".button-style",(function(){previewButtonStyle("dynamic-btn"),previewButtonStyle("send-btn"),previewButtonStyle("appointment-btn"),previewButtonStyle("support-banner-btn"),previewButtonStyle("appointment-slot1"),previewButtonStyle("appointment-slot2"),previewButtonStyle("appointment-slot3"),previewButtonStyle("appointment-slot4")})),document.addEventListener("DOMContentLoaded",(function(){var e=document.getElementById("fileInputTrigger"),t=document.getElementById("attachment"),n=document.getElementById("fileList"),r=document.getElementById("selectedFilesSection");null!=e&&e.addEventListener("click",(function(){t.click()})),null!=t&&t.addEventListener("change",(function(e){var t=Array.from(e.target.files);n.innerHTML="",t.forEach((function(e,t){var o=document.createElement("li");o.classList.add("item");var a=document.createElement("span");a.classList.add("name"),a.textContent="".concat(e.name," (").concat(function(e){var t=["B","KB","MB","GB"],n=0;for(;e>=1024&&n<t.length-1;)e/=1024,n++;return"".concat(e.toFixed(2)," ").concat(t[n])}(e.size),")");var i=document.createElement("div");i.classList.add("remove"),i.innerHTML='<i class="fa-solid fa-trash-can"></i>',i.addEventListener("click",(function(){!function(e){var t=n.querySelectorAll(".item");t[e]&&t[e].remove();0===n.children.length&&(r.style.display="none")}(t)})),o.appendChild(a),o.appendChild(i),n.appendChild(o)})),t.length>0&&(r.style.display="block")}))})),document.addEventListener("DOMContentLoaded",(function(){!function e(){var t=document.getElementById("lightboxOverlay");if(t){var n=function(){var e=t.style.display;"block"===e?(document.body.style.overflow="hidden",console.log("hidden")):"none"!==e&&""!==e||(document.body.style.overflow="")};n(),new MutationObserver((function(){n()})).observe(t,{attributes:!0,attributeFilter:["style"]})}else setTimeout(e,100)}()}))})()})();
+/******/ (() => { // webpackBootstrap
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/jsrender/jsrender.js":
+/*!*******************************************!*\
+  !*** ./node_modules/jsrender/jsrender.js ***!
+  \*******************************************/
+/***/ ((module) => {
+
+/*! JsRender v1.0.11: http://jsviews.com/#jsrender */
+/*! **VERSION FOR WEB** (For NODE.JS see http://jsviews.com/download/jsrender-node.js) */
+/*
+ * Best-of-breed templating in browser or on Node.js.
+ * Does not require jQuery, or HTML DOM
+ * Integrates with JsViews (http://jsviews.com/#jsviews)
+ *
+ * Copyright 2021, Boris Moore
+ * Released under the MIT License.
+ */
+
+//jshint -W018, -W041, -W120
+
+(function(factory, global) {
+	// global var is the this object, which is window when running in the usual browser environment
+	var $ = global.jQuery;
+
+	if (true) { // CommonJS e.g. Browserify
+		module.exports = $
+			? factory(global, $)
+			: function($) { // If no global jQuery, take optional jQuery passed as parameter: require('jsrender')(jQuery)
+				if ($ && !$.fn) {
+					throw "Provide jQuery or null";
+				}
+				return factory(global, $);
+			};
+	} else {}
+} (
+
+// factory (for jsrender.js)
+function(global, $) {
+"use strict";
+
+//========================== Top-level vars ==========================
+
+// global var is the this object, which is window when running in the usual browser environment
+var setGlobals = $ === false; // Only set globals if script block in browser (not AMD and not CommonJS)
+
+$ = $ && $.fn ? $ : global.jQuery; // $ is jQuery passed in by CommonJS loader (Browserify), or global jQuery.
+
+var versionNumber = "v1.0.11",
+	jsvStoreName, rTag, rTmplString, topView, $views, $expando,
+	_ocp = "_ocp",      // Observable contextual parameter
+
+	$isFunction, $isArray, $templates, $converters, $helpers, $tags, $sub, $subSettings, $subSettingsAdvanced, $viewsSettings,
+	delimOpenChar0, delimOpenChar1, delimCloseChar0, delimCloseChar1, linkChar, setting, baseOnError,
+
+	isRenderCall,
+	rNewLine = /[ \t]*(\r\n|\n|\r)/g,
+	rUnescapeQuotes = /\\(['"\\])/g, // Unescape quotes and trim
+	rEscapeQuotes = /['"\\]/g, // Escape quotes and \ character
+	rBuildHash = /(?:\x08|^)(onerror:)?(?:(~?)(([\w$.]+):)?([^\x08]+))\x08(,)?([^\x08]+)/gi,
+	rTestElseIf = /^if\s/,
+	rFirstElem = /<(\w+)[>\s]/,
+	rAttrEncode = /[\x00`><"'&=]/g, // Includes > encoding since rConvertMarkers in JsViews does not skip > characters in attribute strings
+	rIsHtml = /[\x00`><\"'&=]/,
+	rHasHandlers = /^on[A-Z]|^convert(Back)?$/,
+	rWrappedInViewMarker = /^\#\d+_`[\s\S]*\/\d+_`$/,
+	rHtmlEncode = rAttrEncode,
+	rDataEncode = /[&<>]/g,
+	rDataUnencode = /&(amp|gt|lt);/g,
+	rBracketQuote = /\[['"]?|['"]?\]/g,
+	viewId = 0,
+	charEntities = {
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		"\x00": "&#0;",
+		"'": "&#39;",
+		'"': "&#34;",
+		"`": "&#96;",
+		"=": "&#61;"
+	},
+	charsFromEntities = {
+		amp: "&",
+		gt: ">",
+		lt: "<"
+	},
+	HTML = "html",
+	OBJECT = "object",
+	tmplAttr = "data-jsv-tmpl",
+	jsvTmpl = "jsvTmpl",
+	indexStr = "For #index in nested block use #getIndex().",
+	cpFnStore = {},     // Compiled furnctions for computed values in template expressions (properties, methods, helpers)
+	$render = {},
+
+	jsr = global.jsrender,
+	jsrToJq = jsr && $ && !$.render, // JsRender already loaded, without jQuery. but we will re-load it now to attach to jQuery
+
+	jsvStores = {
+		template: {
+			compile: compileTmpl
+		},
+		tag: {
+			compile: compileTag
+		},
+		viewModel: {
+			compile: compileViewModel
+		},
+		helper: {},
+		converter: {}
+	};
+
+	// views object ($.views if jQuery is loaded, jsrender.views if no jQuery, e.g. in Node.js)
+	$views = {
+		jsviews: versionNumber,
+		sub: {
+			// subscription, e.g. JsViews integration
+			rPath: /^(!*?)(?:null|true|false|\d[\d.]*|([\w$]+|\.|~([\w$]+)|#(view|([\w$]+))?)([\w$.^]*?)(?:[.[^]([\w$]+)\]?)?)$/g,
+			//        not                               object     helper    view  viewProperty pathTokens      leafToken
+
+			rPrm: /(\()(?=\s*\()|(?:([([])\s*)?(?:(\^?)(~?[\w$.^]+)?\s*((\+\+|--)|\+|-|~(?![\w$])|&&|\|\||===|!==|==|!=|<=|>=|[<>%*:?\/]|(=))\s*|(!*?(@)?[#~]?[\w$.^]+)([([])?)|(,\s*)|(?:(\()\s*)?\\?(?:(')|("))|(?:\s*(([)\]])(?=[.^]|\s*$|[^([])|[)\]])([([]?))|(\s+)/g,
+			//   lftPrn0           lftPrn         bound     path               operator     err                                          eq      path2 late            prn      comma  lftPrn2          apos quot        rtPrn  rtPrnDot                  prn2     space
+
+			View: View,
+			Err: JsViewsError,
+			tmplFn: tmplFn,
+			parse: parseParams,
+			extend: $extend,
+			extendCtx: extendCtx,
+			syntaxErr: syntaxError,
+			onStore: {
+				template: function(name, item) {
+					if (item === null) {
+						delete $render[name];
+					} else if (name) {
+						$render[name] = item;
+					}
+				}
+			},
+			addSetting: addSetting,
+			settings: {
+				allowCode: false
+			},
+			advSet: noop, // Update advanced settings
+			_thp: tagHandlersFromProps,
+			_gm: getMethod,
+			_tg: function() {}, // Constructor for tagDef
+			_cnvt: convertVal,
+			_tag: renderTag,
+			_er: error,
+			_err: onRenderError,
+			_cp: retVal, // Get observable contextual parameters (or properties) ~foo=expr. In JsRender, simply returns val.
+			_sq: function(token) {
+				if (token === "constructor") {
+					syntaxError("");
+				}
+				return token;
+			}
+		},
+		settings: {
+			delimiters: $viewsDelimiters,
+			advanced: function(value) {
+				return value
+					? (
+							$extend($subSettingsAdvanced, value),
+							$sub.advSet(),
+							$viewsSettings
+						)
+						: $subSettingsAdvanced;
+				}
+		},
+		map: dataMap // If jsObservable loaded first, use that definition of dataMap
+	};
+
+function getDerivedMethod(baseMethod, method) {
+	return function() {
+		var ret,
+			tag = this,
+			prevBase = tag.base;
+
+		tag.base = baseMethod; // Within method call, calling this.base will call the base method
+		ret = method.apply(tag, arguments); // Call the method
+		tag.base = prevBase; // Replace this.base to be the base method of the previous call, for chained calls
+		return ret;
+	};
+}
+
+function getMethod(baseMethod, method) {
+	// For derived methods (or handlers declared declaratively as in {{:foo onChange=~fooChanged}} replace by a derived method, to allow using this.base(...)
+	// or this.baseApply(arguments) to call the base implementation. (Equivalent to this._super(...) and this._superApply(arguments) in jQuery UI)
+	if ($isFunction(method)) {
+		method = getDerivedMethod(
+				!baseMethod
+					? noop // no base method implementation, so use noop as base method
+					: baseMethod._d
+						? baseMethod // baseMethod is a derived method, so use it
+						: getDerivedMethod(noop, baseMethod), // baseMethod is not derived so make its base method be the noop method
+				method
+			);
+		method._d = (baseMethod && baseMethod._d || 0) + 1; // Add flag for derived method (incremented for derived of derived...)
+	}
+	return method;
+}
+
+function tagHandlersFromProps(tag, tagCtx) {
+	var prop,
+		props = tagCtx.props;
+	for (prop in props) {
+		if (rHasHandlers.test(prop) && !(tag[prop] && tag[prop].fix)) { // Don't override handlers with fix expando (used in datepicker and spinner)
+			tag[prop] = prop !== "convert" ? getMethod(tag.constructor.prototype[prop], props[prop]) : props[prop];
+			// Copy over the onFoo props, convert and convertBack from tagCtx.props to tag (overrides values in tagDef).
+			// Note: unsupported scenario: if handlers are dynamically added ^onFoo=expression this will work, but dynamically removing will not work.
+		}
+	}
+}
+
+function retVal(val) {
+	return val;
+}
+
+function noop() {
+	return "";
+}
+
+function dbgBreak(val) {
+	// Usage examples: {{dbg:...}}, {{:~dbg(...)}}, {{dbg .../}}, {^{for ... onAfterLink=~dbg}} etc.
+	try {
+		console.log("JsRender dbg breakpoint: " + val);
+		throw "dbg breakpoint"; // To break here, stop on caught exceptions.
+	}
+	catch (e) {}
+	return this.base ? this.baseApply(arguments) : val;
+}
+
+function JsViewsError(message) {
+	// Error exception type for JsViews/JsRender
+	// Override of $.views.sub.Error is possible
+	this.name = ($.link ? "JsViews" : "JsRender") + " Error";
+	this.message = message || this.name;
+}
+
+function $extend(target, source) {
+	if (target) {
+		for (var name in source) {
+			target[name] = source[name];
+		}
+		return target;
+	}
+}
+
+(JsViewsError.prototype = new Error()).constructor = JsViewsError;
+
+//========================== Top-level functions ==========================
+
+//===================
+// views.delimiters
+//===================
+
+	/**
+	* Set the tag opening and closing delimiters and 'link' character. Default is "{{", "}}" and "^"
+	* openChars, closeChars: opening and closing strings, each with two characters
+	* $.views.settings.delimiters(...)
+	*
+	* @param {string}   openChars
+	* @param {string}   [closeChars]
+	* @param {string}   [link]
+	* @returns {Settings}
+	*
+	* Get delimiters
+	* delimsArray = $.views.settings.delimiters()
+	*
+	* @returns {string[]}
+	*/
+function $viewsDelimiters(openChars, closeChars, link) {
+	if (!openChars) {
+		return $subSettings.delimiters;
+	}
+	if ($isArray(openChars)) {
+		return $viewsDelimiters.apply($views, openChars);
+	}
+	linkChar = link ? link[0] : linkChar;
+	if (!/^(\W|_){5}$/.test(openChars + closeChars + linkChar)) {
+		error("Invalid delimiters"); // Must be non-word characters, and openChars and closeChars must each be length 2
+	}
+	delimOpenChar0 = openChars[0];
+	delimOpenChar1 = openChars[1];
+	delimCloseChar0 = closeChars[0];
+	delimCloseChar1 = closeChars[1];
+
+	$subSettings.delimiters = [delimOpenChar0 + delimOpenChar1, delimCloseChar0 + delimCloseChar1, linkChar];
+
+	// Escape the characters - since they could be regex special characters
+	openChars = "\\" + delimOpenChar0 + "(\\" + linkChar + ")?\\" + delimOpenChar1; // Default is "{^{"
+	closeChars = "\\" + delimCloseChar0 + "\\" + delimCloseChar1;                   // Default is "}}"
+	// Build regex with new delimiters
+	//          [tag    (followed by / space or })  or cvtr+colon or html or code] followed by space+params then convertBack?
+	rTag = "(?:(\\w+(?=[\\/\\s\\" + delimCloseChar0 + "]))|(\\w+)?(:)|(>)|(\\*))\\s*((?:[^\\"
+		+ delimCloseChar0 + "]|\\" + delimCloseChar0 + "(?!\\" + delimCloseChar1 + "))*?)";
+
+	// Make rTag available to JsViews (or other components) for parsing binding expressions
+	$sub.rTag = "(?:" + rTag + ")";
+	//                        { ^? {   tag+params slash?  or closingTag                                                   or comment
+	rTag = new RegExp("(?:" + openChars + rTag + "(\\/)?|\\" + delimOpenChar0 + "(\\" + linkChar + ")?\\" + delimOpenChar1 + "(?:(?:\\/(\\w+))\\s*|!--[\\s\\S]*?--))" + closeChars, "g");
+
+	// Default:  bind     tagName         cvt   cln html code    params            slash   bind2         closeBlk  comment
+	//      /(?:{(\^)?{(?:(\w+(?=[\/\s}]))|(\w+)?(:)|(>)|(\*))\s*((?:[^}]|}(?!}))*?)(\/)?|{(\^)?{(?:(?:\/(\w+))\s*|!--[\s\S]*?--))}}
+
+	$sub.rTmpl = new RegExp("^\\s|\\s$|<.*>|([^\\\\]|^)[{}]|" + openChars + ".*" + closeChars);
+	// $sub.rTmpl looks for initial or final white space, html tags or { or } char not preceded by \\, or JsRender tags {{xxx}}.
+	// Each of these strings are considered NOT to be jQuery selectors
+	return $viewsSettings;
+}
+
+//=========
+// View.get
+//=========
+
+function getView(inner, type) { //view.get(inner, type)
+	if (!type && inner !== true) {
+		// view.get(type)
+		type = inner;
+		inner = undefined;
+	}
+
+	var views, i, l, found,
+		view = this,
+		root = type === "root";
+		// view.get("root") returns view.root, view.get() returns view.parent, view.get(true) returns view.views[0].
+
+	if (inner) {
+		// Go through views - this one, and all nested ones, depth-first - and return first one with given type.
+		// If type is undefined, i.e. view.get(true), return first child view.
+		found = type && view.type === type && view;
+		if (!found) {
+			views = view.views;
+			if (view._.useKey) {
+				for (i in views) {
+					if (found = type ? views[i].get(inner, type) : views[i]) {
+						break;
+					}
+				}
+			} else {
+				for (i = 0, l = views.length; !found && i < l; i++) {
+					found = type ? views[i].get(inner, type) : views[i];
+				}
+			}
+		}
+	} else if (root) {
+		// Find root view. (view whose parent is top view)
+		found = view.root;
+	} else if (type) {
+		while (view && !found) {
+			// Go through views - this one, and all parent ones - and return first one with given type.
+			found = view.type === type ? view : undefined;
+			view = view.parent;
+		}
+	} else {
+		found = view.parent;
+	}
+	return found || undefined;
+}
+
+function getNestedIndex() {
+	var view = this.get("item");
+	return view ? view.index : undefined;
+}
+
+getNestedIndex.depends = function() {
+	return [this.get("item"), "index"];
+};
+
+function getIndex() {
+	return this.index;
+}
+
+getIndex.depends = "index";
+
+//==================
+// View.ctxPrm, etc.
+//==================
+
+/* Internal private: view._getOb() */
+function getPathObject(ob, path, ltOb, fn) {
+	// Iterate through path to late paths: @a.b.c paths
+	// Return "" (or noop if leaf is a function @a.b.c(...) ) if intermediate object not yet available
+	var prevOb, tokens, l,
+		i = 0;
+	if (ltOb === 1) {
+		fn = 1;
+		ltOb = undefined;
+	}
+	// Paths like ^a^b^c or ~^a^b^c will not throw if an object in path is undefined.
+	if (path) {
+		tokens = path.split(".");
+		l = tokens.length;
+
+		for (; ob && i < l; i++) {
+			prevOb = ob;
+			ob = tokens[i] ? ob[tokens[i]] : ob;
+		}
+	}
+	if (ltOb) {
+		ltOb.lt = ltOb.lt || i<l; // If i < l there was an object in the path not yet available
+	}
+	return ob === undefined
+		? fn ? noop : ""
+		: fn ? function() {
+			return ob.apply(prevOb, arguments);
+		} : ob;
+}
+
+function contextParameter(key, value, get) {
+	// Helper method called as view.ctxPrm(key) for helpers or template parameters ~foo - from compiled template or from context callback
+	var wrapped, deps, res, obsCtxPrm, tagElse, callView, newRes,
+		storeView = this,
+		isUpdate = !isRenderCall && arguments.length > 1,
+		store = storeView.ctx;
+	if (key) {
+		if (!storeView._) { // tagCtx.ctxPrm() call
+			tagElse = storeView.index;
+			storeView = storeView.tag;
+		}
+		callView = storeView;
+		if (store && store.hasOwnProperty(key) || (store = $helpers).hasOwnProperty(key)) {
+			res = store[key];
+			if (key === "tag" || key === "tagCtx" || key === "root" || key === "parentTags") {
+				return res;
+			}
+		} else {
+			store = undefined;
+		}
+		if (!isRenderCall && storeView.tagCtx || storeView.linked) { // Data-linked view, or tag instance
+			if (!res || !res._cxp) {
+				// Not a contextual parameter
+				// Set storeView to tag (if this is a tag.ctxPrm() call) or to root view ("data" view of linked template)
+				storeView = storeView.tagCtx || $isFunction(res)
+					? storeView // Is a tag, not a view, or is a computed contextual parameter, so scope to the callView, no the 'scope view'
+					: (storeView = storeView.scope || storeView,
+						!storeView.isTop && storeView.ctx.tag // If this view is in a tag, set storeView to the tag
+							|| storeView);
+				if (res !== undefined && storeView.tagCtx) {
+					// If storeView is a tag, but the contextual parameter has been set at at higher level (e.g. helpers)...
+					storeView = storeView.tagCtx.view.scope; // then move storeView to the outer level (scope of tag container view)
+				}
+				store = storeView._ocps;
+				res = store && store.hasOwnProperty(key) && store[key] || res;
+				if (!(res && res._cxp) && (get || isUpdate)) {
+					// Create observable contextual parameter
+					(store || (storeView._ocps = storeView._ocps || {}))[key]
+						= res
+						= [{
+							_ocp: res, // The observable contextual parameter value
+							_vw: callView,
+							_key: key
+						}];
+					res._cxp = {
+						path: _ocp,
+						ind: 0,
+						updateValue: function(val, path) {
+							$.observable(res[0]).setProperty(_ocp, val); // Set the value (res[0]._ocp)
+							return this;
+						}
+					};
+				}
+			}
+			if (obsCtxPrm = res && res._cxp) {
+				// If this helper resource is an observable contextual parameter
+				if (arguments.length > 2) {
+					deps = res[1] ? $sub._ceo(res[1].deps) : [_ocp]; // fn deps (with any exprObs cloned using $sub._ceo)
+					deps.unshift(res[0]); // view
+					deps._cxp = obsCtxPrm;
+					// In a context callback for a contextual param, we set get = true, to get ctxPrm [view, dependencies...] array - needed for observe call
+					return deps;
+				}
+				tagElse = obsCtxPrm.tagElse;
+				newRes = res[1] // linkFn for compiled expression
+					? obsCtxPrm.tag && obsCtxPrm.tag.cvtArgs
+						? obsCtxPrm.tag.cvtArgs(tagElse, 1)[obsCtxPrm.ind] // = tag.bndArgs() - for tag contextual parameter
+						: res[1](res[0].data, res[0], $sub) // = fn(data, view, $sub) for compiled binding expression
+					: res[0]._ocp; // Observable contextual parameter (uninitialized, or initialized as static expression, so no path dependencies)
+				if (isUpdate) {
+					$sub._ucp(key, value, storeView, obsCtxPrm); // Update observable contextual parameter
+					return storeView;
+				}
+				res = newRes;
+			}
+		}
+		if (res && $isFunction(res)) {
+			// If a helper is of type function we will wrap it, so if called with no this pointer it will be called with the
+			// view as 'this' context. If the helper ~foo() was in a data-link expression, the view will have a 'temporary' linkCtx property too.
+			// Note that helper functions on deeper paths will have specific this pointers, from the preceding path.
+			// For example, ~util.foo() will have the ~util object as 'this' pointer
+			wrapped = function() {
+				return res.apply((!this || this === global) ? callView : this, arguments);
+			};
+			$extend(wrapped, res); // Attach same expandos (if any) to the wrapped function
+		}
+		return wrapped || res;
+	}
+}
+
+/* Internal private: view._getTmpl() */
+function getTemplate(tmpl) {
+	return tmpl && (tmpl.fn
+		? tmpl
+		: this.getRsc("templates", tmpl) || $templates(tmpl)); // not yet compiled
+}
+
+//==============
+// views._cnvt
+//==============
+
+function convertVal(converter, view, tagCtx, onError) {
+	// Called from compiled template code for {{:}}
+	// self is template object or linkCtx object
+	var tag, linkCtx, value, argsLen, bindTo,
+		// If tagCtx is an integer, then it is the key for the compiled function to return the boundTag tagCtx
+		boundTag = typeof tagCtx === "number" && view.tmpl.bnds[tagCtx-1];
+
+	if (onError === undefined && boundTag && boundTag._lr) { // lateRender
+		onError = "";
+	}
+	if (onError !== undefined) {
+		tagCtx = onError = {props: {}, args: [onError]};
+	} else if (boundTag) {
+		tagCtx = boundTag(view.data, view, $sub);
+	}
+	boundTag = boundTag._bd && boundTag;
+	if (converter || boundTag) {
+		linkCtx = view._lc; // For data-link="{cvt:...}"... See onDataLinkedTagChange
+		tag = linkCtx && linkCtx.tag;
+		tagCtx.view = view;
+		if (!tag) {
+			tag = $extend(new $sub._tg(), {
+				_: {
+					bnd: boundTag,
+					unlinked: true,
+					lt: tagCtx.lt // If a late path @some.path has not returned @some object, mark tag as late
+				},
+				inline: !linkCtx,
+				tagName: ":",
+				convert: converter,
+				onArrayChange: true,
+				flow: true,
+				tagCtx: tagCtx,
+				tagCtxs: [tagCtx],
+				_is: "tag"
+			});
+			argsLen = tagCtx.args.length;
+			if (argsLen>1) {
+				bindTo = tag.bindTo = [];
+				while (argsLen--) {
+					bindTo.unshift(argsLen); // Bind to all the arguments - generate bindTo array: [0,1,2...]
+				}
+			}
+			if (linkCtx) {
+				linkCtx.tag = tag;
+				tag.linkCtx = linkCtx;
+			}
+			tagCtx.ctx = extendCtx(tagCtx.ctx, (linkCtx ? linkCtx.view : view).ctx);
+			tagHandlersFromProps(tag, tagCtx);
+		}
+		tag._er = onError && value;
+		tag.ctx = tagCtx.ctx || tag.ctx || {};
+		tagCtx.ctx = undefined;
+		value = tag.cvtArgs()[0]; // If there is a convertBack but no convert, converter will be "true"
+		tag._er = onError && value;
+	} else {
+		value = tagCtx.args[0];
+	}
+
+	// Call onRender (used by JsViews if present, to add binding annotations around rendered content)
+	value = boundTag && view._.onRender
+		? view._.onRender(value, view, tag)
+		: value;
+	return value != undefined ? value : "";
+}
+
+function convertArgs(tagElse, bound) { // tag.cvtArgs() or tag.cvtArgs(tagElse?, true?)
+	var l, key, boundArgs, args, bindFrom, tag, converter,
+		tagCtx = this;
+
+	if (tagCtx.tagName) {
+		tag = tagCtx;
+		tagCtx = (tag.tagCtxs || [tagCtx])[tagElse||0];
+		if (!tagCtx) {
+			return;
+		}
+	} else {
+		tag = tagCtx.tag;
+	}
+
+	bindFrom = tag.bindFrom;
+	args = tagCtx.args;
+
+	if ((converter = tag.convert) && "" + converter === converter) {
+		converter = converter === "true"
+			? undefined
+			: (tagCtx.view.getRsc("converters", converter) || error("Unknown converter: '" + converter + "'"));
+	}
+
+	if (converter && !bound) { // If there is a converter, use a copy of the tagCtx.args array for rendering, and replace the args[0] in
+		args = args.slice(); // the copied array with the converted value. But we do not modify the value of tag.tagCtx.args[0] (the original args array)
+	}
+	if (bindFrom) { // Get the values of the boundArgs
+		boundArgs = [];
+		l = bindFrom.length;
+		while (l--) {
+			key = bindFrom[l];
+			boundArgs.unshift(argOrProp(tagCtx, key));
+		}
+		if (bound) {
+			args = boundArgs; // Call to bndArgs() - returns the boundArgs
+		}
+	}
+	if (converter) {
+		converter = converter.apply(tag, boundArgs || args);
+		if (converter === undefined) {
+			return args; // Returning undefined from a converter is equivalent to not having a converter.
+		}
+		bindFrom = bindFrom || [0];
+		l = bindFrom.length;
+		if (!$isArray(converter) || (converter.arg0 !== false && (l === 1 || converter.length !== l || converter.arg0))) {
+			converter = [converter]; // Returning converter as first arg, even if converter value is an array
+			bindFrom = [0];
+			l = 1;
+		}
+		if (bound) {        // Call to bndArgs() - so apply converter to all boundArgs
+			args = converter; // The array of values returned from the converter
+		} else {            // Call to cvtArgs()
+			while (l--) {
+				key = bindFrom[l];
+				if (+key === key) {
+					args[key] = converter[l];
+				}
+			}
+		}
+	}
+	return args;
+}
+
+function argOrProp(context, key) {
+	context = context[+key === key ? "args" : "props"];
+	return context && context[key];
+}
+
+function convertBoundArgs(tagElse) { // tag.bndArgs()
+	return this.cvtArgs(tagElse, 1);
+}
+
+//=============
+// views.tag
+//=============
+
+/* view.getRsc() */
+function getResource(resourceType, itemName) {
+	var res, store,
+		view = this;
+	if ("" + itemName === itemName) {
+		while ((res === undefined) && view) {
+			store = view.tmpl && view.tmpl[resourceType];
+			res = store && store[itemName];
+			view = view.parent;
+		}
+		return res || $views[resourceType][itemName];
+	}
+}
+
+function renderTag(tagName, parentView, tmpl, tagCtxs, isUpdate, onError) {
+	function bindToOrBindFrom(type) {
+		var bindArray = tag[type];
+
+		if (bindArray !== undefined) {
+			bindArray = $isArray(bindArray) ? bindArray : [bindArray];
+			m = bindArray.length;
+			while (m--) {
+				key = bindArray[m];
+				if (!isNaN(parseInt(key))) {
+					bindArray[m] = parseInt(key); // Convert "0" to 0, etc.
+				}
+			}
+		}
+
+		return bindArray || [0];
+	}
+
+	parentView = parentView || topView;
+	var tag, tagDef, template, tags, attr, parentTag, l, m, n, itemRet, tagCtx, tagCtxCtx, ctxPrm, bindTo, bindFrom, initVal,
+		content, callInit, mapDef, thisMap, args, bdArgs, props, tagDataMap, contentCtx, key, bindFromLength, bindToLength, linkedElement, defaultCtx,
+		i = 0,
+		ret = "",
+		linkCtx = parentView._lc || false, // For data-link="{myTag...}"... See onDataLinkedTagChange
+		ctx = parentView.ctx,
+		parentTmpl = tmpl || parentView.tmpl,
+		// If tagCtxs is an integer, then it is the key for the compiled function to return the boundTag tagCtxs
+		boundTag = typeof tagCtxs === "number" && parentView.tmpl.bnds[tagCtxs-1];
+
+	if (tagName._is === "tag") {
+		tag = tagName;
+		tagName = tag.tagName;
+		tagCtxs = tag.tagCtxs;
+		template = tag.template;
+	} else {
+		tagDef = parentView.getRsc("tags", tagName) || error("Unknown tag: {{" + tagName + "}} ");
+		template = tagDef.template;
+	}
+	if (onError === undefined && boundTag && (boundTag._lr = (tagDef.lateRender && boundTag._lr!== false || boundTag._lr))) {
+		onError = ""; // If lateRender, set temporary onError, to skip initial rendering (and render just "")
+	}
+	if (onError !== undefined) {
+		ret += onError;
+		tagCtxs = onError = [{props: {}, args: [], params: {props:{}}}];
+	} else if (boundTag) {
+		tagCtxs = boundTag(parentView.data, parentView, $sub);
+	}
+
+	l = tagCtxs.length;
+	for (; i < l; i++) {
+		tagCtx = tagCtxs[i];
+		content = tagCtx.tmpl;
+		if (!linkCtx || !linkCtx.tag || i && !linkCtx.tag.inline || tag._er || content && +content===content) {
+			// Initialize tagCtx
+			// For block tags, tagCtx.tmpl is an integer > 0
+			if (content && parentTmpl.tmpls) {
+				tagCtx.tmpl = tagCtx.content = parentTmpl.tmpls[content - 1]; // Set the tmpl property to the content of the block tag
+			}
+			tagCtx.index = i;
+			tagCtx.ctxPrm = contextParameter;
+			tagCtx.render = renderContent;
+			tagCtx.cvtArgs = convertArgs;
+			tagCtx.bndArgs = convertBoundArgs;
+			tagCtx.view = parentView;
+			tagCtx.ctx = extendCtx(extendCtx(tagCtx.ctx, tagDef && tagDef.ctx), ctx); // Clone and extend parentView.ctx
+		}
+		if (tmpl = tagCtx.props.tmpl) {
+			// If the tmpl property is overridden, set the value (when initializing, or, in case of binding: ^tmpl=..., when updating)
+			tagCtx.tmpl = parentView._getTmpl(tmpl);
+			tagCtx.content = tagCtx.content || tagCtx.tmpl;
+		}
+
+		if (!tag) {
+			// This will only be hit for initial tagCtx (not for {{else}}) - if the tag instance does not exist yet
+			// If the tag has not already been instantiated, we will create a new instance.
+			// ~tag will access the tag, even within the rendering of the template content of this tag.
+			// From child/descendant tags, can access using ~tag.parent, or ~parentTags.tagName
+			tag = new tagDef._ctr();
+			callInit = !!tag.init;
+
+			tag.parent = parentTag = ctx && ctx.tag;
+			tag.tagCtxs = tagCtxs;
+
+			if (linkCtx) {
+				tag.inline = false;
+				linkCtx.tag = tag;
+			}
+			tag.linkCtx = linkCtx;
+			if (tag._.bnd = boundTag || linkCtx.fn) {
+				// Bound if {^{tag...}} or data-link="{tag...}"
+				tag._.ths = tagCtx.params.props["this"]; // Tag has a this=expr binding, to get javascript reference to tag instance
+				tag._.lt = tagCtxs.lt; // If a late path @some.path has not returned @some object, mark tag as late
+				tag._.arrVws = {};
+			} else if (tag.dataBoundOnly) {
+				error(tagName + " must be data-bound:\n{^{" + tagName + "}}");
+			}
+			//TODO better perf for childTags() - keep child tag.tags array, (and remove child, when disposed)
+			// tag.tags = [];
+		} else if (linkCtx && linkCtx.fn._lr) {
+			callInit = !!tag.init;
+		}
+		tagDataMap = tag.dataMap;
+
+		tagCtx.tag = tag;
+		if (tagDataMap && tagCtxs) {
+			tagCtx.map = tagCtxs[i].map; // Copy over the compiled map instance from the previous tagCtxs to the refreshed ones
+		}
+		if (!tag.flow) {
+			tagCtxCtx = tagCtx.ctx = tagCtx.ctx || {};
+
+			// tags hash: tag.ctx.tags, merged with parentView.ctx.tags,
+			tags = tag.parents = tagCtxCtx.parentTags = ctx && extendCtx(tagCtxCtx.parentTags, ctx.parentTags) || {};
+			if (parentTag) {
+				tags[parentTag.tagName] = parentTag;
+				//TODO better perf for childTags: parentTag.tags.push(tag);
+			}
+			tags[tag.tagName] = tagCtxCtx.tag = tag;
+			tagCtxCtx.tagCtx = tagCtx;
+		}
+	}
+	if (!(tag._er = onError)) {
+		tagHandlersFromProps(tag, tagCtxs[0]);
+		tag.rendering = {rndr: tag.rendering}; // Provide object for state during render calls to tag and elses. (Used by {{if}} and {{for}}...)
+		for (i = 0; i < l; i++) { // Iterate tagCtx for each {{else}} block
+			tagCtx = tag.tagCtx = tagCtxs[i];
+			props = tagCtx.props;
+			tag.ctx = tagCtx.ctx;
+
+			if (!i) {
+				if (callInit) {
+					tag.init(tagCtx, linkCtx, tag.ctx);
+					callInit = undefined;
+				}
+				if (!tagCtx.args.length && tagCtx.argDefault !== false && tag.argDefault !== false) {
+					tagCtx.args = args = [tagCtx.view.data]; // Missing first arg defaults to the current data context
+					tagCtx.params.args = ["#data"];
+				}
+
+				bindTo = bindToOrBindFrom("bindTo");
+
+				if (tag.bindTo !== undefined) {
+					tag.bindTo = bindTo;
+				}
+
+				if (tag.bindFrom !== undefined) {
+					tag.bindFrom = bindToOrBindFrom("bindFrom");
+				} else if (tag.bindTo) {
+					tag.bindFrom = tag.bindTo = bindTo;
+				}
+				bindFrom = tag.bindFrom || bindTo;
+
+				bindToLength = bindTo.length;
+				bindFromLength = bindFrom.length;
+
+				if (tag._.bnd && (linkedElement = tag.linkedElement)) {
+					tag.linkedElement = linkedElement = $isArray(linkedElement) ? linkedElement: [linkedElement];
+
+					if (bindToLength !== linkedElement.length) {
+						error("linkedElement not same length as bindTo");
+					}
+				}
+				if (linkedElement = tag.linkedCtxParam) {
+					tag.linkedCtxParam = linkedElement = $isArray(linkedElement) ? linkedElement: [linkedElement];
+
+					if (bindFromLength !== linkedElement.length) {
+						error("linkedCtxParam not same length as bindFrom/bindTo");
+					}
+				}
+
+				if (bindFrom) {
+					tag._.fromIndex = {}; // Hash of bindFrom index which has same path value as bindTo index. fromIndex = tag._.fromIndex[toIndex]
+					tag._.toIndex = {}; // Hash of bindFrom index which has same path value as bindTo index. fromIndex = tag._.fromIndex[toIndex]
+					n = bindFromLength;
+					while (n--) {
+						key = bindFrom[n];
+						m = bindToLength;
+						while (m--) {
+							if (key === bindTo[m]) {
+								tag._.fromIndex[m] = n;
+								tag._.toIndex[n] = m;
+							}
+						}
+					}
+				}
+
+				if (linkCtx) {
+					// Set attr on linkCtx to ensure outputting to the correct target attribute.
+					// Setting either linkCtx.attr or this.attr in the init() allows per-instance choice of target attrib.
+					linkCtx.attr = tag.attr = linkCtx.attr || tag.attr || linkCtx._dfAt;
+				}
+				attr = tag.attr;
+				tag._.noVws = attr && attr !== HTML;
+			}
+			args = tag.cvtArgs(i);
+			if (tag.linkedCtxParam) {
+				bdArgs = tag.cvtArgs(i, 1);
+				m = bindFromLength;
+				defaultCtx = tag.constructor.prototype.ctx;
+				while (m--) {
+					if (ctxPrm = tag.linkedCtxParam[m]) {
+						key = bindFrom[m];
+						initVal = bdArgs[m];
+						// Create tag contextual parameter
+						tagCtx.ctx[ctxPrm] = $sub._cp(
+							defaultCtx && initVal === undefined ? defaultCtx[ctxPrm]: initVal,
+							initVal !== undefined && argOrProp(tagCtx.params, key),
+							tagCtx.view,
+							tag._.bnd && {tag: tag, cvt: tag.convert, ind: m, tagElse: i}
+						);
+					}
+				}
+			}
+			if ((mapDef = props.dataMap || tagDataMap) && (args.length || props.dataMap)) {
+				thisMap = tagCtx.map;
+				if (!thisMap || thisMap.src !== args[0] || isUpdate) {
+					if (thisMap && thisMap.src) {
+						thisMap.unmap(); // only called if observable map - not when only used in JsRender, e.g. by {{props}}
+					}
+					mapDef.map(args[0], tagCtx, thisMap, !tag._.bnd);
+					thisMap = tagCtx.map;
+				}
+				args = [thisMap.tgt];
+			}
+
+			itemRet = undefined;
+			if (tag.render) {
+				itemRet = tag.render.apply(tag, args);
+				if (parentView.linked && itemRet && !rWrappedInViewMarker.test(itemRet)) {
+					// When a tag renders content from the render method, with data linking then we need to wrap with view markers, if absent,
+					// to provide a contentView for the tag, which will correctly dispose bindings if deleted. The 'tmpl' for this view will
+					// be a dumbed-down template which will always return the itemRet string (no matter what the data is). The itemRet string
+					// is not compiled as template markup, so can include "{{" or "}}" without triggering syntax errors
+					tmpl = { // 'Dumbed-down' template which always renders 'static' itemRet string
+						links: []
+					};
+					tmpl.render = tmpl.fn = function() {
+						return itemRet;
+					};
+					itemRet = renderWithViews(tmpl, parentView.data, undefined, true, parentView, undefined, undefined, tag);
+				}
+			}
+			if (!args.length) {
+				args = [parentView]; // no arguments - (e.g. {{else}}) get data context from view.
+			}
+			if (itemRet === undefined) {
+				contentCtx = args[0]; // Default data context for wrapped block content is the first argument
+				if (tag.contentCtx) { // Set tag.contentCtx to true, to inherit parent context, or to a function to provide alternate context.
+					contentCtx = tag.contentCtx === true ? parentView : tag.contentCtx(contentCtx);
+				}
+				itemRet = tagCtx.render(contentCtx, true) || (isUpdate ? undefined : "");
+			}
+			ret = ret
+				? ret + (itemRet || "")
+				: itemRet !== undefined
+					? "" + itemRet
+					: undefined; // If no return value from render, and no template/content tagCtx.render(...), return undefined
+		}
+		tag.rendering = tag.rendering.rndr; // Remove tag.rendering object (if this is outermost render call. (In case of nested calls)
+	}
+	tag.tagCtx = tagCtxs[0];
+	tag.ctx = tag.tagCtx.ctx;
+
+	if (tag._.noVws && tag.inline) {
+		// inline tag with attr set to "text" will insert HTML-encoded content - as if it was element-based innerText
+		ret = attr === "text"
+			? $converters.html(ret)
+			: "";
+	}
+	return boundTag && parentView._.onRender
+		// Call onRender (used by JsViews if present, to add binding annotations around rendered content)
+		? parentView._.onRender(ret, parentView, tag)
+		: ret;
+}
+
+//=================
+// View constructor
+//=================
+
+function View(context, type, parentView, data, template, key, onRender, contentTmpl) {
+	// Constructor for view object in view hierarchy. (Augmented by JsViews if JsViews is loaded)
+	var views, parentView_, tag, self_,
+		self = this,
+		isArray = type === "array";
+		// If the data is an array, this is an 'array view' with a views array for each child 'item view'
+		// If the data is not an array, this is an 'item view' with a views 'hash' object for any child nested views
+
+	self.content = contentTmpl;
+	self.views = isArray ? [] : {};
+	self.data = data;
+	self.tmpl = template;
+	self_ = self._ = {
+		key: 0,
+		// ._.useKey is non zero if is not an 'array view' (owning a data array). Use this as next key for adding to child views hash
+		useKey: isArray ? 0 : 1,
+		id: "" + viewId++,
+		onRender: onRender,
+		bnds: {}
+	};
+	self.linked = !!onRender;
+	self.type = type || "top";
+	if (type) {
+		self.cache = {_ct: $subSettings._cchCt}; // Used for caching results of computed properties and helpers (view.getCache)
+	}
+
+	if (!parentView || parentView.type === "top") {
+		(self.ctx = context || {}).root = self.data;
+	}
+
+	if (self.parent = parentView) {
+		self.root = parentView.root || self; // view whose parent is top view
+		views = parentView.views;
+		parentView_ = parentView._;
+		self.isTop = parentView_.scp; // Is top content view of a link("#container", ...) call
+		self.scope = (!context.tag || context.tag === parentView.ctx.tag) && !self.isTop && parentView.scope || self;
+		// Scope for contextParams - closest non flow tag ancestor or root view
+		if (parentView_.useKey) {
+			// Parent is not an 'array view'. Add this view to its views object
+			// self._key = is the key in the parent view hash
+			views[self_.key = "_" + parentView_.useKey++] = self;
+			self.index = indexStr;
+			self.getIndex = getNestedIndex;
+		} else if (views.length === (self_.key = self.index = key)) { // Parent is an 'array view'. Add this view to its views array
+			views.push(self); // Adding to end of views array. (Using push when possible - better perf than splice)
+		} else {
+			views.splice(key, 0, self); // Inserting in views array
+		}
+		// If no context was passed in, use parent context
+		// If context was passed in, it should have been merged already with parent context
+		self.ctx = context || parentView.ctx;
+	} else if (type) {
+		self.root = self; // view whose parent is top view
+	}
+}
+
+View.prototype = {
+	get: getView,
+	getIndex: getIndex,
+	ctxPrm: contextParameter,
+	getRsc: getResource,
+	_getTmpl: getTemplate,
+	_getOb: getPathObject,
+	getCache: function(key) { // Get cached value of computed value
+		if ($subSettings._cchCt > this.cache._ct) {
+			this.cache = {_ct: $subSettings._cchCt};
+		}
+		return this.cache[key] !== undefined ? this.cache[key] : (this.cache[key] = cpFnStore[key](this.data, this, $sub));
+	},
+	_is: "view"
+};
+
+//====================================================
+// Registration
+//====================================================
+
+function compileChildResources(parentTmpl) {
+	var storeName, storeNames, resources;
+	for (storeName in jsvStores) {
+		storeNames = storeName + "s";
+		if (parentTmpl[storeNames]) {
+			resources = parentTmpl[storeNames];        // Resources not yet compiled
+			parentTmpl[storeNames] = {};               // Remove uncompiled resources
+			$views[storeNames](resources, parentTmpl); // Add back in the compiled resources
+		}
+	}
+}
+
+//===============
+// compileTag
+//===============
+
+function compileTag(name, tagDef, parentTmpl) {
+	var tmpl, baseTag, prop,
+		compiledDef = new $sub._tg();
+
+	function Tag() {
+		var tag = this;
+		tag._ = {
+			unlinked: true
+		};
+		tag.inline = true;
+		tag.tagName = name;
+	}
+
+	if ($isFunction(tagDef)) {
+		// Simple tag declared as function. No presenter instantation.
+		tagDef = {
+			depends: tagDef.depends,
+			render: tagDef
+		};
+	} else if ("" + tagDef === tagDef) {
+		tagDef = {template: tagDef};
+	}
+
+	if (baseTag = tagDef.baseTag) {
+		tagDef.flow = !!tagDef.flow; // Set flow property, so defaults to false even if baseTag has flow=true
+		baseTag = "" + baseTag === baseTag
+			? (parentTmpl && parentTmpl.tags[baseTag] || $tags[baseTag])
+			: baseTag;
+		if (!baseTag) {
+			error('baseTag: "' + tagDef.baseTag + '" not found');
+		}
+		compiledDef = $extend(compiledDef, baseTag);
+
+		for (prop in tagDef) {
+			compiledDef[prop] = getMethod(baseTag[prop], tagDef[prop]);
+		}
+	} else {
+		compiledDef = $extend(compiledDef, tagDef);
+	}
+
+	// Tag declared as object, used as the prototype for tag instantiation (control/presenter)
+	if ((tmpl = compiledDef.template) !== undefined) {
+		compiledDef.template = "" + tmpl === tmpl ? ($templates[tmpl] || $templates(tmpl)) : tmpl;
+	}
+	(Tag.prototype = compiledDef).constructor = compiledDef._ctr = Tag;
+
+	if (parentTmpl) {
+		compiledDef._parentTmpl = parentTmpl;
+	}
+	return compiledDef;
+}
+
+function baseApply(args) {
+	// In derived method (or handler declared declaratively as in {{:foo onChange=~fooChanged}} can call base method,
+	// using this.baseApply(arguments) (Equivalent to this._superApply(arguments) in jQuery UI)
+	return this.base.apply(this, args);
+}
+
+//===============
+// compileTmpl
+//===============
+
+function compileTmpl(name, tmpl, parentTmpl, options) {
+	// tmpl is either a template object, a selector for a template script block, or the name of a compiled template
+
+	//==== nested functions ====
+	function lookupTemplate(value) {
+		// If value is of type string - treat as selector, or name of compiled template
+		// Return the template object, if already compiled, or the markup string
+		var currentName, tmpl;
+		if (("" + value === value) || value.nodeType > 0 && (elem = value)) {
+			if (!elem) {
+				if (/^\.?\/[^\\:*?"<>]*$/.test(value)) {
+					// value="./some/file.html" (or "/some/file.html")
+					// If the template is not named, use "./some/file.html" as name.
+					if (tmpl = $templates[name = name || value]) {
+						value = tmpl;
+					} else {
+						// BROWSER-SPECIFIC CODE (not on Node.js):
+						// Look for server-generated script block with id "./some/file.html"
+						elem = document.getElementById(value);
+					}
+				} else if (value.charAt(0) === "#") {
+					elem = document.getElementById(value.slice(1));
+				} else if ($.fn && !$sub.rTmpl.test(value)) {
+					try {
+						elem = $(value, document)[0]; // if jQuery is loaded, test for selector returning elements, and get first element
+					} catch (e) {}
+				}// END BROWSER-SPECIFIC CODE
+			} //BROWSER-SPECIFIC CODE
+			if (elem) {
+				if (elem.tagName !== "SCRIPT") {
+					error(value + ": Use script block, not " + elem.tagName);
+				}
+				if (options) {
+					// We will compile a new template using the markup in the script element
+					value = elem.innerHTML;
+				} else {
+					// We will cache a single copy of the compiled template, and associate it with the name
+					// (renaming from a previous name if there was one).
+					currentName = elem.getAttribute(tmplAttr);
+					if (currentName) {
+						if (currentName !== jsvTmpl) {
+							value = $templates[currentName];
+							delete $templates[currentName];
+						} else if ($.fn) {
+							value = $.data(elem)[jsvTmpl]; // Get cached compiled template
+						}
+					}
+					if (!currentName || !value) { // Not yet compiled, or cached version lost
+						name = name || ($.fn ? jsvTmpl : value);
+						value = compileTmpl(name, elem.innerHTML, parentTmpl, options);
+					}
+					value.tmplName = name = name || currentName;
+					if (name !== jsvTmpl) {
+						$templates[name] = value;
+					}
+					elem.setAttribute(tmplAttr, name);
+					if ($.fn) {
+						$.data(elem, jsvTmpl, value);
+					}
+				}
+			} // END BROWSER-SPECIFIC CODE
+			elem = undefined;
+		} else if (!value.fn) {
+			value = undefined;
+			// If value is not a string. HTML element, or compiled template, return undefined
+		}
+		return value;
+	}
+
+	var elem, compiledTmpl,
+		tmplOrMarkup = tmpl = tmpl || "";
+	$sub._html = $converters.html;
+
+	//==== Compile the template ====
+	if (options === 0) {
+		options = undefined;
+		tmplOrMarkup = lookupTemplate(tmplOrMarkup); // Top-level compile so do a template lookup
+	}
+
+	// If options, then this was already compiled from a (script) element template declaration.
+	// If not, then if tmpl is a template object, use it for options
+	options = options || (tmpl.markup
+		? tmpl.bnds
+			? $extend({}, tmpl)
+			: tmpl
+		: {}
+	);
+
+	options.tmplName = options.tmplName || name || "unnamed";
+	if (parentTmpl) {
+		options._parentTmpl = parentTmpl;
+	}
+	// If tmpl is not a markup string or a selector string, then it must be a template object
+	// In that case, get it from the markup property of the object
+	if (!tmplOrMarkup && tmpl.markup && (tmplOrMarkup = lookupTemplate(tmpl.markup)) && tmplOrMarkup.fn) {
+		// If the string references a compiled template object, need to recompile to merge any modified options
+		tmplOrMarkup = tmplOrMarkup.markup;
+	}
+	if (tmplOrMarkup !== undefined) {
+		if (tmplOrMarkup.render || tmpl.render) {
+			// tmpl is already compiled, so use it
+			if (tmplOrMarkup.tmpls) {
+				compiledTmpl = tmplOrMarkup;
+			}
+		} else {
+			// tmplOrMarkup is a markup string, not a compiled template
+			// Create template object
+			tmpl = tmplObject(tmplOrMarkup, options);
+			// Compile to AST and then to compiled function
+			tmplFn(tmplOrMarkup.replace(rEscapeQuotes, "\\$&"), tmpl);
+		}
+		if (!compiledTmpl) {
+			compiledTmpl = $extend(function() {
+				return compiledTmpl.render.apply(compiledTmpl, arguments);
+			}, tmpl);
+
+			compileChildResources(compiledTmpl);
+		}
+		return compiledTmpl;
+	}
+}
+
+//==== /end of function compileTmpl ====
+
+//=================
+// compileViewModel
+//=================
+
+function getDefaultVal(defaultVal, data) {
+	return $isFunction(defaultVal)
+		? defaultVal.call(data)
+		: defaultVal;
+}
+
+function addParentRef(ob, ref, parent) {
+	Object.defineProperty(ob, ref, {
+		value: parent,
+		configurable: true
+	});
+}
+
+function compileViewModel(name, type) {
+	var i, constructor, parent,
+		viewModels = this,
+		getters = type.getters,
+		extend = type.extend,
+		id = type.id,
+		proto = $.extend({
+			_is: name || "unnamed",
+			unmap: unmap,
+			merge: merge
+		}, extend),
+		args = "",
+		cnstr = "",
+		getterCount = getters ? getters.length : 0,
+		$observable = $.observable,
+		getterNames = {};
+
+	function JsvVm(args) {
+		constructor.apply(this, args);
+	}
+
+	function vm() {
+		return new JsvVm(arguments);
+	}
+
+	function iterate(data, action) {
+		var getterType, defaultVal, prop, ob, parentRef,
+			j = 0;
+		for (; j < getterCount; j++) {
+			prop = getters[j];
+			getterType = undefined;
+			if (prop + "" !== prop) {
+				getterType = prop;
+				prop = getterType.getter;
+				parentRef = getterType.parentRef;
+			}
+			if ((ob = data[prop]) === undefined && getterType && (defaultVal = getterType.defaultVal) !== undefined) {
+				ob = getDefaultVal(defaultVal, data);
+			}
+			action(ob, getterType && viewModels[getterType.type], prop, parentRef);
+		}
+	}
+
+	function map(data) {
+		data = data + "" === data
+			? JSON.parse(data) // Accept JSON string
+			: data;            // or object/array
+		var l, prop, childOb, parentRef,
+			j = 0,
+			ob = data,
+			arr = [];
+
+		if ($isArray(data)) {
+			data = data || [];
+			l = data.length;
+			for (; j<l; j++) {
+				arr.push(this.map(data[j]));
+			}
+			arr._is = name;
+			arr.unmap = unmap;
+			arr.merge = merge;
+			return arr;
+		}
+
+		if (data) {
+			iterate(data, function(ob, viewModel) {
+				if (viewModel) { // Iterate to build getters arg array (value, or mapped value)
+					ob = viewModel.map(ob);
+				}
+				arr.push(ob);
+			});
+			ob = this.apply(this, arr); // Instantiate this View Model, passing getters args array to constructor
+			j = getterCount;
+			while (j--) {
+				childOb = arr[j];
+				parentRef = getters[j].parentRef;
+				if (parentRef && childOb && childOb.unmap) {
+					if ($isArray(childOb)) {
+						l = childOb.length;
+						while (l--) {
+							addParentRef(childOb[l], parentRef, ob);
+						}
+					} else {
+						addParentRef(childOb, parentRef, ob);
+					}
+				}
+			}
+			for (prop in data) { // Copy over any other properties. that are not get/set properties
+				if (prop !== $expando && !getterNames[prop]) {
+					ob[prop] = data[prop];
+				}
+			}
+		}
+		return ob;
+	}
+
+	function merge(data, parent, parentRef) {
+		data = data + "" === data
+			? JSON.parse(data) // Accept JSON string
+			: data;            // or object/array
+
+		var j, l, m, prop, mod, found, assigned, ob, newModArr, childOb,
+			k = 0,
+			model = this;
+
+		if ($isArray(model)) {
+			assigned = {};
+			newModArr = [];
+			l = data.length;
+			m = model.length;
+			for (; k<l; k++) {
+				ob = data[k];
+				found = false;
+				for (j=0; j<m && !found; j++) {
+					if (assigned[j]) {
+						continue;
+					}
+					mod = model[j];
+
+					if (id) {
+						assigned[j] = found = id + "" === id
+						? (ob[id] && (getterNames[id] ? mod[id]() : mod[id]) === ob[id])
+						: id(mod, ob);
+					}
+				}
+				if (found) {
+					mod.merge(ob);
+					newModArr.push(mod);
+				} else {
+					newModArr.push(childOb = vm.map(ob));
+					if (parentRef) {
+						addParentRef(childOb, parentRef, parent);
+					}
+				}
+			}
+			if ($observable) {
+				$observable(model).refresh(newModArr, true);
+			} else {
+				model.splice.apply(model, [0, model.length].concat(newModArr));
+			}
+			return;
+		}
+		iterate(data, function(ob, viewModel, getter, parentRef) {
+			if (viewModel) {
+				model[getter]().merge(ob, model, parentRef); // Update typed property
+			} else if (model[getter]() !== ob) {
+				model[getter](ob); // Update non-typed property
+			}
+		});
+		for (prop in data) {
+			if (prop !== $expando && !getterNames[prop]) {
+				model[prop] = data[prop];
+			}
+		}
+	}
+
+	function unmap() {
+		var ob, prop, getterType, arr, value,
+			k = 0,
+			model = this;
+
+		function unmapArray(modelArr) {
+			var arr = [],
+				i = 0,
+				l = modelArr.length;
+			for (; i<l; i++) {
+				arr.push(modelArr[i].unmap());
+			}
+			return arr;
+		}
+
+		if ($isArray(model)) {
+			return unmapArray(model);
+		}
+		ob = {};
+		for (; k < getterCount; k++) {
+			prop = getters[k];
+			getterType = undefined;
+			if (prop + "" !== prop) {
+				getterType = prop;
+				prop = getterType.getter;
+			}
+			value = model[prop]();
+			ob[prop] = getterType && value && viewModels[getterType.type]
+				? $isArray(value)
+					? unmapArray(value)
+					: value.unmap()
+				: value;
+		}
+		for (prop in model) {
+			if (model.hasOwnProperty(prop) && (prop.charAt(0) !== "_" || !getterNames[prop.slice(1)]) && prop !== $expando && !$isFunction(model[prop])) {
+				ob[prop] = model[prop];
+			}
+		}
+		return ob;
+	}
+
+	JsvVm.prototype = proto;
+
+	for (i=0; i < getterCount; i++) {
+		(function(getter) {
+			getter = getter.getter || getter;
+			getterNames[getter] = i+1;
+			var privField = "_" + getter;
+
+			args += (args ? "," : "") + getter;
+			cnstr += "this." + privField + " = " + getter + ";\n";
+			proto[getter] = proto[getter] || function(val) {
+				if (!arguments.length) {
+					return this[privField]; // If there is no argument, use as a getter
+				}
+				if ($observable) {
+					$observable(this).setProperty(getter, val);
+				} else {
+					this[privField] = val;
+				}
+			};
+
+			if ($observable) {
+				proto[getter].set = proto[getter].set || function(val) {
+					this[privField] = val; // Setter called by observable property change
+				};
+			}
+		})(getters[i]);
+	}
+
+	// Constructor for new viewModel instance.
+	cnstr = new Function(args, cnstr);
+
+	constructor = function() {
+		cnstr.apply(this, arguments);
+		// Pass additional parentRef str and parent obj to have a parentRef pointer on instance
+		if (parent = arguments[getterCount + 1]) {
+			addParentRef(this, arguments[getterCount], parent);
+		}
+	};
+
+	constructor.prototype = proto;
+	proto.constructor = constructor;
+
+	vm.map = map;
+	vm.getters = getters;
+	vm.extend = extend;
+	vm.id = id;
+	return vm;
+}
+
+function tmplObject(markup, options) {
+	// Template object constructor
+	var htmlTag,
+		wrapMap = $subSettingsAdvanced._wm || {}, // Only used in JsViews. Otherwise empty: {}
+		tmpl = {
+			tmpls: [],
+			links: {}, // Compiled functions for link expressions
+			bnds: [],
+			_is: "template",
+			render: renderContent
+		};
+
+	if (options) {
+		tmpl = $extend(tmpl, options);
+	}
+
+	tmpl.markup = markup;
+	if (!tmpl.htmlTag) {
+		// Set tmpl.tag to the top-level HTML tag used in the template, if any...
+		htmlTag = rFirstElem.exec(markup);
+		tmpl.htmlTag = htmlTag ? htmlTag[1].toLowerCase() : "";
+	}
+	htmlTag = wrapMap[tmpl.htmlTag];
+	if (htmlTag && htmlTag !== wrapMap.div) {
+		// When using JsViews, we trim templates which are inserted into HTML contexts where text nodes are not rendered (i.e. not 'Phrasing Content').
+		// Currently not trimmed for <li> tag. (Not worth adding perf cost)
+		tmpl.markup = $.trim(tmpl.markup);
+	}
+
+	return tmpl;
+}
+
+//==============
+// registerStore
+//==============
+
+/**
+* Internal. Register a store type (used for template, tags, helpers, converters)
+*/
+function registerStore(storeName, storeSettings) {
+
+/**
+* Generic store() function to register item, named item, or hash of items
+* Also used as hash to store the registered items
+* Used as implementation of $.templates(), $.views.templates(), $.views.tags(), $.views.helpers() and $.views.converters()
+*
+* @param {string|hash} name         name - or selector, in case of $.templates(). Or hash of items
+* @param {any}         [item]       (e.g. markup for named template)
+* @param {template}    [parentTmpl] For item being registered as private resource of template
+* @returns {any|$.views} item, e.g. compiled template - or $.views in case of registering hash of items
+*/
+	function theStore(name, item, parentTmpl) {
+		// The store is also the function used to add items to the store. e.g. $.templates, or $.views.tags
+
+		// For store of name 'thing', Call as:
+		//    $.views.things(items[, parentTmpl]),
+		// or $.views.things(name[, item, parentTmpl])
+
+		var compile, itemName, thisStore, cnt,
+			onStore = $sub.onStore[storeName];
+
+		if (name && typeof name === OBJECT && !name.nodeType && !name.markup && !name.getTgt && !(storeName === "viewModel" && name.getters || name.extend)) {
+			// Call to $.views.things(items[, parentTmpl]),
+
+			// Adding items to the store
+			// If name is a hash, then item is parentTmpl. Iterate over hash and call store for key.
+			for (itemName in name) {
+				theStore(itemName, name[itemName], item);
+			}
+			return item || $views;
+		}
+		// Adding a single unnamed item to the store
+		if (name && "" + name !== name) { // name must be a string
+			parentTmpl = item;
+			item = name;
+			name = undefined;
+		}
+		thisStore = parentTmpl
+			? storeName === "viewModel"
+				? parentTmpl
+				: (parentTmpl[storeNames] = parentTmpl[storeNames] || {})
+			: theStore;
+		compile = storeSettings.compile;
+
+		if (item === undefined) {
+			item = compile ? name : thisStore[name];
+			name = undefined;
+		}
+		if (item === null) {
+			// If item is null, delete this entry
+			if (name) {
+				delete thisStore[name];
+			}
+		} else {
+			if (compile) {
+				item = compile.call(thisStore, name, item, parentTmpl, 0) || {};
+				item._is = storeName; // Only do this for compiled objects (tags, templates...)
+			}
+			if (name) {
+				thisStore[name] = item;
+			}
+		}
+		if (onStore) {
+			// e.g. JsViews integration
+			onStore(name, item, parentTmpl, compile);
+		}
+		return item;
+	}
+
+	var storeNames = storeName + "s";
+	$views[storeNames] = theStore;
+}
+
+/**
+* Add settings such as:
+* $.views.settings.allowCode(true)
+* @param {boolean} value
+* @returns {Settings}
+*
+* allowCode = $.views.settings.allowCode()
+* @returns {boolean}
+*/
+function addSetting(st) {
+	$viewsSettings[st] = $viewsSettings[st] || function(value) {
+		return arguments.length
+			? ($subSettings[st] = value, $viewsSettings)
+			: $subSettings[st];
+	};
+}
+
+//========================
+// dataMap for render only
+//========================
+
+function dataMap(mapDef) {
+	function Map(source, options) {
+		this.tgt = mapDef.getTgt(source, options);
+		options.map = this;
+	}
+
+	if ($isFunction(mapDef)) {
+		// Simple map declared as function
+		mapDef = {
+			getTgt: mapDef
+		};
+	}
+
+	if (mapDef.baseMap) {
+		mapDef = $extend($extend({}, mapDef.baseMap), mapDef);
+	}
+
+	mapDef.map = function(source, options) {
+		return new Map(source, options);
+	};
+	return mapDef;
+}
+
+//==============
+// renderContent
+//==============
+
+/** Render the template as a string, using the specified data and helpers/context
+* $("#tmpl").render(), tmpl.render(), tagCtx.render(), $.render.namedTmpl()
+*
+* @param {any}        data
+* @param {hash}       [context]           helpers or context
+* @param {boolean}    [noIteration]
+* @param {View}       [parentView]        internal
+* @param {string}     [key]               internal
+* @param {function}   [onRender]          internal
+* @returns {string}   rendered template   internal
+*/
+function renderContent(data, context, noIteration, parentView, key, onRender) {
+	var i, l, tag, tmpl, tagCtx, isTopRenderCall, prevData, prevIndex,
+		view = parentView,
+		result = "";
+
+	if (context === true) {
+		noIteration = context; // passing boolean as second param - noIteration
+		context = undefined;
+	} else if (typeof context !== OBJECT) {
+		context = undefined; // context must be a boolean (noIteration) or a plain object
+	}
+
+	if (tag = this.tag) {
+		// This is a call from renderTag or tagCtx.render(...)
+		tagCtx = this;
+		view = view || tagCtx.view;
+		tmpl = view._getTmpl(tag.template || tagCtx.tmpl);
+		if (!arguments.length) {
+			data = tag.contentCtx && $isFunction(tag.contentCtx)
+				? data = tag.contentCtx(data)
+				: view; // Default data context for wrapped block content is the first argument
+		}
+	} else {
+		// This is a template.render(...) call
+		tmpl = this;
+	}
+
+	if (tmpl) {
+		if (!parentView && data && data._is === "view") {
+			view = data; // When passing in a view to render or link (and not passing in a parent view) use the passed-in view as parentView
+		}
+
+		if (view && data === view) {
+			// Inherit the data from the parent view.
+			data = view.data;
+		}
+
+		isTopRenderCall = !view;
+		isRenderCall = isRenderCall || isTopRenderCall;
+		if (isTopRenderCall) {
+			(context = context || {}).root = data; // Provide ~root as shortcut to top-level data.
+		}
+		if (!isRenderCall || $subSettingsAdvanced.useViews || tmpl.useViews || view && view !== topView) {
+			result = renderWithViews(tmpl, data, context, noIteration, view, key, onRender, tag);
+		} else {
+			if (view) { // In a block
+				prevData = view.data;
+				prevIndex = view.index;
+				view.index = indexStr;
+			} else {
+				view = topView;
+				prevData = view.data;
+				view.data = data;
+				view.ctx = context;
+			}
+			if ($isArray(data) && !noIteration) {
+				// Create a view for the array, whose child views correspond to each data item. (Note: if key and parentView are passed in
+				// along with parent view, treat as insert -e.g. from view.addViews - so parentView is already the view item for array)
+				for (i = 0, l = data.length; i < l; i++) {
+					view.index = i;
+					view.data = data[i];
+					result += tmpl.fn(data[i], view, $sub);
+				}
+			} else {
+				view.data = data;
+				result += tmpl.fn(data, view, $sub);
+			}
+			view.data = prevData;
+			view.index = prevIndex;
+		}
+		if (isTopRenderCall) {
+			isRenderCall = undefined;
+		}
+	}
+	return result;
+}
+
+function renderWithViews(tmpl, data, context, noIteration, view, key, onRender, tag) {
+	// Render template against data as a tree of subviews (nested rendered template instances), or as a string (top-level template).
+	// If the data is the parent view, treat as noIteration, re-render with the same data context.
+	// tmpl can be a string (e.g. rendered by a tag.render() method), or a compiled template.
+	var i, l, newView, childView, itemResult, swapContent, contentTmpl, outerOnRender, tmplName, itemVar, newCtx, tagCtx, noLinking,
+		result = "";
+
+	if (tag) {
+		// This is a call from renderTag or tagCtx.render(...)
+		tmplName = tag.tagName;
+		tagCtx = tag.tagCtx;
+		context = context ? extendCtx(context, tag.ctx) : tag.ctx;
+
+		if (tmpl === view.content) { // {{xxx tmpl=#content}}
+			contentTmpl = tmpl !== view.ctx._wrp // We are rendering the #content
+				? view.ctx._wrp // #content was the tagCtx.props.tmpl wrapper of the block content - so within this view, #content will now be the view.ctx._wrp block content
+				: undefined; // #content was the view.ctx._wrp block content - so within this view, there is no longer any #content to wrap.
+		} else if (tmpl !== tagCtx.content) {
+			if (tmpl === tag.template) { // Rendering {{tag}} tag.template, replacing block content.
+				contentTmpl = tagCtx.tmpl; // Set #content to block content (or wrapped block content if tagCtx.props.tmpl is set)
+				context._wrp = tagCtx.content; // Pass wrapped block content to nested views
+			} else { // Rendering tagCtx.props.tmpl wrapper
+				contentTmpl = tagCtx.content || view.content; // Set #content to wrapped block content
+			}
+		} else {
+			contentTmpl = view.content; // Nested views inherit same wrapped #content property
+		}
+
+		if (tagCtx.props.link === false) {
+			// link=false setting on block tag
+			// We will override inherited value of link by the explicit setting link=false taken from props
+			// The child views of an unlinked view are also unlinked. So setting child back to true will not have any effect.
+			context = context || {};
+			context.link = false;
+		}
+	}
+
+	if (view) {
+		onRender = onRender || view._.onRender;
+		noLinking = context && context.link === false;
+
+		if (noLinking && view._.nl) {
+			onRender = undefined;
+		}
+
+		context = extendCtx(context, view.ctx);
+		tagCtx = !tag && view.tag
+			? view.tag.tagCtxs[view.tagElse]
+			: tagCtx;
+	}
+
+	if (itemVar = tagCtx && tagCtx.props.itemVar) {
+		if (itemVar[0] !== "~") {
+			syntaxError("Use itemVar='~myItem'");
+		}
+		itemVar = itemVar.slice(1);
+	}
+
+	if (key === true) {
+		swapContent = true;
+		key = 0;
+	}
+
+	// If link===false, do not call onRender, so no data-linking marker nodes
+	if (onRender && tag && tag._.noVws) {
+		onRender = undefined;
+	}
+	outerOnRender = onRender;
+	if (onRender === true) {
+		// Used by view.refresh(). Don't create a new wrapper view.
+		outerOnRender = undefined;
+		onRender = view._.onRender;
+	}
+	// Set additional context on views created here, (as modified context inherited from the parent, and to be inherited by child views)
+	context = tmpl.helpers
+		? extendCtx(tmpl.helpers, context)
+		: context;
+
+	newCtx = context;
+	if ($isArray(data) && !noIteration) {
+		// Create a view for the array, whose child views correspond to each data item. (Note: if key and view are passed in
+		// along with parent view, treat as insert -e.g. from view.addViews - so view is already the view item for array)
+		newView = swapContent
+			? view
+			: (key !== undefined && view)
+				|| new View(context, "array", view, data, tmpl, key, onRender, contentTmpl);
+		newView._.nl= noLinking;
+		if (view && view._.useKey) {
+			// Parent is not an 'array view'
+			newView._.bnd = !tag || tag._.bnd && tag; // For array views that are data bound for collection change events, set the
+			// view._.bnd property to true for top-level link() or data-link="{for}", or to the tag instance for a data-bound tag, e.g. {^{for ...}}
+			newView.tag = tag;
+		}
+		for (i = 0, l = data.length; i < l; i++) {
+			// Create a view for each data item.
+			childView = new View(newCtx, "item", newView, data[i], tmpl, (key || 0) + i, onRender, newView.content);
+			if (itemVar) {
+				(childView.ctx = $extend({}, newCtx))[itemVar] = $sub._cp(data[i], "#data", childView);
+			}
+			itemResult = tmpl.fn(data[i], childView, $sub);
+			result += newView._.onRender ? newView._.onRender(itemResult, childView) : itemResult;
+		}
+	} else {
+		// Create a view for singleton data object. The type of the view will be the tag name, e.g. "if" or "mytag" except for
+		// "item", "array" and "data" views. A "data" view is from programmatic render(object) against a 'singleton'.
+		newView = swapContent ? view : new View(newCtx, tmplName || "data", view, data, tmpl, key, onRender, contentTmpl);
+
+		if (itemVar) {
+			(newView.ctx = $extend({}, newCtx))[itemVar] = $sub._cp(data, "#data", newView);
+		}
+
+		newView.tag = tag;
+		newView._.nl = noLinking;
+		result += tmpl.fn(data, newView, $sub);
+	}
+	if (tag) {
+		newView.tagElse = tagCtx.index;
+		tagCtx.contentView = newView;
+	}
+	return outerOnRender ? outerOnRender(result, newView) : result;
+}
+
+//===========================
+// Build and compile template
+//===========================
+
+// Generate a reusable function that will serve to render a template against data
+// (Compile AST then build template function)
+
+function onRenderError(e, view, fallback) {
+	var message = fallback !== undefined
+		? $isFunction(fallback)
+			? fallback.call(view.data, e, view)
+			: fallback || ""
+		: "{Error: " + (e.message||e) + "}";
+
+	if ($subSettings.onError && (fallback = $subSettings.onError.call(view.data, e, fallback && message, view)) !== undefined) {
+		message = fallback; // There is a settings.debugMode(handler) onError override. Call it, and use return value (if any) to replace message
+	}
+	return view && !view._lc ? $converters.html(message) : message; // For data-link=\"{... onError=...}"... See onDataLinkedTagChange
+}
+
+function error(message) {
+	throw new $sub.Err(message);
+}
+
+function syntaxError(message) {
+	error("Syntax error\n" + message);
+}
+
+function tmplFn(markup, tmpl, isLinkExpr, convertBack, hasElse) {
+	// Compile markup to AST (abtract syntax tree) then build the template function code from the AST nodes
+	// Used for compiling templates, and also by JsViews to build functions for data link expressions
+
+	//==== nested functions ====
+	function pushprecedingContent(shift) {
+		shift -= loc;
+		if (shift) {
+			content.push(markup.substr(loc, shift).replace(rNewLine, "\\n"));
+		}
+	}
+
+	function blockTagCheck(tagName, block) {
+		if (tagName) {
+			tagName += '}}';
+			//			'{{include}} block has {{/for}} with no open {{for}}'
+			syntaxError((
+				block
+					? '{{' + block + '}} block has {{/' + tagName + ' without {{' + tagName
+					: 'Unmatched or missing {{/' + tagName) + ', in template:\n' + markup);
+		}
+	}
+
+	function parseTag(all, bind, tagName, converter, colon, html, codeTag, params, slash, bind2, closeBlock, index) {
+/*
+
+     bind     tagName         cvt   cln html code    params            slash   bind2         closeBlk  comment
+/(?:{(\^)?{(?:(\w+(?=[\/\s}]))|(\w+)?(:)|(>)|(\*))\s*((?:[^}]|}(?!}))*?)(\/)?|{(\^)?{(?:(?:\/(\w+))\s*|!--[\s\S]*?--))}}/g
+
+(?:
+  {(\^)?{            bind
+  (?:
+    (\w+             tagName
+      (?=[\/\s}])
+    )
+    |
+    (\w+)?(:)        converter colon
+    |
+    (>)              html
+    |
+    (\*)             codeTag
+  )
+  \s*
+  (                  params
+    (?:[^}]|}(?!}))*?
+  )
+  (\/)?              slash
+  |
+  {(\^)?{            bind2
+  (?:
+    (?:\/(\w+))\s*   closeBlock
+    |
+    !--[\s\S]*?--    comment
+  )
+)
+}}/g
+
+*/
+		if (codeTag && bind || slash && !tagName || params && params.slice(-1) === ":" || bind2) {
+			syntaxError(all);
+		}
+
+		// Build abstract syntax tree (AST): [tagName, converter, params, content, hash, bindings, contentMarkup]
+		if (html) {
+			colon = ":";
+			converter = HTML;
+		}
+		slash = slash || isLinkExpr && !hasElse;
+
+		var late, openTagName, isLateOb,
+			pathBindings = (bind || isLinkExpr) && [[]], // pathBindings is an array of arrays for arg bindings and a hash of arrays for prop bindings
+			props = "",
+			args = "",
+			ctxProps = "",
+			paramsArgs = "",
+			paramsProps = "",
+			paramsCtxProps = "",
+			onError = "",
+			useTrigger = "",
+			// Block tag if not self-closing and not {{:}} or {{>}} (special case) and not a data-link expression
+			block = !slash && !colon;
+
+		//==== nested helper function ====
+		tagName = tagName || (params = params || "#data", colon); // {{:}} is equivalent to {{:#data}}
+		pushprecedingContent(index);
+		loc = index + all.length; // location marker - parsed up to here
+		if (codeTag) {
+			if (allowCode) {
+				content.push(["*", "\n" + params.replace(/^:/, "ret+= ").replace(rUnescapeQuotes, "$1") + ";\n"]);
+			}
+		} else if (tagName) {
+			if (tagName === "else") {
+				if (rTestElseIf.test(params)) {
+					syntaxError('For "{{else if expr}}" use "{{else expr}}"');
+				}
+				pathBindings = current[9] && [[]];
+				current[10] = markup.substring(current[10], index); // contentMarkup for block tag
+				openTagName = current[11] || current[0] || syntaxError("Mismatched: " + all);
+				// current[0] is tagName, but for {{else}} nodes, current[11] is tagName of preceding open tag
+				current = stack.pop();
+				content = current[2];
+				block = true;
+			}
+			if (params) {
+				// remove newlines from the params string, to avoid compiled code errors for unterminated strings
+				parseParams(params.replace(rNewLine, " "), pathBindings, tmpl, isLinkExpr)
+					.replace(rBuildHash, function(all, onerror, isCtxPrm, key, keyToken, keyValue, arg, param) {
+						if (key === "this:") {
+							keyValue = "undefined"; // this=some.path is always a to parameter (one-way), so don't need to compile/evaluate some.path initialization
+						}
+						if (param) {
+							isLateOb = isLateOb || param[0] === "@";
+						}
+						key = "'" + keyToken + "':";
+						if (arg) {
+							args += isCtxPrm + keyValue + ",";
+							paramsArgs += "'" + param + "',";
+						} else if (isCtxPrm) { // Contextual parameter, ~foo=expr
+							ctxProps += key + 'j._cp(' + keyValue + ',"' + param + '",view),';
+							// Compiled code for evaluating tagCtx on a tag will have: ctx:{'foo':j._cp(compiledExpr, "expr", view)}
+							paramsCtxProps += key + "'" + param + "',";
+						} else if (onerror) {
+							onError += keyValue;
+						} else {
+							if (keyToken === "trigger") {
+								useTrigger += keyValue;
+							}
+							if (keyToken === "lateRender") {
+								late = param !== "false"; // Render after first pass
+							}
+							props += key + keyValue + ",";
+							paramsProps += key + "'" + param + "',";
+							hasHandlers = hasHandlers || rHasHandlers.test(keyToken);
+						}
+						return "";
+					}).slice(0, -1);
+			}
+
+			if (pathBindings && pathBindings[0]) {
+				pathBindings.pop(); // Remove the binding that was prepared for next arg. (There is always an extra one ready).
+			}
+
+			newNode = [
+					tagName,
+					converter || !!convertBack || hasHandlers || "",
+					block && [],
+					parsedParam(paramsArgs || (tagName === ":" ? "'#data'," : ""), paramsProps, paramsCtxProps), // {{:}} equivalent to {{:#data}}
+					parsedParam(args || (tagName === ":" ? "data," : ""), props, ctxProps),
+					onError,
+					useTrigger,
+					late,
+					isLateOb,
+					pathBindings || 0
+				];
+			content.push(newNode);
+			if (block) {
+				stack.push(current);
+				current = newNode;
+				current[10] = loc; // Store current location of open tag, to be able to add contentMarkup when we reach closing tag
+				current[11] = openTagName; // Used for checking syntax (matching close tag)
+			}
+		} else if (closeBlock) {
+			blockTagCheck(closeBlock !== current[0] && closeBlock !== current[11] && closeBlock, current[0]); // Check matching close tag name
+			current[10] = markup.substring(current[10], index); // contentMarkup for block tag
+			current = stack.pop();
+		}
+		blockTagCheck(!current && closeBlock);
+		content = current[2];
+	}
+	//==== /end of nested functions ====
+
+	var i, result, newNode, hasHandlers, bindings,
+		allowCode = $subSettings.allowCode || tmpl && tmpl.allowCode
+			|| $viewsSettings.allowCode === true, // include direct setting of settings.allowCode true for backward compat only
+		astTop = [],
+		loc = 0,
+		stack = [],
+		content = astTop,
+		current = [,,astTop];
+
+	if (allowCode && tmpl._is) {
+		tmpl.allowCode = allowCode;
+	}
+
+//TODO	result = tmplFnsCache[markup]; // Only cache if template is not named and markup length < ...,
+//and there are no bindings or subtemplates?? Consider standard optimization for data-link="a.b.c"
+//		if (result) {
+//			tmpl.fn = result;
+//		} else {
+
+//		result = markup;
+	if (isLinkExpr) {
+		if (convertBack !== undefined) {
+			markup = markup.slice(0, -convertBack.length - 2) + delimCloseChar0;
+		}
+		markup = delimOpenChar0 + markup + delimCloseChar1;
+	}
+
+	blockTagCheck(stack[0] && stack[0][2].pop()[0]);
+	// Build the AST (abstract syntax tree) under astTop
+	markup.replace(rTag, parseTag);
+
+	pushprecedingContent(markup.length);
+
+	if (loc = astTop[astTop.length - 1]) {
+		blockTagCheck("" + loc !== loc && (+loc[10] === loc[10]) && loc[0]);
+	}
+//			result = tmplFnsCache[markup] = buildCode(astTop, tmpl);
+//		}
+
+	if (isLinkExpr) {
+		result = buildCode(astTop, markup, isLinkExpr);
+		bindings = [];
+		i = astTop.length;
+		while (i--) {
+			bindings.unshift(astTop[i][9]); // With data-link expressions, pathBindings array for tagCtx[i] is astTop[i][9]
+		}
+		setPaths(result, bindings);
+	} else {
+		result = buildCode(astTop, tmpl);
+	}
+	return result;
+}
+
+function setPaths(fn, pathsArr) {
+	var key, paths,
+		i = 0,
+		l = pathsArr.length;
+	fn.deps = [];
+	fn.paths = []; // The array of path binding (array/dictionary)s for each tag/else block's args and props
+	for (; i < l; i++) {
+		fn.paths.push(paths = pathsArr[i]);
+		for (key in paths) {
+			if (key !== "_jsvto" && paths.hasOwnProperty(key) && paths[key].length && !paths[key].skp) {
+				fn.deps = fn.deps.concat(paths[key]); // deps is the concatenation of the paths arrays for the different bindings
+			}
+		}
+	}
+}
+
+function parsedParam(args, props, ctx) {
+	return [args.slice(0, -1), props.slice(0, -1), ctx.slice(0, -1)];
+}
+
+function paramStructure(paramCode, paramVals) {
+	return '\n\tparams:{args:[' + paramCode[0] + '],\n\tprops:{' + paramCode[1] + '}'
+		+ (paramCode[2] ? ',\n\tctx:{' + paramCode[2] + '}' : "")
+		+ '},\n\targs:[' + paramVals[0] + '],\n\tprops:{' + paramVals[1] + '}'
+		+ (paramVals[2] ? ',\n\tctx:{' + paramVals[2] + '}' : "");
+}
+
+function parseParams(params, pathBindings, tmpl, isLinkExpr) {
+
+	function parseTokens(all, lftPrn0, lftPrn, bound, path, operator, err, eq, path2, late, prn,
+												comma, lftPrn2, apos, quot, rtPrn, rtPrnDot, prn2, space, index, full) {
+	// /(\()(?=\s*\()|(?:([([])\s*)?(?:(\^?)(~?[\w$.^]+)?\s*((\+\+|--)|\+|-|~(?![\w$])|&&|\|\||===|!==|==|!=|<=|>=|[<>%*:?\/]|(=))\s*|(!*?(@)?[#~]?[\w$.^]+)([([])?)|(,\s*)|(?:(\()\s*)?\\?(?:(')|("))|(?:\s*(([)\]])(?=[.^]|\s*$|[^([])|[)\]])([([]?))|(\s+)/g,
+	//lftPrn0           lftPrn         bound     path               operator     err                                          eq      path2 late            prn      comma  lftPrn2          apos quot        rtPrn  rtPrnDot                  prn2     space
+	// (left paren? followed by (path? followed by operator) or (path followed by paren?)) or comma or apos or quot or right paren or space
+
+		function parsePath(allPath, not, object, helper, view, viewProperty, pathTokens, leafToken) {
+			// /^(!*?)(?:null|true|false|\d[\d.]*|([\w$]+|\.|~([\w$]+)|#(view|([\w$]+))?)([\w$.^]*?)(?:[.[^]([\w$]+)\]?)?)$/g,
+			//    not                               object     helper    view  viewProperty pathTokens      leafToken
+			subPath = object === ".";
+			if (object) {
+				path = path.slice(not.length);
+				if (/^\.?constructor$/.test(leafToken||path)) {
+					syntaxError(allPath);
+				}
+				if (!subPath) {
+					allPath = (late // late path @a.b.c: not throw on 'property of undefined' if a undefined, and will use _getOb() after linking to resolve late.
+							? (isLinkExpr ? '' : '(ltOb.lt=ltOb.lt||') + '(ob='
+							: ""
+						)
+						+ (helper
+							? 'view.ctxPrm("' + helper + '")'
+							: view
+								? "view"
+								: "data")
+						+ (late
+							? ')===undefined' + (isLinkExpr ? '' : ')') + '?"":view._getOb(ob,"'
+							: ""
+						)
+						+ (leafToken
+							? (viewProperty
+								? "." + viewProperty
+								: helper
+									? ""
+									: (view ? "" : "." + object)
+								) + (pathTokens || "")
+							: (leafToken = helper ? "" : view ? viewProperty || "" : object, ""));
+					allPath = allPath + (leafToken ? "." + leafToken : "");
+
+					allPath = not + (allPath.slice(0, 9) === "view.data"
+						? allPath.slice(5) // convert #view.data... to data...
+						: allPath)
+					+ (late
+							? (isLinkExpr ? '"': '",ltOb') + (prn ? ',1)':')')
+							: ""
+						);
+				}
+				if (bindings) {
+					binds = named === "_linkTo" ? (bindto = pathBindings._jsvto = pathBindings._jsvto || []) : bndCtx.bd;
+					if (theOb = subPath && binds[binds.length-1]) {
+						if (theOb._cpfn) { // Computed property exprOb
+							while (theOb.sb) {
+								theOb = theOb.sb;
+							}
+							if (theOb.prm) {
+								if (theOb.bnd) {
+									path = "^" + path.slice(1);
+								}
+								theOb.sb = path;
+								theOb.bnd = theOb.bnd || path[0] === "^";
+							}
+						}
+					} else {
+						binds.push(path);
+					}
+					if (prn && !subPath) {
+						pathStart[fnDp] = ind;
+						compiledPathStart[fnDp] = compiledPath[fnDp].length;
+					}
+				}
+			}
+			return allPath;
+		}
+
+		//bound = bindings && bound;
+		if (bound && !eq) {
+			path = bound + path; // e.g. some.fn(...)^some.path - so here path is "^some.path"
+		}
+		operator = operator || "";
+		lftPrn2 = lftPrn2 || "";
+		lftPrn = lftPrn || lftPrn0 || lftPrn2;
+		path = path || path2;
+
+		if (late && (late = !/\)|]/.test(full[index-1]))) {
+			path = path.slice(1).split(".").join("^"); // Late path @z.b.c. Use "^" rather than "." to ensure that deep binding will be used
+		}
+		// Could do this - but not worth perf cost?? :-
+		// if (!path.lastIndexOf("#data.", 0)) { path = path.slice(6); } // If path starts with "#data.", remove that.
+		prn = prn || prn2 || "";
+		var expr, binds, theOb, newOb, subPath, lftPrnFCall, ret,
+			ind = index;
+
+		if (!aposed && !quoted) {
+			if (err) {
+				syntaxError(params);
+			}
+			if (rtPrnDot && bindings) {
+				// This is a binding to a path in which an object is returned by a helper/data function/expression, e.g. foo()^x.y or (a?b:c)^x.y
+				// We create a compiled function to get the object instance (which will be called when the dependent data of the subexpression changes,
+				// to return the new object, and trigger re-binding of the subsequent path)
+				expr = pathStart[fnDp-1];
+				if (full.length - 1 > ind - (expr || 0)) { // We need to compile a subexpression
+					expr = $.trim(full.slice(expr, ind + all.length));
+					binds = bindto || bndStack[fnDp-1].bd;
+					// Insert exprOb object, to be used during binding to return the computed object
+					theOb = binds[binds.length-1];
+					if (theOb && theOb.prm) {
+						while (theOb.sb && theOb.sb.prm) {
+							theOb = theOb.sb;
+						}
+						newOb = theOb.sb = {path: theOb.sb, bnd: theOb.bnd};
+					} else {
+						binds.push(newOb = {path: binds.pop()}); // Insert exprOb object, to be used during binding to return the computed object
+					}
+					if (theOb && theOb.sb === newOb) {
+						compiledPath[fnDp] = compiledPath[fnDp-1].slice(theOb._cpPthSt) + compiledPath[fnDp];
+						compiledPath[fnDp-1] = compiledPath[fnDp-1].slice(0, theOb._cpPthSt);
+					}
+					newOb._cpPthSt = compiledPathStart[fnDp-1];
+					newOb._cpKey = expr;
+
+					compiledPath[fnDp] += full.slice(prevIndex, index);
+					prevIndex = index;
+
+					newOb._cpfn = cpFnStore[expr] = cpFnStore[expr] || // Compiled function for computed value: get from store, or compile and store
+						new Function("data,view,j", // Compiled function for computed value in template
+					"//" + expr + "\nvar v;\nreturn ((v=" + compiledPath[fnDp] + (rtPrn === "]" ? ")]" : rtPrn) + ")!=null?v:null);");
+
+					compiledPath[fnDp-1] += (fnCall[prnDp] && $subSettingsAdvanced.cache ? "view.getCache(\"" + expr.replace(rEscapeQuotes, "\\$&") + "\"" : compiledPath[fnDp]);
+
+					newOb.prm = bndCtx.bd;
+					newOb.bnd = newOb.bnd || newOb.path && newOb.path.indexOf("^") >= 0;
+				}
+				compiledPath[fnDp] = "";
+			}
+			if (prn === "[") {
+				prn = "[j._sq(";
+			}
+			if (lftPrn === "[") {
+				lftPrn = "[j._sq(";
+			}
+		}
+		ret = (aposed
+			// within single-quoted string
+			? (aposed = !apos, (aposed ? all : lftPrn2 + '"'))
+			: quoted
+			// within double-quoted string
+				? (quoted = !quot, (quoted ? all : lftPrn2 + '"'))
+				:
+			(
+				(lftPrn
+					? (
+						prnStack[++prnDp] = true,
+						prnInd[prnDp] = 0,
+						bindings && (
+							pathStart[fnDp++] = ind++,
+							bndCtx = bndStack[fnDp] = {bd: []},
+							compiledPath[fnDp] = "",
+							compiledPathStart[fnDp] = 1
+						),
+						lftPrn) // Left paren, (not a function call paren)
+					: "")
+				+ (space
+					? (prnDp
+						? "" // A space within parens or within function call parens, so not a separator for tag args
+			// New arg or prop - so insert backspace \b (\x08) as separator for named params, used subsequently by rBuildHash, and prepare new bindings array
+						: (paramIndex = full.slice(paramIndex, ind), named
+							? (named = boundName = bindto = false, "\b")
+							: "\b,") + paramIndex + (paramIndex = ind + all.length, bindings && pathBindings.push(bndCtx.bd = []), "\b")
+					)
+					: eq
+			// named param. Remove bindings for arg and create instead bindings array for prop
+						? (fnDp && syntaxError(params), bindings && pathBindings.pop(), named = "_" + path, boundName = bound, paramIndex = ind + all.length,
+								bindings && ((bindings = bndCtx.bd = pathBindings[named] = []), bindings.skp = !bound), path + ':')
+						: path
+			// path
+							? (path.split("^").join(".").replace($sub.rPath, parsePath)
+								+ (prn || operator)
+							)
+							: operator
+			// operator
+								? operator
+								: rtPrn
+			// function
+									? rtPrn === "]" ? ")]" : ")"
+									: comma
+										? (fnCall[prnDp] || syntaxError(params), ",") // We don't allow top-level literal arrays or objects
+										: lftPrn0
+											? ""
+											: (aposed = apos, quoted = quot, '"')
+			))
+		);
+
+		if (!aposed && !quoted) {
+			if (rtPrn) {
+				fnCall[prnDp] = false;
+				prnDp--;
+			}
+		}
+
+		if (bindings) {
+			if (!aposed && !quoted) {
+				if (rtPrn) {
+					if (prnStack[prnDp+1]) {
+						bndCtx = bndStack[--fnDp];
+						prnStack[prnDp+1] = false;
+					}
+					prnStart = prnInd[prnDp+1];
+				}
+				if (prn) {
+					prnInd[prnDp+1] = compiledPath[fnDp].length + (lftPrn ? 1 : 0);
+					if (path || rtPrn) {
+						bndCtx = bndStack[++fnDp] = {bd: []};
+						prnStack[prnDp+1] = true;
+					}
+				}
+			}
+
+			compiledPath[fnDp] = (compiledPath[fnDp]||"") + full.slice(prevIndex, index);
+			prevIndex = index+all.length;
+
+			if (!aposed && !quoted) {
+				if (lftPrnFCall = lftPrn && prnStack[prnDp+1]) {
+					compiledPath[fnDp-1] += lftPrn;
+					compiledPathStart[fnDp-1]++;
+				}
+				if (prn === "(" && subPath && !newOb) {
+					compiledPath[fnDp] = compiledPath[fnDp-1].slice(prnStart) + compiledPath[fnDp];
+					compiledPath[fnDp-1] = compiledPath[fnDp-1].slice(0, prnStart);
+				}
+			}
+			compiledPath[fnDp] += lftPrnFCall ? ret.slice(1) : ret;
+		}
+
+		if (!aposed && !quoted && prn) {
+			prnDp++;
+			if (path && prn === "(") {
+				fnCall[prnDp] = true;
+			}
+		}
+
+		if (!aposed && !quoted && prn2) {
+			if (bindings) {
+				compiledPath[fnDp] += prn;
+			}
+			ret += prn;
+		}
+		return ret;
+	}
+
+	var named, bindto, boundName, result,
+		quoted, // boolean for string content in double quotes
+		aposed, // or in single quotes
+		bindings = pathBindings && pathBindings[0], // bindings array for the first arg
+		bndCtx = {bd: bindings},
+		bndStack = {0: bndCtx},
+		paramIndex = 0, // list,
+		// The following are used for tracking path parsing including nested paths, such as "a.b(c^d + (e))^f", and chained computed paths such as
+		// "a.b().c^d().e.f().g" - which has four chained paths, "a.b()", "^c.d()", ".e.f()" and ".g"
+		prnDp = 0,     // For tracking paren depth (not function call parens)
+		fnDp = 0,      // For tracking depth of function call parens
+		prnInd = {},   // We are in a function call
+		prnStart = 0,  // tracks the start of the current path such as c^d() in the above example
+		prnStack = {}, // tracks parens which are not function calls, and so are associated with new bndStack contexts
+		fnCall = {},   // We are in a function call
+		pathStart = {},// tracks the start of the current path such as c^d() in the above example
+		compiledPathStart = {0: 0},
+		compiledPath = {0:""},
+		prevIndex = 0;
+
+	if (params[0] === "@") {
+		params = params.replace(rBracketQuote, ".");
+	}
+	result = (params + (tmpl ? " " : "")).replace($sub.rPrm, parseTokens);
+
+	if (bindings) {
+		result = compiledPath[0];
+	}
+
+	return !prnDp && result || syntaxError(params); // Syntax error if unbalanced parens in params expression
+}
+
+function buildCode(ast, tmpl, isLinkExpr) {
+	// Build the template function code from the AST nodes, and set as property on the passed-in template object
+	// Used for compiling templates, and also by JsViews to build functions for data link expressions
+	var i, node, tagName, converter, tagCtx, hasTag, hasEncoder, getsVal, hasCnvt, useCnvt, tmplBindings, pathBindings, params, boundOnErrStart,
+		boundOnErrEnd, tagRender, nestedTmpls, tmplName, nestedTmpl, tagAndElses, content, markup, nextIsElse, oldCode, isElse, isGetVal, tagCtxFn,
+		onError, tagStart, trigger, lateRender, retStrOpen, retStrClose,
+		tmplBindingKey = 0,
+		useViews = $subSettingsAdvanced.useViews || tmpl.useViews || tmpl.tags || tmpl.templates || tmpl.helpers || tmpl.converters,
+		code = "",
+		tmplOptions = {},
+		l = ast.length;
+
+	if ("" + tmpl === tmpl) {
+		tmplName = isLinkExpr ? 'data-link="' + tmpl.replace(rNewLine, " ").slice(1, -1) + '"' : tmpl;
+		tmpl = 0;
+	} else {
+		tmplName = tmpl.tmplName || "unnamed";
+		if (tmpl.allowCode) {
+			tmplOptions.allowCode = true;
+		}
+		if (tmpl.debug) {
+			tmplOptions.debug = true;
+		}
+		tmplBindings = tmpl.bnds;
+		nestedTmpls = tmpl.tmpls;
+	}
+	for (i = 0; i < l; i++) {
+		// AST nodes: [0: tagName, 1: converter, 2: content, 3: params, 4: code, 5: onError, 6: trigger, 7:pathBindings, 8: contentMarkup]
+		node = ast[i];
+
+		// Add newline for each callout to t() c() etc. and each markup string
+		if ("" + node === node) {
+			// a markup string to be inserted
+			code += '+"' + node + '"';
+		} else {
+			// a compiled tag expression to be inserted
+			tagName = node[0];
+			if (tagName === "*") {
+				// Code tag: {{* }}
+				code += ";\n" + node[1] + "\nret=ret";
+			} else {
+				converter = node[1];
+				content = !isLinkExpr && node[2];
+				tagCtx = paramStructure(node[3], params = node[4]);
+				trigger = node[6];
+				lateRender = node[7];
+				if (node[8]) { // latePath @a.b.c or @~a.b.c
+					retStrOpen = "\nvar ob,ltOb={},ctxs=";
+					retStrClose = ";\nctxs.lt=ltOb.lt;\nreturn ctxs;";
+				} else {
+					retStrOpen = "\nreturn ";
+					retStrClose = "";
+				}
+				markup = node[10] && node[10].replace(rUnescapeQuotes, "$1");
+				if (isElse = tagName === "else") {
+					if (pathBindings) {
+						pathBindings.push(node[9]);
+					}
+				} else {
+					onError = node[5] || $subSettings.debugMode !== false && "undefined"; // If debugMode not false, set default onError handler on tag to "undefined" (see onRenderError)
+					if (tmplBindings && (pathBindings = node[9])) { // Array of paths, or false if not data-bound
+						pathBindings = [pathBindings];
+						tmplBindingKey = tmplBindings.push(1); // Add placeholder in tmplBindings for compiled function
+					}
+				}
+				useViews = useViews || params[1] || params[2] || pathBindings || /view.(?!index)/.test(params[0]);
+				// useViews is for perf optimization. For render() we only use views if necessary - for the more advanced scenarios.
+				// We use views if there are props, contextual properties or args with #... (other than #index) - but you can force
+				// using the full view infrastructure, (and pay a perf price) by opting in: Set useViews: true on the template, manually...
+				if (isGetVal = tagName === ":") {
+					if (converter) {
+						tagName = converter === HTML ? ">" : converter + tagName;
+					}
+				} else {
+					if (content) { // TODO optimize - if content.length === 0 or if there is a tmpl="..." specified - set content to null / don't run this compilation code - since content won't get used!!
+						// Create template object for nested template
+						nestedTmpl = tmplObject(markup, tmplOptions);
+						nestedTmpl.tmplName = tmplName + "/" + tagName;
+						// Compile to AST and then to compiled function
+						nestedTmpl.useViews = nestedTmpl.useViews || useViews;
+						buildCode(content, nestedTmpl);
+						useViews = nestedTmpl.useViews;
+						nestedTmpls.push(nestedTmpl);
+					}
+
+					if (!isElse) {
+						// This is not an else tag.
+						tagAndElses = tagName;
+						useViews = useViews || tagName && (!$tags[tagName] || !$tags[tagName].flow);
+						// Switch to a new code string for this bound tag (and its elses, if it has any) - for returning the tagCtxs array
+						oldCode = code;
+						code = "";
+					}
+					nextIsElse = ast[i + 1];
+					nextIsElse = nextIsElse && nextIsElse[0] === "else";
+				}
+				tagStart = onError ? ";\ntry{\nret+=" : "\n+";
+				boundOnErrStart = "";
+				boundOnErrEnd = "";
+
+				if (isGetVal && (pathBindings || trigger || converter && converter !== HTML || lateRender)) {
+					// For convertVal we need a compiled function to return the new tagCtx(s)
+					tagCtxFn = new Function("data,view,j", "// " + tmplName + " " + (++tmplBindingKey) + " " + tagName
+						+ retStrOpen + "{" + tagCtx + "};" + retStrClose);
+					tagCtxFn._er = onError;
+					tagCtxFn._tag = tagName;
+					tagCtxFn._bd = !!pathBindings; // data-linked tag {^{.../}}
+					tagCtxFn._lr = lateRender;
+
+					if (isLinkExpr) {
+						return tagCtxFn;
+					}
+
+					setPaths(tagCtxFn, pathBindings);
+					tagRender = 'c("' + converter + '",view,';
+					useCnvt = true;
+					boundOnErrStart = tagRender + tmplBindingKey + ",";
+					boundOnErrEnd = ")";
+				}
+				code += (isGetVal
+					? (isLinkExpr ? (onError ? "try{\n" : "") + "return " : tagStart) + (useCnvt // Call _cnvt if there is a converter: {{cnvt: ... }} or {^{cnvt: ... }}
+						? (useCnvt = undefined, useViews = hasCnvt = true, tagRender + (tagCtxFn
+							? ((tmplBindings[tmplBindingKey - 1] = tagCtxFn), tmplBindingKey) // Store the compiled tagCtxFn in tmpl.bnds, and pass the key to convertVal()
+							: "{" + tagCtx + "}") + ")")
+						: tagName === ">"
+							? (hasEncoder = true, "h(" + params[0] + ")")
+							: (getsVal = true, "((v=" + params[0] + ')!=null?v:' + (isLinkExpr ? 'null)' : '"")'))
+							// Non strict equality so data-link="title{:expr}" with expr=null/undefined removes title attribute
+					)
+					: (hasTag = true, "\n{view:view,content:false,tmpl:" // Add this tagCtx to the compiled code for the tagCtxs to be passed to renderTag()
+						+ (content ? nestedTmpls.length : "false") + "," // For block tags, pass in the key (nestedTmpls.length) to the nested content template
+						+ tagCtx + "},"));
+
+				if (tagAndElses && !nextIsElse) {
+					// This is a data-link expression or an inline tag without any elses, or the last {{else}} of an inline tag
+					// We complete the code for returning the tagCtxs array
+					code = "[" + code.slice(0, -1) + "]";
+					tagRender = 't("' + tagAndElses + '",view,this,';
+					if (isLinkExpr || pathBindings) {
+						// This is a bound tag (data-link expression or inline bound tag {^{tag ...}}) so we store a compiled tagCtxs function in tmp.bnds
+						code = new Function("data,view,j", " // " + tmplName + " " + tmplBindingKey + " " + tagAndElses + retStrOpen + code
+							+ retStrClose);
+						code._er = onError;
+						code._tag = tagAndElses;
+						if (pathBindings) {
+							setPaths(tmplBindings[tmplBindingKey - 1] = code, pathBindings);
+						}
+						code._lr = lateRender;
+						if (isLinkExpr) {
+							return code; // For a data-link expression we return the compiled tagCtxs function
+						}
+						boundOnErrStart = tagRender + tmplBindingKey + ",undefined,";
+						boundOnErrEnd = ")";
+					}
+
+					// This is the last {{else}} for an inline tag.
+					// For a bound tag, pass the tagCtxs fn lookup key to renderTag.
+					// For an unbound tag, include the code directly for evaluating tagCtxs array
+					code = oldCode + tagStart + tagRender + (pathBindings && tmplBindingKey || code) + ")";
+					pathBindings = 0;
+					tagAndElses = 0;
+				}
+				if (onError && !nextIsElse) {
+					useViews = true;
+					code += ';\n}catch(e){ret' + (isLinkExpr ? "urn " : "+=") + boundOnErrStart + 'j._err(e,view,' + onError + ')' + boundOnErrEnd + ';}' + (isLinkExpr ? "" : '\nret=ret');
+				}
+			}
+		}
+	}
+	// Include only the var references that are needed in the code
+	code = "// " + tmplName
+		+ (tmplOptions.debug ? "\ndebugger;" : "")
+		+ "\nvar v"
+		+ (hasTag ? ",t=j._tag" : "")                // has tag
+		+ (hasCnvt ? ",c=j._cnvt" : "")              // converter
+		+ (hasEncoder ? ",h=j._html" : "")           // html converter
+		+ (isLinkExpr
+				? (node[8] // late @... path?
+						? ", ob"
+						: ""
+					) + ";\n"
+				: ',ret=""')
+		+ code
+		+ (isLinkExpr ? "\n" : ";\nreturn ret;");
+
+	try {
+		code = new Function("data,view,j", code);
+	} catch (e) {
+		syntaxError("Compiled template code:\n\n" + code + '\n: "' + (e.message||e) + '"');
+	}
+	if (tmpl) {
+		tmpl.fn = code;
+		tmpl.useViews = !!useViews;
+	}
+	return code;
+}
+
+//==========
+// Utilities
+//==========
+
+// Merge objects, in particular contexts which inherit from parent contexts
+function extendCtx(context, parentContext) {
+	// Return copy of parentContext, unless context is defined and is different, in which case return a new merged context
+	// If neither context nor parentContext are defined, return undefined
+	return context && context !== parentContext
+		? (parentContext
+			? $extend($extend({}, parentContext), context)
+			: context)
+		: parentContext && $extend({}, parentContext);
+}
+
+function getTargetProps(source, tagCtx) {
+	// this pointer is theMap - which has tagCtx.props too
+	// arguments: tagCtx.args.
+	var key, prop,
+		map = tagCtx.map,
+		propsArr = map && map.propsArr;
+
+	if (!propsArr) { // map.propsArr is the full array of {key:..., prop:...} objects
+		propsArr = [];
+		if (typeof source === OBJECT || $isFunction(source)) {
+			for (key in source) {
+				prop = source[key];
+				if (key !== $expando && source.hasOwnProperty(key) && (!tagCtx.props.noFunctions || !$.isFunction(prop))) {
+					propsArr.push({key: key, prop: prop});
+				}
+			}
+		}
+		if (map) {
+			map.propsArr = map.options && propsArr; // If bound {^{props}} and not isRenderCall, store propsArr on map (map.options is defined only for bound, && !isRenderCall)
+		}
+	}
+	return getTargetSorted(propsArr, tagCtx); // Obtains map.tgt, by filtering, sorting and splicing the full propsArr
+}
+
+function getTargetSorted(value, tagCtx) {
+	// getTgt
+	var mapped, start, end,
+		tag = tagCtx.tag,
+		props = tagCtx.props,
+		propParams = tagCtx.params.props,
+		filter = props.filter,
+		sort = props.sort,
+		directSort = sort === true,
+		step = parseInt(props.step),
+		reverse = props.reverse ? -1 : 1;
+
+	if (!$isArray(value)) {
+		return value;
+	}
+	if (directSort || sort && "" + sort === sort) {
+		// Temporary mapped array holds objects with index and sort-value
+		mapped = value.map(function(item, i) {
+			item = directSort ? item : getPathObject(item, sort);
+			return {i: i, v: "" + item === item ? item.toLowerCase() : item};
+		});
+		// Sort mapped array
+		mapped.sort(function(a, b) {
+			return a.v > b.v ? reverse : a.v < b.v ? -reverse : 0;
+		});
+		// Map to new array with resulting order
+		value = mapped.map(function(item){
+			return value[item.i];
+		});
+	} else if ((sort || reverse < 0) && !tag.dataMap) {
+		value = value.slice(); // Clone array first if not already a new array
+	}
+	if ($isFunction(sort)) {
+		value = value.sort(function() { // Wrap the sort function to provide tagCtx as 'this' pointer
+			return sort.apply(tagCtx, arguments);
+		});
+	}
+	if (reverse < 0 && (!sort || $isFunction(sort))) { // Reverse result if not already reversed in sort
+		value = value.reverse();
+	}
+
+	if (value.filter && filter) { // IE8 does not support filter
+		value = value.filter(filter, tagCtx);
+		if (tagCtx.tag.onFilter) {
+			tagCtx.tag.onFilter(tagCtx);
+		}
+	}
+
+	if (propParams.sorted) {
+		mapped = (sort || reverse < 0) ? value : value.slice();
+		if (tag.sorted) {
+			$.observable(tag.sorted).refresh(mapped); // Note that this might cause the start and end props to be modified - e.g. by pager tag control
+		} else {
+			tagCtx.map.sorted = mapped;
+		}
+	}
+
+	start = props.start; // Get current value - after possible changes triggered by tag.sorted refresh() above
+	end = props.end;
+	if (propParams.start && start === undefined || propParams.end && end === undefined) {
+		start = end = 0;
+	}
+	if (!isNaN(start) || !isNaN(end)) { // start or end specified, but not the auto-create Number array scenario of {{for start=xxx end=yyy}}
+		start = +start || 0;
+		end = end === undefined || end > value.length ? value.length : +end;
+		value = value.slice(start, end);
+	}
+	if (step > 1) {
+		start = 0;
+		end = value.length;
+		mapped = [];
+		for (; start<end; start+=step) {
+			mapped.push(value[start]);
+		}
+		value = mapped;
+	}
+	if (propParams.paged && tag.paged) {
+		$observable(tag.paged).refresh(value);
+	}
+
+	return value;
+}
+
+/** Render the template as a string, using the specified data and helpers/context
+* $("#tmpl").render()
+*
+* @param {any}        data
+* @param {hash}       [helpersOrContext]
+* @param {boolean}    [noIteration]
+* @returns {string}   rendered template
+*/
+function $fnRender(data, context, noIteration) {
+	var tmplElem = this.jquery && (this[0] || error('Unknown template')), // Targeted element not found for jQuery template selector such as "#myTmpl"
+		tmpl = tmplElem.getAttribute(tmplAttr);
+
+	return renderContent.call(tmpl && $.data(tmplElem)[jsvTmpl] || $templates(tmplElem),
+		data, context, noIteration);
+}
+
+//========================== Register converters ==========================
+
+function getCharEntity(ch) {
+	// Get character entity for HTML, Attribute and optional data encoding
+	return charEntities[ch] || (charEntities[ch] = "&#" + ch.charCodeAt(0) + ";");
+}
+
+function getCharFromEntity(match, token) {
+	// Get character from HTML entity, for optional data unencoding
+	return charsFromEntities[token] || "";
+}
+
+function htmlEncode(text) {
+	// HTML encode: Replace < > & ' " ` etc. by corresponding entities.
+	return text != undefined ? rIsHtml.test(text) && ("" + text).replace(rHtmlEncode, getCharEntity) || text : "";
+}
+
+function dataEncode(text) {
+	// Encode just < > and & - intended for 'safe data' along with {{:}} rather than {{>}}
+  return "" + text === text ? text.replace(rDataEncode, getCharEntity) : text;
+}
+
+function dataUnencode(text) {
+  // Unencode just < > and & - intended for 'safe data' along with {{:}} rather than {{>}}
+  return "" + text === text ? text.replace(rDataUnencode, getCharFromEntity) : text;
+}
+
+//========================== Initialize ==========================
+
+$sub = $views.sub;
+$viewsSettings = $views.settings;
+
+if (!(jsr || $ && $.render)) {
+	// JsRender/JsViews not already loaded (or loaded without jQuery, and we are now moving from jsrender namespace to jQuery namepace)
+	for (jsvStoreName in jsvStores) {
+		registerStore(jsvStoreName, jsvStores[jsvStoreName]);
+	}
+
+	$converters = $views.converters;
+	$helpers = $views.helpers;
+	$tags = $views.tags;
+
+	$sub._tg.prototype = {
+		baseApply: baseApply,
+		cvtArgs: convertArgs,
+		bndArgs: convertBoundArgs,
+		ctxPrm: contextParameter
+	};
+
+	topView = $sub.topView = new View();
+
+	//BROWSER-SPECIFIC CODE
+	if ($) {
+
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		// jQuery (= $) is loaded
+
+		$.fn.render = $fnRender;
+		$expando = $.expando;
+		if ($.observable) {
+			if (versionNumber !== (versionNumber = $.views.jsviews)) {
+				// Different version of jsRender was loaded
+				throw "jquery.observable.js requires jsrender.js " + versionNumber;
+			}
+			$extend($sub, $.views.sub); // jquery.observable.js was loaded before jsrender.js
+			$views.map = $.views.map;
+		}
+
+	} else {
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		// jQuery is not loaded.
+
+		$ = {};
+
+		if (setGlobals) {
+			global.jsrender = $; // We are loading jsrender.js from a script element, not AMD or CommonJS, so set global
+		}
+
+		// Error warning if jsrender.js is used as template engine on Node.js (e.g. Express or Hapi...)
+		// Use jsrender-node.js instead...
+		$.renderFile = $.__express = $.compile = function() { throw "Node.js: use npm jsrender, or jsrender-node.js"; };
+
+		//END BROWSER-SPECIFIC CODE
+		$.isFunction = function(ob) {
+			return typeof ob === "function";
+		};
+
+		$.isArray = Array.isArray || function(obj) {
+			return ({}.toString).call(obj) === "[object Array]";
+		};
+
+		$sub._jq = function(jq) { // private method to move from JsRender APIs from jsrender namespace to jQuery namespace
+			if (jq !== $) {
+				$extend(jq, $); // map over from jsrender namespace to jQuery namespace
+				$ = jq;
+				$.fn.render = $fnRender;
+				delete $.jsrender;
+				$expando = $.expando;
+			}
+		};
+
+		$.jsrender = versionNumber;
+	}
+	$subSettings = $sub.settings;
+	$subSettings.allowCode = false;
+	$isFunction = $.isFunction;
+	$.render = $render;
+	$.views = $views;
+	$.templates = $templates = $views.templates;
+
+	for (setting in $subSettings) {
+		addSetting(setting);
+	}
+
+	/**
+	* $.views.settings.debugMode(true)
+	* @param {boolean} debugMode
+	* @returns {Settings}
+	*
+	* debugMode = $.views.settings.debugMode()
+	* @returns {boolean}
+	*/
+	($viewsSettings.debugMode = function(debugMode) {
+		return debugMode === undefined
+			? $subSettings.debugMode
+			: (
+				$subSettings._clFns && $subSettings._clFns(), // Clear linkExprStore (cached compiled expressions), since debugMode setting affects compilation for expressions
+				$subSettings.debugMode = debugMode,
+				$subSettings.onError = debugMode + "" === debugMode
+					? function() { return debugMode; }
+					: $isFunction(debugMode)
+						? debugMode
+						: undefined,
+				$viewsSettings);
+	})(false); // jshint ignore:line
+
+	$subSettingsAdvanced = $subSettings.advanced = {
+		cache: true, // By default use cached values of computed values (Otherwise, set advanced cache setting to false)
+		useViews: false,
+		_jsv: false // For global access to JsViews store
+	};
+
+	//========================== Register tags ==========================
+
+	$tags({
+		"if": {
+			render: function(val) {
+				// This function is called once for {{if}} and once for each {{else}}.
+				// We will use the tag.rendering object for carrying rendering state across the calls.
+				// If not done (a previous block has not been rendered), look at expression for this block and render the block if expression is truthy
+				// Otherwise return ""
+				var self = this,
+					tagCtx = self.tagCtx,
+					ret = (self.rendering.done || !val && (tagCtx.args.length || !tagCtx.index))
+						? ""
+						: (self.rendering.done = true,
+							self.selected = tagCtx.index,
+							undefined); // Test is satisfied, so render content on current context
+				return ret;
+			},
+			contentCtx: true, // Inherit parent view data context
+			flow: true
+		},
+		"for": {
+			sortDataMap: dataMap(getTargetSorted),
+			init: function(val, cloned) {
+				this.setDataMap(this.tagCtxs);
+			},
+			render: function(val) {
+				// This function is called once for {{for}} and once for each {{else}}.
+				// We will use the tag.rendering object for carrying rendering state across the calls.
+				var value, filter, srtField, isArray, i, sorted, end, step,
+					self = this,
+					tagCtx = self.tagCtx,
+					range = tagCtx.argDefault === false,
+					props = tagCtx.props,
+					iterate = range || tagCtx.args.length, // Not final else and not auto-create range
+					result = "",
+					done = 0;
+
+				if (!self.rendering.done) {
+					value = iterate ? val : tagCtx.view.data; // For the final else, defaults to current data without iteration.
+
+					if (range) {
+						range = props.reverse ? "unshift" : "push";
+						end = +props.end;
+						step = +props.step || 1;
+						value = []; // auto-create integer array scenario of {{for start=xxx end=yyy}}
+						for (i = +props.start || 0; (end - i) * step > 0; i += step) {
+							value[range](i);
+						}
+					}
+					if (value !== undefined) {
+						isArray = $isArray(value);
+						result += tagCtx.render(value, !iterate || props.noIteration);
+						// Iterates if data is an array, except on final else - or if noIteration property
+						// set to true. (Use {{include}} to compose templates without array iteration)
+						done += isArray ? value.length : 1;
+					}
+					if (self.rendering.done = done) {
+						self.selected = tagCtx.index;
+					}
+					// If nothing was rendered we will look at the next {{else}}. Otherwise, we are done.
+				}
+				return result;
+			},
+			setDataMap: function(tagCtxs) {
+				var tagCtx, props, paramsProps,
+					self = this,
+					l = tagCtxs.length;
+				while (l--) {
+					tagCtx = tagCtxs[l];
+					props = tagCtx.props;
+					paramsProps = tagCtx.params.props;
+					tagCtx.argDefault = props.end === undefined || tagCtx.args.length > 0; // Default to #data except for auto-create range scenario {{for start=xxx end=yyy step=zzz}}
+					props.dataMap = (tagCtx.argDefault !== false && $isArray(tagCtx.args[0]) &&
+						(paramsProps.sort || paramsProps.start || paramsProps.end || paramsProps.step || paramsProps.filter || paramsProps.reverse
+						|| props.sort || props.start || props.end || props.step || props.filter || props.reverse))
+						&& self.sortDataMap;
+				}
+			},
+			flow: true
+		},
+		props: {
+			baseTag: "for",
+			dataMap: dataMap(getTargetProps),
+			init: noop, // Don't execute the base init() of the "for" tag
+			flow: true
+		},
+		include: {
+			flow: true
+		},
+		"*": {
+			// {{* code... }} - Ignored if template.allowCode and $.views.settings.allowCode are false. Otherwise include code in compiled template
+			render: retVal,
+			flow: true
+		},
+		":*": {
+			// {{:* returnedExpression }} - Ignored if template.allowCode and $.views.settings.allowCode are false. Otherwise include code in compiled template
+			render: retVal,
+			flow: true
+		},
+		dbg: $helpers.dbg = $converters.dbg = dbgBreak // Register {{dbg/}}, {{dbg:...}} and ~dbg() to throw and catch, as breakpoints for debugging.
+	});
+
+	$converters({
+		html: htmlEncode,
+		attr: htmlEncode, // Includes > encoding since rConvertMarkers in JsViews does not skip > characters in attribute strings
+		encode: dataEncode,
+		unencode: dataUnencode, // Includes > encoding since rConvertMarkers in JsViews does not skip > characters in attribute strings
+		url: function(text) {
+			// URL encoding helper.
+			return text != undefined ? encodeURI("" + text) : text === null ? text : ""; // null returns null, e.g. to remove attribute. undefined returns ""
+		}
+	});
+}
+//========================== Define default delimiters ==========================
+$subSettings = $sub.settings;
+$isArray = ($||jsr).isArray;
+$viewsSettings.delimiters("{{", "}}", "^");
+
+if (jsrToJq) { // Moving from jsrender namespace to jQuery namepace - copy over the stored items (templates, converters, helpers...)
+	jsr.views.sub._jq($);
+}
+return $ || jsr;
+}, window));
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		if (cachedModule !== undefined) {
+/******/ 			return cachedModule.exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+/*!**********************************************!*\
+  !*** ./resources/assets/js/custom/custom.js ***!
+  \**********************************************/
+
+
+var jsrender = __webpack_require__(/*! jsrender */ "./node_modules/jsrender/jsrender.js");
+var csrfToken = $('meta[name="csrf-token"]').attr("content");
+
+// document.addEventListener("turbo:load", initAllComponents);
+document.addEventListener("DOMContentLoaded", initAllComponents);
+function initAllComponents() {
+  select2initialize();
+  refreshCsrfToken();
+  alertInitialize();
+  modalInputFocus();
+  inputFocus();
+  IOInitImageComponent();
+  IOInitSidebar();
+  togglePassword();
+  vcardTableCardRemove();
+  tooltip();
+  frontTestimonials();
+  initializeColorPickers();
+}
+function tooltip() {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+}
+function togglePassword() {
+  $('[data-toggle="password"]').each(function () {
+    var input = $(this);
+    var eye_btn = $(this).parent().find(".input-icon");
+    eye_btn.css("cursor", "pointer").addClass("input-password-hide");
+    eye_btn.on("click", function () {
+      if (eye_btn.hasClass("input-password-hide")) {
+        eye_btn.removeClass("input-password-hide").addClass("input-password-show");
+        eye_btn.find(".bi").removeClass("bi-eye-slash-fill").addClass("bi-eye-fill");
+        input.attr("type", "text");
+      } else {
+        eye_btn.removeClass("input-password-show").addClass("input-password-hide");
+        eye_btn.find(".bi").removeClass("bi-eye-fill").addClass("bi-eye-slash-fill");
+        input.attr("type", "password");
+      }
+    });
+  });
+}
+function alertInitialize() {
+  $(".alert").delay(5000).slideUp(300);
+}
+function refreshCsrfToken() {
+  csrfToken = $('meta[name="csrf-token"]').attr("content");
+  $.ajaxSetup({
+    headers: {
+      "X-CSRF-TOKEN": csrfToken
+    }
+  });
+}
+function select2initialize() {
+  $('[data-control="select2"]').each(function () {
+    $(this).select2();
+  });
+}
+document.addEventListener("click", function (e) {
+  var filterBtnEle = $(e.target).closest('.show[data-ic-dropdown-btn="true"]');
+  var filterDropDownEle = $(e.target).closest('.show[data-ic-dropdown="true"]');
+  if (!(filterBtnEle.length > 0 || filterDropDownEle.length > 0)) {
+    $('[data-ic-dropdown-btn="true"]').removeClass("show");
+    $('[data-ic-dropdown="true"]').removeClass("show");
+  }
+});
+document.addEventListener("livewire:load", function () {
+  window.livewire.hook("message.processed", function () {
+    $('[data-control="select2"]').each(function () {
+      $(this).select2();
+    });
+  });
+});
+var inputFocus = function inputFocus() {
+  $('input:text:not([readonly="readonly"]):not([name="search"]):not(.front-input)').first().focus();
+};
+var modalInputFocus = function modalInputFocus() {
+  $(function () {
+    $(".modal").on("shown.bs.modal", function () {
+      if ($(this).find("input:text")[0]) {
+        $(this).find("input:text")[0].focus();
+      }
+    });
+  });
+};
+$.ajaxSetup({
+  headers: {
+    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+  }
+});
+$(document).on("select2:open", function () {
+  document.querySelector(".select2-search__field").focus();
+});
+toastr.options = {
+  closeButton: true,
+  debug: false,
+  newestOnTop: false,
+  progressBar: true,
+  positionClass: "toast-top-right",
+  preventDuplicates: false,
+  onclick: null,
+  showDuration: "300",
+  hideDuration: "1000",
+  timeOut: "5000",
+  extendedTimeOut: "1000",
+  showEasing: "swing",
+  hideEasing: "linear",
+  showMethod: "fadeIn",
+  hideMethod: "fadeOut"
+};
+window.resetModalForm = function (formId) {
+  var validationBox = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+  $(formId)[0].reset();
+  $("select.select2Selector").each(function (index, element) {
+    var drpSelector = "#" + $(this).attr("id");
+    $(drpSelector).val("");
+    $(drpSelector).trigger("change");
+  });
+  $(validationBox).hide();
+};
+window.printErrorMessage = function (selector, errorResult) {
+  $(selector).show().html("");
+  $(selector).text(errorResult.responseJSON.message);
+};
+window.manageAjaxErrors = function (data) {
+  var errorDivId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "editValidationErrorsBox";
+  if (data.status == 404) {
+    toastr.error(data.responseJSON.message);
+  } else {
+    printErrorMessage("#" + errorDivId, data);
+  }
+};
+window.displaySuccessMessage = function (message) {
+  if (lang == "ar" || lang == "fa") {
+    toastr.options.rtl = "rtl";
+    toastr.options.positionClass = "toast-top-left";
+  } else {
+    toastr.options.positionClass = "toast-top-right";
+  }
+  toastr.success(message, Lang.get("js.successful"));
+};
+window.displayErrorMessage = function (message) {
+  if (lang == "ar" || lang == "fa") {
+    toastr.options.rtl = "rtl";
+    toastr.options.positionClass = "toast-top-left";
+  } else {
+    toastr.options.positionClass = "toast-top-right";
+  }
+  toastr.error(message, Lang.get("js.error"));
+};
+window.deleteItem = function (url, header) {
+  var callFunction = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+  swal({
+    title: Lang.get("js.delete") + " !",
+    text: Lang.get("js.are_you_sure") + ' "' + header + '" ?',
+    buttons: {
+      confirm: Lang.get("js.yes"),
+      cancel: Lang.get("js.no")
+    },
+    reverseButtons: true,
+    icon: sweetAlertIcon
+  }).then(function (willDelete) {
+    if (willDelete) {
+      deleteItemAjax(url, header, callFunction);
+    }
+  });
+};
+function deleteItemAjax(url, header) {
+  var callFunction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  $.ajax({
+    url: url,
+    type: "DELETE",
+    dataType: "json",
+    success: function success(obj) {
+      if (obj.success) {
+        Livewire.dispatch("resetPageTable");
+        Livewire.dispatch("refresh");
+      }
+      swal({
+        icon: "success",
+        title: Lang.get("js.deleted") + " !",
+        text: header + " " + Lang.get("js.has_been_deleted"),
+        timer: 2000,
+        buttons: {
+          confirm: Lang.get("js.ok")
+        }
+      });
+      if (callFunction) {
+        eval(callFunction);
+      }
+    },
+    error: function error(data) {
+      swal({
+        title: Lang.get("js.error"),
+        icon: "error",
+        text: data.responseJSON.message,
+        type: "error",
+        timer: 4000,
+        buttons: {
+          confirm: Lang.get("js.ok")
+        }
+      });
+    }
+  });
+}
+window.format = function (dateTime) {
+  var dateFormat = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "DD-MMM-YYYY";
+  var format = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : dateFormat;
+  return moment(dateTime).format(format);
+};
+window.processingBtn = function (selecter, btnId) {
+  var state = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+  var loadingButton = $(selecter).find(btnId);
+  if (state === "loading") {
+    loadingButton.button("loading");
+  } else {
+    loadingButton.button("reset");
+  }
+};
+window.prepareTemplateRender = function (templateSelector, data) {
+  var template = jsrender.templates(templateSelector);
+  return template.render(data);
+};
+window.changeImg = function (inputSelector, imgErrorsSelector, previewSelector, defaultImg) {
+  var validFile = isValidFile($(inputSelector), imgErrorsSelector);
+  if (validFile) {
+    displayPhoto(inputSelector, previewSelector);
+  } else {
+    $("#servicePreview").attr("src", defaultImg);
+  }
+};
+window.isValidFile = function (inputSelector, validationMessageSelector) {
+  var ext = $(inputSelector).val().split(".").pop().toLowerCase();
+  if ($.inArray(ext, ["png", "jpg", "jpeg"]) == -1) {
+    $(inputSelector).val("");
+    $(validationMessageSelector).removeClass("d-none");
+    $(validationMessageSelector).html("The image must be a file of type: jpeg, jpg, png.").show();
+    $(validationMessageSelector).delay(5000).slideUp(300);
+    return false;
+  }
+  $(validationMessageSelector).hide();
+  return true;
+};
+window.displayPhoto = function (input, selector) {
+  var displayPreview = true;
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var image = new Image();
+      image.src = e.target.result;
+      image.onload = function () {
+        $(selector).attr("src", e.target.result);
+        displayPreview = true;
+      };
+    };
+    if (displayPreview) {
+      reader.readAsDataURL(input.files[0]);
+      $(selector).show();
+    }
+  }
+};
+window.removeCommas = function (str) {
+  return str.replace(/,/g, "");
+};
+window.DatetimepickerDefaults = function (opts) {
+  return $.extend({}, {
+    sideBySide: true,
+    ignoreReadonly: true,
+    icons: {
+      close: "fa fa-times",
+      time: "fa fa-clock-o",
+      date: "fa fa-calendar",
+      up: "fa fa-arrow-up",
+      down: "fa fa-arrow-down",
+      previous: "fa fa-chevron-left",
+      next: "fa fa-chevron-right",
+      today: "fa fa-clock-o",
+      clear: "fa fa-trash-o"
+    }
+  }, opts);
+};
+window.isEmpty = function (value) {
+  return value === undefined || value === null || value === "";
+};
+window.screenLock = function () {
+  $("#overlay-screen-lock").show();
+  $("body").css({
+    "pointer-events": "none",
+    opacity: "0.6"
+  });
+};
+window.screenUnLock = function () {
+  $("body").css({
+    "pointer-events": "auto",
+    opacity: "1"
+  });
+  $("#overlay-screen-lock").hide();
+};
+window.onload = function () {
+  window.startLoader = function () {
+    $(".infy-loader").show();
+  };
+  window.stopLoader = function () {
+    $(".infy-loader").hide();
+  };
+
+  // infy loader js
+  stopLoader();
+};
+$(document).ready(function () {
+  // script to active parent menu if sub menu has currently active
+  var hasActiveMenu = $(document).find(".nav-item.dropdown ul li").hasClass("active");
+  if (hasActiveMenu) {
+    $(document).find(".nav-item.dropdown ul li.active").parent("ul").css("display", "block");
+    $(document).find(".nav-item.dropdown ul li.active").parent("ul").parent("li").addClass("active");
+  }
+});
+window.urlValidation = function (value, regex) {
+  var urlCheck = value == "" ? true : value.match(regex) ? true : false;
+  if (!urlCheck) {
+    return false;
+  }
+  return true;
+};
+listenClick(".languageSelection", function () {
+  var languageName = $(this).data("prefix-value");
+  $.ajax({
+    type: "POST",
+    url: "/change-language",
+    headers: {
+      "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+    },
+    data: {
+      languageName: languageName
+    },
+    success: function success() {
+      location.reload();
+    }
+  });
+});
+if ($(window).width() > 992) {
+  $(".no-hover").on("click", function () {
+    $(this).toggleClass("open");
+  });
+}
+$(document).on("click", "#readNotification", function (e) {
+  e.preventDefault();
+  var notificationId = $(this).data("id");
+  var notification = $(this);
+  $.ajax({
+    type: "POST",
+    url: readNotification + "/" + notificationId + "/read",
+    data: {
+      notificationId: notificationId
+    },
+    success: function success() {
+      notification.remove();
+      var notificationCounter = document.getElementsByClassName("readNotification").length;
+      if (notificationCounter == 0) {
+        $("#readAllNotification").addClass("d-none");
+        $(".empty-state").removeClass("d-none");
+        $(".notification-toggle").removeClass("beep");
+      }
+    },
+    error: function error(_error) {
+      manageAjaxErrors(_error);
+    }
+  });
+});
+$("#register").on("click", function (e) {
+  e.preventDefault();
+  $(".open #dropdownLanguage").trigger("click");
+  $(".open #dropdownLogin").trigger("click");
+});
+$("#language").on("click", function (e) {
+  e.preventDefault();
+  $(".open #dropdownRegister").trigger("click");
+  $(".open #dropdownLogin").trigger("click");
+});
+$("#login").on("click", function (e) {
+  e.preventDefault();
+  $(".open #dropdownRegister").trigger("click");
+  $(".open #dropdownLanguage").trigger("click");
+});
+window.preparedTemplate = function () {
+  var source = $("#actionTemplate").html();
+  window.preparedTemplate = Handlebars.compile(source);
+};
+$(document).delegate("textarea", "keydown", function (e) {
+  var keyCode = e.keyCode || e.which;
+  if (keyCode === 9) {
+    e.preventDefault();
+    var start = this.selectionStart;
+    var end = this.selectionEnd;
+    var text = $(this).val();
+    var selText = text.substring(start, end);
+    $(this).val(text.substring(0, start) + "\t" + selText.replace(/\n/g, "\n\t") + text.substring(end));
+    this.selectionStart = this.selectionEnd = start + 1;
+  }
+});
+$(document).ready(function () {
+  $("#languageDropdown").click(function (e) {
+    e.stopPropagation();
+  });
+});
+function isEmailEditProfile(email) {
+  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  return regex.test(email);
+}
+listenSubmit("#userProfileEditForm", function () {
+  if ($.trim($("#editProfileFirstName").val()) == "") {
+    displayErrorMessage(Lang.get("js.first_name_required"));
+    return false;
+  }
+  if ($.trim($("#editProfileLastName").val()) == "") {
+    displayErrorMessage(Lang.get("js.last_name_required"));
+    return false;
+  }
+  if (!isEmailEditProfile($("#isEmailEditProfile").val())) {
+    displayErrorMessage(Lang.get("js.enter_valid_email"));
+    return false;
+  }
+  if (!$("#userProfileEditForm").find("#error-msg").hasClass("d-none")) {
+    return false;
+  }
+});
+window.openDropdownManually = function (dropdownBtnEle, dropdownEle) {
+  if (!dropdownBtnEle.hasClass("show")) {
+    dropdownBtnEle.addClass("show");
+    dropdownEle.addClass("show");
+  } else {
+    dropdownBtnEle.removeClass("show");
+    dropdownEle.removeClass("show");
+  }
+};
+window.hideDropdownManually = function (dropdownBtnEle, dropdownEle) {
+  dropdownBtnEle.removeClass("show");
+  dropdownEle.removeClass("show");
+};
+function vcardTableCardRemove() {
+  listenClick("#vcards-tab", function () {
+    $(".card-check").removeClass("card");
+    $(".card-body-check").removeClass("card-body");
+  });
+  listenClick("#overview-tab", function () {
+    $(".card-check").addClass("card");
+    $(".card-body-check").addClass("card-body");
+  });
+}
+function frontTestimonials() {
+  if ($(".pricing-carousel").length > 0) {
+    $("#toogler-icon").click(function () {
+      $(this).toggleClass("open");
+    });
+    $(".pricing-carousel").slick({
+      dots: true,
+      centerMode: true,
+      centerPadding: "0",
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      responsive: [{
+        breakpoint: 1400,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true,
+          centerPadding: "250px"
+        }
+      }, {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true,
+          centerPadding: "150px"
+        }
+      }, {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true,
+          centerPadding: "100px"
+        }
+      }, {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true,
+          centerPadding: "50px",
+          arrows: false
+        }
+      }, {
+        breakpoint: 576,
+        settings: {
+          slidesToShow: 1,
+          arrows: false
+        }
+      }]
+    });
+    $(".testimonial-carousel").slick({
+      // autoplay: true,
+      autoplaySpeed: 1000,
+      speed: 600,
+      draggable: true,
+      infinite: true,
+      dots: true,
+      centerMode: true,
+      centerPadding: "0",
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: false,
+      rtl: frontLanguage == 'ar' || frontLanguage == 'fa',
+      responsive: [{
+        breakpoint: 1199,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true
+          // centerPadding: '250px',
+        }
+      }, {
+        breakpoint: 992,
+        settings: {
+          slidesToShow: 1
+          // centerMode: true,
+          // centerPadding: '120px',
+        }
+      }, {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          centerMode: true
+          // centerPadding: '50px',
+        }
+      }, {
+        breakpoint: 576,
+        settings: {
+          slidesToShow: 1
+        }
+      }]
+    });
+  }
+}
+window.checkPhpFile = function (inputSelector, validationMessageSelector) {
+  var ext = $(inputSelector).val().split(".").pop().toLowerCase();
+  if ($.inArray(ext, ["php"]) !== -1) {
+    $(inputSelector).val("");
+    $(validationMessageSelector).removeClass("d-none");
+    $(validationMessageSelector).html("PHP file is not valid type for attachment").show();
+    $(validationMessageSelector).delay(5000).slideUp(300);
+    return false;
+  }
+  $(validationMessageSelector).hide();
+  return true;
+};
+
+// window.downloadVcard = function (fileName, id) {
+//     $('.spinner-border').removeClass('d-none');
+//     $.ajax({
+//         url: '/vcards/' + id,
+//         type: 'GET',
+//         success: function (result) {
+//             if (result.success) {
+//                 let vcard = result.data
+//                 let url = vcard.social_link.website ?? appUrl + '/' +
+//                     vcard.url_alias
+//                 let vcardString = 'BEGIN:VCARD\n' +
+//                     'VERSION:3.0\n'
+
+//                 if (!isEmpty(vcard.first_name) || !isEmpty(vcard.last_name)) {
+//                     vcardString += 'N;CHARSET=UTF-8:' + vcard.last_name + ';' +
+//                         vcard.first_name + ';;;\n'
+//                 }
+//                 if (!isEmpty(vcard.dob)) {
+//                     vcardString += 'BDAY;CHARSET=UTF-8:' + new Date(vcard.dob) +
+//                         '\n'
+//                 }
+//                 if (!isEmpty(vcard.email)) {
+//                     vcardString += 'EMAIL;CHARSET=UTF-8:' + vcard.email + '\n'
+//                 }
+//                 if (!isEmpty(vcard.alternative_email)) {
+//                     vcardString += 'EMAIL;CHARSET=UTF-8:' +
+//                         vcard.alternative_email + '\n'
+//                 }
+//                 if (!isEmpty(vcard.job_title)) {
+//                     vcardString += 'TITLE;CHARSET=UTF-8:' + vcard.job_title +
+//                         '\n'
+//                 }
+//                 if (!isEmpty(vcard.company)) {
+//                     vcardString += 'ORG;CHARSET=UTF-8:' + vcard.company + '\n'
+//                 }
+//                 if (!isEmpty(vcard.region_code) && !isEmpty(vcard.phone)) {
+//                     vcardString += 'TEL;TYPE=WORK,VOICE:' + '+' +
+//                         vcard.region_code + ' ' + vcard.phone + '\n'
+//                 }
+//                 if (!isEmpty(vcard.region_code) &&
+//                     !isEmpty(vcard.alternative_phone)) {
+//                     vcardString += 'TEL;TYPE=WORK,VOICE:' + '+' +
+//                         vcard.region_code + ' ' + vcard.alternative_phone + '\n'
+//                 }
+//                 if (!isEmpty(vcard.url_alias)) {
+//                     vcardString += 'URL;CHARSET=UTF-8:' + url + '\n'
+//                 }
+//                 if (!isEmpty(vcard.description)) {
+//                     vcardString += 'NOTE;CHARSET=UTF-8:' + vcard.description +
+//                         '\n'
+//                 }
+//                 if (!isEmpty(vcard.location)) {
+//                     vcardString += 'ADR;CHARSET=UTF-8:' + vcard.location + '\n'
+//                 }
+//                 var extension = vcard.profile_url.split('.').pop()
+//                 vcardString += 'PHOTO;ENCODING=BASE64;TYPE=' +
+//                     extension.toUpperCase() + ':' + vcard.profile_url_base64 +
+//                     '\n'
+//                 vcardString += 'REV:' + moment().toISOString() + '\n'
+//                 vcardString += 'END:VCARD'
+
+//                 var a = $('<a />')
+//                 a.attr('download', fileName)
+//                 a.attr('href',
+//                     'data:text/vcard;charset=UTF-8,' + encodeURI(vcardString))
+//                 $('body').append(a)
+//                 a[0].click()
+//                 $('body').remove(a)
+//             }
+//             $('.download-icon').removeClass('d-none');
+//             $('.spinner-border').addClass('d-none');
+//         },
+//         error: function (result) {
+//             displayError('#enquiryError', result.responseJSON.message)
+//         },
+//     })
+// }
+
+window.allowAlphaNumeric = function (input) {
+  input.value = input.value.toUpperCase().split(/[^a-zA-Z0-9_-]/).join("");
+};
+window.getCurrencyAmount = function (amount, currencyCode) {
+  var formattedAmount = currencyCode + "" + amount;
+  if (currencyAfterAmount == true) {
+    formattedAmount = amount + "" + currencyCode;
+  }
+  return formattedAmount;
+};
+$(document).ready(function () {
+  var $searchTrigger = $('[data-ic-class="search-trigger"]'),
+    $searchInput = $('[data-ic-class="search-input"]'),
+    $searchClear = $('[data-ic-class="search-clear"]');
+  $searchTrigger.click(function () {
+    $(".share-wp-btn").addClass("d-none");
+    var $this = $('[data-ic-class="search-trigger"]');
+    $this.addClass("active");
+    $searchInput.focus();
+  });
+  $searchInput.blur(function () {
+    if ($searchInput.val().length > 0) {
+      return false;
+    } else {
+      $searchTrigger.removeClass("active");
+    }
+  });
+  $searchClear.click(function () {
+    $searchInput.val("");
+  });
+  $searchInput.focus(function () {
+    $searchTrigger.addClass("active");
+  });
+});
+listenChange(".file-validation", function () {
+  var file = this.files[0];
+  var ext = $(this).val().split(".").pop().toLowerCase();
+  if ($.inArray(ext, ["png", "jpg", "jpeg"]) == -1) {
+    displayErrorMessage(Lang.get("js.allowed_file_types"));
+    $(this).val("");
+  }
+  if (file.size > 1048576) {
+    displayErrorMessage(Lang.get("js.image_too_large"));
+    $(this).val("");
+  }
+});
+
+// delete multiples success event JS code
+document.addEventListener("bulk-delete-vcard", function (data) {
+  var vcardIds = data.detail;
+  if (vcardIds.length > 0) {
+    swal({
+      title: "Delete" + " !",
+      text: Lang.get("js.are_you_sure_want_to_delete_selected_Vcards"),
+      buttons: {
+        confirm: "Yes",
+        cancel: "No"
+      },
+      reverseButtons: true,
+      icon: sweetAlertIcon
+    }).then(function (willDelete) {
+      if (willDelete) {
+        Livewire.dispatch("deleteVcard", vcardIds);
+      }
+    });
+  } else {
+    displayErrorMessage("Please select one or more records for multiples delete.");
+    return false;
+  }
+});
+document.addEventListener("delete-vcard-success", function () {
+  Livewire.dispatch("refresh");
+  Livewire.dispatch("resetPageTable");
+  swal({
+    icon: "success",
+    title: Lang.get("js.deleted") + " !",
+    text: "Vcards " + Lang.get("js.has_been_deleted"),
+    timer: 3000,
+    buttons: {
+      confirm: Lang.get("js.ok")
+    }
+  });
+});
+document.addEventListener("bulk-delete-error", function () {
+  displayErrorMessage("Please select one or more records for multiples delete.");
+});
+
+// delete multiples success event JS code
+document.addEventListener("bulk-delete-vcard", function (data) {
+  var vcardIds = data.detail;
+  if (vcardIds.length > 0) {
+    swal({
+      title: "Delete" + " !",
+      text: Lang.get("js.are_you_sure_want_to_delete_selected_Vcards"),
+      buttons: {
+        confirm: "Yes",
+        cancel: "No"
+      },
+      reverseButtons: true,
+      icon: sweetAlertIcon
+    }).then(function (willDelete) {
+      if (willDelete) {
+        Livewire.dispatch("deleteVcard", vcardIds);
+      }
+    });
+  } else {
+    displayErrorMessage("Please select one or more records for multiples delete.");
+    return false;
+  }
+});
+document.addEventListener("delete-vcard-success", function () {
+  Livewire.dispatch("refresh");
+  Livewire.dispatch("resetPageTable");
+  swal({
+    icon: "success",
+    title: Lang.get("messages.common.deleted") + " !",
+    text: "Vcards " + Lang.get("messages.common.has_been_deleted"),
+    timer: 3000,
+    buttons: {
+      confirm: Lang.get("messages.common.ok")
+    }
+  });
+});
+document.addEventListener("bulk-delete-error", function () {
+  displayErrorMessage("Please select one or more records for multiples delete.");
+});
+// delete multiples success event JS code
+document.addEventListener("bulk-delete-vcard", function (data) {
+  var vcardIds = data.detail;
+  if (vcardIds.length > 0) {
+    swal({
+      title: "Delete" + " !",
+      text: Lang.get("js.are_you_sure_want_to_delete_selected_Vcards"),
+      buttons: {
+        confirm: "Yes",
+        cancel: "No"
+      },
+      reverseButtons: true,
+      icon: sweetAlertIcon
+    }).then(function (willDelete) {
+      if (willDelete) {
+        Livewire.dispatch("deleteVcard", vcardIds);
+      }
+    });
+  } else {
+    displayErrorMessage("Please select one or more records for multiples delete.");
+    return false;
+  }
+});
+document.addEventListener("delete-vcard-success", function () {
+  Livewire.dispatch("refresh");
+  Livewire.dispatch("resetPageTable");
+  swal({
+    icon: "success",
+    title: Lang.get("js.deleted") + " !",
+    text: "Vcards " + Lang.get("js.has_been_deleted"),
+    timer: 3000,
+    buttons: {
+      confirm: Lang.get("js.ok")
+    }
+  });
+});
+document.addEventListener("bulk-delete-error", function () {
+  displayErrorMessage("Please select one or more records for multiples delete.");
+});
+listenChange("#primary_color", function () {
+  var primaryColor = $("#primary_color").val();
+  document.documentElement.style.setProperty("--primary-color", primaryColor);
+});
+listenChange("#back_color", function () {
+  var backColor = $("#back_color").val();
+  document.documentElement.style.setProperty("--green-100", backColor);
+});
+listenChange("#back_seconds_color", function () {
+  var backSecondColor = $("#back_seconds_color").val();
+  document.documentElement.style.setProperty("--green", backSecondColor);
+});
+listenChange("#cards_back", function () {
+  var cardsBackColor = $("#cards_back").val();
+  document.documentElement.style.setProperty("--light", cardsBackColor);
+});
+listenChange("#social_icon_color", function () {
+  var socialIconColor = $("#social_icon_color").val();
+  $(".soical-icon-color").attr("fill", socialIconColor);
+  $(".icon-color").attr("fill", socialIconColor);
+  document.documentElement.style.setProperty("--light-100", socialIconColor);
+});
+listenChange("#button_text_color", function () {
+  var buttonTextColor = $("#button_text_color").val();
+  document.documentElement.style.setProperty("--black", buttonTextColor);
+});
+listenChange("#text_description_color", function () {
+  var textDescriptionColor = $("#text_description_color").val();
+  document.documentElement.style.setProperty("--gray-100", textDescriptionColor);
+});
+listenChange("#text_label_color", function () {
+  var textLabelColor = $("#text_label_color").val();
+  document.documentElement.style.setProperty("--white", textLabelColor);
+});
+listenClick(".sticky-btn", function () {
+  if ($(this).val() == 1) {
+    $("#sticky-dynamic-btn").removeClass("dynamic-sticky-left").addClass("dynamic-sticky-right");
+  } else {
+    $("#sticky-dynamic-btn").removeClass("dynamic-sticky-right").addClass("dynamic-sticky-left");
+  }
+});
+function initializeColorPickers() {
+  // Only initialize if color input elements exist
+  if ($('#primary_color').length === 0) return;
+  var primaryColorpreview = $("#primary_color").val();
+  document.documentElement.style.setProperty("--primary-color", primaryColorpreview);
+  var backColorpreview = $("#back_color").val();
+  document.documentElement.style.setProperty("--green-100", backColorpreview);
+  var backSecondColor = $("#back_seconds_color").val();
+  document.documentElement.style.setProperty("--green", backSecondColor);
+  var buttonTextColorpreview = $("#button_text_color").val();
+  document.documentElement.style.setProperty("--black", buttonTextColorpreview);
+  var cardsBackColorpreview = $("#cards_back").val();
+  document.documentElement.style.setProperty("--light", cardsBackColorpreview);
+  var socialIconColorpreview = $("#social_icon_color").val();
+  $(".soical-icon-color").attr("fill", socialIconColorpreview);
+  $(".icon-color").attr("fill", socialIconColorpreview);
+  document.documentElement.style.setProperty("--light-100", socialIconColorpreview);
+  var textDescriptionColorpreview = $("#text_description_color").val();
+  document.documentElement.style.setProperty("--gray-100", textDescriptionColorpreview);
+  var textLabelColorpreview = $("#text_label_color").val();
+  document.documentElement.style.setProperty("--white", textLabelColorpreview);
+  var primaryColor = $("#primary_color").val();
+  var primaryPickr = Pickr.create({
+    el: '.color-picker',
+    "default": primaryColor,
+    components: {
+      preview: false,
+      opacity: false,
+      hue: true,
+      // Input / output Options
+      interaction: {
+        hex: true,
+        rgba: true,
+        hsla: true,
+        hsva: true,
+        cmyk: true,
+        input: true,
+        save: false
+      }
+    }
+  });
+  primaryPickr.on('change', function (color) {
+    var hexColor = color.toHEXA().toString();
+    document.documentElement.style.setProperty("--primary-color", hexColor);
+    var colorInput = document.querySelector('#primary_color');
+    if (colorInput) {
+      colorInput.value = hexColor; // Set the input's value to the selected color
+    }
+
+    var saveButton = primaryPickr.getRoot().interaction.save;
+    if (saveButton) {
+      saveButton.click();
+    }
+    // Update the background color of the color picker
+    var colorPickerElement = document.querySelector('.color-picker');
+    if (colorPickerElement) {
+      colorPickerElement.style.backgroundColor = hexColor;
+    }
+  });
+  var backColor = $("#back_color").val();
+  var backColorpickr = Pickr.create({
+    el: '.back-color-picker',
+    "default": backColor,
+    components: {
+      preview: false,
+      opacity: false,
+      hue: true,
+      interaction: {
+        hex: true,
+        rgba: true,
+        hsla: true,
+        hsva: true,
+        cmyk: true,
+        input: true,
+        save: false
+      }
+    }
+  });
+  backColorpickr.on('change', function (color) {
+    var backHexColor = color.toHEXA().toString();
+    document.documentElement.style.setProperty("--green-100", backHexColor);
+    var colorInput = document.querySelector('#back_color');
+    if (colorInput) {
+      colorInput.value = backHexColor;
+    }
+    var saveButton = backColorpickr.getRoot().interaction.save;
+    if (saveButton) {
+      saveButton.click();
+    }
+    var backColorPickerElement = document.querySelector('.back-color-picker');
+    if (backColorPickerElement) {
+      backColorPickerElement.style.backgroundColor = backHexColor;
+    }
+  });
+  var backSecondsColor = $("#back_seconds_color").val();
+  var backSecondsColorpickr = Pickr.create({
+    el: '.back-seconds-color-picker',
+    "default": backSecondsColor,
+    components: {
+      preview: false,
+      opacity: false,
+      hue: true,
+      interaction: {
+        hex: true,
+        rgba: true,
+        hsla: true,
+        hsva: true,
+        cmyk: true,
+        input: true,
+        save: false
+      }
+    }
+  });
+  backSecondsColorpickr.on('change', function (color) {
+    var backSecondsHexColor = color.toHEXA().toString();
+    document.documentElement.style.setProperty("--green", backSecondsHexColor);
+    var colorInput = document.querySelector('#back_seconds_color');
+    if (colorInput) {
+      colorInput.value = backSecondsHexColor;
+    }
+    var saveButton = backSecondsColorpickr.getRoot().interaction.save;
+    if (saveButton) {
+      saveButton.click();
+    }
+    var backColorPickerElement = document.querySelector('.back-seconds-color-picker');
+    if (backColorPickerElement) {
+      backColorPickerElement.style.backgroundColor = backSecondsHexColor;
+    }
+  });
+  var buttonTextColor = $("#button_text_color").val();
+  var buttonTextColorpickr = Pickr.create({
+    el: '.button-text-color-picker',
+    "default": buttonTextColor,
+    components: {
+      preview: false,
+      opacity: false,
+      hue: true,
+      interaction: {
+        hex: true,
+        rgba: true,
+        hsla: true,
+        hsva: true,
+        cmyk: true,
+        input: true,
+        save: false
+      }
+    }
+  });
+  buttonTextColorpickr.on('change', function (color) {
+    var buttonTextHexColor = color.toHEXA().toString();
+    document.documentElement.style.setProperty("--black", buttonTextHexColor);
+    var colorInput = document.querySelector('#button_text_color');
+    if (colorInput) {
+      colorInput.value = buttonTextHexColor;
+    }
+    var saveButton = buttonTextColorpickr.getRoot().interaction.save;
+    if (saveButton) {
+      saveButton.click();
+    }
+    var buttonColorPickerElement = document.querySelector('.button-text-color-picker');
+    if (buttonColorPickerElement) {
+      buttonColorPickerElement.style.backgroundColor = buttonTextHexColor;
+    }
+  });
+  var textLabelColor = $("#text_label_color").val();
+  var textLableColorpickr = Pickr.create({
+    el: '.text-label-color-picker',
+    "default": textLabelColor,
+    components: {
+      preview: false,
+      opacity: false,
+      hue: true,
+      interaction: {
+        hex: true,
+        rgba: true,
+        hsla: true,
+        hsva: true,
+        cmyk: true,
+        input: true,
+        save: false
+      }
+    }
+  });
+  textLableColorpickr.on('change', function (color) {
+    var TextLableHexColor = color.toHEXA().toString();
+    document.documentElement.style.setProperty("--white", TextLableHexColor);
+    var colorInput = document.querySelector('#text_label_color');
+    if (colorInput) {
+      colorInput.value = TextLableHexColor;
+    }
+    var saveButton = textLableColorpickr.getRoot().interaction.save;
+    if (saveButton) {
+      saveButton.click();
+    }
+    var textLabelColorPickerElement = document.querySelector('.text-label-color-picker');
+    if (textLabelColorPickerElement) {
+      textLabelColorPickerElement.style.backgroundColor = TextLableHexColor;
+    }
+  });
+  var textDescriptionColor = $("#text_description_color").val();
+  var textDescriptionColorpickr = Pickr.create({
+    el: '.text-description-color-picker',
+    "default": textDescriptionColor,
+    components: {
+      preview: false,
+      opacity: false,
+      hue: true,
+      interaction: {
+        hex: true,
+        rgba: true,
+        hsla: true,
+        hsva: true,
+        cmyk: true,
+        input: true,
+        save: false
+      }
+    }
+  });
+  textDescriptionColorpickr.on('change', function (color) {
+    var TextDescriptionHexColor = color.toHEXA().toString();
+    document.documentElement.style.setProperty("--gray-100", TextDescriptionHexColor);
+    var colorInput = document.querySelector('#text_description_color');
+    if (colorInput) {
+      colorInput.value = TextDescriptionHexColor;
+    }
+    var saveButton = textDescriptionColorpickr.getRoot().interaction.save;
+    if (saveButton) {
+      saveButton.click();
+    }
+    var textDescriptionColorPickerElement = document.querySelector('.text-description-color-picker');
+    if (textDescriptionColorPickerElement) {
+      textDescriptionColorPickerElement.style.backgroundColor = TextDescriptionHexColor;
+    }
+  });
+  var cardsBackColor = $("#cards_back").val();
+  var cardsBackColorpickr = Pickr.create({
+    el: '.cards-back-color-picker',
+    "default": cardsBackColor,
+    components: {
+      preview: false,
+      opacity: false,
+      hue: true,
+      interaction: {
+        hex: true,
+        rgba: true,
+        hsla: true,
+        hsva: true,
+        cmyk: true,
+        input: true,
+        save: false
+      }
+    }
+  });
+  cardsBackColorpickr.on('change', function (color) {
+    var cardsBackHexColor = color.toHEXA().toString();
+    document.documentElement.style.setProperty("--light", cardsBackHexColor);
+    var colorInput = document.querySelector('#cards_back');
+    if (colorInput) {
+      colorInput.value = cardsBackHexColor;
+    }
+    var saveButton = cardsBackColorpickr.getRoot().interaction.save;
+    if (saveButton) {
+      saveButton.click();
+    }
+    var cardsBackColorPickerElement = document.querySelector('.cards-back-color-picker');
+    if (cardsBackColorPickerElement) {
+      cardsBackColorPickerElement.style.backgroundColor = cardsBackHexColor;
+    }
+  });
+  var socialIconColor = $("#social_icon_color").val();
+  var socialIconColorpickr = Pickr.create({
+    el: '.social-icon-color-picker',
+    "default": socialIconColor,
+    components: {
+      preview: false,
+      opacity: false,
+      hue: true,
+      interaction: {
+        hex: true,
+        rgba: true,
+        hsla: true,
+        hsva: true,
+        cmyk: true,
+        input: true,
+        save: false
+      }
+    }
+  });
+  socialIconColorpickr.on('change', function (color) {
+    var socialIconHexColor = color.toHEXA().toString();
+    $(".soical-icon-color").attr("fill", socialIconHexColor);
+    $(".icon-color").attr("fill", socialIconHexColor);
+    document.documentElement.style.setProperty("--light-100", socialIconHexColor);
+    var colorInput = document.querySelector('#social_icon_color');
+    if (colorInput) {
+      colorInput.value = socialIconHexColor;
+    }
+    var saveButton = socialIconColorpickr.getRoot().interaction.save;
+    if (saveButton) {
+      saveButton.click();
+    }
+    var socialIconColorPickerElement = document.querySelector('.social-icon-color-picker');
+    if (socialIconColorPickerElement) {
+      socialIconColorPickerElement.style.backgroundColor = socialIconHexColor;
+    }
+  });
+}
+//dynamic buttons
+document.addEventListener("DOMContentLoaded", function () {
+  applyButtonStyle("dynamic-btn");
+  applyButtonStyle("send-btn");
+  applyButtonStyle("appointment-btn");
+  // applyButtonStyle("select-language-btn");
+  applyButtonStyle("support-banner-btn");
+  previewButtonStyle("appointment-slot1");
+  previewButtonStyle("appointment-slot2");
+  previewButtonStyle("appointment-slot3");
+  previewButtonStyle("appointment-slot4");
+});
+function applyButtonStyle(buttonId) {
+  var button = document.getElementById(buttonId);
+  if (!button) {
+    return;
+  }
+  var buttonStyle = button.getAttribute("data-button-style");
+  if (buttonStyle === "default" || !buttonStyle) {
+    buttonStyle = "1";
+  }
+  button.classList.add("dynamic-btn-".concat(buttonStyle));
+}
+listenClick(".button-style", function () {
+  previewButtonStyle("dynamic-btn");
+  previewButtonStyle("send-btn");
+  previewButtonStyle("appointment-btn");
+  // previewButtonStyle("select-language-btn");
+  previewButtonStyle("support-banner-btn");
+  previewButtonStyle("appointment-slot1");
+  previewButtonStyle("appointment-slot2");
+  previewButtonStyle("appointment-slot3");
+  previewButtonStyle("appointment-slot4");
+});
+function previewButtonStyle(buttonId) {
+  var button = document.getElementById(buttonId);
+  if (!button) {
+    return;
+  }
+  var buttonStyle = $("input[name='button_style']:checked").val();
+  if (buttonStyle === "default" || !buttonStyle) {
+    buttonStyle = "1";
+  }
+  button.className = "dynamic-btn-".concat(buttonStyle);
+}
+document.addEventListener("DOMContentLoaded", function () {
+  var fileInputTrigger = document.getElementById("fileInputTrigger");
+  var fileInput = document.getElementById("attachment");
+  var fileList = document.getElementById("fileList");
+  var selectedFilesSection = document.getElementById("selectedFilesSection");
+  if (fileInputTrigger != null) {
+    fileInputTrigger.addEventListener("click", function () {
+      fileInput.click();
+    });
+  }
+  if (fileInput != null) {
+    fileInput.addEventListener("change", handleFileChange);
+  }
+  function handleFileChange(event) {
+    var files = Array.from(event.target.files);
+    fileList.innerHTML = ''; // Clear previous files
+    files.forEach(function (file, index) {
+      var listItem = document.createElement("li");
+      listItem.classList.add("item");
+      var nameSpan = document.createElement("span");
+      nameSpan.classList.add("name");
+      nameSpan.textContent = "".concat(file.name, " (").concat(formatFileSize(file.size), ")");
+      var removeBtn = document.createElement("div");
+      removeBtn.classList.add("remove");
+      removeBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+      removeBtn.addEventListener("click", function () {
+        removeFile(index);
+      });
+      listItem.appendChild(nameSpan);
+      listItem.appendChild(removeBtn);
+      fileList.appendChild(listItem);
+    });
+    if (files.length > 0) {
+      selectedFilesSection.style.display = "block";
+    }
+  }
+  function formatFileSize(size) {
+    var units = ["B", "KB", "MB", "GB"];
+    var index = 0;
+    while (size >= 1024 && index < units.length - 1) {
+      size /= 1024;
+      index++;
+    }
+    return "".concat(size.toFixed(2), " ").concat(units[index]);
+  }
+  function removeFile(index) {
+    var items = fileList.querySelectorAll(".item");
+    if (items[index]) {
+      items[index].remove();
+    }
+    if (fileList.children.length === 0) {
+      selectedFilesSection.style.display = "none";
+    }
+  }
+});
+document.addEventListener("DOMContentLoaded", function () {
+  function waitForOverlayAndObserve() {
+    var overlay = document.getElementById("lightboxOverlay");
+    if (!overlay) {
+      setTimeout(waitForOverlayAndObserve, 100);
+      return;
+    }
+    var updateBodyOverflow = function updateBodyOverflow() {
+      var display = overlay.style.display;
+      if (display === "block") {
+        document.body.style.overflow = "hidden";
+        console.log("hidden");
+      } else if (display === "none" || display === "") {
+        document.body.style.overflow = "";
+      }
+    };
+    updateBodyOverflow();
+    var observer = new MutationObserver(function () {
+      updateBodyOverflow();
+    });
+    observer.observe(overlay, {
+      attributes: true,
+      attributeFilter: ['style']
+    });
+  }
+  waitForOverlayAndObserve();
+});
+})();
+
+/******/ })()
+;

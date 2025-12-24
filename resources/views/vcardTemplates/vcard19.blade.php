@@ -48,7 +48,7 @@
     <!-- Favicon -->
     <link rel="icon" href="{{ getVcardFavicon($vcard) }}" type="image/png">
     @if (checkFeature('custom-fonts') && $vcard->font_family)
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family={{ $vcard->font_family }}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ urlencode($vcard->font_family) }}:wght@400;500;600;700&display=swap{{ in_array($vcard->font_family, ['Tajawal', 'Cairo', 'Amiri', 'Noto Sans Arabic', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Scheherazade', 'Lateef', 'Harmattan', 'Reem Kufi', 'Jomhuria', 'Mada', 'Lemonada', 'Zain']) ? '&subset=arabic' : '' }}">
     @endif
 
     @if ($vcard->font_family || $vcard->font_size || $vcard->custom_css)
@@ -56,7 +56,7 @@
             @if (checkFeature('custom-fonts'))
                 @if ($vcard->font_family)
                     body {
-                        font-family: {{ $vcard->font_family }};
+                        font-family: {{ $vcard->font_family }} !important;
                     }
                 @endif
                 @if ($vcard->font_size)

@@ -6,6 +6,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $product->name }} | {{ $whatsappStore->store_name }}</title>
     <link href="{{ asset('front/css/bootstrap.min.css') }}" rel="stylesheet">
+    {{-- google Font --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @if (checkFeature('custom-fonts') && $whatsappStore->font_family)
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family={{ urlencode($whatsappStore->font_family) }}:wght@400;500;600;700&display=swap{{ in_array($whatsappStore->font_family, ['Tajawal', 'Cairo', 'Amiri', 'Noto Sans Arabic', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Scheherazade', 'Lateef', 'Harmattan', 'Reem Kufi', 'Jomhuria', 'Mada', 'Lemonada', 'Zain']) ? '&subset=arabic' : '' }}">
+    @endif
     <link rel="icon" href="{{ $whatsappStore->logo_url }}" type="image/png">
     <link rel="stylesheet" href="{{ asset('assets/css/slider/css/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/slider/css/slick-theme.min.css') }}">
@@ -18,7 +24,7 @@
         <style>
             @if ($whatsappStore->font_family)
                 body {
-                    font-family: {{ $whatsappStore->font_family }};
+                    font-family: {{ $whatsappStore->font_family }} !important;
                 }
             @endif
 
