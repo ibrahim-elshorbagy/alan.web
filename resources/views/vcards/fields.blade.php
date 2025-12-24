@@ -1150,7 +1150,7 @@
                 {{ Form::select(
                     'font_family',
                     \App\Models\Vcard::FONT_FAMILY,
-                    \App\Models\Vcard::FONT_FAMILY[$vcard->font_family],
+                    $vcard->font_family,
                     ['class' => 'form-select', 'data-control' => 'select2'],
                 ) }}
             </div>

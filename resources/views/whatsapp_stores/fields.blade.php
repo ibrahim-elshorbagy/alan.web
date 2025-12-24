@@ -383,7 +383,7 @@
                 {{ Form::select(
                     'font_family',
                     \App\Models\WhatsappStore::FONT_FAMILY,
-                    \App\Models\WhatsappStore::FONT_FAMILY[$whatsappStore->font_family],
+                    $whatsappStore->font_family,
                     ['class' => 'form-select', 'data-control' => 'select2'],
                 ) }}
             </div>
