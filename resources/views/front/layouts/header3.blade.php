@@ -11,7 +11,7 @@
                     </div>
                     <span
                         class="hidden sm:block text-2xl font-extrabold bg-gradient-to-r from-primary-400 via-accent-400 to-white bg-clip-text text-transparent @if (checkFrontLanguageSession() == 'ar' || checkFrontLanguageSession() == 'fa') me-2 @endif">
-                        {{ getAppName() }}</span>
+                        {{ getAppSlogan() }}</span>
                 </div>
             </div>
             <div id="mobileMenu"

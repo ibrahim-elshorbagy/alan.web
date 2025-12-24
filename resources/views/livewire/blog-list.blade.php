@@ -22,15 +22,11 @@
                                         </a>
                                         @php
                                             $description = $blog->description;
-                                            $wordCount = str_word_count(strip_tags($description));
+                                            $wordsLimit = config('app.blog_words_per_card', 35);
                                         @endphp
-                                        @if ($wordCount > 35)
-                                            <p class="text-gray-100 fs-18 mb-0">
-                                                {{ \Illuminate\Support\Str::words(strip_tags($description), 35, '...') }}
-                                            </p>
-                                        @else
-                                            <p class="text-gray-100 fs-18 mb-0">{!! $description !!}</p>
-                                        @endif
+                                        <p class="text-gray-100 fs-18 mb-0">
+                                            {{ \Illuminate\Support\Str::words(strip_tags($description), $wordsLimit, '...') }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

@@ -548,6 +548,7 @@ return [
         'register_mail' => 'Send Registration Mail',
         'phone_number_required' => 'Phone Number Required',
         'virtual_note' => 'Note : Virtual Backgrounds will give you the business card images in which your logo, name, address, and phone will be written. we are exporting standard sizes of horizontal and vertical virtual backgrounds, which will be useful when you want to design your NFC card, you can directly give these images to NFC printing handlers. Also, you can share this with your friends too directly or set it as a profile/cover image.',
+        'note' => 'Note',
         'email_verification' => 'Enable Email Verification',
         'default' => 'Default',
         'horizontal' =>  'Horizontal',
@@ -1807,6 +1808,7 @@ return [
         'add_ecard' => 'Add E-card',
         'ecard_logo' => 'E-card logo',
         'ecard_info' => 'Best resolution for this image will be 150 x 150',
+        'english_only_note' => "You can add your card information in English only.",
     ],
     'nfc' => [
         'nfc_order_recived' => 'New NFC Card Order Recived',

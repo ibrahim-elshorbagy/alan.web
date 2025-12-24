@@ -137,6 +137,18 @@ if (!function_exists('getAppName')) {
 /**
  * @return mixed
  */
+if (!function_exists('getAppSlogan')) {
+    function getAppSlogan()
+    {
+        $record = getSuperAdminSettingValue('app_slogan');
+
+        return (!empty($record)) ? $record : config('app.slogan');
+    }
+}
+
+/**
+ * @return mixed
+ */
 if (!function_exists('getLogoUrl')) {
     function getLogoUrl()
     {

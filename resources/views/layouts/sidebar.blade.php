@@ -5,7 +5,7 @@
                 <img src="{{ getDashboardLogoUrl() }}" alt="Logo" class="object-fit-cover sidebar-app-logo" />
             </div>
             <span
-                class="text-gray-900 fs-4">{{ strlen(getAppName()) > 12 ? substr(getAppName(), 0, 12) . '...' : getAppName() }}</span>
+                class="text-gray-900 fs-4">{{ getAppSlogan() }}</span>
         </a>
         <button type="button" class="btn px-0 aside-menu-container__aside-menubar d-lg-block d-none sidebar-btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="29" height="28" fill="#6C757D" class="bi bi-list"

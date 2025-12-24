@@ -20,20 +20,16 @@
                     </div>
                     @php
                         $description = $blog->description;
-                        $wordCount = str_word_count(strip_tags($description));
+                        $wordsLimit = config('app.blog_words_per_card', 35);
                     @endphp
 
                     <a href="{{ route('fornt-blog-show', $blog->slug) }}">
                         <h3 class="text-xl font-bold text-secondary-800 mb-3 hover:text-primary-600 transition-colors">
                             {{ $blog->title }}</h3>
                     </a>
-                    @if ($wordCount > 35)
-                        <p class="text-secondary-600 mb-4 line-clamp-3">
-                            {!! str_replace('&nbsp;', ' ', \Illuminate\Support\Str::words(strip_tags($description), 35, '...')) !!}
-                        </p>
-                    @else
-                        <p class="text-secondary-600 mb-4 line-clamp-3">{!! str_replace('&nbsp;', ' ', $description) !!}</p>
-                    @endif
+                    <p class="text-secondary-600 mb-4 line-clamp-3">
+                        {{ \Illuminate\Support\Str::words(strip_tags($description), $wordsLimit, '...') }}
+                    </p>
                     <div class="text-secondary-800 fs-18 date-time mt-2">
                         <span><i class="fas fa-calendar-alt icon-color-bs-purple"></i><span
                                 class="ms-2">{{ $blog->created_at->format('F d, Y') }}</span></span> <span

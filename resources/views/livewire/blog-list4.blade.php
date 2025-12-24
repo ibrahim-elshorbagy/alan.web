@@ -17,7 +17,7 @@
 
                     @php
                         $description = $blog->description;
-                        $wordCount = str_word_count(strip_tags($description));
+                        $wordsLimit = config('app.blog_words_per_card', 35);
                     @endphp
 
                     <a href="{{ route('fornt-blog-show', $blog->slug) }}" class="group">
@@ -26,13 +26,9 @@
                         </h3>
                     </a>
 
-                    @if ($wordCount > 35)
-                        <p class="text-gray-600 mb-6 line-clamp-3 leading-relaxed">
-                            {!! str_replace('&nbsp;', ' ', \Illuminate\Support\Str::words(strip_tags($description), 35, '...')) !!}
-                        </p>
-                    @else
-                        <p class="text-gray-600 mb-6 line-clamp-3 leading-relaxed">{!! str_replace('&nbsp;', ' ', $description) !!}</p>
-                    @endif
+                    <p class="text-gray-600 mb-6 line-clamp-3 leading-relaxed">
+                        {{ \Illuminate\Support\Str::words(strip_tags($description), $wordsLimit, '...') }}
+                    </p>
 
                     <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                         <div class="flex items-center text-sm text-gray-500">

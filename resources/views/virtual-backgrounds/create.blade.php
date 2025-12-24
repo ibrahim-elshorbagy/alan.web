@@ -17,6 +17,9 @@
                 enctype="multipart/form-data">
                 @csrf
                 <div class="card-body">
+                    <div class="alert-info p-2 my-2">
+                        <strong>{{ __('messages.common.note') }}:</strong> {{ __('messages.e_card.english_only_note') }}
+                    </div>
                     <div class="row">
                         <div class="col-md-6 mt-4">
                             <label class="form-label required">{{ __('messages.vcard.vcard_name') }}</label>

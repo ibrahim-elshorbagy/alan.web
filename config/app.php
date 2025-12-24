@@ -18,6 +18,10 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'slogan' => env('APP_SLOGAN', 'إبرزها للعلن'),
+
+    'blog_words_per_card' => env('BLOG_WORDS_PER_CARD', 35),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

@@ -9,7 +9,7 @@
                     <a href="{{ url('/') }}" class="flex items-center">
                         <img src="{{ getLogoUrl() }}" alt="company-logo" class="w-100 h-100 mr-2 object-contain" />
                         <span class="text-2xl font-bold text-blue-600">
-                            {{ getAppName() }}
+                            {{ getAppSlogan() }}
                         </span>
                     </a>
                 </div>
