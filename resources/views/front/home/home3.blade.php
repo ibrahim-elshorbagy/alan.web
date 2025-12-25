@@ -324,8 +324,7 @@
             <div>
               <div>
                 <div
-                  class="bg-white rounded-2xl shadow-xl relative border-2 center-border-main overflow-hidden transition-all duration-300 hover:shadow-2xl  transform  z-10"
-                  @if (checkFrontLanguageSession() == 'ar' || checkFrontLanguageSession() == 'fa') dir="rtl" @endif>
+                  class="bg-white rounded-2xl shadow-xl relative border-2 center-border-main overflow-hidden transition-all duration-300 hover:shadow-2xl  transform  z-10">
                   @if ($plan->trial_days > 0)
                     <div class="absolute top-0 @if (checkFrontLanguageSession() == 'ar' || checkFrontLanguageSession() == 'fa') left-0 @else right-0 @endif">
                       <div
@@ -376,7 +375,8 @@
                         @endif
                       </h2>
                     @else
-                      <div class="flex items-baseline mb-1" id="price_{{ $plan->id }}">
+                      <div class="flex items-baseline mb-2 justify-center" id="price_{{ $plan->id }}"
+                        @if (checkFrontLanguageSession() == 'ar' || checkFrontLanguageSession() == 'fa') dir="rtl" @endif>
                         <span class="text-4xl font-extrabold text-primary-600">
                           @if ($plan->custom_select == 0)
                             {{ str_replace('.00', '', currencyFormat($plan->price, 2, $plan->currency->currency_code)) }}

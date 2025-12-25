@@ -382,6 +382,7 @@ input[type=number] {
 .nav-tabs-1 .nav-item-1 .nav-link-1 {
   color: #6c757d !important;
   border-radius: 0;
+  font-weight: 300 !important;
 }
 
 .form-check-input {

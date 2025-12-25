@@ -870,7 +870,7 @@ return [
         'back_color' => 'لون الخلفية',
         'qrcode_style' => 'اختر النمط',
         'qrcode_eye_style' => 'اختر نمط العين',
-        'qrcode_customize' => 'تخصيص رمز الاستجابة السريعة',
+        'qrcode_customize' => 'تخصيص رمز QR Code',
         'duplicate_vcard' => 'نسخة مكررة من vCard!',
         'product_transection' => 'معاملات المنتج',
         'product_name' => 'اسم المنتج',
@@ -1027,7 +1027,7 @@ return [
         'linkedin_note' => 'يتم قبول منشورات لينكدإن الأصلية فقط (التي تحتوي على "ugcPost" في كود التضمين). لا يتم دعم المنشورات المشتركة (التي تحتوي على "share").',
     ],
     'social' => [
-        'social_links' => 'روابط التواصل الاجتماعي - الموقع الإلكتروني',
+        'social_links' => 'روابط التواصل الاجتماعي',
         'Facebook' => 'فيسبوك',
         'Instagram' => 'إنستغرام',
         'Youtube' => 'يوتيوب',
