@@ -31,6 +31,10 @@
           <p class="text-secondary-600 mb-4 ">
             {{ \Illuminate\Support\Str::words(strip_tags($description), $wordsLimit, '...') }}
           </p>
+          <a href="{{ route('fornt-blog-show', $blog->slug) }}"
+            class="inline-block bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium">
+            {{ __('messages.vcard_11.read_more') }}
+          </a>
           <div class="text-secondary-800 fs-18 date-time mt-2">
             <span><i class="fas fa-calendar-alt icon-color-bs-purple"></i><span
                 class="ms-2">{{ $blog->created_at->format('F d, Y') }}</span></span> <span

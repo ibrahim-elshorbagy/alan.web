@@ -13,151 +13,163 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ECardsController extends Controller
 {
-    public function index(): View|Factory|Application
-    {
-        $tenantId = Auth::user()->tenant_id;
-        $vCards = Vcard::whereTenantId($tenantId)->pluck('name', 'id');
+  public function index(): View|Factory|Application
+  {
+    $tenantId = Auth::user()->tenant_id;
+    $vCards = Vcard::whereTenantId($tenantId)->pluck('name', 'id');
 
-        return view('virtual-backgrounds.index', compact('vCards'));
+    return view('virtual-backgrounds.index', compact('vCards'));
+  }
+
+  public function getVcardData(Request $request): JsonResponse
+  {
+    $input = $request->all();
+    $vcard = Vcard::with('socialLink')->findOrFail($input['vcardId']);
+
+    $data = [
+      'id' => $vcard['id'],
+      'first_name' => $vcard['first_name'],
+      'last_name' => $vcard['last_name'],
+      'email' => $vcard['email'],
+      'occupation' => $vcard['occupation'],
+      'location' => $vcard['location'],
+      'region_code' => $vcard['region_code'],
+      'phone' => $vcard['phone'],
+      'website' => $vcard['socialLink']['website'],
+    ];
+
+    return response()->json(['data' => $data, 'success' => true]);
+  }
+
+  public function downloadEcard(CreateEcardRequest $request): RedirectResponse
+  {
+    $input = $request->all();
+
+    if ($request->hasFile('ecard-logo')) {
+      $image = $request->file('ecard-logo');
+      $resizedImage = Image::make($image)->resize(150, 150);
+      $filename = time() . '_' . $image->getClientOriginalName();
+      $tempPath = public_path('uploads/ecard/temp');
+      if (!file_exists($tempPath)) {
+        mkdir($tempPath, 0755, true);
+      }
+      $path = $tempPath . '/' . $filename;
+      $resizedImage->save($path);
+      $input['ecard-logo'] = $path;
     }
 
-    public function getVcardData(Request $request): JsonResponse
-    {
-        $input = $request->all();
-        $vcard = Vcard::with('socialLink')->findOrFail($input['vcardId']);
+    $path = asset('uploads/ecard');
 
-        $data = [
-            'id' => $vcard['id'],
-            'first_name' => $vcard['first_name'],
-            'last_name' => $vcard['last_name'],
-            'email' => $vcard['email'],
-            'occupation' => $vcard['occupation'],
-            'location' => $vcard['location'],
-            'region_code' => $vcard['region_code'],
-            'phone' => $vcard['phone'],
-            'website' => $vcard['socialLink']['website'],
-        ];
-
-        return response()->json(['data' => $data, 'success' => true]);
+    if (! Storage::exists($path)) {
+      Storage::disk('public')->makeDirectory('uploads/ecard');
     }
 
-    public function downloadEcard(CreateEcardRequest $request): RedirectResponse
-    {
-        $input = $request->all();
-
-        $path = asset('uploads/ecard');
-
-        if (! Storage::exists($path)) {
-            Storage::disk('public')->makeDirectory('uploads/ecard');
-        }
-
-        $zipFile = public_path('virtual_backgrounds/virtual-backgrounds.zip');
-        if (File::exists($zipFile)) {
-            File::delete($zipFile);
-        }
-
-        if ($input['e-card-id'] == 1) {
-            $data = retriveH1Card($input);
-        }
-        if ($input['e-card-id'] == 2) {
-            $data = retriveH2Card($input);
-        }
-        if ($input['e-card-id'] == 3) {
-            $data = retriveH3Card($input);
-        }
-        if ($input['e-card-id'] == 4) {
-            $data = retriveH4Card($input);
-        }
-        if ($input['e-card-id'] == 5) {
-            $data = retriveH5Card($input);
-        }
-        if ($input['e-card-id'] == 6) {
-            $data = retriveH6Card($input);
-        }
-        if ($input['e-card-id'] == 7) {
-            $data = retriveH7Card($input);
-        }
-        if ($input['e-card-id'] == 8) {
-            $data = retriveH8Card($input);
-        }
-        if ($input['e-card-id'] == 9) {
-            $data = retriveH9Card($input);
-        }
-        if ($input['e-card-id'] == 10) {
-            $data = retriveH10Card($input);
-        }
-        if ($input['e-card-id'] == 11) {
-            $data = retriveH11Card($input);
-        }
-        if ($input['e-card-id'] == 12) {
-            $data = retriveH12Card($input);
-        }
-        if ($input['e-card-id'] == 13) {
-            $data = retriveH13Card($input);
-        }
-
-        // delete images after generate zip file
-        $vcardId = $input['vcard_id'];
-        $qrCodeImage = public_path('ecard/'.$vcardId.'-qr.png');
-        $frontImage = public_path('virtual_backgrounds/Front.jpg');
-        $backImage = public_path('virtual_backgrounds/Back.jpg');
-        $frontImage1 = public_path('uploads/ecard/'.$vcardId .'/Front.png');
-        $backImage1 = public_path('uploads/ecard/'.$vcardId.'/Back.png');
-        $directory = public_path('uploads/ecard/'.$vcardId);
-
-
-        if (File::exists($qrCodeImage)) {
-            File::delete($qrCodeImage);
-        }
-        if (File::exists($frontImage)) {
-            File::delete($frontImage);
-        }
-        if (File::exists($backImage)) {
-            File::delete($backImage);
-        }
-        if (File::exists($frontImage1)) {
-            File::delete($frontImage1);
-        }
-        if (File::exists($backImage1)) {
-            File::delete($backImage1);
-            File::deleteDirectory($directory);
-        }
-
-        return redirect(asset($data[0]));
+    $zipFile = public_path('virtual_backgrounds/virtual-backgrounds.zip');
+    if (File::exists($zipFile)) {
+      File::delete($zipFile);
     }
 
-    public function getEcard(Request $request): \Illuminate\View\View
-    {
-        return view();
+    if ($input['e-card-id'] == 1) {
+      $data = retriveH1Card($input);
+    }
+    if ($input['e-card-id'] == 2) {
+      $data = retriveH2Card($input);
+    }
+    if ($input['e-card-id'] == 3) {
+      $data = retriveH3Card($input);
+    }
+    if ($input['e-card-id'] == 4) {
+      $data = retriveH4Card($input);
+    }
+    if ($input['e-card-id'] == 5) {
+      $data = retriveH5Card($input);
+    }
+    if ($input['e-card-id'] == 6) {
+      $data = retriveH6Card($input);
+    }
+    if ($input['e-card-id'] == 7) {
+      $data = retriveH7Card($input);
+    }
+    if ($input['e-card-id'] == 8) {
+      $data = retriveH8Card($input);
+    }
+    if ($input['e-card-id'] == 9) {
+      $data = retriveH9Card($input);
+    }
+    if ($input['e-card-id'] == 10) {
+      $data = retriveH10Card($input);
+    }
+    if ($input['e-card-id'] == 11) {
+      $data = retriveH11Card($input);
+    }
+    if ($input['e-card-id'] == 12) {
+      $data = retriveH12Card($input);
+    }
+    if ($input['e-card-id'] == 13) {
+      $data = retriveH13Card($input);
     }
 
-    public function create($ecard): \Illuminate\View\View
-    {
-        $vcards = Vcard::whereTenantId(getLogInTenantId())->where('status', Vcard::ACTIVE)->pluck('name', 'id')->toArray();
+    // delete images after generate zip file
+    $vcardId = $input['vcard_id'];
+    $qrCodeImage = public_path('ecard/' . $vcardId . '-qr.png');
+    $frontImage = public_path('virtual_backgrounds/Front.jpg');
+    $backImage = public_path('virtual_backgrounds/Back.jpg');
+    $frontImage1 = public_path('uploads/ecard/' . $vcardId . '/Front.png');
+    $backImage1 = public_path('uploads/ecard/' . $vcardId . '/Back.png');
+    $directory = public_path('uploads/ecard/' . $vcardId);
 
-        return view('virtual-backgrounds.create', compact('vcards', 'ecard'));
+
+    if (File::exists($qrCodeImage)) {
+      File::delete($qrCodeImage);
+    }
+    if (File::exists($frontImage)) {
+      File::delete($frontImage);
+    }
+    if (File::exists($backImage)) {
+      File::delete($backImage);
+    }
+    if (File::exists($frontImage1)) {
+      File::delete($frontImage1);
+    }
+    if (File::exists($backImage1)) {
+      File::delete($backImage1);
+      File::deleteDirectory($directory);
     }
 
-    public function store(Request $request, $cardImageId)
-    {
-    }
+    return redirect(asset($data[0]));
+  }
 
-    public function custom(): View|Factory|Application
-    {
-        $tenantId = Auth::user()->tenant_id;
-        $vcards = Vcard::whereTenantId($tenantId)->pluck('name', 'id');
+  public function getEcard(Request $request): \Illuminate\View\View
+  {
+    return view();
+  }
 
-        return view('virtual-backgrounds.custom', compact('vcards'));
-    }
+  public function create($ecard): \Illuminate\View\View
+  {
+    $vcards = Vcard::whereTenantId(getLogInTenantId())->where('status', Vcard::ACTIVE)->pluck('name', 'id')->toArray();
 
-    public function qrCode(Request $request) {
-        $link = $request->input('link');
-        $qrcode = QrCode::size(100)->generate($link);
-        return $qrcode;
-    }
+    return view('virtual-backgrounds.create', compact('vcards', 'ecard'));
+  }
 
+  public function store(Request $request, $cardImageId) {}
+
+  public function custom(): View|Factory|Application
+  {
+    $tenantId = Auth::user()->tenant_id;
+    $vcards = Vcard::whereTenantId($tenantId)->pluck('name', 'id');
+
+    return view('virtual-backgrounds.custom', compact('vcards'));
+  }
+
+  public function qrCode(Request $request)
+  {
+    $link = $request->input('link');
+    $qrcode = QrCode::size(100)->generate($link);
+    return $qrcode;
+  }
 }
