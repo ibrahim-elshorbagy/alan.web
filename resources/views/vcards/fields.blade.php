@@ -1154,7 +1154,7 @@
                     ['class' => 'form-select', 'data-control' => 'select2'],
                 ) }}
             </div>
-            <div class="col-lg-6 mb-7">
+            {{-- <div class="col-lg-6 mb-7">
                 {!! Form::label('font_size', __('messages.font.font_size') . ':', ['class' => 'form-label']) !!}
 
                 {!! Form::number('font_size', $vcard->font_size, [
@@ -1163,7 +1163,7 @@
                     'max' => '40',
                     'placeholder' => __('messages.font.font_size_in_px'),
                 ]) !!}
-            </div>
+            </div> --}}
             <div class="col-lg-12 d-flex">
                 <button type="submit" class="btn btn-primary me-3">
                     {{ __('messages.common.save') }}
