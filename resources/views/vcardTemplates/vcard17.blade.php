@@ -806,7 +806,7 @@
                                 ?>
                                 <div>
                                     <div class="blog-card-wrapper">
-                                        <div class="blog-card card">
+                                        <div class="blog-card card" style="transform: scaleX(1) !important;">
                                             <div class="card-img mb-3 mb-sm-0">
                                                 <a href="{{ $vcardBlogUrl }}">
                                                     <img src="{{ $blog->blog_icon }}" alt="profile"
@@ -818,9 +818,11 @@
                                                     {{ $blog->title }}
                                                 </h2>
                                                 <p class="blog-desc fs-14 text-white mb-0">
-                                                    {{ Illuminate\Support\Str::words(str_replace('&nbsp;', ' ', strip_tags($blog->description)), 100, '...') }}
+                                                    {{ Illuminate\Support\Str::words(str_replace('&nbsp;', ' ', strip_tags($blog->description)), 100, '') }}
                                                 </p>
                                                 <a href="{{ $vcardBlogUrl }}"
+                                                style="transform: scaleX(1) !important;"
+
                                                     class="read-more d-inline-flex align-items-center justify-content-end gap-2 fs-14"
                                                     tabindex="0">
                                                     {{ __('messages.vcard_11.read_more') }}
