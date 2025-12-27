@@ -424,6 +424,39 @@ class SettingController extends AppBaseController
     return redirect()->back();
   }
 
+  public function aiSettingUpdate(Request $request): RedirectResponse
+  {
+    $input = $request->all();
+
+    $aiSettingKeys = [
+      'open_ai_enable',
+      'openai_api_key',
+      'open_ai_model',
+    ];
+
+    foreach ($aiSettingKeys as $key) {
+      $setting = Setting::where('key', $key)->first();
+
+      if ($key == 'open_ai_enable') {
+        $value = isset($input[$key]) ? '1' : '0';
+      } elseif ($key == 'open_ai_model') {
+        // Always save model name in lowercase
+        $value = isset($input[$key]) ? strtolower(trim($input[$key])) : '';
+      } else {
+        $value = $input[$key] ?? '';
+      }
+
+      if ($setting) {
+        $setting->update(['value' => $value]);
+      } else {
+        Setting::create(['key' => $key, 'value' => $value]);
+      }
+    }
+
+    Flash::success(__('messages.vcard.open_ai') . ' ' . __('messages.flash.setting_update'));
+    return redirect()->back();
+  }
+
   public function customDomainUpdate(Request $request, $id)
   {
     $input = $request->all();
