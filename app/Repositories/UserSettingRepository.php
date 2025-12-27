@@ -90,26 +90,6 @@ class UserSettingRepository extends BaseRepository
         }
         return $setting;
     }
-    public function openAiUpdate($input, $id)
-    {
-        $inputArr = Arr::except($input, ['_token', 'sectionName']);
-        $inputArr['open_ai_enable'] = isset($inputArr['open_ai_enable']) ? $inputArr['open_ai_enable'] : '0';
-
-        foreach ($inputArr as $key => $value) {
-            $setting = UserSetting::where('key', $key)->where('user_id', $id)->first();
-            if (! $setting) {
-                $setting = UserSetting::create([
-                    'user_id' => $id,
-                    'key' => $key,
-                    'value' => $value,
-                ]);
-            } else {
-                $setting->update(['value' => $value]);
-            }
-        }
-
-        return $setting;
-    }
 
     public function updateAPI($input, $id)
     {

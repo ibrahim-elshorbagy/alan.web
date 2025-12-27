@@ -136,27 +136,18 @@ class VcardController extends AppBaseController
    */
   public function store(CreateVcardRequest $request): RedirectResponse
   {
-    $input = $request->all();
+    if ($request->favicon_img) {
+      $imageSize = getimagesize($request->favicon_img);
+      $width = $imageSize[0];
+      $height = $imageSize[1];
 
-    // Automatically crop favicon to 16x16
-    if ($request->hasFile('favicon_img')) {
-      $faviconFile = $request->file('favicon_img');
-      $image = Image::make($faviconFile);
-      $image->fit(16, 16);
+      if ($width > 16 && $height > 16) {
+        Flash::error(__('messages.placeholder.favicon_invalid'));
 
-      // Save the cropped image to a temporary file
-      $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_favicon.png';
-      $image->save($tempPath, 100, 'png');
-
-      // Replace the input with the cropped image
-      $input['favicon_img'] = new \Illuminate\Http\UploadedFile(
-        $tempPath,
-        'favicon.png',
-        'image/png',
-        null,
-        true
-      );
+        return redirect()->back();
+      }
     }
+    $input = $request->all();
 
     $vcard = $this->vcardRepository->store($input);
 
@@ -481,28 +472,19 @@ class VcardController extends AppBaseController
 
   public function update(UpdateVcardRequest $request, Vcard $vcard): RedirectResponse
   {
+    if ($request->favicon_img) {
+      $imageSize = getimagesize($request->favicon_img);
+      $width = $imageSize[0];
+      $height = $imageSize[1];
+
+      if ($width > 16 && $height > 16) {
+        Flash::error(__('messages.placeholder.favicon_invalid'));
+
+        return redirect()->back();
+      }
+    }
     $request->except('url_alias');
     $input = $request->all();
-
-    // Automatically crop favicon to 16x16
-    if ($request->hasFile('favicon_img')) {
-      $faviconFile = $request->file('favicon_img');
-      $image = Image::make($faviconFile);
-      $image->fit(16, 16);
-
-      // Save the cropped image to a temporary file
-      $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_favicon.png';
-      $image->save($tempPath, 100, 'png');
-
-      // Replace the input with the cropped image
-      $input['favicon_img'] = new \Illuminate\Http\UploadedFile(
-        $tempPath,
-        'favicon.png',
-        'image/png',
-        null,
-        true
-      );
-    }
 
     $edit_alias_url = getSuperAdminSettingValue('url_alias');
     if ($edit_alias_url == 0 && isset($input['url_alias']) && $input['url_alias'] != $vcard->url_alias) {
@@ -1042,23 +1024,23 @@ class VcardController extends AppBaseController
       'prompt' => 'required|string',
     ]);
 
-    $userApiKey = getUserSettingValue('openai_api_key', getLogInUserId());
-    $envApiKey = env('OPENAI_API_KEY');
+    // Get OpenAI settings from super admin settings (Setting model)
+    $openAiEnable = getSuperAdminSettingValue('open_ai_enable');
 
-    $apiKey = !empty($userApiKey) ? $userApiKey : $envApiKey;
+    if ($openAiEnable != '1') {
+      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
+    }
+
+    $apiKey = getSuperAdminSettingValue('openai_api_key');
 
     if (empty($apiKey)) {
       return $this->sendError(__('messages.vcard.openai_api_key_not_set'));
     }
 
-    $model = getUserSettingValue('open_ai_model', getLogInUserId());
+    $model = getSuperAdminSettingValue('open_ai_model');
 
     if (empty($model)) {
       return $this->sendError(__('messages.vcard.open_ai_model_not_configured'));
-    }
-
-    if (getUserSettingValue('open_ai_enable', getLogInUserId()) == 0) {
-      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
     }
     try {
       $response = Http::withHeaders([
