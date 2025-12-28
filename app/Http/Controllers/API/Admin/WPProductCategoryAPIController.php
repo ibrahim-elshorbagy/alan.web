@@ -9,6 +9,8 @@ use App\Models\WhatsappStore;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image;
+use Illuminate\Http\UploadedFile;
 
 class WPProductCategoryAPIController extends AppBaseController
 {
@@ -68,13 +70,21 @@ class WPProductCategoryAPIController extends AppBaseController
             ]);
 
             if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $resizedImage = Image::make($file)->fit(100, 100);
+                $tempPath = sys_get_temp_dir() . '/' . time() . '.' . $file->extension();
+                $resizedImage->save($tempPath);
+                $resizedFile = new UploadedFile($tempPath, $file->getClientOriginalName(), $file->getMimeType(), null, true);
+
                 $productCategory
-                    ->addMediaFromRequest('image')
-                    ->usingFileName(time() . '.' . $request->file('image')->extension())
+                    ->addMedia($resizedFile)
+                    ->usingFileName(time() . '.' . $file->extension())
                     ->toMediaCollection(
                         ProductCategory::IMAGE,
                         config('app.media_disc')
                     );
+
+                @unlink($tempPath);
             }
             DB::commit();
             return $this->sendSuccess('Product category created successfully.');
@@ -121,13 +131,22 @@ class WPProductCategoryAPIController extends AppBaseController
 
             if ($request->hasFile('image')) {
                 $productCategory->clearMediaCollection(ProductCategory::IMAGE);
+
+                $file = $request->file('image');
+                $resizedImage = Image::make($file)->fit(100, 100);
+                $tempPath = sys_get_temp_dir() . '/' . time() . '.' . $file->extension();
+                $resizedImage->save($tempPath);
+                $resizedFile = new UploadedFile($tempPath, $file->getClientOriginalName(), $file->getMimeType(), null, true);
+
                 $productCategory
-                    ->addMediaFromRequest('image')
-                    ->usingFileName(time().'.'.$request->file('image')->extension())
+                    ->addMedia($resizedFile)
+                    ->usingFileName(time().'.'.$file->extension())
                     ->toMediaCollection(
                         ProductCategory::IMAGE,
                         config('app.media_disc')
                     );
+
+                @unlink($tempPath);
             }
 
             DB::commit();

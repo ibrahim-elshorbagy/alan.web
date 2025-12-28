@@ -7,7 +7,7 @@ return [
   'paste_from_clipboard' => 'لصق من الحافظة',
   'no_image_in_clipboard' => 'لا توجد صورة في الحافظة',
   'or_paste_image_here' => 'أو الصق الصورة هنا (Ctrl+V)',
-  'image_pasted_successfully' => 'تم لصق الصورة بنجاح!',
+  'image_pasted_successfully' => 'تم اضافة الصورة بنجاح!',
   'invalid_image_type' => 'الرجاء لصق ملف صورة صالح (PNG، JPG، JPEG، GIF، WebP)',
   'image_too_large' => 'ملف الصورة كبير جداً. الرجاء استخدام صورة أصغر من 5 ميجابايت.',
   'approved' => 'موافق عليه',

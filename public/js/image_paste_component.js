@@ -42,7 +42,7 @@ class ImagePasteComponent {
         // Select button
         const selectButton = document.createElement('button');
         selectButton.type = 'button';
-        selectButton.className = 'btn btn-outline-secondary btn-sm me-2';
+        selectButton.className = 'btn btn-outline-primary btn-sm me-2';
         selectButton.innerHTML = '<i class="fas fa-image"></i> ' + this.options.buttonText;
         selectButton.onclick = () => this.selectImage();
 

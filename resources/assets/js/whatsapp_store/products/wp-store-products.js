@@ -210,7 +210,7 @@ function editProductRenderData(productId) {
                         <label>
                             <i class="fa-solid fa-pen" id="profileImageIcon"></i>
                             <input type="file" id="editProductIcon" name="images[]"
-                                class="image-upload file-validation d-none crop-image-input" accept="image/*" data-crop-width="280" data-crop-height="230" data-preview-id="editWpStoreProductPreview"
+                                class="image-upload d-none" accept="image/*"
                                 multiple />
                         </label>
                     </span>

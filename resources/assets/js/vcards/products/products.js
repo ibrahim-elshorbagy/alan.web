@@ -130,7 +130,7 @@ function editVcardProductRenderData(id) {
                                             <label>
                                                 <i class="fa-solid fa-pen" id="profileImageIcon"></i>
                                                 <input type="file" id="editProductIcon" name="product_icon[]"
-                                                    class="image-upload file-validation d-none crop-image-input" accept="image/*" data-preview-id="editVcardProductPreview"
+                                                    class="image-upload file-validation d-none" accept="image/*" data-preview-id="editVcardProductPreview"
                                                     multiple />
                                             </label>
                                         </span>
