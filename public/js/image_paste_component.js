@@ -49,7 +49,7 @@ class ImagePasteComponent {
         // Clipboard button
         const clipboardButton = document.createElement('button');
         clipboardButton.type = 'button';
-        clipboardButton.className = 'btn btn-outline-primary btn-sm me-2';
+        clipboardButton.className = 'btn btn-outline-primary btn-sm my-2';
         clipboardButton.innerHTML = '<i class="fas fa-clipboard"></i> ' + this.options.clipboardButtonText;
         clipboardButton.onclick = () => this.readClipboard();
 
