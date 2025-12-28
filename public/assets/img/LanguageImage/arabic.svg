@@ -1,7 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="900" height="600">
-    <rect width="900" height="200" fill="#000"/>
-    <rect y="200" width="900" height="200" fill="#007a3d"/>
-    <rect y="400" width="900" height="200" fill="#fff"/>
-    <path d="M 0,0 L 300,300 L 0,600 z" fill="#ce1126"/>
-</svg>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1500 1000"><defs><style>.cls-1{fill:none;}.cls-2{clip-path:url(#clip-path);}.cls-3{fill:#fff;}.cls-4{fill:#007a3d;}.cls-5{fill:#ce1126;}</style><clipPath id="clip-path"><rect class="cls-1" x="0.17" y="-0.3" width="1500" height="1000"/></clipPath></defs><title>Flag-of-Jordan</title><g class="cls-2"><rect x="0.17" y="-0.3" width="1500" height="1000"/><rect x="0.17" y="-0.3" width="1500" height="1000"/><rect class="cls-3" x="0.17" y="328.78" width="1500" height="335.46"/><rect class="cls-4" x="0.17" y="664.24" width="1500" height="335.46"/><polygon class="cls-5" points="0.17 -0.16 0.17 999.7 816.17 496.54 10.58 -0.16 0.17 -0.16"/><polygon class="cls-3" points="477.07 518.93 433.04 523.01 438.85 566.73 408.18 534.94 377.52 566.73 383.33 523.01 339.27 518.93 377.18 496.2 352.93 459.33 394.37 474.72 408.18 432.8 421.97 474.72 463.44 459.33 439.19 496.2 477.07 518.93"/></g></svg>

@@ -137,17 +137,41 @@ class VcardController extends AppBaseController
   public function store(CreateVcardRequest $request): RedirectResponse
   {
     if ($request->favicon_img) {
-      $imageSize = getimagesize($request->favicon_img);
-      $width = $imageSize[0];
-      $height = $imageSize[1];
+      $faviconFile = $request->file('favicon_img');
+      $image = Image::make($faviconFile);
+      $image->fit(16, 16); // Favicon: 16x16
 
-      if ($width > 16 && $height > 16) {
-        Flash::error(__('messages.placeholder.favicon_invalid'));
+      $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_favicon.png';
+      $image->save($tempPath, 100, 'png');
 
-        return redirect()->back();
-      }
+      $input = $request->all();
+      $input['favicon_img'] = new \Illuminate\Http\UploadedFile(
+        $tempPath,
+        'favicon.png',
+        'image/png',
+        null,
+        true
+      );
+    } else {
+      $input = $request->all();
     }
-    $input = $request->all();
+
+    if ($request->hasFile('cover_img')) {
+      $coverFile = $request->file('cover_img');
+      $image = Image::make($coverFile);
+      $image->fit(576, 300); // Cover image: 576x300
+
+      $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_cover.png';
+      $image->save($tempPath, 100, 'png');
+
+      $input['cover_img'] = new \Illuminate\Http\UploadedFile(
+        $tempPath,
+        'cover.png',
+        'image/png',
+        null,
+        true
+      );
+    }
 
     $vcard = $this->vcardRepository->store($input);
 
@@ -473,18 +497,41 @@ class VcardController extends AppBaseController
   public function update(UpdateVcardRequest $request, Vcard $vcard): RedirectResponse
   {
     if ($request->favicon_img) {
-      $imageSize = getimagesize($request->favicon_img);
-      $width = $imageSize[0];
-      $height = $imageSize[1];
+      $faviconFile = $request->file('favicon_img');
+      $image = Image::make($faviconFile);
+      $image->fit(16, 16); // Favicon: 16x16
 
-      if ($width > 16 && $height > 16) {
-        Flash::error(__('messages.placeholder.favicon_invalid'));
+      $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_favicon.png';
+      $image->save($tempPath, 100, 'png');
 
-        return redirect()->back();
-      }
+      $input = $request->all();
+      $input['favicon_img'] = new \Illuminate\Http\UploadedFile(
+        $tempPath,
+        'favicon.png',
+        'image/png',
+        null,
+        true
+      );
+    } else {
+      $input = $request->all();
     }
-    $request->except('url_alias');
-    $input = $request->all();
+
+    if ($request->hasFile('cover_img')) {
+      $coverFile = $request->file('cover_img');
+      $image = Image::make($coverFile);
+      $image->fit(576, 300); // Cover image: 576x300
+
+      $tempPath = sys_get_temp_dir() . '/' . uniqid() . '_cover.png';
+      $image->save($tempPath, 100, 'png');
+
+      $input['cover_img'] = new \Illuminate\Http\UploadedFile(
+        $tempPath,
+        'cover.png',
+        'image/png',
+        null,
+        true
+      );
+    }
 
     $edit_alias_url = getSuperAdminSettingValue('url_alias');
     if ($edit_alias_url == 0 && isset($input['url_alias']) && $input['url_alias'] != $vcard->url_alias) {

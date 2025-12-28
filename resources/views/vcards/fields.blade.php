@@ -104,11 +104,19 @@
                       data-placement="top" data-bs-original-title="{{ __('messages.tooltip.cover') }}">
                       <label>
                         <i class="fa-solid fa-pen click-image" id="profileImageIcon"></i>
-                        <input type="file" id="coverImg" name="cover_img" class="d-none crop-image-input"
-                          accept="image/*" data-preview-id="coverPreview" data-crop-width="576"
-                          data-crop-height="300" />
+                        <input type="file" id="coverImg" name="cover_img" class="d-none" accept="image/*"
+                          data-preview-id="coverPreview" />
                       </label>
                     </span>
+                  </div>
+                  <!-- Image Paste Component -->
+                  <div data-image-paste data-file-input-id="coverImg" data-preview-id="coverPreview"
+                    data-button-text="{{ __('messages.select_image') }}"
+                    data-clipboard-button-text="{{ __('messages.paste_from_clipboard') }}"
+                    data-success-text="{{ __('messages.image_pasted_successfully') }}"
+                    data-invalid-type-text="{{ __('messages.invalid_image_type') }}"
+                    data-image-too-large-text="{{ __('messages.image_too_large') }}"
+                    data-no-image-text="{{ __('messages.no_image_in_clipboard') }}">
                   </div>
                 </div>
               </div>
@@ -126,7 +134,8 @@
                           <source src="{{ $vcard->cover_url }}" type="video/mp4">
                         </video>
                       @else
-                        <img src="{{ asset('assets/images/video-icon.png') }}" alt="Default Video Icon" width="100%">
+                        <img src="{{ asset('assets/images/video-icon.png') }}" alt="Default Video Icon"
+                          width="100%">
                       @endif
                     </div>
                     <span class="picker-edit rounded-circle text-gray-500 fs-small" data-bs-toggle="tooltip"
@@ -653,10 +662,10 @@
           @endphp
           <div class="col-xl-3 col-lg-4 col-md-4 col-sm-6 mb-3 templatecard">
             {{-- For Debugging --}}
-            <div class="template-header-info">
+            {{-- <div class="template-header-info">
               <span class="template-id">ID: {{ $id }} | {{ $folderName }}</span>
               <span class="template-name">{{ $templateNames[$id] }}</span>
-            </div>
+            </div> --}}
             <div
               class="img-radio img-thumbnail {{ $id == 11 ? 'screen vcard_11' : '' }} {{ $vcard->template_id == $id ? 'img-border' : '' }} @if ($id == 22) ribbon @endif"
               data-id="{{ $id }}">
