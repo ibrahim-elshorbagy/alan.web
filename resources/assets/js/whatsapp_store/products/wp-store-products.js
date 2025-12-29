@@ -72,6 +72,128 @@ function loadView() {
     quillwpStoreEditDescription.root.innerHTML = element2.value;
 }
 
+// AI Product Description Generation for WhatsApp Store - Create Form
+listenClick("#generateAiWpProductDescriptionBtn", function () {
+    const $button = $(this);
+    const productName = $("input[name='name']").val();
+    const categoryId = $("select[name='category_id']").val();
+    const whatsappStoreId = $("input[name='whatsapp_store_id']").val();
+
+    if (!productName || !productName.trim()) {
+        displayErrorMessage(Lang.get("js.product_name_required"));
+        return;
+    }
+
+    if (!categoryId || categoryId == "0") {
+        displayErrorMessage(Lang.get("js.product_category_required"));
+        return;
+    }
+
+    if (!whatsappStoreId) {
+        displayErrorMessage("WhatsApp Store ID not found");
+        return;
+    }
+
+    $button.prop('disabled', true);
+    $button.find('i').addClass('fa-spin');
+
+    $.ajax({
+        url: route('whatsapp.stores.products.generate.ai.description'),
+        type: 'POST',
+        data: {
+            product_name: productName.trim(),
+            category_id: categoryId,
+            whatsapp_store_id: whatsappStoreId,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        timeout: 45000,
+        success: function (result) {
+            $button.prop('disabled', false);
+            $button.find('i').removeClass('fa-spin');
+
+            if (result.success) {
+                // Update the Quill editor with AI-generated content
+                quillwpStoreDescription.root.innerHTML = result.description;
+                $("#wpStoreProductDescriptionData").val(result.description);
+                displaySuccessMessage(Lang.get("js.description_generated_successfully"));
+            } else {
+                displayErrorMessage(result.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            $button.prop('disabled', false);
+            $button.find('i').removeClass('fa-spin');
+
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                displayErrorMessage(xhr.responseJSON.message);
+            } else {
+                displayErrorMessage("An error occurred while generating description");
+            }
+        }
+    });
+});
+
+// AI Product Description Generation for WhatsApp Store - Edit Form
+listenClick("#generateAiWpProductDescriptionBtnEdit", function () {
+    const $button = $(this);
+    const productName = $("#editProductName").val();
+    const categoryId = $("select[name='category_id']").val();
+    const whatsappStoreId = $("input[name='whatsapp_store_id']").val();
+
+    if (!productName || !productName.trim()) {
+        displayErrorMessage(Lang.get("js.product_name_required"));
+        return;
+    }
+
+    if (!categoryId || categoryId == "0" || categoryId == "") {
+        displayErrorMessage(Lang.get("js.product_category_required"));
+        return;
+    }
+
+    if (!whatsappStoreId) {
+        displayErrorMessage("WhatsApp Store ID not found");
+        return;
+    }
+
+    $button.prop('disabled', true);
+    $button.find('i').addClass('fa-spin');
+
+    $.ajax({
+        url: route('whatsapp.stores.products.generate.ai.description'),
+        type: 'POST',
+        data: {
+            product_name: productName.trim(),
+            category_id: categoryId,
+            whatsapp_store_id: whatsappStoreId,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        timeout: 45000,
+        success: function (result) {
+            $button.prop('disabled', false);
+            $button.find('i').removeClass('fa-spin');
+
+            if (result.success) {
+                // Update the Quill editor with AI-generated content
+                quillwpStoreEditDescription.root.innerHTML = result.description;
+                $("#editWpStoreProductDescriptionData").val(result.description);
+                displaySuccessMessage(Lang.get("js.description_generated_successfully"));
+            } else {
+                displayErrorMessage(result.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            $button.prop('disabled', false);
+            $button.find('i').removeClass('fa-spin');
+
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                displayErrorMessage(xhr.responseJSON.message);
+            } else {
+                displayErrorMessage("An error occurred while generating description");
+            }
+        }
+    });
+});
+
 //wp store product form
 listenClick("#addWpStoreProduct", function () {
     let url = $("#wpProductDefaultImage").val();

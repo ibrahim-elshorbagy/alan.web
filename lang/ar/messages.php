@@ -960,6 +960,7 @@ return [
     'vcard_visitors' => 'زوار بطاقات vCard',
     'whatsapp_store_visitors' => 'زوار متجر واتساب',
     'generate_description_with_ai' => 'إنشاء الوصف بالذكاء الاصطناعي',
+    'write_with_ai' => 'اكتب بالذكاء الاصطناعي',
     'refund_&_cancellation' => 'سياسة الاسترجاع والإلغاء',
     'shipping_&_delivery' => 'سياسة الشحن والتسليم',
     'search_google_images' => 'البحث في صور جوجل',
@@ -2100,6 +2101,12 @@ return [
     'enter_youtube_video_link' => 'أدخل رابط فيديو يوتيوب',
     'support_services' => 'الدعم والخدمات',
     'talk_to_us' => 'تحدث إلينا',
+    'generate_terms_conditions_with_ai' => 'إنشاء الشروط والأحكام بالذكاء الاصطناعي',
+    'generate_privacy_policy_with_ai' => 'إنشاء سياسة الخصوصية بالذكاء الاصطناعي',
+    'generate_refund_policy_with_ai' => 'إنشاء سياسة الاسترداد بالذكاء الاصطناعي',
+    'generate_shipping_delivery_with_ai' => 'إنشاء سياسة الشحن والتسليم بالذكاء الاصطناعي',
+    'ai_description_prompt' => 'أمر وصف الذكاء الاصطناعي',
+    'describe_your_business' => 'صف عملك (مثال: "أدير متجراً للأزياء يبيع الملابس والإكسسوارات")',
   ],
 
   'whatsapp_stores_templates' => [

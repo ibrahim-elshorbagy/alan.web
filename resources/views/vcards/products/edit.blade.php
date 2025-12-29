@@ -11,6 +11,7 @@
         <div class="row mb-5">
           <div class="col-sm-12 mb-5 col-lg-6">
             {{ Form::hidden('product_id', null, ['id' => 'productId']) }}
+            {{ Form::hidden('vcard_id', $vcard->id, ['id' => 'vcardId']) }}
             {{ Form::label('name', __('messages.common.name') . ':', ['class' => 'form-label required']) }}
             {{ Form::text('name', null, ['class' => 'form-control', 'id' => 'editName', 'required', 'placeholder' => __('messages.form.product')]) }}
           </div>
@@ -36,6 +37,13 @@
           </div>
           <div class="col-sm-12 mb-5 col-lg-12">
             {{ Form::label('description', __('messages.common.description') . ':', ['class' => 'form-label']) }}
+            <div class="d-flex align-items-center mb-2">
+              <a href="javascript:void(0)" id="generateAiProductDescriptionBtn"
+                class="text-primary text-decoration-none fw-semibold d-inline-flex align-items-center gap-2 me-3">
+                <i class="bi bi-stars"></i>
+                {{ __('messages.vcard.generate_description_with_ai') }}
+              </a>
+            </div>
             {{ Form::textarea('description', null, ['class' => 'form-control', 'id' => 'editDescription', 'placeholder' => __('messages.form.short_description'), 'rows' => '5']) }}
           </div>
           <div class="col-sm-12 mb-5 col-lg-12">

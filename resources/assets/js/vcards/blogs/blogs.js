@@ -169,3 +169,57 @@ listenHiddenBsModal("#addBlogModal", function () {
 listenHiddenBsModal("#editBlogModal", function () {
     $(".cancel-edit-blog").hide();
 });
+
+// AI Blog Description Generation
+listenClick("#generateAiBlogDescriptionBtn", function () {
+    const $button = $(this);
+    const blogTitle = $("#addBlogForm input[name='title']").val() || $("#editBlogForm input[name='title']").val();
+    const vcardId = $("#vcardId").val();
+
+    if (!blogTitle || !blogTitle.trim()) {
+        displayErrorMessage(Lang.get("js.blog_title_required"));
+        return;
+    }
+
+    if (!vcardId) {
+        displayErrorMessage("vCard ID not found");
+        return;
+    }
+
+    $button.prop('disabled', true);
+    $button.find('i').addClass('fa-spin');
+
+    $.ajax({
+        url: route('vcards.generate.ai.blog.description'),
+        type: 'POST',
+        data: {
+            blog_title: blogTitle.trim(),
+            vcard_id: vcardId,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        timeout: 35000,
+        success: function (result) {
+            $button.prop('disabled', false);
+            $button.find('i').removeClass('fa-spin');
+
+            if (result.success) {
+                // Update the description textarea with HTML content for Summernote
+                $("#blogDescription").summernote('code', result.description);
+                $("#editBlogDescription").summernote('code', result.description);
+                displaySuccessMessage(Lang.get("js.description_generated_successfully"));
+            } else {
+                displayErrorMessage(result.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            $button.prop('disabled', false);
+            $button.find('i').removeClass('fa-spin');
+
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                displayErrorMessage(xhr.responseJSON.message);
+            } else {
+                displayErrorMessage("An error occurred while generating description");
+            }
+        }
+    });
+});

@@ -488,6 +488,18 @@ Route::middleware(['freshInstall'])->group(function () {
           Route::post('wp-template-trending-video/{whatsappStore}/update', [WhatsappStoreController::class, 'wpTemplateTrendingVideoUpdate'])->name('wp.template.trending.video.update');
           Route::post('whatsapp-stores/terms-conditions/{whatsappStore}/update', [WhatsappStoreController::class, 'wpTermsConditionsUpdate'])->name('wp.terms.conditions.update');
 
+          // AI Content Generation for WhatsApp Store
+          Route::post('whatsapp-stores/generate-ai-terms-conditions', [WhatsappStoreController::class, 'generateAiWhatsappTermsConditions'])->name('whatsapp.stores.generate.ai.terms.conditions');
+          Route::post('whatsapp-stores/generate-ai-privacy-policy', [WhatsappStoreController::class, 'generateAiWhatsappPrivacyPolicy'])->name('whatsapp.stores.generate.ai.privacy.policy');
+          Route::post('whatsapp-stores/generate-ai-refund-cancellation', [WhatsappStoreController::class, 'generateAiWhatsappRefundCancellation'])->name('whatsapp.stores.generate.ai.refund.cancellation');
+          Route::post('whatsapp-stores/generate-ai-shipping-delivery', [WhatsappStoreController::class, 'generateAiWhatsappShippingDelivery'])->name('whatsapp.stores.generate.ai.shipping.delivery');
+
+          // AI SEO Field Generation for WhatsApp Store
+          Route::post('whatsapp-stores/generate-ai-site-title', [WhatsappStoreController::class, 'generateAiWhatsappSiteTitle'])->name('whatsapp.stores.generate.ai.site.title');
+          Route::post('whatsapp-stores/generate-ai-home-title', [WhatsappStoreController::class, 'generateAiWhatsappHomeTitle'])->name('whatsapp.stores.generate.ai.home.title');
+          Route::post('whatsapp-stores/generate-ai-meta-keyword', [WhatsappStoreController::class, 'generateAiWhatsappMetaKeyword'])->name('whatsapp.stores.generate.ai.meta.keyword');
+          Route::post('whatsapp-stores/generate-ai-meta-description', [WhatsappStoreController::class, 'generateAiWhatsappMetaDescription'])->name('whatsapp.stores.generate.ai.meta.description');
+
 
           //product category
           Route::post('product-categories', [ProductCategoryController::class, 'store'])->name('product.categories.store');
@@ -504,6 +516,7 @@ Route::middleware(['freshInstall'])->group(function () {
           Route::get('wp-store-product/{wpStoreProduct}/edit', [WhatsappStoreProductController::class, 'edit'])->name('wp.store.product.edit');
           Route::post('wp-store-product/{wpStoreProduct}/update', [WhatsappStoreProductController::class, 'update'])->name('wp.store.product.update');
           Route::delete('wp.product.media.destroy/{id}', [WhatsappStoreProductController::class, 'destroyMedia'])->name('wp.product.media.destroy');
+          Route::post('wp-store-product/generate-ai-description', [WhatsappStoreProductController::class, 'generateAiProductDescription'])->name('whatsapp.stores.products.generate.ai.description');
           Route::get('whatsapp-stores/{wpOrder}/order', [WhatsappStoreProductController::class, 'showOrder'])->name('wp.stores.show.order');
           Route::post('whatsapp-stores/{wpOrder}/order', [WhatsappStoreProductController::class, 'updateOrderStatus'])->name('wp.stores.update.order.status');
           Route::delete('whatsapp-stores/{id}/order', [WhatsappStoreProductController::class, 'destroyOrder'])->name('wp.stores.destroy.order');
@@ -811,6 +824,15 @@ Route::middleware(['freshInstall'])->group(function () {
 
     Route::resource('/vcards', VcardController::class)->except(['edit', 'destroy']);
     Route::post('/vcards/generate-ai-description', [VcardController::class, 'generateAiDescription'])->name('vcards.generate.ai.description');
+    Route::post('/vcards/generate-ai-service-description', [VcardController::class, 'generateAiServiceDescription'])->name('vcards.generate.ai.service.description');
+    Route::post('/vcards/generate-ai-product-description', [VcardController::class, 'generateAiProductDescription'])->name('vcards.generate.ai.product.description');
+    Route::post('/vcards/generate-ai-blog-description', [VcardController::class, 'generateAiBlogDescription'])->name('vcards.generate.ai.blog.description');
+    Route::post('/vcards/generate-ai-site-title', [VcardController::class, 'generateAiSiteTitle'])->name('vcards.generate.ai.site.title');
+    Route::post('/vcards/generate-ai-home-title', [VcardController::class, 'generateAiHomeTitle'])->name('vcards.generate.ai.home.title');
+    Route::post('/vcards/generate-ai-meta-keyword', [VcardController::class, 'generateAiMetaKeyword'])->name('vcards.generate.ai.meta.keyword');
+    Route::post('/vcards/generate-ai-meta-description', [VcardController::class, 'generateAiMetaDescription'])->name('vcards.generate.ai.meta.description');
+    Route::post('/vcards/generate-ai-privacy-policy', [VcardController::class, 'generateAiPrivacyPolicy'])->name('vcards.generate.ai.privacy.policy');
+    Route::post('/vcards/generate-ai-terms-conditions', [VcardController::class, 'generateAiTermsConditions'])->name('vcards.generate.ai.terms.conditions');
     Route::get(
       '/vcards/{vcard}/edit',
       [VcardController::class, 'edit']

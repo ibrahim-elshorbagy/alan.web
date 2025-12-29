@@ -8,7 +8,7 @@
       {{ Form::open(['id' => 'addServiceForm', 'files' => 'true']) }}
       <div class="modal-body">
         <div class="mb-5">
-          {{ Form::hidden('vcard_id', $vcard->id) }}
+          {{ Form::hidden('vcard_id', $vcard->id, ['id' => 'vcardId']) }}
           {{ Form::label('name', __('messages.common.name') . ':', ['class' => 'form-label required']) }}
           {{ Form::text('name', null, ['class' => 'form-control', 'required', 'placeholder' => __('messages.form.service')]) }}
         </div>
@@ -18,6 +18,13 @@
         </div>
         <div class="mb-5">
           {{ Form::label('description', __('messages.common.description') . ':', ['class' => 'form-label required']) }}
+          <div class="d-flex align-items-center mb-2">
+            <a href="javascript:void(0)" id="generateAiServiceDescriptionBtn"
+              class="text-primary text-decoration-none fw-semibold d-inline-flex align-items-center gap-2 me-3">
+              <i class="bi bi-stars"></i>
+              {{ __('messages.vcard.generate_description_with_ai') }}
+            </a>
+          </div>
           {{ Form::textarea('description', null, ['class' => 'form-control', 'placeholder' => __('messages.form.short_description'), 'rows' => '5', 'required']) }}
         </div>
         <div class="mb-3" io-image-input="true">

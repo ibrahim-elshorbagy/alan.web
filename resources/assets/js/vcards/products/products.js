@@ -314,3 +314,57 @@ listenClick(".delete-media", function () {
         },
     });
 });
+
+// AI Product Description Generation
+listenClick("#generateAiProductDescriptionBtn", function () {
+    const $button = $(this);
+    const productName = $("#addProductForm input[name='name']").val() || $("#editProductForm input[name='name']").val();
+    const vcardId = $("#vcardId").val();
+
+    if (!productName || !productName.trim()) {
+        displayErrorMessage(Lang.get("js.product_name_required"));
+        return;
+    }
+
+    if (!vcardId) {
+        displayErrorMessage("vCard ID not found");
+        return;
+    }
+
+    $button.prop('disabled', true);
+    $button.find('i').addClass('fa-spin');
+
+    $.ajax({
+        url: route('vcards.generate.ai.product.description'),
+        type: 'POST',
+        data: {
+            product_name: productName.trim(),
+            vcard_id: vcardId,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        timeout: 35000,
+        success: function (result) {
+            $button.prop('disabled', false);
+            $button.find('i').removeClass('fa-spin');
+
+            if (result.success) {
+                // Update the description textarea
+                $("#addProductForm textarea[name='description']").val(result.description);
+                $("#editProductForm textarea[name='description']").val(result.description);
+                displaySuccessMessage(Lang.get("js.description_generated_successfully"));
+            } else {
+                displayErrorMessage(result.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            $button.prop('disabled', false);
+            $button.find('i').removeClass('fa-spin');
+
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                displayErrorMessage(xhr.responseJSON.message);
+            } else {
+                displayErrorMessage("An error occurred while generating description");
+            }
+        }
+    });
+});

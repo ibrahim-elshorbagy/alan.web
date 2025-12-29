@@ -44504,6 +44504,221 @@ listen("submit", "#cloneVcardForm", function (e) {
     }
   });
 });
+
+// AI SEO Field Generation
+// Site Title
+listen("click", "#generateAiSiteTitle", function () {
+  var vcardId = $("#vcardIdForSeo").val();
+  var spinner = $("#siteTitleSpinner");
+  var button = $("#generateAiSiteTitle");
+  spinner.removeClass("d-none");
+  button.prop("disabled", true);
+  $.ajax({
+    url: route("vcards.generate.ai.site.title"),
+    method: "POST",
+    data: {
+      vcard_id: vcardId,
+      _token: $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function success(response) {
+      if (response.success) {
+        $("#siteTitleInput").val(response.title);
+      } else {
+        displayErrorMessage(response.message);
+      }
+    },
+    error: function error(xhr) {
+      var _xhr$responseJSON;
+      var message = ((_xhr$responseJSON = xhr.responseJSON) === null || _xhr$responseJSON === void 0 ? void 0 : _xhr$responseJSON.message) || Lang.get("js.something_went_wrong");
+      displayErrorMessage(message);
+    },
+    complete: function complete() {
+      spinner.addClass("d-none");
+      button.prop("disabled", false);
+    }
+  });
+});
+
+// Home Title
+listen("click", "#generateAiHomeTitle", function () {
+  var vcardId = $("#vcardIdForSeo").val();
+  var spinner = $("#homeTitleSpinner");
+  var button = $("#generateAiHomeTitle");
+  spinner.removeClass("d-none");
+  button.prop("disabled", true);
+  $.ajax({
+    url: route("vcards.generate.ai.home.title"),
+    method: "POST",
+    data: {
+      vcard_id: vcardId,
+      _token: $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function success(response) {
+      if (response.success) {
+        $("#homeTitleInput").val(response.title);
+      } else {
+        displayErrorMessage(response.message);
+      }
+    },
+    error: function error(xhr) {
+      var _xhr$responseJSON2;
+      var message = ((_xhr$responseJSON2 = xhr.responseJSON) === null || _xhr$responseJSON2 === void 0 ? void 0 : _xhr$responseJSON2.message) || Lang.get("js.something_went_wrong");
+      displayErrorMessage(message);
+    },
+    complete: function complete() {
+      spinner.addClass("d-none");
+      button.prop("disabled", false);
+    }
+  });
+});
+
+// Meta Keyword
+listen("click", "#generateAiMetaKeyword", function () {
+  var vcardId = $("#vcardIdForSeo").val();
+  var spinner = $("#metaKeywordSpinner");
+  var button = $("#generateAiMetaKeyword");
+  spinner.removeClass("d-none");
+  button.prop("disabled", true);
+  $.ajax({
+    url: route("vcards.generate.ai.meta.keyword"),
+    method: "POST",
+    data: {
+      vcard_id: vcardId,
+      _token: $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function success(response) {
+      if (response.success) {
+        $("#metaKeywordInput").val(response.keywords);
+      } else {
+        displayErrorMessage(response.message);
+      }
+    },
+    error: function error(xhr) {
+      var _xhr$responseJSON3;
+      var message = ((_xhr$responseJSON3 = xhr.responseJSON) === null || _xhr$responseJSON3 === void 0 ? void 0 : _xhr$responseJSON3.message) || Lang.get("js.something_went_wrong");
+      displayErrorMessage(message);
+    },
+    complete: function complete() {
+      spinner.addClass("d-none");
+      button.prop("disabled", false);
+    }
+  });
+});
+
+// Meta Description
+listen("click", "#generateAiMetaDescription", function () {
+  var vcardId = $("#vcardIdForSeo").val();
+  var spinner = $("#metaDescriptionSpinner");
+  var button = $("#generateAiMetaDescription");
+  spinner.removeClass("d-none");
+  button.prop("disabled", true);
+  $.ajax({
+    url: route("vcards.generate.ai.meta.description"),
+    method: "POST",
+    data: {
+      vcard_id: vcardId,
+      _token: $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function success(response) {
+      if (response.success) {
+        $("#metaDescriptionInput").val(response.description);
+      } else {
+        displayErrorMessage(response.message);
+      }
+    },
+    error: function error(xhr) {
+      var _xhr$responseJSON4;
+      var message = ((_xhr$responseJSON4 = xhr.responseJSON) === null || _xhr$responseJSON4 === void 0 ? void 0 : _xhr$responseJSON4.message) || Lang.get("js.something_went_wrong");
+      displayErrorMessage(message);
+    },
+    complete: function complete() {
+      spinner.addClass("d-none");
+      button.prop("disabled", false);
+    }
+  });
+});
+
+// AI Privacy Policy Generation
+listen("click", "#generateAiPrivacyPolicy", function () {
+  var vcardId = $("#vcardIdForPrivacy").val();
+  var button = $("#generateAiPrivacyPolicy");
+  var icon = $("#privacyPolicyIcon");
+  var spinner = $("#privacyPolicySpinner");
+  icon.addClass("d-none");
+  spinner.removeClass("d-none");
+  button.prop("disabled", true);
+  $.ajax({
+    url: route("vcards.generate.ai.privacy.policy"),
+    method: "POST",
+    data: {
+      vcard_id: vcardId,
+      _token: $('meta[name="csrf-token"]').attr("content")
+    },
+    timeout: 45000,
+    success: function success(response) {
+      if (response.success) {
+        // Set content in Summernote editor (same as blogs)
+        if ($("#privacyPolicyDescription").length) {
+          $("#privacyPolicyDescription").summernote('code', response.content);
+        }
+        //
+      } else {
+        displayErrorMessage(response.message);
+      }
+    },
+    error: function error(xhr) {
+      var _xhr$responseJSON5;
+      var message = ((_xhr$responseJSON5 = xhr.responseJSON) === null || _xhr$responseJSON5 === void 0 ? void 0 : _xhr$responseJSON5.message) || Lang.get("js.something_went_wrong");
+      displayErrorMessage(message);
+    },
+    complete: function complete() {
+      icon.removeClass("d-none");
+      spinner.addClass("d-none");
+      button.prop("disabled", false);
+    }
+  });
+});
+
+// AI Terms and Conditions Generation
+listen("click", "#generateAiTermsConditions", function () {
+  var vcardId = $("#vcardIdForTerms").val();
+  var button = $("#generateAiTermsConditions");
+  var icon = $("#termsConditionsIcon");
+  var spinner = $("#termsConditionsSpinner");
+  icon.addClass("d-none");
+  spinner.removeClass("d-none");
+  button.prop("disabled", true);
+  $.ajax({
+    url: route("vcards.generate.ai.terms.conditions"),
+    method: "POST",
+    data: {
+      vcard_id: vcardId,
+      _token: $('meta[name="csrf-token"]').attr("content")
+    },
+    timeout: 45000,
+    success: function success(response) {
+      if (response.success) {
+        // Set content in Summernote editor (same as blogs)
+        if ($("#termConditionDescription").length) {
+          $("#termConditionDescription").summernote('code', response.content);
+        }
+        //
+      } else {
+        displayErrorMessage(response.message);
+      }
+    },
+    error: function error(xhr) {
+      var _xhr$responseJSON6;
+      var message = ((_xhr$responseJSON6 = xhr.responseJSON) === null || _xhr$responseJSON6 === void 0 ? void 0 : _xhr$responseJSON6.message) || Lang.get("js.something_went_wrong");
+      displayErrorMessage(message);
+    },
+    complete: function complete() {
+      icon.removeClass("d-none");
+      spinner.addClass("d-none");
+      button.prop("disabled", false);
+    }
+  });
+});
 })();
 
 // This entry need to be wrapped in an IIFE because it need to be isolated against other entry modules.
@@ -44644,49 +44859,25 @@ function loadVcardCreateEdit() {
       });
     });
   }
-  if ($("#privacyPolicyQuill").length) {
-    window.quillPrivacyPolicy = new Quill("#privacyPolicyQuill", {
-      modules: {
-        toolbar: [[{
-          header: [1, 2, false]
-        }], ["bold", "italic", "underline"]]
-      },
-      theme: "snow",
-      // or 'bubble'
-      placeholder: Lang.get("js.privacy_policy")
-    });
-    quillPrivacyPolicy.on("text-change", function (delta, oldDelta, source) {
-      if (quillPrivacyPolicy.getText().trim().length === 0) {
-        quillPrivacyPolicy.setContents([{
-          insert: ""
-        }]);
-      }
-    });
-    var element = document.createElement("textarea");
-    element.innerHTML = $("#privacyData").val();
-    quillPrivacyPolicy.root.innerHTML = element.value;
-  }
-  if ($("#termConditionQuill").length) {
-    window.termConditionQuill = new Quill("#termConditionQuill", {
-      modules: {
-        toolbar: [[{
-          header: [1, 2, false]
-        }], ["bold", "italic", "underline"]]
-      },
-      placeholder: Lang.get("js.term_condition").replace(/&amp;/g, "&"),
-      theme: "snow" // or 'bubble'
-    });
 
-    termConditionQuill.on("text-change", function (delta, oldDelta, source) {
-      if (termConditionQuill.getText().trim().length === 0) {
-        termConditionQuill.setContents([{
-          insert: ""
-        }]);
-      }
+  // Initialize Summernote for Privacy Policy (same as blogs)
+  if ($("#privacyPolicyDescription").length) {
+    $("#privacyPolicyDescription").summernote({
+      placeholder: Lang.get("js.privacy_policy"),
+      tabsize: 2,
+      height: 200,
+      toolbar: [["style", ["style"]], ["font", ["bold", "underline", "clear"]], ["color", ["color"]], ["para", ["ul", "ol", "paragraph"]], ["table", ["table"]]]
     });
-    var _element = document.createElement("textarea");
-    _element.innerHTML = $("#conditionData").val();
-    termConditionQuill.root.innerHTML = _element.value;
+  }
+
+  // Initialize Summernote for Terms & Conditions (same as blogs)
+  if ($("#termConditionDescription").length) {
+    $("#termConditionDescription").summernote({
+      placeholder: Lang.get("js.term_condition").replace(/&amp;/g, "&"),
+      tabsize: 2,
+      height: 200,
+      toolbar: [["style", ["style"]], ["font", ["bold", "underline", "clear"]], ["color", ["color"]], ["para", ["ul", "ol", "paragraph"]], ["table", ["table"]]]
+    });
   }
   if ($("#vcardDescriptionQuill").length) {
     window.quillVcardDescription = new Quill("#vcardDescriptionQuill", {
@@ -44711,9 +44902,9 @@ function loadVcardCreateEdit() {
         }]);
       }
     });
-    var _element2 = document.createElement("textarea");
-    _element2.innerHTML = $("#vcardDescriptionData").val();
-    quillVcardDescription.root.innerHTML = _element2.value;
+    var element = document.createElement("textarea");
+    element.innerHTML = $("#vcardDescriptionData").val();
+    quillVcardDescription.root.innerHTML = element.value;
   }
   listenClick("#vcardSaveBtn", function () {
     var editor_content_1 = quillVcardDescription.root.innerHTML;
@@ -44747,29 +44938,25 @@ function loadVcardCreateEdit() {
   });
 }
 listenClick("#privacyPolicySave", function () {
-  var element = document.createElement("textarea");
-  var editor_content_1 = quillPrivacyPolicy.root.innerHTML;
-  element.innerHTML = editor_content_1;
   var partName = $("#privacyPolicyPartName").val();
   if (partName == "privacy-policy") {
-    if (quillPrivacyPolicy.getText().trim().length === 0) {
+    // Get Summernote content
+    var descriptionContent = $("#privacyPolicyDescription").summernote('code');
+    var plainText = $("<div>").html(descriptionContent).text().trim();
+    if (plainText.length === 0) {
       displayErrorMessage(Lang.get("js.privacy_policy"));
       return false;
     }
-    var input = JSON.stringify(editor_content_1);
-    $("#privacyData").val(input.replace(/"/g, ""));
   }
   return true;
 });
 listenClick("#termConditionSave", function () {
-  var element = document.createElement("textarea");
-  var editor_content_1 = termConditionQuill.root.innerHTML;
-  element.innerHTML = editor_content_1;
   var partName = $("#termConditionPartName").val();
   if (partName == "term-condition") {
-    var input = JSON.stringify(editor_content_1);
-    $("#conditionData").val(input.replace(/"/g, ""));
-    if (termConditionQuill.getText().trim().length === 0) {
+    // Get Summernote content
+    var descriptionContent = $("#termConditionDescription").summernote('code');
+    var plainText = $("<div>").html(descriptionContent).text().trim();
+    if (plainText.length === 0) {
       displayErrorMessage(Lang.get("js.the_term_conditions"));
       return false;
     }
@@ -45199,6 +45386,54 @@ listenClick("#vcard-services-slider-view", function () {
     }
   });
 });
+
+// AI Service Description Generation
+listenClick("#generateAiServiceDescriptionBtn", function () {
+  var $button = $(this);
+  var serviceName = $("#addServiceForm input[name='name']").val() || $("#editServiceForm input[name='name']").val();
+  var vcardId = $("#vcardId").val();
+  if (!serviceName || !serviceName.trim()) {
+    displayErrorMessage(Lang.get("js.service_name_required"));
+    return;
+  }
+  if (!vcardId) {
+    displayErrorMessage("vCard ID not found");
+    return;
+  }
+  $button.prop('disabled', true);
+  $button.find('i').addClass('fa-spin');
+  $.ajax({
+    url: route('vcards.generate.ai.service.description'),
+    type: 'POST',
+    data: {
+      service_name: serviceName.trim(),
+      vcard_id: vcardId,
+      _token: $('meta[name="csrf-token"]').attr('content')
+    },
+    timeout: 35000,
+    success: function success(result) {
+      $button.prop('disabled', false);
+      $button.find('i').removeClass('fa-spin');
+      if (result.success) {
+        // Update the description textarea
+        $("#addServiceForm textarea[name='description']").val(result.description);
+        $("#editServiceForm textarea[name='description']").val(result.description);
+        displaySuccessMessage(Lang.get("js.description_generated_successfully"));
+      } else {
+        displayErrorMessage(result.message);
+      }
+    },
+    error: function error(xhr, status, _error) {
+      $button.prop('disabled', false);
+      $button.find('i').removeClass('fa-spin');
+      if (xhr.responseJSON && xhr.responseJSON.message) {
+        displayErrorMessage(xhr.responseJSON.message);
+      } else {
+        displayErrorMessage("An error occurred while generating description");
+      }
+    }
+  });
+});
 })();
 
 // This entry need to be wrapped in an IIFE because it need to be isolated against other entry modules.
@@ -45342,6 +45577,54 @@ listenHiddenBsModal("#addBlogModal", function () {
 });
 listenHiddenBsModal("#editBlogModal", function () {
   $(".cancel-edit-blog").hide();
+});
+
+// AI Blog Description Generation
+listenClick("#generateAiBlogDescriptionBtn", function () {
+  var $button = $(this);
+  var blogTitle = $("#addBlogForm input[name='title']").val() || $("#editBlogForm input[name='title']").val();
+  var vcardId = $("#vcardId").val();
+  if (!blogTitle || !blogTitle.trim()) {
+    displayErrorMessage(Lang.get("js.blog_title_required"));
+    return;
+  }
+  if (!vcardId) {
+    displayErrorMessage("vCard ID not found");
+    return;
+  }
+  $button.prop('disabled', true);
+  $button.find('i').addClass('fa-spin');
+  $.ajax({
+    url: route('vcards.generate.ai.blog.description'),
+    type: 'POST',
+    data: {
+      blog_title: blogTitle.trim(),
+      vcard_id: vcardId,
+      _token: $('meta[name="csrf-token"]').attr('content')
+    },
+    timeout: 35000,
+    success: function success(result) {
+      $button.prop('disabled', false);
+      $button.find('i').removeClass('fa-spin');
+      if (result.success) {
+        // Update the description textarea with HTML content for Summernote
+        $("#blogDescription").summernote('code', result.description);
+        $("#editBlogDescription").summernote('code', result.description);
+        displaySuccessMessage(Lang.get("js.description_generated_successfully"));
+      } else {
+        displayErrorMessage(result.message);
+      }
+    },
+    error: function error(xhr, status, _error) {
+      $button.prop('disabled', false);
+      $button.find('i').removeClass('fa-spin');
+      if (xhr.responseJSON && xhr.responseJSON.message) {
+        displayErrorMessage(xhr.responseJSON.message);
+      } else {
+        displayErrorMessage("An error occurred while generating description");
+      }
+    }
+  });
 });
 })();
 
@@ -45915,6 +46198,54 @@ listenClick(".delete-media", function () {
     },
     error: function error(response) {
       displayErrorMessage(response.responseJSON.message);
+    }
+  });
+});
+
+// AI Product Description Generation
+listenClick("#generateAiProductDescriptionBtn", function () {
+  var $button = $(this);
+  var productName = $("#addProductForm input[name='name']").val() || $("#editProductForm input[name='name']").val();
+  var vcardId = $("#vcardId").val();
+  if (!productName || !productName.trim()) {
+    displayErrorMessage(Lang.get("js.product_name_required"));
+    return;
+  }
+  if (!vcardId) {
+    displayErrorMessage("vCard ID not found");
+    return;
+  }
+  $button.prop('disabled', true);
+  $button.find('i').addClass('fa-spin');
+  $.ajax({
+    url: route('vcards.generate.ai.product.description'),
+    type: 'POST',
+    data: {
+      product_name: productName.trim(),
+      vcard_id: vcardId,
+      _token: $('meta[name="csrf-token"]').attr('content')
+    },
+    timeout: 35000,
+    success: function success(result) {
+      $button.prop('disabled', false);
+      $button.find('i').removeClass('fa-spin');
+      if (result.success) {
+        // Update the description textarea
+        $("#addProductForm textarea[name='description']").val(result.description);
+        $("#editProductForm textarea[name='description']").val(result.description);
+        displaySuccessMessage(Lang.get("js.description_generated_successfully"));
+      } else {
+        displayErrorMessage(result.message);
+      }
+    },
+    error: function error(xhr, status, _error) {
+      $button.prop('disabled', false);
+      $button.find('i').removeClass('fa-spin');
+      if (xhr.responseJSON && xhr.responseJSON.message) {
+        displayErrorMessage(xhr.responseJSON.message);
+      } else {
+        displayErrorMessage("An error occurred while generating description");
+      }
     }
   });
 });
@@ -51455,72 +51786,36 @@ function saveYoutubeLinks(whatsappStoreId) {
   });
 }
 function loadWhatsappStoreTermsCondition() {
-  if ($("#privacyPolicyQuill").length) {
-    window.quillPrivacyPolicy = new Quill("#privacyPolicyQuill", {
-      modules: {
-        toolbar: [[{
-          header: [1, 2, false]
-        }], ["bold", "italic", "underline"]]
-      },
-      theme: "snow",
-      // or 'bubble'
-      placeholder: Lang.get("js.privacy_policy")
-    });
-    quillPrivacyPolicy.on("text-change", function (delta, oldDelta, source) {
-      if (quillPrivacyPolicy.getText().trim().length === 0) {
-        quillPrivacyPolicy.setContents([{
-          insert: ""
-        }]);
-      }
-    });
-    var element = document.createElement("textarea");
-    element.innerHTML = $("#privacyData").val();
-    quillPrivacyPolicy.root.innerHTML = element.value;
-  }
-  if ($("#termConditionQuill").length) {
-    window.termConditionQuill = new Quill("#termConditionQuill", {
-      modules: {
-        toolbar: [[{
-          header: [1, 2, false]
-        }], ["bold", "italic", "underline"]]
-      },
+  // Initialize Summernote for Terms & Conditions
+  if ($("#whatsappTermsConditionsDescription").length) {
+    $("#whatsappTermsConditionsDescription").summernote({
       placeholder: Lang.get("js.term_condition").replace(/&amp;/g, "&"),
-      theme: "snow" // or 'bubble'
+      tabsize: 2,
+      height: 200,
+      toolbar: [["style", ["style"]], ["font", ["bold", "underline", "clear"]], ["color", ["color"]], ["para", ["ul", "ol", "paragraph"]], ["table", ["table"]]]
     });
+  }
 
-    termConditionQuill.on("text-change", function (delta, oldDelta, source) {
-      if (termConditionQuill.getText().trim().length === 0) {
-        termConditionQuill.setContents([{
-          insert: ""
-        }]);
-      }
+  // Initialize Summernote for Privacy Policy
+  if ($("#whatsappPrivacyPolicyDescription").length) {
+    $("#whatsappPrivacyPolicyDescription").summernote({
+      placeholder: Lang.get("js.privacy_policy"),
+      tabsize: 2,
+      height: 200,
+      toolbar: [["style", ["style"]], ["font", ["bold", "underline", "clear"]], ["color", ["color"]], ["para", ["ul", "ol", "paragraph"]], ["table", ["table"]]]
     });
-    var _element = document.createElement("textarea");
-    _element.innerHTML = $("#conditionData").val();
-    termConditionQuill.root.innerHTML = _element.value;
   }
-  if ($("#refundCancellationQuill").length) {
-    window.refundCancellationQuill = new Quill("#refundCancellationQuill", {
-      modules: {
-        toolbar: [[{
-          header: [1, 2, false]
-        }], ["bold", "italic", "underline"]]
-      },
-      theme: "snow",
-      // or 'bubble'
-      placeholder: Lang.get("js.refund_cancellation")
+
+  // Initialize Summernote for Refund Cancellation
+  if ($("#whatsappRefundCancellationDescription").length) {
+    $("#whatsappRefundCancellationDescription").summernote({
+      tabsize: 2,
+      height: 200,
+      toolbar: [["style", ["style"]], ["font", ["bold", "underline", "clear"]], ["color", ["color"]], ["para", ["ul", "ol", "paragraph"]], ["table", ["table"]]]
     });
-    refundCancellationQuill.on("text-change", function (delta, oldDelta, source) {
-      if (refundCancellationQuill.getText().trim().length === 0) {
-        refundCancellationQuill.setContents([{
-          insert: ""
-        }]);
-      }
-    });
-    var _element2 = document.createElement("textarea");
-    _element2.innerHTML = $("#refundCancellationData").val();
-    refundCancellationQuill.root.innerHTML = _element2.value;
   }
+
+  // Keep Quill for Shipping Delivery (unchanged)
   if ($("#shippingDeliveryQuill").length) {
     window.shippingDeliveryQuill = new Quill("#shippingDeliveryQuill", {
       modules: {
@@ -51539,9 +51834,9 @@ function loadWhatsappStoreTermsCondition() {
         }]);
       }
     });
-    var _element3 = document.createElement("textarea");
-    _element3.innerHTML = $("#shippingDeliveryData").val();
-    shippingDeliveryQuill.root.innerHTML = _element3.value;
+    var element = document.createElement("textarea");
+    element.innerHTML = $("#shippingDeliveryData").val();
+    shippingDeliveryQuill.root.innerHTML = element.value;
   }
 }
 listenClick(".wp-template-terms-conditions-save", function (e) {
@@ -51549,40 +51844,40 @@ listenClick(".wp-template-terms-conditions-save", function (e) {
   var whatsappStore = $("#whatsappStoreId").val();
   var formData = new FormData();
 
-  // Get content from all Quill editors
+  // Get content from Summernote editors and Quill editor
   var termConditionContent = '';
   var privacyPolicyContent = '';
   var refundCancellationContent = '';
   var shippingDeliveryContent = '';
 
-  // Terms & Conditions
-  if (window.termConditionQuill) {
-    termConditionContent = termConditionQuill.root.innerHTML;
-    if (termConditionQuill.getText().trim().length === 0) {
+  // Terms & Conditions (Summernote)
+  if ($("#whatsappTermsConditionsDescription").length) {
+    termConditionContent = $("#whatsappTermsConditionsDescription").summernote('code');
+    if ($.trim(termConditionContent).length === 0) {
       displayErrorMessage(Lang.get("js.the_term_conditions"));
       return false;
     }
   }
 
-  // Privacy Policy
-  if (window.quillPrivacyPolicy) {
-    privacyPolicyContent = quillPrivacyPolicy.root.innerHTML;
-    if (quillPrivacyPolicy.getText().trim().length === 0) {
+  // Privacy Policy (Summernote)
+  if ($("#whatsappPrivacyPolicyDescription").length) {
+    privacyPolicyContent = $("#whatsappPrivacyPolicyDescription").summernote('code');
+    if ($.trim(privacyPolicyContent).length === 0) {
       displayErrorMessage(Lang.get("js.the_privacy_policy"));
       return false;
     }
   }
 
-  // Refund Cancellation
-  if (window.refundCancellationQuill) {
-    refundCancellationContent = refundCancellationQuill.root.innerHTML;
-    if (refundCancellationQuill.getText().trim().length === 0) {
+  // Refund Cancellation (Summernote)
+  if ($("#whatsappRefundCancellationDescription").length) {
+    refundCancellationContent = $("#whatsappRefundCancellationDescription").summernote('code');
+    if ($.trim(refundCancellationContent).length === 0) {
       displayErrorMessage(Lang.get("js.the_refund_cancellation"));
       return false;
     }
   }
 
-  // Shipping Delivery
+  // Shipping Delivery (Quill - unchanged)
   if (window.shippingDeliveryQuill) {
     shippingDeliveryContent = shippingDeliveryQuill.root.innerHTML;
     if (shippingDeliveryQuill.getText().trim().length === 0) {
@@ -51611,6 +51906,295 @@ listenClick(".wp-template-terms-conditions-save", function (e) {
     },
     error: function error(response) {
       displayErrorMessage(response.responseJSON.message);
+    }
+  });
+});
+
+// AI Generation handlers for WhatsApp Store Terms & Conditions
+listenClick("#generateAiWhatsappTermsConditions", function () {
+  var whatsappStoreId = $("#whatsappStoreId").val();
+  var description = $("#termsConditionsAiDescription").val().trim();
+  var button = $(this);
+  var originalText = button.html();
+  if (!description) {
+    displayErrorMessage(Lang.get("js.description_required"));
+    $("#termsConditionsAiDescription").focus();
+    return;
+  }
+  button.prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i> ');
+  $.ajax({
+    url: route("whatsapp.stores.generate.ai.terms.conditions", whatsappStoreId),
+    type: "POST",
+    data: {
+      whatsapp_store_id: whatsappStoreId,
+      description: description
+    },
+    timeout: 45000,
+    success: function success(response) {
+      $("#whatsappTermsConditionsDescription").summernote('code', response.content);
+      // displaySuccessMessage(response.message);
+    },
+
+    error: function error(xhr) {
+      if (xhr.statusText === 'timeout') {
+        displayErrorMessage(Lang.get("js.request_timeout"));
+      } else {
+        var _xhr$responseJSON;
+        displayErrorMessage(((_xhr$responseJSON = xhr.responseJSON) === null || _xhr$responseJSON === void 0 ? void 0 : _xhr$responseJSON.message) || Lang.get("js.something_went_wrong"));
+      }
+    },
+    complete: function complete() {
+      button.prop("disabled", false).html(originalText);
+    }
+  });
+});
+
+// AI Generation handlers for WhatsApp Store Privacy Policy
+listenClick("#generateAiWhatsappPrivacyPolicy", function () {
+  var whatsappStoreId = $("#whatsappStoreId").val();
+  var description = $("#privacyPolicyAiDescription").val().trim();
+  var button = $(this);
+  var originalText = button.html();
+  if (!description) {
+    displayErrorMessage(Lang.get("js.description_required"));
+    $("#privacyPolicyAiDescription").focus();
+    return;
+  }
+  button.prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i> ');
+  $.ajax({
+    url: route("whatsapp.stores.generate.ai.privacy.policy", whatsappStoreId),
+    type: "POST",
+    data: {
+      whatsapp_store_id: whatsappStoreId,
+      description: description
+    },
+    timeout: 45000,
+    success: function success(response) {
+      $("#whatsappPrivacyPolicyDescription").summernote('code', response.content);
+      // displaySuccessMessage(response.message);
+    },
+
+    error: function error(xhr) {
+      if (xhr.statusText === 'timeout') {
+        displayErrorMessage(Lang.get("js.request_timeout"));
+      } else {
+        var _xhr$responseJSON2;
+        displayErrorMessage(((_xhr$responseJSON2 = xhr.responseJSON) === null || _xhr$responseJSON2 === void 0 ? void 0 : _xhr$responseJSON2.message) || Lang.get("js.something_went_wrong"));
+      }
+    },
+    complete: function complete() {
+      button.prop("disabled", false).html(originalText);
+    }
+  });
+});
+
+// AI Generation handlers for WhatsApp Store Refund & Cancellation Policy
+listenClick("#generateAiWhatsappRefundCancellation", function () {
+  var whatsappStoreId = $("#whatsappStoreId").val();
+  var description = $("#refundCancellationAiDescription").val().trim();
+  var button = $(this);
+  var originalText = button.html();
+  if (!description) {
+    displayErrorMessage(Lang.get("js.description_required"));
+    $("#refundCancellationAiDescription").focus();
+    return;
+  }
+  button.prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i> ');
+  $.ajax({
+    url: route("whatsapp.stores.generate.ai.refund.cancellation", whatsappStoreId),
+    type: "POST",
+    data: {
+      whatsapp_store_id: whatsappStoreId,
+      description: description
+    },
+    timeout: 45000,
+    success: function success(response) {
+      $("#whatsappRefundCancellationDescription").summernote('code', response.content);
+      // displaySuccessMessage(response.message);
+    },
+
+    error: function error(xhr) {
+      if (xhr.statusText === 'timeout') {
+        displayErrorMessage(Lang.get("js.request_timeout"));
+      } else {
+        var _xhr$responseJSON3;
+        displayErrorMessage(((_xhr$responseJSON3 = xhr.responseJSON) === null || _xhr$responseJSON3 === void 0 ? void 0 : _xhr$responseJSON3.message) || Lang.get("js.something_went_wrong"));
+      }
+    },
+    complete: function complete() {
+      button.prop("disabled", false).html(originalText);
+    }
+  });
+});
+
+// AI Generation handlers for WhatsApp Store Shipping & Delivery Policy
+listenClick("#generateAiWhatsappShippingDelivery", function () {
+  var whatsappStoreId = $("#whatsappStoreId").val();
+  var description = $("#shippingDeliveryAiDescription").val().trim();
+  var button = $(this);
+  var originalText = button.html();
+  if (!description) {
+    displayErrorMessage(Lang.get("js.description_required"));
+    $("#shippingDeliveryAiDescription").focus();
+    return;
+  }
+  button.prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i> ');
+  $.ajax({
+    url: route("whatsapp.stores.generate.ai.shipping.delivery", whatsappStoreId),
+    type: "POST",
+    data: {
+      whatsapp_store_id: whatsappStoreId,
+      description: description
+    },
+    timeout: 45000,
+    success: function success(response) {
+      $("#whatsappShippingDeliveryDescription").summernote('code', response.content);
+      // displaySuccessMessage(response.message);
+    },
+
+    error: function error(xhr) {
+      if (xhr.statusText === 'timeout') {
+        displayErrorMessage(Lang.get("js.request_timeout"));
+      } else {
+        var _xhr$responseJSON4;
+        displayErrorMessage(((_xhr$responseJSON4 = xhr.responseJSON) === null || _xhr$responseJSON4 === void 0 ? void 0 : _xhr$responseJSON4.message) || Lang.get("js.something_went_wrong"));
+      }
+    },
+    complete: function complete() {
+      button.prop("disabled", false).html(originalText);
+    }
+  });
+});
+
+// AI SEO Field Generation for WhatsApp Store
+// Site Title
+listenClick("#generateAiWpSiteTitle", function () {
+  var whatsappStoreId = $("#whatsappStoreId").val();
+  var spinner = $("#wpSiteTitleSpinner");
+  var button = $("#generateAiWpSiteTitle");
+  spinner.removeClass("d-none");
+  button.prop("disabled", true);
+  $.ajax({
+    url: route("whatsapp.stores.generate.ai.site.title"),
+    method: "POST",
+    data: {
+      whatsapp_store_id: whatsappStoreId,
+      _token: $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function success(response) {
+      if (response.success) {
+        $("#wpSiteTitleInput").val(response.title);
+      } else {
+        displayErrorMessage(response.message);
+      }
+    },
+    error: function error(xhr) {
+      var _xhr$responseJSON5;
+      var message = ((_xhr$responseJSON5 = xhr.responseJSON) === null || _xhr$responseJSON5 === void 0 ? void 0 : _xhr$responseJSON5.message) || Lang.get("js.something_went_wrong");
+      displayErrorMessage(message);
+    },
+    complete: function complete() {
+      spinner.addClass("d-none");
+      button.prop("disabled", false);
+    }
+  });
+});
+
+// Home Title
+listenClick("#generateAiWpHomeTitle", function () {
+  var whatsappStoreId = $("#whatsappStoreId").val();
+  var spinner = $("#wpHomeTitleSpinner");
+  var button = $("#generateAiWpHomeTitle");
+  spinner.removeClass("d-none");
+  button.prop("disabled", true);
+  $.ajax({
+    url: route("whatsapp.stores.generate.ai.home.title"),
+    method: "POST",
+    data: {
+      whatsapp_store_id: whatsappStoreId,
+      _token: $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function success(response) {
+      if (response.success) {
+        $("#wpHomeTitleInput").val(response.title);
+      } else {
+        displayErrorMessage(response.message);
+      }
+    },
+    error: function error(xhr) {
+      var _xhr$responseJSON6;
+      var message = ((_xhr$responseJSON6 = xhr.responseJSON) === null || _xhr$responseJSON6 === void 0 ? void 0 : _xhr$responseJSON6.message) || Lang.get("js.something_went_wrong");
+      displayErrorMessage(message);
+    },
+    complete: function complete() {
+      spinner.addClass("d-none");
+      button.prop("disabled", false);
+    }
+  });
+});
+
+// Meta Keyword
+listenClick("#generateAiWpMetaKeyword", function () {
+  var whatsappStoreId = $("#whatsappStoreId").val();
+  var spinner = $("#wpMetaKeywordSpinner");
+  var button = $("#generateAiWpMetaKeyword");
+  spinner.removeClass("d-none");
+  button.prop("disabled", true);
+  $.ajax({
+    url: route("whatsapp.stores.generate.ai.meta.keyword"),
+    method: "POST",
+    data: {
+      whatsapp_store_id: whatsappStoreId,
+      _token: $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function success(response) {
+      if (response.success) {
+        $("#wpMetaKeywordInput").val(response.keywords);
+      } else {
+        displayErrorMessage(response.message);
+      }
+    },
+    error: function error(xhr) {
+      var _xhr$responseJSON7;
+      var message = ((_xhr$responseJSON7 = xhr.responseJSON) === null || _xhr$responseJSON7 === void 0 ? void 0 : _xhr$responseJSON7.message) || Lang.get("js.something_went_wrong");
+      displayErrorMessage(message);
+    },
+    complete: function complete() {
+      spinner.addClass("d-none");
+      button.prop("disabled", false);
+    }
+  });
+});
+
+// Meta Description
+listenClick("#generateAiWpMetaDescription", function () {
+  var whatsappStoreId = $("#whatsappStoreId").val();
+  var spinner = $("#wpMetaDescriptionSpinner");
+  var button = $("#generateAiWpMetaDescription");
+  spinner.removeClass("d-none");
+  button.prop("disabled", true);
+  $.ajax({
+    url: route("whatsapp.stores.generate.ai.meta.description"),
+    method: "POST",
+    data: {
+      whatsapp_store_id: whatsappStoreId,
+      _token: $('meta[name="csrf-token"]').attr("content")
+    },
+    success: function success(response) {
+      if (response.success) {
+        $("#wpMetaDescriptionInput").val(response.description);
+      } else {
+        displayErrorMessage(response.message);
+      }
+    },
+    error: function error(xhr) {
+      var _xhr$responseJSON8;
+      var message = ((_xhr$responseJSON8 = xhr.responseJSON) === null || _xhr$responseJSON8 === void 0 ? void 0 : _xhr$responseJSON8.message) || Lang.get("js.something_went_wrong");
+      displayErrorMessage(message);
+    },
+    complete: function complete() {
+      spinner.addClass("d-none");
+      button.prop("disabled", false);
     }
   });
 });
@@ -51801,6 +52385,114 @@ function loadView() {
   element2.innerHTML = $("#editWpStoreProductDescriptionData").val();
   quillwpStoreEditDescription.root.innerHTML = element2.value;
 }
+
+// AI Product Description Generation for WhatsApp Store - Create Form
+listenClick("#generateAiWpProductDescriptionBtn", function () {
+  var $button = $(this);
+  var productName = $("input[name='name']").val();
+  var categoryId = $("select[name='category_id']").val();
+  var whatsappStoreId = $("input[name='whatsapp_store_id']").val();
+  if (!productName || !productName.trim()) {
+    displayErrorMessage(Lang.get("js.product_name_required"));
+    return;
+  }
+  if (!categoryId || categoryId == "0") {
+    displayErrorMessage(Lang.get("js.product_category_required"));
+    return;
+  }
+  if (!whatsappStoreId) {
+    displayErrorMessage("WhatsApp Store ID not found");
+    return;
+  }
+  $button.prop('disabled', true);
+  $button.find('i').addClass('fa-spin');
+  $.ajax({
+    url: route('whatsapp.stores.products.generate.ai.description'),
+    type: 'POST',
+    data: {
+      product_name: productName.trim(),
+      category_id: categoryId,
+      whatsapp_store_id: whatsappStoreId,
+      _token: $('meta[name="csrf-token"]').attr('content')
+    },
+    timeout: 45000,
+    success: function success(result) {
+      $button.prop('disabled', false);
+      $button.find('i').removeClass('fa-spin');
+      if (result.success) {
+        // Update the Quill editor with AI-generated content
+        quillwpStoreDescription.root.innerHTML = result.description;
+        $("#wpStoreProductDescriptionData").val(result.description);
+        displaySuccessMessage(Lang.get("js.description_generated_successfully"));
+      } else {
+        displayErrorMessage(result.message);
+      }
+    },
+    error: function error(xhr, status, _error) {
+      $button.prop('disabled', false);
+      $button.find('i').removeClass('fa-spin');
+      if (xhr.responseJSON && xhr.responseJSON.message) {
+        displayErrorMessage(xhr.responseJSON.message);
+      } else {
+        displayErrorMessage("An error occurred while generating description");
+      }
+    }
+  });
+});
+
+// AI Product Description Generation for WhatsApp Store - Edit Form
+listenClick("#generateAiWpProductDescriptionBtnEdit", function () {
+  var $button = $(this);
+  var productName = $("#editProductName").val();
+  var categoryId = $("select[name='category_id']").val();
+  var whatsappStoreId = $("input[name='whatsapp_store_id']").val();
+  if (!productName || !productName.trim()) {
+    displayErrorMessage(Lang.get("js.product_name_required"));
+    return;
+  }
+  if (!categoryId || categoryId == "0" || categoryId == "") {
+    displayErrorMessage(Lang.get("js.product_category_required"));
+    return;
+  }
+  if (!whatsappStoreId) {
+    displayErrorMessage("WhatsApp Store ID not found");
+    return;
+  }
+  $button.prop('disabled', true);
+  $button.find('i').addClass('fa-spin');
+  $.ajax({
+    url: route('whatsapp.stores.products.generate.ai.description'),
+    type: 'POST',
+    data: {
+      product_name: productName.trim(),
+      category_id: categoryId,
+      whatsapp_store_id: whatsappStoreId,
+      _token: $('meta[name="csrf-token"]').attr('content')
+    },
+    timeout: 45000,
+    success: function success(result) {
+      $button.prop('disabled', false);
+      $button.find('i').removeClass('fa-spin');
+      if (result.success) {
+        // Update the Quill editor with AI-generated content
+        quillwpStoreEditDescription.root.innerHTML = result.description;
+        $("#editWpStoreProductDescriptionData").val(result.description);
+        displaySuccessMessage(Lang.get("js.description_generated_successfully"));
+      } else {
+        displayErrorMessage(result.message);
+      }
+    },
+    error: function error(xhr, status, _error2) {
+      $button.prop('disabled', false);
+      $button.find('i').removeClass('fa-spin');
+      if (xhr.responseJSON && xhr.responseJSON.message) {
+        displayErrorMessage(xhr.responseJSON.message);
+      } else {
+        displayErrorMessage("An error occurred while generating description");
+      }
+    }
+  });
+});
 
 //wp store product form
 listenClick("#addWpStoreProduct", function () {

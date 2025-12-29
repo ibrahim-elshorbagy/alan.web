@@ -282,3 +282,232 @@ listen("submit", "#cloneVcardForm", function (e) {
         },
     });
 });
+
+// AI SEO Field Generation
+// Site Title
+listen("click", "#generateAiSiteTitle", function () {
+    const vcardId = $("#vcardIdForSeo").val();
+
+    const spinner = $("#siteTitleSpinner");
+    const button = $("#generateAiSiteTitle");
+
+    spinner.removeClass("d-none");
+    button.prop("disabled", true);
+
+    $.ajax({
+        url: route("vcards.generate.ai.site.title"),
+        method: "POST",
+        data: {
+            vcard_id: vcardId,
+            _token: $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            if (response.success) {
+                $("#siteTitleInput").val(response.title);
+
+            } else {
+                displayErrorMessage(response.message);
+            }
+        },
+        error: function (xhr) {
+            const message = xhr.responseJSON?.message || Lang.get("js.something_went_wrong");
+            displayErrorMessage(message);
+        },
+        complete: function () {
+            spinner.addClass("d-none");
+            button.prop("disabled", false);
+        },
+    });
+});
+
+// Home Title
+listen("click", "#generateAiHomeTitle", function () {
+    const vcardId = $("#vcardIdForSeo").val();
+
+    const spinner = $("#homeTitleSpinner");
+    const button = $("#generateAiHomeTitle");
+
+    spinner.removeClass("d-none");
+    button.prop("disabled", true);
+
+    $.ajax({
+        url: route("vcards.generate.ai.home.title"),
+        method: "POST",
+        data: {
+            vcard_id: vcardId,
+            _token: $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            if (response.success) {
+                $("#homeTitleInput").val(response.title);
+
+            } else {
+                displayErrorMessage(response.message);
+            }
+        },
+        error: function (xhr) {
+            const message = xhr.responseJSON?.message || Lang.get("js.something_went_wrong");
+            displayErrorMessage(message);
+        },
+        complete: function () {
+            spinner.addClass("d-none");
+            button.prop("disabled", false);
+        },
+    });
+});
+
+// Meta Keyword
+listen("click", "#generateAiMetaKeyword", function () {
+    const vcardId = $("#vcardIdForSeo").val();
+
+    const spinner = $("#metaKeywordSpinner");
+    const button = $("#generateAiMetaKeyword");
+
+    spinner.removeClass("d-none");
+    button.prop("disabled", true);
+
+    $.ajax({
+        url: route("vcards.generate.ai.meta.keyword"),
+        method: "POST",
+        data: {
+            vcard_id: vcardId,
+            _token: $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            if (response.success) {
+                $("#metaKeywordInput").val(response.keywords);
+
+            } else {
+                displayErrorMessage(response.message);
+            }
+        },
+        error: function (xhr) {
+            const message = xhr.responseJSON?.message || Lang.get("js.something_went_wrong");
+            displayErrorMessage(message);
+        },
+        complete: function () {
+            spinner.addClass("d-none");
+            button.prop("disabled", false);
+        },
+    });
+});
+
+// Meta Description
+listen("click", "#generateAiMetaDescription", function () {
+    const vcardId = $("#vcardIdForSeo").val();
+
+    const spinner = $("#metaDescriptionSpinner");
+    const button = $("#generateAiMetaDescription");
+
+    spinner.removeClass("d-none");
+    button.prop("disabled", true);
+
+    $.ajax({
+        url: route("vcards.generate.ai.meta.description"),
+        method: "POST",
+        data: {
+            vcard_id: vcardId,
+            _token: $('meta[name="csrf-token"]').attr("content"),
+        },
+        success: function (response) {
+            if (response.success) {
+                $("#metaDescriptionInput").val(response.description);
+
+            } else {
+                displayErrorMessage(response.message);
+            }
+        },
+        error: function (xhr) {
+            const message = xhr.responseJSON?.message || Lang.get("js.something_went_wrong");
+            displayErrorMessage(message);
+        },
+        complete: function () {
+            spinner.addClass("d-none");
+            button.prop("disabled", false);
+        },
+    });
+});
+
+// AI Privacy Policy Generation
+listen("click", "#generateAiPrivacyPolicy", function () {
+    const vcardId = $("#vcardIdForPrivacy").val();
+    const button = $("#generateAiPrivacyPolicy");
+    const icon = $("#privacyPolicyIcon");
+    const spinner = $("#privacyPolicySpinner");
+
+    icon.addClass("d-none");
+    spinner.removeClass("d-none");
+    button.prop("disabled", true);
+
+    $.ajax({
+        url: route("vcards.generate.ai.privacy.policy"),
+        method: "POST",
+        data: {
+            vcard_id: vcardId,
+            _token: $('meta[name="csrf-token"]').attr("content"),
+        },
+        timeout: 45000,
+        success: function (response) {
+            if (response.success) {
+                // Set content in Summernote editor (same as blogs)
+                if ($("#privacyPolicyDescription").length) {
+                    $("#privacyPolicyDescription").summernote('code', response.content);
+                }
+                //
+            } else {
+                displayErrorMessage(response.message);
+            }
+        },
+        error: function (xhr) {
+            const message = xhr.responseJSON?.message || Lang.get("js.something_went_wrong");
+            displayErrorMessage(message);
+        },
+        complete: function () {
+            icon.removeClass("d-none");
+            spinner.addClass("d-none");
+            button.prop("disabled", false);
+        },
+    });
+});
+
+// AI Terms and Conditions Generation
+listen("click", "#generateAiTermsConditions", function () {
+    const vcardId = $("#vcardIdForTerms").val();
+    const button = $("#generateAiTermsConditions");
+    const icon = $("#termsConditionsIcon");
+    const spinner = $("#termsConditionsSpinner");
+
+    icon.addClass("d-none");
+    spinner.removeClass("d-none");
+    button.prop("disabled", true);
+
+    $.ajax({
+        url: route("vcards.generate.ai.terms.conditions"),
+        method: "POST",
+        data: {
+            vcard_id: vcardId,
+            _token: $('meta[name="csrf-token"]').attr("content"),
+        },
+        timeout: 45000,
+        success: function (response) {
+            if (response.success) {
+                // Set content in Summernote editor (same as blogs)
+                if ($("#termConditionDescription").length) {
+                    $("#termConditionDescription").summernote('code', response.content);
+                }
+                //
+            } else {
+                displayErrorMessage(response.message);
+            }
+        },
+        error: function (xhr) {
+            const message = xhr.responseJSON?.message || Lang.get("js.something_went_wrong");
+            displayErrorMessage(message);
+        },
+        complete: function () {
+            icon.removeClass("d-none");
+            spinner.addClass("d-none");
+            button.prop("disabled", false);
+        },
+    });
+});

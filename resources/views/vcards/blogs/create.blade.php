@@ -9,12 +9,19 @@
         {!! Form::open(['id' => 'addBlogForm', 'files' => 'true']) !!}
         <div class="row">
           <div class="col-sm-12 mb-5">
-            {{ Form::hidden('vcard_id', $vcard->id) }}
+            {{ Form::hidden('vcard_id', $vcard->id, ['id' => 'vcardId']) }}
             {{ Form::label('title', __('messages.front_cms.title') . ':', ['class' => 'form-label required fs-6 fw-bolder text-gray-700 mb-3']) }}
             {{ Form::text('title', null, ['class' => 'form-control', 'required', 'placeholder' => __('messages.form.blog'), 'maxlength' => '100']) }}
           </div>
           <div class="col-sm-12 mb-5">
             {{ Form::label('blogDescription', __('messages.common.description') . ':', ['class' => 'form-label required fs-6 fw-bolder text-gray-700 mb-3']) }}
+            <div class="d-flex align-items-center mb-2">
+              <a href="javascript:void(0)" id="generateAiBlogDescriptionBtn"
+                class="text-primary text-decoration-none fw-semibold d-inline-flex align-items-center gap-2 me-3">
+                <i class="bi bi-stars"></i>
+                {{ __('messages.vcard.generate_description_with_ai') }}
+              </a>
+            </div>
             {{ Form::textarea('description', null, ['class' => 'form-control', 'id' => 'blogDescription', 'required']) }}
           </div>
           <div class="col-sm-12 mb-5">

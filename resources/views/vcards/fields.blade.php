@@ -1177,23 +1177,58 @@
 @endif
 
 @if ($partName == 'seo')
+  @if (isset($vcard))
+    <input type="hidden" id="vcardIdForSeo" value="{{ $vcard->id }}">
+  @endif
   <div class="container-fluid">
     <div class="row">
       <div class="col-lg-6 mb-7">
         {{ Form::label('Site title', __('messages.vcard.site_title') . ':', ['class' => 'form-label']) }}
-        {{ Form::text('site_title', isset($vcard) ? $vcard->site_title : null, ['class' => 'form-control', 'placeholder' => __('messages.form.site_title')]) }}
+        <div class="input-group">
+          {{ Form::text('site_title', isset($vcard) ? $vcard->site_title : null, ['class' => 'form-control', 'placeholder' => __('messages.form.site_title'), 'id' => 'siteTitleInput']) }}
+          <button class="btn btn-primary" type="button" id="generateAiSiteTitle">
+            <i class="bi bi-stars"></i>
+            <span class="spinner-border spinner-border-sm d-none ms-2" id="siteTitleSpinner" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </span>
+          </button>
+        </div>
       </div>
       <div class="col-lg-6 mb-7">
         {{ Form::label('Home title', __('messages.vcard.home_title') . ':', ['class' => 'form-label']) }}
-        {{ Form::text('home_title', isset($vcard) ? $vcard->home_title : null, ['class' => 'form-control', 'placeholder' => __('messages.form.home_title')]) }}
+        <div class="input-group">
+          {{ Form::text('home_title', isset($vcard) ? $vcard->home_title : null, ['class' => 'form-control', 'placeholder' => __('messages.form.home_title'), 'id' => 'homeTitleInput']) }}
+          <button class="btn btn-primary" type="button" id="generateAiHomeTitle">
+            <i class="bi bi-stars"></i>
+            <span class="spinner-border spinner-border-sm d-none ms-2" id="homeTitleSpinner" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </span>
+          </button>
+        </div>
       </div>
       <div class="col-lg-6 mb-7">
         {{ Form::label('Meta keyword', __('messages.vcard.meta_keyword') . ':', ['class' => 'form-label']) }}
-        {{ Form::text('meta_keyword', isset($vcard) ? $vcard->meta_keyword : null, ['class' => 'form-control', 'placeholder' => __('messages.form.meta_keyword')]) }}
+        <div class="input-group">
+          {{ Form::text('meta_keyword', isset($vcard) ? $vcard->meta_keyword : null, ['class' => 'form-control', 'placeholder' => __('messages.form.meta_keyword'), 'id' => 'metaKeywordInput']) }}
+          <button class="btn btn-primary" type="button" id="generateAiMetaKeyword">
+            <i class="bi bi-stars"></i>
+            <span class="spinner-border spinner-border-sm d-none ms-2" id="metaKeywordSpinner" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </span>
+          </button>
+        </div>
       </div>
       <div class="col-lg-6 mb-7">
         {{ Form::label('Meta Description', __('messages.vcard.meta_description') . ':', ['class' => 'form-label']) }}
-        {{ Form::text('meta_description', isset($vcard) ? $vcard->meta_description : null, ['class' => 'form-control', 'placeholder' => __('messages.form.meta_description')]) }}
+        <div class="input-group">
+          {{ Form::text('meta_description', isset($vcard) ? $vcard->meta_description : null, ['class' => 'form-control', 'placeholder' => __('messages.form.meta_description'), 'id' => 'metaDescriptionInput']) }}
+          <button class="btn btn-primary" type="button" id="generateAiMetaDescription">
+            <i class="bi bi-stars"></i>
+            <span class="spinner-border spinner-border-sm d-none ms-2" id="metaDescriptionSpinner" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </span>
+          </button>
+        </div>
       </div>
       <div class="col-lg-12 mb-7">
         {{ Form::label('Google Analytics', __('messages.vcard.google_analytics') . ':', ['class' => 'form-label']) }}
@@ -1209,15 +1244,25 @@
 @endif
 
 @if ($partName == 'privacy-policy')
+  <input type="hidden" name="part" value="{{ $partName }}" id="privacyPolicyPartName">
+  @if (isset($vcard))
+    <input type="hidden" id="vcardIdForPrivacy" value="{{ $vcard->id }}">
+  @endif
   <div class="container-fluid">
     <div class="row">
       <div class="col-lg-12">
         <div class="mb-5">
-          <input type="hidden" name="part" value="{{ $partName }}" id="privacyPolicyPartName">
           {{ Form::hidden('id', isset($privacyPolicy) ? $privacyPolicy->id : null, ['id' => 'privacyPolicyId']) }}
           {{ Form::label('privacy_policy', __('messages.vcard.privacy_policy') . ':', ['class' => 'form-label required']) }}
-          <div id="privacyPolicyQuill" class="editor-height" style="height: 200px"></div>
-          {{ Form::hidden('privacy_policy', isset($privacyPolicy) ? $privacyPolicy->privacy_policy : null, ['id' => 'privacyData']) }}
+          <div class="d-flex align-items-center mb-2">
+            <a href="javascript:void(0)" id="generateAiPrivacyPolicy"
+              class="text-primary text-decoration-none fw-semibold d-inline-flex align-items-center gap-2 me-3">
+              <i class="bi bi-stars" id="privacyPolicyIcon"></i>
+              <span id="privacyPolicySpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+              {{ __('messages.vcard.write_with_ai') }}
+            </a>
+          </div>
+          {{ Form::textarea('privacy_policy', isset($privacyPolicy) ? $privacyPolicy->privacy_policy : null, ['class' => 'form-control', 'id' => 'privacyPolicyDescription', 'rows' => '5']) }}
         </div>
       </div>
       <div class="col-lg-12 d-flex">
@@ -1231,15 +1276,26 @@
 @endif
 
 @if ($partName == 'term-condition')
+  <input type="hidden" name="part" value="{{ $partName }}" id="termConditionPartName">
+  @if (isset($vcard))
+    <input type="hidden" id="vcardIdForTerms" value="{{ $vcard->id }}">
+  @endif
   <div class="container-fluid">
     <div class="row">
-      <input type="hidden" name="part" value="{{ $partName }}" id="termConditionPartName">
       <div class="col-lg-12">
         <div class="mb-5">
           {{ Form::hidden('id', isset($termCondition) ? $termCondition->id : null, ['id' => 'termConditionId']) }}
           {{ Form::label('term_condition', __('messages.vcard.term_condition') . ':', ['class' => 'form-label required']) }}
-          <div id="termConditionQuill" class="editor-height" style="height: 200px"></div>
-          {{ Form::hidden('term_condition', isset($termCondition) ? $termCondition->term_condition : null, ['id' => 'conditionData']) }}
+          <div class="d-flex align-items-center mb-2">
+            <a href="javascript:void(0)" id="generateAiTermsConditions"
+              class="text-primary text-decoration-none fw-semibold d-inline-flex align-items-center gap-2 me-3">
+              <i class="bi bi-stars" id="termsConditionsIcon"></i>
+              <span id="termsConditionsSpinner" class="spinner-border spinner-border-sm d-none"
+                role="status"></span>
+              {{ __('messages.vcard.write_with_ai') }}
+            </a>
+          </div>
+          {{ Form::textarea('term_condition', isset($termCondition) ? $termCondition->term_condition : null, ['class' => 'form-control', 'id' => 'termConditionDescription', 'rows' => '5']) }}
         </div>
       </div>
       <div class="col-lg-12 d-flex">

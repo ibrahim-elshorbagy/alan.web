@@ -73,6 +73,13 @@
                 <label for="description" class="form-label required">
                   {{ __('messages.vcard.description') }}:
                 </label>
+                <div class="d-flex align-items-center mb-2">
+                  <a href="javascript:void(0)" id="generateAiWpProductDescriptionBtn"
+                    class="text-primary text-decoration-none fw-semibold d-inline-flex align-items-center gap-2 me-3">
+                    <i class="bi bi-stars"></i>
+                    {{ __('messages.vcard.generate_description_with_ai') }}
+                  </a>
+                </div>
                 <div id="wpStoreProductDescriptionQuill" class="editor-height" style="height: 150px"></div>
                 <input type="hidden" name="description" id="wpStoreProductDescriptionData">
               </div>

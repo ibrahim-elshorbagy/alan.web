@@ -141,62 +141,36 @@ function loadVcardCreateEdit() {
         });
     }
 
-    if ($("#privacyPolicyQuill").length) {
-        window.quillPrivacyPolicy = new Quill("#privacyPolicyQuill", {
-            modules: {
-                toolbar: [
-                    [
-                        {
-                            header: [1, 2, false],
-                        },
-                    ],
-                    ["bold", "italic", "underline"],
-                ],
-            },
-            theme: "snow", // or 'bubble'
+    // Initialize Summernote for Privacy Policy (same as blogs)
+    if ($("#privacyPolicyDescription").length) {
+        $("#privacyPolicyDescription").summernote({
             placeholder: Lang.get("js.privacy_policy"),
+            tabsize: 2,
+            height: 200,
+            toolbar: [
+                ["style", ["style"]],
+                ["font", ["bold", "underline", "clear"]],
+                ["color", ["color"]],
+                ["para", ["ul", "ol", "paragraph"]],
+                ["table", ["table"]],
+            ],
         });
-
-        quillPrivacyPolicy.on(
-            "text-change",
-            function (delta, oldDelta, source) {
-                if (quillPrivacyPolicy.getText().trim().length === 0) {
-                    quillPrivacyPolicy.setContents([{ insert: "" }]);
-                }
-            }
-        );
-        let element = document.createElement("textarea");
-        element.innerHTML = $("#privacyData").val();
-        quillPrivacyPolicy.root.innerHTML = element.value;
     }
 
-    if ($("#termConditionQuill").length) {
-        window.termConditionQuill = new Quill("#termConditionQuill", {
-            modules: {
-                toolbar: [
-                    [
-                        {
-                            header: [1, 2, false],
-                        },
-                    ],
-                    ["bold", "italic", "underline"],
-                ],
-            },
+    // Initialize Summernote for Terms & Conditions (same as blogs)
+    if ($("#termConditionDescription").length) {
+        $("#termConditionDescription").summernote({
             placeholder: Lang.get("js.term_condition").replace(/&amp;/g, "&"),
-            theme: "snow", // or 'bubble'
+            tabsize: 2,
+            height: 200,
+            toolbar: [
+                ["style", ["style"]],
+                ["font", ["bold", "underline", "clear"]],
+                ["color", ["color"]],
+                ["para", ["ul", "ol", "paragraph"]],
+                ["table", ["table"]],
+            ],
         });
-
-        termConditionQuill.on(
-            "text-change",
-            function (delta, oldDelta, source) {
-                if (termConditionQuill.getText().trim().length === 0) {
-                    termConditionQuill.setContents([{ insert: "" }]);
-                }
-            }
-        );
-        let element = document.createElement("textarea");
-        element.innerHTML = $("#conditionData").val();
-        termConditionQuill.root.innerHTML = element.value;
     }
 
     if ($("#vcardDescriptionQuill").length) {
@@ -272,31 +246,28 @@ function loadVcardCreateEdit() {
 }
 
 listenClick("#privacyPolicySave", function () {
-    let element = document.createElement("textarea");
-    let editor_content_1 = quillPrivacyPolicy.root.innerHTML;
-    element.innerHTML = editor_content_1;
     let partName = $("#privacyPolicyPartName").val();
     if (partName == "privacy-policy") {
-        if (quillPrivacyPolicy.getText().trim().length === 0) {
+        // Get Summernote content
+        var descriptionContent = $("#privacyPolicyDescription").summernote('code');
+        var plainText = $("<div>").html(descriptionContent).text().trim();
+
+        if (plainText.length === 0) {
             displayErrorMessage(Lang.get("js.privacy_policy"));
             return false;
         }
-        let input = JSON.stringify(editor_content_1);
-        $("#privacyData").val(input.replace(/"/g, ""));
     }
     return true;
 });
 
 listenClick("#termConditionSave", function () {
-    let element = document.createElement("textarea");
-    let editor_content_1 = termConditionQuill.root.innerHTML;
-    element.innerHTML = editor_content_1;
     let partName = $("#termConditionPartName").val();
     if (partName == "term-condition") {
-        let input = JSON.stringify(editor_content_1);
-        $("#conditionData").val(input.replace(/"/g, ""));
+        // Get Summernote content
+        var descriptionContent = $("#termConditionDescription").summernote('code');
+        var plainText = $("<div>").html(descriptionContent).text().trim();
 
-        if (termConditionQuill.getText().trim().length === 0) {
+        if (plainText.length === 0) {
             displayErrorMessage(Lang.get("js.the_term_conditions"));
             return false;
         }

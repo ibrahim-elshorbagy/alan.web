@@ -56,6 +56,7 @@ use App\Http\Requests\CreateEmailSubscribersRequest;
 use Modules\SlackIntegration\Entities\SlackIntegration;
 use Modules\SlackIntegration\Notifications\SlackNotification;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Illuminate\Support\Facades\Log;
 
 class VcardController extends AppBaseController
 {
@@ -1136,6 +1137,761 @@ class VcardController extends AppBaseController
         'success' => false,
         'message' => $e->getMessage(),
       ], 500);
+    }
+  }
+
+  public function generateAiServiceDescription(Request $request)
+  {
+    $request->validate([
+      'service_name' => 'required|string',
+      'vcard_id' => 'required|integer|exists:vcards,id',
+    ]);
+
+    // Get OpenAI settings from super admin settings (Setting model)
+    $openAiEnable = getSuperAdminSettingValue('open_ai_enable');
+
+    if ($openAiEnable != '1') {
+      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
+    }
+
+    $apiKey = getSuperAdminSettingValue('openai_api_key');
+
+    if (empty($apiKey)) {
+      return $this->sendError(__('messages.vcard.openai_api_key_not_set'));
+    }
+
+    $model = getSuperAdminSettingValue('open_ai_model');
+
+    if (empty($model)) {
+      return $this->sendError(__('messages.vcard.open_ai_model_not_configured'));
+    }
+
+    // Get vCard basic information
+    $vcard = Vcard::find($request->vcard_id);
+    $vcardName = $vcard->name;
+    $occupation = $vcard->occupation ?? '';
+    $vcardDescription = $vcard->description ?? '';
+    $serviceName = $request->service_name;
+
+    // Get current language for prompt (from vCard's default language)
+    $currentLang = $vcard->default_language ?? app()->getLocale();
+
+    // Create language-specific prompt
+    if ($currentLang == 'ar') {
+      $prompt = "بالاعتماد على اسم الخدمة '{$serviceName}' والمهنة '{$occupation}' والوصف اللي مكتوبين في التفاصيل الاساسية للبطاقة الشخصية '{$vcardDescription}'، اكتب وصف الخدمة من 20-30 كلمة باللغة العربية.";
+    } else {
+      $prompt = "Based on the service name '{$serviceName}', occupation '{$occupation}', and the basic description written in the vCard details '{$vcardDescription}', write a service description of 20-30 words in English.";
+    }
+
+    try {
+      $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $apiKey,
+        'Content-Type' => 'application/json',
+      ])->timeout(30)->post('https://api.openai.com/v1/chat/completions', [
+        'model' => $model,
+        'messages' => [
+          [
+            'role' => 'system',
+            'content' => 'You are a helpful assistant that writes professional, engaging, and concise service descriptions for business cards. Write a description of maximum 255 characters. The text should be suitable for direct use in a rich text editor (Quill). You may use HTML formatting tags like <b>, <strong>, <i>, <em>, <u>, <br> and do not wrap the description in any quotation marks, stars, or symbols. Just return the plain HTML content.'
+          ],
+          [
+            'role' => 'user',
+            'content' => $prompt,
+          ],
+        ],
+      ]);
+
+      if ($response->failed()) {
+        $errorData = $response->json();
+        $errorMessage = $errorData['error']['message'] ?? __('messages.vcard.open_ai_api_error');
+
+        return response()->json([
+          'success' => false,
+          'message' => $errorMessage,
+        ], $response->status());
+      }
+
+      $responseData = $response->json();
+      $description = trim($responseData['choices'][0]['message']['content'] ?? '');
+
+      if (empty($description)) {
+        return response()->json([
+          'success' => false,
+          'message' => __('messages.vcard.generated_description_is_empty'),
+        ], 500);
+      }
+
+      // Remove HTML tags to get plain text
+      $description = strip_tags($description);
+
+      Log::info('AI Service Description: ' . $description);
+      return response()->json([
+        'success' => true,
+        'description' => $description,
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'message' => $e->getMessage(),
+      ], 500);
+    }
+  }
+
+  public function generateAiProductDescription(Request $request)
+  {
+    $request->validate([
+      'product_name' => 'required|string',
+      'vcard_id' => 'required|integer|exists:vcards,id',
+    ]);
+
+    // Get OpenAI settings from super admin settings (Setting model)
+    $openAiEnable = getSuperAdminSettingValue('open_ai_enable');
+
+    if ($openAiEnable != '1') {
+      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
+    }
+
+    $apiKey = getSuperAdminSettingValue('openai_api_key');
+
+    if (empty($apiKey)) {
+      return $this->sendError(__('messages.vcard.openai_api_key_not_set'));
+    }
+
+    $model = getSuperAdminSettingValue('open_ai_model');
+
+    if (empty($model)) {
+      return $this->sendError(__('messages.vcard.open_ai_model_not_configured'));
+    }
+
+    // Get vCard basic information
+    $vcard = Vcard::find($request->vcard_id);
+    $vcardName = $vcard->name;
+    $occupation = $vcard->occupation ?? '';
+    $vcardDescription = $vcard->description ?? '';
+    $productName = $request->product_name;
+
+    // Get current language for prompt (from vCard's default language)
+    $currentLang = $vcard->default_language ?? app()->getLocale();
+
+    // Create language-specific prompt
+    if ($currentLang == 'ar') {
+      $prompt = "بالاعتماد على اسم المنتج '{$productName}' والمهنة '{$occupation}' والوصف اللي مكتوبين في التفاصيل الاساسية للبطاقة الشخصية '{$vcardDescription}'، اكتب وصف المنتج من 20-30 كلمة باللغة العربية.";
+    } else {
+      $prompt = "Based on the product name '{$productName}', occupation '{$occupation}', and the basic description written in the vCard details '{$vcardDescription}', write a product description of 20-30 words in English.";
+    }
+
+    try {
+      $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $apiKey,
+        'Content-Type' => 'application/json',
+      ])->timeout(30)->post('https://api.openai.com/v1/chat/completions', [
+        'model' => $model,
+        'messages' => [
+          [
+            'role' => 'system',
+            'content' => 'You are a helpful assistant that writes professional, engaging, and concise product descriptions for business cards. Write a description of maximum 255 characters. The text should be suitable for direct use in a rich text editor (Quill). You may use HTML formatting tags like <b>, <strong>, <i>, <em>, <u>, <br> and do not wrap the description in any quotation marks, stars, or symbols. Just return the plain HTML content.'
+          ],
+          [
+            'role' => 'user',
+            'content' => $prompt,
+          ],
+        ],
+      ]);
+
+      if ($response->failed()) {
+        $errorData = $response->json();
+        $errorMessage = $errorData['error']['message'] ?? __('messages.vcard.open_ai_api_error');
+
+        return response()->json([
+          'success' => false,
+          'message' => $errorMessage,
+        ], $response->status());
+      }
+
+      $responseData = $response->json();
+      $description = trim($responseData['choices'][0]['message']['content'] ?? '');
+
+      if (empty($description)) {
+        return response()->json([
+          'success' => false,
+          'message' => __('messages.vcard.generated_description_is_empty'),
+        ], 500);
+      }
+
+      // Remove HTML tags to get plain text
+      $description = strip_tags($description);
+
+      return response()->json([
+        'success' => true,
+        'description' => $description,
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'message' => $e->getMessage(),
+      ], 500);
+    }
+  }
+
+  public function generateAiBlogDescription(Request $request)
+  {
+    $request->validate([
+      'blog_title' => 'required|string',
+      'vcard_id' => 'required|integer|exists:vcards,id',
+    ]);
+
+    // Get OpenAI settings from super admin settings (Setting model)
+    $openAiEnable = getSuperAdminSettingValue('open_ai_enable');
+
+    if ($openAiEnable != '1') {
+      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
+    }
+
+    $apiKey = getSuperAdminSettingValue('openai_api_key');
+
+    if (empty($apiKey)) {
+      return $this->sendError(__('messages.vcard.openai_api_key_not_set'));
+    }
+
+    $model = getSuperAdminSettingValue('open_ai_model');
+
+    if (empty($model)) {
+      return $this->sendError(__('messages.vcard.open_ai_model_not_configured'));
+    }
+
+    // Get vCard basic information
+    $vcard = Vcard::find($request->vcard_id);
+    $vcardName = $vcard->name;
+    $occupation = $vcard->occupation ?? '';
+    $vcardDescription = $vcard->description ?? '';
+    $blogTitle = $request->blog_title;
+
+    // Get current language for prompt (from vCard's default language)
+    $currentLang = $vcard->default_language ?? app()->getLocale();
+
+    // Create language-specific prompt
+    if ($currentLang == 'ar') {
+      $prompt = "اكتب مقالة باللغة العربية طولها 100-150 كلمة بعنوان '{$blogTitle}'. استخدم عدة فقرات كل فقرة بعنوان مستقل مع استخدام الأيقونات التجميلية مثل ⭐ أو 📌 أو 💡. المقالة يجب أن تكون مفيدة وجذابة ومناسبة لمدونة شخصية أو مهنية.";
+    } else {
+      $prompt = "Write an article in English of 100-150 words with the title '{$blogTitle}'. Use several paragraphs, each with an independent heading and decorative icons like ⭐ or 📌 or 💡. The article should be useful, engaging, and suitable for a personal or professional blog.";
+    }
+
+    try {
+      $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $apiKey,
+        'Content-Type' => 'application/json',
+      ])->timeout(30)->post('https://api.openai.com/v1/chat/completions', [
+        'model' => $model,
+        'messages' => [
+          [
+            'role' => 'system',
+            'content' => 'You are a helpful assistant that writes engaging, informative blog articles. Write an article of 100-150 words with multiple paragraphs, each starting with a heading and decorative icons. Use HTML formatting for headings and icons. Do not wrap the content in quotation marks or additional formatting.'
+          ],
+          [
+            'role' => 'user',
+            'content' => $prompt,
+          ],
+        ],
+        'max_tokens' => 500,
+        'temperature' => 0.7,
+      ]);
+
+      if ($response->failed()) {
+        $errorData = $response->json();
+        $errorMessage = $errorData['error']['message'] ?? __('messages.vcard.open_ai_api_error');
+
+        return response()->json([
+          'success' => false,
+          'message' => $errorMessage,
+        ], $response->status());
+      }
+
+      $responseData = $response->json();
+      $description = trim($responseData['choices'][0]['message']['content'] ?? '');
+
+      if (empty($description)) {
+        return response()->json([
+          'success' => false,
+          'message' => __('messages.vcard.generated_description_is_empty'),
+        ], 500);
+      }
+
+      // For blogs, we want to keep HTML formatting for headings and icons
+      // But remove any unwanted tags if necessary
+      // Since Summernote is used, HTML is expected
+
+      Log::info('AI Blog Description: ' . $description);
+      return response()->json([
+        'success' => true,
+        'description' => $description,
+      ]);
+    } catch (\Exception $e) {
+      return response()->json([
+        'success' => false,
+        'message' => $e->getMessage(),
+      ], 500);
+    }
+  }
+
+  public function generateAiSiteTitle(Request $request)
+  {
+    $request->validate([
+      'vcard_id' => 'required|integer|exists:vcards,id',
+    ]);
+
+    // Get OpenAI settings
+    $openAiEnable = getSuperAdminSettingValue('open_ai_enable');
+    if ($openAiEnable != '1') {
+      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
+    }
+
+    $apiKey = getSuperAdminSettingValue('openai_api_key');
+    if (empty($apiKey)) {
+      return $this->sendError(__('messages.vcard.openai_api_key_not_set'));
+    }
+
+    $model = getSuperAdminSettingValue('open_ai_model');
+    if (empty($model)) {
+      return $this->sendError(__('messages.vcard.open_ai_model_not_configured'));
+    }
+
+    // Get vCard information
+    $vcard = Vcard::find($request->vcard_id);
+    $vcardName = $vcard->name;
+    $occupation = $vcard->occupation ?? '';
+
+    // Get language
+    $currentLang = $vcard->default_language ?? app()->getLocale();
+
+    // Create language-specific prompt
+    if ($currentLang == 'ar') {
+      $prompt = "اكتب عنوان Title لصفحة البطاقة الشخصية، اسم صاحبها '{$vcardName}' ومهنته '{$occupation}' مع التركيز على اسمه بما لا يزيد على 4-5 كلمات. الرد يجب أن يكون العنوان فقط بدون أي إضافات أو علامات ترقيم خاصة.";
+    } else {
+      $prompt = "Write a Title for a personal vCard page, owner's name is '{$vcardName}' and their profession is '{$occupation}'. Focus on their name, max 4-5 words. Response should be just the title without any additional text or special punctuation.";
+    }
+
+    try {
+      $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $apiKey,
+        'Content-Type' => 'application/json',
+      ])->timeout(30)->post('https://api.openai.com/v1/chat/completions', [
+        'model' => $model,
+        'messages' => [
+          [
+            'role' => 'system',
+            'content' => 'You are a helpful assistant that creates concise, SEO-friendly titles. Provide only the title text, nothing else.'
+          ],
+          [
+            'role' => 'user',
+            'content' => $prompt,
+          ],
+        ],
+        'max_tokens' => 50,
+        'temperature' => 0.7,
+      ]);
+
+      if ($response->failed()) {
+        $errorData = $response->json();
+        $errorMessage = $errorData['error']['message'] ?? __('messages.vcard.open_ai_api_error');
+        return response()->json(['success' => false, 'message' => $errorMessage], $response->status());
+      }
+
+      $responseData = $response->json();
+      $title = trim($responseData['choices'][0]['message']['content'] ?? '');
+      $title = strip_tags($title);
+
+      if (empty($title)) {
+        return response()->json(['success' => false, 'message' => __('messages.vcard.generated_description_is_empty')], 500);
+      }
+
+      return response()->json(['success' => true, 'title' => $title]);
+    } catch (\Exception $e) {
+      return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+  }
+
+  public function generateAiHomeTitle(Request $request)
+  {
+    $request->validate([
+      'vcard_id' => 'required|integer|exists:vcards,id',
+    ]);
+
+    // Get OpenAI settings
+    $openAiEnable = getSuperAdminSettingValue('open_ai_enable');
+    if ($openAiEnable != '1') {
+      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
+    }
+
+    $apiKey = getSuperAdminSettingValue('openai_api_key');
+    if (empty($apiKey)) {
+      return $this->sendError(__('messages.vcard.openai_api_key_not_set'));
+    }
+
+    $model = getSuperAdminSettingValue('open_ai_model');
+    if (empty($model)) {
+      return $this->sendError(__('messages.vcard.open_ai_model_not_configured'));
+    }
+
+    // Get vCard information
+    $vcard = Vcard::find($request->vcard_id);
+    $vcardName = $vcard->name;
+    $occupation = $vcard->occupation ?? '';
+
+    // Get language
+    $currentLang = $vcard->default_language ?? app()->getLocale();
+
+    // Create language-specific prompt - Focus on profession
+    if ($currentLang == 'ar') {
+      $prompt = "اكتب عنوان Title لصفحة البطاقة الشخصية، اسم صاحبها '{$vcardName}' ومهنته '{$occupation}' مع التركيز على مهنته بما لا يزيد على 4-5 كلمات. الرد يجب أن يكون العنوان فقط بدون أي إضافات أو علامات ترقيم خاصة.";
+    } else {
+      $prompt = "Write a Title for a personal vCard page, owner's name is '{$vcardName}' and their profession is '{$occupation}'. Focus on their profession, max 4-5 words. Response should be just the title without any additional text or special punctuation.";
+    }
+
+    try {
+      $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $apiKey,
+        'Content-Type' => 'application/json',
+      ])->timeout(30)->post('https://api.openai.com/v1/chat/completions', [
+        'model' => $model,
+        'messages' => [
+          [
+            'role' => 'system',
+            'content' => 'You are a helpful assistant that creates concise, SEO-friendly titles. Provide only the title text, nothing else.'
+          ],
+          [
+            'role' => 'user',
+            'content' => $prompt,
+          ],
+        ],
+        'max_tokens' => 50,
+        'temperature' => 0.7,
+      ]);
+
+      if ($response->failed()) {
+        $errorData = $response->json();
+        $errorMessage = $errorData['error']['message'] ?? __('messages.vcard.open_ai_api_error');
+        return response()->json(['success' => false, 'message' => $errorMessage], $response->status());
+      }
+
+      $responseData = $response->json();
+      $title = trim($responseData['choices'][0]['message']['content'] ?? '');
+      $title = strip_tags($title);
+
+      if (empty($title)) {
+        return response()->json(['success' => false, 'message' => __('messages.vcard.generated_description_is_empty')], 500);
+      }
+
+      return response()->json(['success' => true, 'title' => $title]);
+    } catch (\Exception $e) {
+      return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+  }
+
+  public function generateAiMetaKeyword(Request $request)
+  {
+    $request->validate([
+      'vcard_id' => 'required|integer|exists:vcards,id',
+    ]);
+
+    // Get OpenAI settings
+    $openAiEnable = getSuperAdminSettingValue('open_ai_enable');
+    if ($openAiEnable != '1') {
+      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
+    }
+
+    $apiKey = getSuperAdminSettingValue('openai_api_key');
+    if (empty($apiKey)) {
+      return $this->sendError(__('messages.vcard.openai_api_key_not_set'));
+    }
+
+    $model = getSuperAdminSettingValue('open_ai_model');
+    if (empty($model)) {
+      return $this->sendError(__('messages.vcard.open_ai_model_not_configured'));
+    }
+
+    // Get vCard information
+    $vcard = Vcard::find($request->vcard_id);
+    $vcardName = $vcard->name;
+    $occupation = $vcard->occupation ?? '';
+    $description = $vcard->description ?? '';
+
+    // Get language
+    $currentLang = $vcard->default_language ?? app()->getLocale();
+
+    // Create language-specific prompt
+    if ($currentLang == 'ar') {
+      $prompt = "اقترح كلمات مفتاحية لصفحة البطاقة الشخصية. اسم صاحبها '{$vcardName}' ومهنته '{$occupation}'. يجب أن تكون الكلمات المفتاحية مفصولة بفاصلة ومناسبة لمحركات البحث، من 5-8 كلمات. الرد يجب أن يكون الكلمات فقط بدون أي نص إضافي.";
+    } else {
+      $prompt = "Suggest meta keywords for a personal vCard page. Owner's name is '{$vcardName}' and profession is '{$occupation}'. Keywords should be comma-separated, SEO-friendly, 5-8 keywords. Response should be just the keywords without any additional text.";
+    }
+
+    try {
+      $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $apiKey,
+        'Content-Type' => 'application/json',
+      ])->timeout(30)->post('https://api.openai.com/v1/chat/completions', [
+        'model' => $model,
+        'messages' => [
+          [
+            'role' => 'system',
+            'content' => 'You are a helpful assistant that generates SEO-friendly meta keywords. Provide only comma-separated keywords, nothing else.'
+          ],
+          [
+            'role' => 'user',
+            'content' => $prompt,
+          ],
+        ],
+        'max_tokens' => 100,
+        'temperature' => 0.7,
+      ]);
+
+      if ($response->failed()) {
+        $errorData = $response->json();
+        $errorMessage = $errorData['error']['message'] ?? __('messages.vcard.open_ai_api_error');
+        return response()->json(['success' => false, 'message' => $errorMessage], $response->status());
+      }
+
+      $responseData = $response->json();
+      $keywords = trim($responseData['choices'][0]['message']['content'] ?? '');
+      $keywords = strip_tags($keywords);
+
+      if (empty($keywords)) {
+        return response()->json(['success' => false, 'message' => __('messages.vcard.generated_description_is_empty')], 500);
+      }
+
+      return response()->json(['success' => true, 'keywords' => $keywords]);
+    } catch (\Exception $e) {
+      return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+  }
+
+  public function generateAiMetaDescription(Request $request)
+  {
+    $request->validate([
+      'vcard_id' => 'required|integer|exists:vcards,id',
+    ]);
+
+    // Get OpenAI settings
+    $openAiEnable = getSuperAdminSettingValue('open_ai_enable');
+    if ($openAiEnable != '1') {
+      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
+    }
+
+    $apiKey = getSuperAdminSettingValue('openai_api_key');
+    if (empty($apiKey)) {
+      return $this->sendError(__('messages.vcard.openai_api_key_not_set'));
+    }
+
+    $model = getSuperAdminSettingValue('open_ai_model');
+    if (empty($model)) {
+      return $this->sendError(__('messages.vcard.open_ai_model_not_configured'));
+    }
+
+    // Get vCard information
+    $vcard = Vcard::find($request->vcard_id);
+    $vcardName = $vcard->name;
+    $occupation = $vcard->occupation ?? '';
+    $description = $vcard->description ?? '';
+
+    // Get language
+    $currentLang = $vcard->default_language ?? app()->getLocale();
+
+    // Create language-specific prompt
+    if ($currentLang == 'ar') {
+      $prompt = "اكتب وصف ميتا Meta Description لصفحة البطاقة الشخصية. اسم صاحبها '{$vcardName}' ومهنته '{$occupation}'. يجب أن يكون الوصف جذاب ومناسب لمحركات البحث، بطول 120-160 حرف. الرد يجب أن يكون الوصف فقط بدون أي نص إضافي أو علامات ترقيم خاصة.";
+    } else {
+      $prompt = "Write a meta description for a personal vCard page. Owner's name is '{$vcardName}' and profession is '{$occupation}'. The description should be engaging, SEO-friendly, 120-160 characters. Response should be just the description without any additional text or special punctuation.";
+    }
+
+    try {
+      $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $apiKey,
+        'Content-Type' => 'application/json',
+      ])->timeout(30)->post('https://api.openai.com/v1/chat/completions', [
+        'model' => $model,
+        'messages' => [
+          [
+            'role' => 'system',
+            'content' => 'You are a helpful assistant that creates SEO-friendly meta descriptions. Provide only the description text, nothing else.'
+          ],
+          [
+            'role' => 'user',
+            'content' => $prompt,
+          ],
+        ],
+        'max_tokens' => 100,
+        'temperature' => 0.7,
+      ]);
+
+      if ($response->failed()) {
+        $errorData = $response->json();
+        $errorMessage = $errorData['error']['message'] ?? __('messages.vcard.open_ai_api_error');
+        return response()->json(['success' => false, 'message' => $errorMessage], $response->status());
+      }
+
+      $responseData = $response->json();
+      $description = trim($responseData['choices'][0]['message']['content'] ?? '');
+      $description = strip_tags($description);
+
+      if (empty($description)) {
+        return response()->json(['success' => false, 'message' => __('messages.vcard.generated_description_is_empty')], 500);
+      }
+
+      return response()->json(['success' => true, 'description' => $description]);
+    } catch (\Exception $e) {
+      return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+  }
+
+  public function generateAiPrivacyPolicy(Request $request)
+  {
+    $request->validate([
+      'vcard_id' => 'required|integer|exists:vcards,id',
+    ]);
+
+    // Get OpenAI settings
+    $openAiEnable = getSuperAdminSettingValue('open_ai_enable');
+    if ($openAiEnable != '1') {
+      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
+    }
+
+    $apiKey = getSuperAdminSettingValue('openai_api_key');
+    if (empty($apiKey)) {
+      return $this->sendError(__('messages.vcard.openai_api_key_not_set'));
+    }
+
+    $model = getSuperAdminSettingValue('open_ai_model');
+    if (empty($model)) {
+      return $this->sendError(__('messages.vcard.open_ai_model_not_configured'));
+    }
+
+    // Get vCard information
+    $vcard = Vcard::find($request->vcard_id);
+    $vcardName = $vcard->name;
+    $occupation = $vcard->occupation ?? '';
+
+    // Get language
+    $currentLang = $vcard->default_language ?? app()->getLocale();
+
+    // Create language-specific prompt
+    if ($currentLang == 'ar') {
+      $prompt = "اكتب سياسة خصوصية Privacy Policy احترافية لبطاقة شخصية vCard خاصة بـ '{$vcardName}' الذي يعمل كـ '{$occupation}'. يجب أن تتضمن السياسة: جمع البيانات، استخدام البيانات، حماية البيانات، الكوكيز، حقوق المستخدم. بطول 250-300 كلمة باللغة العربية. استخدم HTML للتنسيق مع عناوين <h3> وفقرات <p>.";
+    } else {
+      $prompt = "Write a professional Privacy Policy for a personal vCard of '{$vcardName}' who works as '{$occupation}'. Should include: data collection, data usage, data protection, cookies, user rights. Length 250-300 words in English. Use HTML formatting with <h3> headings and <p> paragraphs.";
+    }
+
+    try {
+      $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $apiKey,
+        'Content-Type' => 'application/json',
+      ])->timeout(40)->post('https://api.openai.com/v1/chat/completions', [
+        'model' => $model,
+        'messages' => [
+          [
+            'role' => 'system',
+            'content' => 'You are a legal content writer that creates privacy policies. Provide properly formatted HTML content.'
+          ],
+          [
+            'role' => 'user',
+            'content' => $prompt,
+          ],
+        ],
+        'max_tokens' => 1000,
+        'temperature' => 0.7,
+      ]);
+
+      if ($response->failed()) {
+        $errorData = $response->json();
+        $errorMessage = $errorData['error']['message'] ?? __('messages.vcard.open_ai_api_error');
+        return response()->json(['success' => false, 'message' => $errorMessage], $response->status());
+      }
+
+      $responseData = $response->json();
+      $content = trim($responseData['choices'][0]['message']['content'] ?? '');
+
+      if (empty($content)) {
+        return response()->json(['success' => false, 'message' => __('messages.vcard.generated_description_is_empty')], 500);
+      }
+
+      return response()->json(['success' => true, 'content' => $content]);
+    } catch (\Exception $e) {
+      return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+  }
+
+  public function generateAiTermsConditions(Request $request)
+  {
+    $request->validate([
+      'vcard_id' => 'required|integer|exists:vcards,id',
+    ]);
+
+    // Get OpenAI settings
+    $openAiEnable = getSuperAdminSettingValue('open_ai_enable');
+    if ($openAiEnable != '1') {
+      return $this->sendError(__('messages.vcard.open_ai_not_enabled'));
+    }
+
+    $apiKey = getSuperAdminSettingValue('openai_api_key');
+    if (empty($apiKey)) {
+      return $this->sendError(__('messages.vcard.openai_api_key_not_set'));
+    }
+
+    $model = getSuperAdminSettingValue('open_ai_model');
+    if (empty($model)) {
+      return $this->sendError(__('messages.vcard.open_ai_model_not_configured'));
+    }
+
+    // Get vCard information
+    $vcard = Vcard::find($request->vcard_id);
+    $vcardName = $vcard->name;
+    $occupation = $vcard->occupation ?? '';
+
+    // Get language
+    $currentLang = $vcard->default_language ?? app()->getLocale();
+
+    // Create language-specific prompt
+    if ($currentLang == 'ar') {
+      $prompt = "اكتب شروط وأحكام Terms and Conditions احترافية لبطاقة شخصية vCard خاصة بـ '{$vcardName}' الذي يعمل كـ '{$occupation}'. يجب أن تتضمن: شروط الاستخدام، المسؤوليات، الحقوق الفكرية، إخلاء المسؤولية، التعديلات على الشروط. بطول 250-300 كلمة باللغة العربية. استخدم HTML للتنسيق مع عناوين <h3> وفقرات <p>.";
+    } else {
+      $prompt = "Write professional Terms and Conditions for a personal vCard of '{$vcardName}' who works as '{$occupation}'. Should include: usage terms, responsibilities, intellectual property, disclaimer, modifications to terms. Length 250-300 words in English. Use HTML formatting with <h3> headings and <p> paragraphs.";
+    }
+
+    try {
+      $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $apiKey,
+        'Content-Type' => 'application/json',
+      ])->timeout(40)->post('https://api.openai.com/v1/chat/completions', [
+        'model' => $model,
+        'messages' => [
+          [
+            'role' => 'system',
+            'content' => 'You are a legal content writer that creates terms and conditions. Provide properly formatted HTML content.'
+          ],
+          [
+            'role' => 'user',
+            'content' => $prompt,
+          ],
+        ],
+        'max_tokens' => 1000,
+        'temperature' => 0.7,
+      ]);
+
+      if ($response->failed()) {
+        $errorData = $response->json();
+        $errorMessage = $errorData['error']['message'] ?? __('messages.vcard.open_ai_api_error');
+        return response()->json(['success' => false, 'message' => $errorMessage], $response->status());
+      }
+
+      $responseData = $response->json();
+      $content = trim($responseData['choices'][0]['message']['content'] ?? '');
+
+      if (empty($content)) {
+        return response()->json(['success' => false, 'message' => __('messages.vcard.generated_description_is_empty')], 500);
+      }
+
+      return response()->json(['success' => true, 'content' => $content]);
+    } catch (\Exception $e) {
+      return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
     }
   }
 }

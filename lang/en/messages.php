@@ -960,6 +960,7 @@ return [
     'vcard_visitors' => 'vCard Visitors',
     'whatsapp_store_visitors' => 'WhatsApp Store Visitors',
     'generate_description_with_ai' => 'Generate Description with AI',
+    'write_with_ai' => 'Write with AI',
     'refund_&_cancellation' => 'Refund & Cancellation Policy',
     'shipping_&_delivery' => 'Shipping & Delivery Policy',
     'search_google_images' => 'Search Google Images',
@@ -2102,6 +2103,12 @@ return [
     'enter_youtube_video_link' => 'Enter YouTube Video Link',
     'support_services' => 'Support & Services',
     'talk_to_us' => 'Talk To Us',
+    'generate_terms_conditions_with_ai' => 'Generate Terms & Conditions with AI',
+    'generate_privacy_policy_with_ai' => 'Generate Privacy Policy with AI',
+    'generate_refund_policy_with_ai' => 'Generate Refund Policy with AI',
+    'generate_shipping_delivery_with_ai' => 'Generate Shipping & Delivery with AI',
+    'ai_description_prompt' => 'AI Description Prompt',
+    'describe_your_business' => 'Describe your business (e.g., "I run a fashion store selling clothes and accessories")',
   ],
 
   'whatsapp_stores_templates' => [

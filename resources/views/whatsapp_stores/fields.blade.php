@@ -423,19 +423,51 @@
     <div class="row">
       <div class="col-lg-6 mb-7">
         {{ Form::label('Site title', __('messages.vcard.site_title') . ':', ['class' => 'form-label']) }}
-        {{ Form::text('site_title', isset($whatsappStore) ? $whatsappStore->site_title : null, ['name' => 'site_title', 'class' => 'form-control', 'placeholder' => __('messages.form.site_title')]) }}
+        <div class="input-group">
+          {{ Form::text('site_title', isset($whatsappStore) ? $whatsappStore->site_title : null, ['name' => 'site_title', 'class' => 'form-control', 'placeholder' => __('messages.form.site_title'), 'id' => 'wpSiteTitleInput']) }}
+          <button class="btn btn-primary" type="button" id="generateAiWpSiteTitle">
+            <i class="bi bi-stars"></i>
+            <span class="spinner-border spinner-border-sm d-none ms-2" id="wpSiteTitleSpinner" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </span>
+          </button>
+        </div>
       </div>
       <div class="col-lg-6 mb-7">
         {{ Form::label('Home title', __('messages.vcard.home_title') . ':', ['class' => 'form-label']) }}
-        {{ Form::text('home_title', isset($whatsappStore) ? $whatsappStore->home_title : null, ['name' => 'home_title', 'class' => 'form-control', 'placeholder' => __('messages.form.home_title')]) }}
+        <div class="input-group">
+          {{ Form::text('home_title', isset($whatsappStore) ? $whatsappStore->home_title : null, ['name' => 'home_title', 'class' => 'form-control', 'placeholder' => __('messages.form.home_title'), 'id' => 'wpHomeTitleInput']) }}
+          <button class="btn btn-primary" type="button" id="generateAiWpHomeTitle">
+            <i class="bi bi-stars"></i>
+            <span class="spinner-border spinner-border-sm d-none ms-2" id="wpHomeTitleSpinner" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </span>
+          </button>
+        </div>
       </div>
       <div class="col-lg-6 mb-7">
         {{ Form::label('Meta keyword', __('messages.vcard.meta_keyword') . ':', ['class' => 'form-label']) }}
-        {{ Form::text('meta_keyword', isset($whatsappStore) ? $whatsappStore->meta_keyword : null, ['name' => 'meta_keyword', 'class' => 'form-control', 'placeholder' => __('messages.form.meta_keyword')]) }}
+        <div class="input-group">
+          {{ Form::text('meta_keyword', isset($whatsappStore) ? $whatsappStore->meta_keyword : null, ['name' => 'meta_keyword', 'class' => 'form-control', 'placeholder' => __('messages.form.meta_keyword'), 'id' => 'wpMetaKeywordInput']) }}
+          <button class="btn btn-primary" type="button" id="generateAiWpMetaKeyword">
+            <i class="bi bi-stars"></i>
+            <span class="spinner-border spinner-border-sm d-none ms-2" id="wpMetaKeywordSpinner" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </span>
+          </button>
+        </div>
       </div>
       <div class="col-lg-6 mb-7">
         {{ Form::label('Meta Description', __('messages.vcard.meta_description') . ':', ['class' => 'form-label']) }}
-        {{ Form::text('meta_description', isset($whatsappStore) ? $whatsappStore->meta_description : null, ['name' => 'meta_description', 'class' => 'form-control', 'placeholder' => __('messages.form.meta_description')]) }}
+        <div class="input-group">
+          {{ Form::text('meta_description', isset($whatsappStore) ? $whatsappStore->meta_description : null, ['name' => 'meta_description', 'class' => 'form-control', 'placeholder' => __('messages.form.meta_description'), 'id' => 'wpMetaDescriptionInput']) }}
+          <button class="btn btn-primary" type="button" id="generateAiWpMetaDescription">
+            <i class="bi bi-stars"></i>
+            <span class="spinner-border spinner-border-sm d-none ms-2" id="wpMetaDescriptionSpinner" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </span>
+          </button>
+        </div>
       </div>
       <div class="col-lg-12 mb-7">
         {{ Form::label('Google Analytics', __('messages.vcard.google_analytics') . ':', ['class' => 'form-label']) }}
@@ -518,27 +550,59 @@
     <div class="row">
       <div class="col-lg-12 mb-7">
         {{ Form::hidden('id', isset($termCondition) ? $termCondition->id : null, ['id' => 'termConditionId']) }}
-        {{ Form::label('term_condition', __('messages.vcard.term_condition') . ':', ['class' => 'form-label required']) }}
-        <div id="termConditionQuill" class="editor-height" style="height: 200px"></div>
-        {{ Form::hidden('term_condition', isset($termCondition) ? $termCondition->term_condition : null, ['id' => 'conditionData']) }}
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          {{ Form::label('term_condition', __('messages.vcard.term_condition') . ':', ['class' => 'form-label required mb-0']) }}
+          <button type="button" class="btn btn-sm btn-primary" id="generateAiWhatsappTermsConditions">
+            <i class="bi bi-stars"></i> {{ __('messages.whatsapp_stores.generate_terms_conditions_with_ai') }}
+          </button>
+        </div>
+        <div class="mb-3">
+          {{ Form::label('terms_conditions_description', __('messages.whatsapp_stores.ai_description_prompt') . ':', ['class' => 'form-label']) }}
+          {{ Form::textarea('terms_conditions_description', null, ['id' => 'termsConditionsAiDescription', 'class' => 'form-control', 'placeholder' => __('messages.whatsapp_stores.describe_your_business'), 'rows' => 2]) }}
+        </div>
+        {{ Form::textarea('term_condition', isset($termCondition) ? $termCondition->term_condition : null, ['id' => 'whatsappTermsConditionsDescription', 'class' => 'form-control summernote']) }}
       </div>
       <div class="col-lg-12 mb-7">
         {{ Form::hidden('id', isset($privacyPolicy) ? $privacyPolicy->id : null, ['id' => 'privacyPolicyId']) }}
-        {{ Form::label('privacy_policy', __('messages.vcard.privacy_policy') . ':', ['class' => 'form-label required']) }}
-        <div id="privacyPolicyQuill" class="editor-height" style="height: 200px"></div>
-        {{ Form::hidden('privacy_policy', isset($privacyPolicy) ? $privacyPolicy->privacy_policy : null, ['id' => 'privacyData']) }}
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          {{ Form::label('privacy_policy', __('messages.vcard.privacy_policy') . ':', ['class' => 'form-label required mb-0']) }}
+          <button type="button" class="btn btn-sm btn-primary" id="generateAiWhatsappPrivacyPolicy">
+            <i class="bi bi-stars"></i> {{ __('messages.whatsapp_stores.generate_privacy_policy_with_ai') }}
+          </button>
+        </div>
+        <div class="mb-3">
+          {{ Form::label('privacy_policy_description', __('messages.whatsapp_stores.ai_description_prompt') . ':', ['class' => 'form-label']) }}
+          {{ Form::textarea('privacy_policy_description', null, ['id' => 'privacyPolicyAiDescription', 'class' => 'form-control', 'placeholder' => __('messages.whatsapp_stores.describe_your_business'), 'rows' => 2]) }}
+        </div>
+        {{ Form::textarea('privacy_policy', isset($privacyPolicy) ? $privacyPolicy->privacy_policy : null, ['id' => 'whatsappPrivacyPolicyDescription', 'class' => 'form-control summernote']) }}
       </div>
       <div class="col-lg-12 mb-7">
         {{ Form::hidden('id', isset($refundCancellation) ? $refundCancellation->id : null, ['id' => 'refundCancellationId']) }}
-        {{ Form::label('refund_cancellation', __('messages.vcard.refund_cancellation_policy') . ':', ['class' => 'form-label required']) }}
-        <div id="refundCancellationQuill" class="editor-height" style="height: 200px"></div>
-        {{ Form::hidden('refund_cancellation', isset($refundCancellation) ? $refundCancellation->refund_cancellation_policy : null, ['id' => 'refundCancellationData']) }}
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          {{ Form::label('refund_cancellation', __('messages.vcard.refund_cancellation_policy') . ':', ['class' => 'form-label required mb-0']) }}
+          <button type="button" class="btn btn-sm btn-primary" id="generateAiWhatsappRefundCancellation">
+            <i class="bi bi-stars"></i> {{ __('messages.whatsapp_stores.generate_refund_policy_with_ai') }}
+          </button>
+        </div>
+        <div class="mb-3">
+          {{ Form::label('refund_cancellation_description', __('messages.whatsapp_stores.ai_description_prompt') . ':', ['class' => 'form-label']) }}
+          {{ Form::textarea('refund_cancellation_description', null, ['id' => 'refundCancellationAiDescription', 'class' => 'form-control', 'placeholder' => __('messages.whatsapp_stores.describe_your_business'), 'rows' => 2]) }}
+        </div>
+        {{ Form::textarea('refund_cancellation', isset($refundCancellation) ? $refundCancellation->refund_cancellation_policy : null, ['id' => 'whatsappRefundCancellationDescription', 'class' => 'form-control summernote']) }}
       </div>
       <div class="col-lg-12 mb-7">
         {{ Form::hidden('id', isset($shippingDelivery) ? $shippingDelivery->id : null, ['id' => 'shippingDeliveryId']) }}
-        {{ Form::label('shipping_delivery', __('messages.vcard.shipping_delivery_policy') . ':', ['class' => 'form-label required']) }}
-        <div id="shippingDeliveryQuill" class="editor-height" style="height: 200px"></div>
-        {{ Form::hidden('shipping_delivery', isset($shippingDelivery) ? $shippingDelivery->shipping_delivery_policy : null, ['id' => 'shippingDeliveryData']) }}
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          {{ Form::label('shipping_delivery', __('messages.vcard.shipping_delivery_policy') . ':', ['class' => 'form-label required mb-0']) }}
+          <button type="button" class="btn btn-sm btn-primary" id="generateAiWhatsappShippingDelivery">
+            <i class="bi bi-stars"></i> {{ __('messages.whatsapp_stores.generate_shipping_delivery_with_ai') }}
+          </button>
+        </div>
+        <div class="mb-3">
+          {{ Form::label('shipping_delivery_description', __('messages.whatsapp_stores.ai_description_prompt') . ':', ['class' => 'form-label']) }}
+          {{ Form::textarea('shipping_delivery_description', null, ['id' => 'shippingDeliveryAiDescription', 'class' => 'form-control', 'placeholder' => __('messages.whatsapp_stores.describe_your_business'), 'rows' => 2]) }}
+        </div>
+        {{ Form::textarea('shipping_delivery', isset($shippingDelivery) ? $shippingDelivery->shipping_delivery_policy : null, ['id' => 'whatsappShippingDeliveryDescription', 'class' => 'form-control summernote']) }}
       </div>
       <div class="col-lg-12 d-flex">
         <button type="submit" class="btn btn-primary me-3 wp-template-terms-conditions-save">

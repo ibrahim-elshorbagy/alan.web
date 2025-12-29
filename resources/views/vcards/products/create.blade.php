@@ -9,7 +9,7 @@
       <div class="modal-body">
         <div class="row mb-5">
           <div class="mb-5 col-lg-6">
-            {{ Form::hidden('vcard_id', $vcard->id) }}
+            {{ Form::hidden('vcard_id', $vcard->id, ['id' => 'vcardId']) }}
             {{ Form::label('name', __('messages.common.name') . ':', ['class' => 'form-label required fs-6  text-gray-700 mb-3']) }}
             {{ Form::text('name', null, ['class' => 'form-control', 'required', 'placeholder' => __('messages.form.product')]) }}
           </div>
@@ -34,6 +34,13 @@
           </div>
           <div class="mb-5 col-lg-12">
             {{ Form::label('description', __('messages.common.description') . ':', ['class' => 'form-label fs-6 text-gray-700 mb-3']) }}
+            <div class="d-flex align-items-center mb-2">
+              <a href="javascript:void(0)" id="generateAiProductDescriptionBtn"
+                class="text-primary text-decoration-none fw-semibold d-inline-flex align-items-center gap-2 me-3">
+                <i class="bi bi-stars"></i>
+                {{ __('messages.vcard.generate_description_with_ai') }}
+              </a>
+            </div>
             {{ Form::textarea('description', null, ['class' => 'form-control', 'placeholder' => __('messages.form.short_description'), 'rows' => '5']) }}
           </div>
           <div class="mb-5 col-lg-12">
