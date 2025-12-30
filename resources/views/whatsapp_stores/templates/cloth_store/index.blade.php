@@ -72,10 +72,10 @@
           strong,
           b,
           em,
-          i {
-            font-family: {{ $whatsappStore->font_family }} !important;
-          }
-        @endif
+          {
+          font-family: {{ $whatsappStore->font_family }} !important;
+        }
+      @endif
       @endif
 
       @if ($whatsappStore->font_size)

@@ -80,16 +80,16 @@
           strong,
           b,
           em,
-          i {
-            font-family: {{ $vcard->font_family }} !important;
-          }
+          {
+          font-family: {{ $vcard->font_family }} !important;
+        }
 
-        @endif
-        @if ($vcard->font_size)
-          div>h4 {
-            font-size: {{ $vcard->font_size }}px !important;
-          }
-        @endif
+      @endif
+      @if ($vcard->font_size)
+        div>h4 {
+          font-size: {{ $vcard->font_size }}px !important;
+        }
+      @endif
       @endif
 
       @if (isset(checkFeature('advanced')->custom_css))

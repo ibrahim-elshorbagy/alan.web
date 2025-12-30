@@ -84,17 +84,17 @@
           strong,
           b,
           em,
-          i {
-            font-family: {{ $vcard->font_family }} !important;
-          }
+          {
+          font-family: {{ $vcard->font_family }} !important;
+        }
 
-        @endif
-        @if ($vcard->font_size)
-          div>h4 {
-            font-size: {{ $vcard->font_size }}px !important;
-          }
+      @endif
+      @if ($vcard->font_size)
+        div>h4 {
+          font-size: {{ $vcard->font_size }}px !important;
+        }
 
-        @endif
+      @endif
       @endif
       @if (isset(checkFeature('advanced')->custom_css))
         {!! $vcard->custom_css !!}
@@ -528,7 +528,7 @@
                   <div class="position-relative">
                     {{ Form::text('date', null, [
                         'class' => ' date form-control appointment-input
-                                                                                                                                                        text-start',
+                                                                                                                                                                            text-start',
                         'placeholder' => __('messages.form.pick_date'),
                         'id' => 'pickUpDate',
                     ]) }}
