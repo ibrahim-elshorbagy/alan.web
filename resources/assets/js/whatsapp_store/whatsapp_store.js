@@ -471,34 +471,19 @@ function loadWhatsappStoreTermsCondition() {
         });
     }
 
-    // Keep Quill for Shipping Delivery (unchanged)
-    if ($("#shippingDeliveryQuill").length) {
-        window.shippingDeliveryQuill = new Quill("#shippingDeliveryQuill", {
-            modules: {
-                toolbar: [
-                    [
-                        {
-                            header: [1, 2, false],
-                        },
-                    ],
-                    ["bold", "italic", "underline"],
-                ],
-            },
-            theme: "snow", // or 'bubble'
-            placeholder: Lang.get("js.shipping_delivery"),
+    // Initialize Summernote for Shipping Delivery
+    if ($("#whatsappShippingDeliveryDescription").length) {
+        $("#whatsappShippingDeliveryDescription").summernote({
+            tabsize: 2,
+            height: 200,
+            toolbar: [
+                ["style", ["style"]],
+                ["font", ["bold", "underline", "clear"]],
+                ["color", ["color"]],
+                ["para", ["ul", "ol", "paragraph"]],
+                ["table", ["table"]],
+            ],
         });
-
-        shippingDeliveryQuill.on(
-            "text-change",
-            function (delta, oldDelta, source) {
-                if (shippingDeliveryQuill.getText().trim().length === 0) {
-                    shippingDeliveryQuill.setContents([{ insert: "" }]);
-                }
-            }
-        );
-        let element = document.createElement("textarea");
-        element.innerHTML = $("#shippingDeliveryData").val();
-        shippingDeliveryQuill.root.innerHTML = element.value;
     }
 }
 
@@ -542,10 +527,10 @@ listenClick(".wp-template-terms-conditions-save", function (e) {
         }
     }
 
-    // Shipping Delivery (Quill - unchanged)
-    if (window.shippingDeliveryQuill) {
-        shippingDeliveryContent = shippingDeliveryQuill.root.innerHTML;
-        if (shippingDeliveryQuill.getText().trim().length === 0) {
+    // Shipping Delivery (Summernote)
+    if ($("#whatsappShippingDeliveryDescription").length) {
+        shippingDeliveryContent = $("#whatsappShippingDeliveryDescription").summernote('code');
+        if ($.trim(shippingDeliveryContent).length === 0) {
             displayErrorMessage(Lang.get("js.the_shipping_delivery"));
             return false;
         }

@@ -495,6 +495,13 @@ class WhatsappStoreController extends AppBaseController
 
   public function wpTermsConditionsUpdate(Request $request, WhatsappStore $whatsappStore)
   {
+    $request->validate([
+      'term_condition' => 'required|string',
+      'privacy_policy' => 'required|string',
+      'refund_cancellation' => 'required|string',
+      'shipping_delivery' => 'required|string',
+    ]);
+
     DB::beginTransaction();
 
     try {
@@ -913,7 +920,7 @@ class WhatsappStoreController extends AppBaseController
     // Validate store data
     if (empty($storeName)) {
       $currentLang = $whatsappStore->default_language ?? 'en';
-      $errorMsg = $currentLang == 'ar' 
+      $errorMsg = $currentLang == 'ar'
         ? 'الرجاء إضافة اسم المتجر أولاً في علامة التبويب الأساسيات'
         : 'Please add store name first in Basics tab';
       return response()->json(['success' => false, 'message' => $errorMsg], 400);
@@ -924,13 +931,13 @@ class WhatsappStoreController extends AppBaseController
 
     // Create language-specific prompt
     if ($currentLang == 'ar') {
-      $prompt = "اكتب عنوان Title لمتجر واتساب، اسم المتجر '{$storeName}'" . 
-                (!empty($storeDescription) ? " ووصفه '{$storeDescription}'" : "") . 
-                ". مع التركيز على اسم المتجر بما لا يزيد على 4-5 كلمات. الرد يجب أن يكون العنوان فقط بدون أي إضافات أو علامات ترقيم خاصة.";
+      $prompt = "اكتب عنوان Title لمتجر واتساب، اسم المتجر '{$storeName}'" .
+        (!empty($storeDescription) ? " ووصفه '{$storeDescription}'" : "") .
+        ". مع التركيز على اسم المتجر بما لا يزيد على 4-5 كلمات. الرد يجب أن يكون العنوان فقط بدون أي إضافات أو علامات ترقيم خاصة.";
     } else {
-      $prompt = "Write a Title for a WhatsApp store, store name is '{$storeName}'" . 
-                (!empty($storeDescription) ? " and description is '{$storeDescription}'" : "") . 
-                ". Focus on the store name, max 4-5 words. Response should be just the title without any additional text or special punctuation.";
+      $prompt = "Write a Title for a WhatsApp store, store name is '{$storeName}'" .
+        (!empty($storeDescription) ? " and description is '{$storeDescription}'" : "") .
+        ". Focus on the store name, max 4-5 words. Response should be just the title without any additional text or special punctuation.";
     }
 
     try {
@@ -1003,7 +1010,7 @@ class WhatsappStoreController extends AppBaseController
     // Validate store data
     if (empty($storeName)) {
       $currentLang = $whatsappStore->default_language ?? 'en';
-      $errorMsg = $currentLang == 'ar' 
+      $errorMsg = $currentLang == 'ar'
         ? 'الرجاء إضافة اسم المتجر أولاً في علامة التبويب الأساسيات'
         : 'Please add store name first in Basics tab';
       return response()->json(['success' => false, 'message' => $errorMsg], 400);
@@ -1014,13 +1021,13 @@ class WhatsappStoreController extends AppBaseController
 
     // Create language-specific prompt - Focus on description/type
     if ($currentLang == 'ar') {
-      $prompt = "اكتب عنوان Title لمتجر واتساب، اسم المتجر '{$storeName}'" . 
-                (!empty($storeDescription) ? " ووصفه '{$storeDescription}'" : "") . 
-                ". مع التركيز على نوع المتجر أو المنتجات بما لا يزيد على 4-5 كلمات. الرد يجب أن يكون العنوان فقط بدون أي إضافات أو علامات ترقيم خاصة.";
+      $prompt = "اكتب عنوان Title لمتجر واتساب، اسم المتجر '{$storeName}'" .
+        (!empty($storeDescription) ? " ووصفه '{$storeDescription}'" : "") .
+        ". مع التركيز على نوع المتجر أو المنتجات بما لا يزيد على 4-5 كلمات. الرد يجب أن يكون العنوان فقط بدون أي إضافات أو علامات ترقيم خاصة.";
     } else {
-      $prompt = "Write a Title for a WhatsApp store, store name is '{$storeName}'" . 
-                (!empty($storeDescription) ? " and description is '{$storeDescription}'" : "") . 
-                ". Focus on the store type or products, max 4-5 words. Response should be just the title without any additional text or special punctuation.";
+      $prompt = "Write a Title for a WhatsApp store, store name is '{$storeName}'" .
+        (!empty($storeDescription) ? " and description is '{$storeDescription}'" : "") .
+        ". Focus on the store type or products, max 4-5 words. Response should be just the title without any additional text or special punctuation.";
     }
 
     try {
@@ -1093,7 +1100,7 @@ class WhatsappStoreController extends AppBaseController
     // Validate store data
     if (empty($storeName)) {
       $currentLang = $whatsappStore->default_language ?? 'en';
-      $errorMsg = $currentLang == 'ar' 
+      $errorMsg = $currentLang == 'ar'
         ? 'الرجاء إضافة اسم المتجر أولاً في علامة التبويب الأساسيات'
         : 'Please add store name first in Basics tab';
       return response()->json(['success' => false, 'message' => $errorMsg], 400);
@@ -1104,13 +1111,13 @@ class WhatsappStoreController extends AppBaseController
 
     // Create language-specific prompt
     if ($currentLang == 'ar') {
-      $prompt = "اقترح كلمات مفتاحية SEO لمتجر واتساب اسمه '{$storeName}'" . 
-                (!empty($storeDescription) ? " ووصفه '{$storeDescription}'" : "") . 
-                ". اذكر 5-7 كلمات مفتاحية مفصولة بفواصل، مناسبة لمحركات البحث. الرد يجب أن يكون الكلمات المفتاحية فقط مفصولة بفواصل.";
+      $prompt = "اقترح كلمات مفتاحية SEO لمتجر واتساب اسمه '{$storeName}'" .
+        (!empty($storeDescription) ? " ووصفه '{$storeDescription}'" : "") .
+        ". اذكر 5-7 كلمات مفتاحية مفصولة بفواصل، مناسبة لمحركات البحث. الرد يجب أن يكون الكلمات المفتاحية فقط مفصولة بفواصل.";
     } else {
-      $prompt = "Suggest SEO keywords for a WhatsApp store named '{$storeName}'" . 
-                (!empty($storeDescription) ? " with description '{$storeDescription}'" : "") . 
-                ". Provide 5-7 keywords separated by commas, suitable for search engines. Response should be just the keywords separated by commas.";
+      $prompt = "Suggest SEO keywords for a WhatsApp store named '{$storeName}'" .
+        (!empty($storeDescription) ? " with description '{$storeDescription}'" : "") .
+        ". Provide 5-7 keywords separated by commas, suitable for search engines. Response should be just the keywords separated by commas.";
     }
 
     try {
@@ -1183,7 +1190,7 @@ class WhatsappStoreController extends AppBaseController
     // Validate store data
     if (empty($storeName)) {
       $currentLang = $whatsappStore->default_language ?? 'en';
-      $errorMsg = $currentLang == 'ar' 
+      $errorMsg = $currentLang == 'ar'
         ? 'الرجاء إضافة اسم المتجر أولاً في علامة التبويب الأساسيات'
         : 'Please add store name first in Basics tab';
       return response()->json(['success' => false, 'message' => $errorMsg], 400);
@@ -1194,13 +1201,13 @@ class WhatsappStoreController extends AppBaseController
 
     // Create language-specific prompt
     if ($currentLang == 'ar') {
-      $prompt = "اقترح ميتا وصف Meta Description لمتجر واتساب اسمه '{$storeName}'" . 
-                (!empty($storeDescription) ? " ووصفه '{$storeDescription}'" : "") . 
-                ". اكتب وصف جذاب لمحركات البحث بحد أقصى 150-160 حرف. الرد يجب أن يكون الوصف فقط.";
+      $prompt = "اقترح ميتا وصف Meta Description لمتجر واتساب اسمه '{$storeName}'" .
+        (!empty($storeDescription) ? " ووصفه '{$storeDescription}'" : "") .
+        ". اكتب وصف جذاب لمحركات البحث بحد أقصى 150-160 حرف. الرد يجب أن يكون الوصف فقط.";
     } else {
-      $prompt = "Suggest a Meta Description for a WhatsApp store named '{$storeName}'" . 
-                (!empty($storeDescription) ? " with description '{$storeDescription}'" : "") . 
-                ". Write an engaging description for search engines, max 150-160 characters. Response should be just the description.";
+      $prompt = "Suggest a Meta Description for a WhatsApp store named '{$storeName}'" .
+        (!empty($storeDescription) ? " with description '{$storeDescription}'" : "") .
+        ". Write an engaging description for search engines, max 150-160 characters. Response should be just the description.";
     }
 
     try {
