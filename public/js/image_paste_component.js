@@ -39,24 +39,72 @@ class ImagePasteComponent {
     }
 
     createUI() {
-        // Select button
-        const selectButton = document.createElement('button');
-        selectButton.type = 'button';
-        selectButton.className = 'btn btn-outline-primary btn-sm me-2';
-        selectButton.innerHTML = '<i class="fas fa-image"></i> ' + this.options.buttonText;
-        selectButton.onclick = () => this.selectImage();
-
         // Clipboard button
         const clipboardButton = document.createElement('button');
         clipboardButton.type = 'button';
-        clipboardButton.className = 'btn btn-outline-primary btn-sm my-2';
-        clipboardButton.innerHTML = '<i class="fas fa-clipboard"></i> ' + this.options.clipboardButtonText;
+        clipboardButton.className = 'btn btn-outline-primary btn-sm my-2 position-relative';
+        clipboardButton.innerHTML = '<i class="fas fa-paste"></i>';
         clipboardButton.onclick = () => this.readClipboard();
 
-        this.container.appendChild(selectButton);
-        this.container.appendChild(clipboardButton);
+        // Create tooltip element
+        const tooltip = document.createElement('div');
+        tooltip.className = 'custom-tooltip';
+        tooltip.textContent = 'لصق الصورة من الحافظة - انقر للصق الصورة الموجودة في الحافظة';
+        tooltip.style.cssText = `
+            position: absolute;
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            margin-bottom: 5px;
+            pointer-events: none;
+        `;
 
-        this.selectButton = selectButton;
+        // Add arrow
+        const arrow = document.createElement('div');
+        arrow.style.cssText = `
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #333;
+        `;
+        tooltip.appendChild(arrow);
+
+        // Add hover events
+        clipboardButton.addEventListener('mouseenter', () => {
+            tooltip.style.opacity = '1';
+            tooltip.style.visibility = 'visible';
+            tooltip.style.transform = 'translateX(-50%) translateY(0)';
+        });
+
+        clipboardButton.addEventListener('mouseleave', () => {
+            tooltip.style.opacity = '0';
+            tooltip.style.visibility = 'hidden';
+            tooltip.style.transform = 'translateX(-50%) translateY(5px)';
+        });
+
+        // Create wrapper for positioning
+        const wrapper = document.createElement('div');
+        wrapper.className = 'position-relative d-inline-block';
+        wrapper.appendChild(clipboardButton);
+        wrapper.appendChild(tooltip);
+
+        this.container.appendChild(wrapper);
+
         this.clipboardButton = clipboardButton;
     }
 
@@ -67,13 +115,6 @@ class ImagePasteComponent {
             fileInput.addEventListener('change', (e) => {
                 this.handleFileSelect(e);
             });
-        }
-    }
-
-    selectImage() {
-        const fileInput = document.getElementById(this.options.fileInputId);
-        if (fileInput) {
-            fileInput.click();
         }
     }
 
@@ -97,7 +138,7 @@ class ImagePasteComponent {
 
         } catch (error) {
             console.error('Clipboard error:', error);
-            alert('CLIPBOARD REQUIRES HTTPS! Your site must use HTTPS (not HTTP) for automatic clipboard reading. Ask your developer to enable SSL/HTTPS.');
+            alert('الوصول إلى الحافظة يتطلب إذن المتصفح! قد لا يسمح متصفحك بهذه الميزة - يرجى التحقق من إعدادات المتصفح والأذونات.');
         }
     }
 

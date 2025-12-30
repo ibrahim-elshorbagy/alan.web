@@ -58,7 +58,34 @@
     <style>
       @if (checkFeature('custom-fonts'))
         @if ($vcard->font_family)
-          body {
+          body,
+          body *,
+          button,
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6,
+          p,
+          div,
+          span,
+          a,
+          input,
+          textarea,
+          select,
+          label,
+          li,
+          ul,
+          ol,
+          table,
+          th,
+          td,
+          blockquote,
+          strong,
+          b,
+          em,
+          i {
             font-family: {{ $vcard->font_family }} !important;
           }
         @endif
@@ -560,8 +587,8 @@
                             <h5 class="card-title title-text" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                               {{ ucwords($service->name) }}</h5>
                           </a>
-                          <p
-                            class="card-text description-text {{ \Illuminate\Support\Str::length($service->description) > 170 ? 'more' : '' }}" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
+                          <p class="card-text description-text {{ \Illuminate\Support\Str::length($service->description) > 170 ? 'more' : '' }}"
+                            @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                             {!! \Illuminate\Support\Str::limit($service->description, 170, '...') !!}</p>
                         </div>
                       </div>
@@ -584,8 +611,8 @@
                           <h3 class="card-title fs-18 text-white" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                             {{ ucwords($service->name) }}
                           </h3>
-                          <p
-                            class="mb-0 fs-14 fw-light text-white {{ \Illuminate\Support\Str::length($service->description) > 170 ? 'more' : '' }}" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
+                          <p class="mb-0 fs-14 fw-light text-white {{ \Illuminate\Support\Str::length($service->description) > 170 ? 'more' : '' }}"
+                            @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                             {!! \Illuminate\Support\Str::limit($service->description, 170, '...') !!}
                           </p>
                         </div>
@@ -675,12 +702,15 @@
                           </div>
                           <div class="product-desc card-body">
                             <div class="product-title">
-                              <h3 class="text-black fs-18 fw-5" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>{{ $product->name }}</h3>
+                              <h3 class="text-black fs-18 fw-5" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
+                                {{ $product->name }}</h3>
                             </div>
-                            <p class="fs-12 text-gray-100 mb-0 fw-5" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
+                            <p class="fs-12 text-gray-100 mb-0 fw-5"
+                              @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                               {{ $product->description }}
                             </p>
-                            <div class="product-amount text-primary text-center fw-5 mt-2" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') style="direction: rtl; text-align: right; display: block;" @endif>
+                            <div class="product-amount text-primary text-center fw-5 mt-2"
+                              @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') style="direction: rtl; text-align: right; display: block;" @endif>
                               @if ($product->currency_id && $product->price)
                                 <span
                                   class="product-amount text-primary text-center fw-5">{{ currencyFormat($product->price, 2, $product->currency->currency_code) }}</span>
@@ -733,8 +763,8 @@
                           class="img-fluid h-100 object-fit-cover" loading="lazy" />
                       </div>
                       <div class="text-sm-start text-center">
-                        <p
-                          class="desc text-white mb-0  {{ \Illuminate\Support\Str::length($testimonial->description) > 80 ? 'more' : '' }}" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
+                        <p class="desc text-white mb-0  {{ \Illuminate\Support\Str::length($testimonial->description) > 80 ? 'more' : '' }}"
+                          @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                           {!! $testimonial->description !!}
                         </p>
                       </div>

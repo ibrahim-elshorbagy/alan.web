@@ -60,7 +60,34 @@
     <style>
       @if (checkFeature('custom-fonts'))
         @if ($vcard->font_family)
-          body {
+          body,
+          body *,
+          button,
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6,
+          p,
+          div,
+          span,
+          a,
+          input,
+          textarea,
+          select,
+          label,
+          li,
+          ul,
+          ol,
+          table,
+          th,
+          td,
+          blockquote,
+          strong,
+          b,
+          em,
+          i {
             font-family: {{ $vcard->font_family }} !important;
           }
         @endif
@@ -547,8 +574,8 @@
                             <h5 class="card-title title-text" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                               {{ ucwords($service->name) }}</h5>
                           </a>
-                          <p
-                            class="card-text description-text {{ \Illuminate\Support\Str::length($service->description) > 170 ? 'more' : '' }}" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
+                          <p class="card-text description-text {{ \Illuminate\Support\Str::length($service->description) > 170 ? 'more' : '' }}"
+                            @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                             {!! \Illuminate\Support\Str::limit($service->description, 170, '...') !!}</p>
                         </div>
                       </div>
@@ -570,8 +597,8 @@
                           <h5 class="card-title text-gray-100" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                             {{ ucwords($service->name) }}
                           </h5>
-                          <p
-                            class="card-text text-gray-300 {{ \Illuminate\Support\Str::length($service->description) > 170 ? 'more' : '' }}" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
+                          <p class="card-text text-gray-300 {{ \Illuminate\Support\Str::length($service->description) > 170 ? 'more' : '' }}"
+                            @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                             {!! \Illuminate\Support\Str::limit($service->description, 170, '...') !!}</p>
                         </div>
                       </div>
@@ -661,16 +688,17 @@
                             height="208px" loading="lazy" />
                         </div>
                         <div class="product-details mt-3">
-                          <h4 class="text-white" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>{{ $product->name }}</h4>
+                          <h4 class="text-white" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
+                            {{ $product->name }}</h4>
                           <p class="mb-2 text-white" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                             {{ $product->description }}
                           </p>
                           @if ($product->currency_id && $product->price)
-                            <span
-                              class="text-whitek" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') style="direction: rtl; text-align: right; display: block;" @endif>{{ currencyFormat($product->price, 2, $product->currency->currency_code) }}</span>
+                            <span class="text-whitek"
+                              @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') style="direction: rtl; text-align: right; display: block;" @endif>{{ currencyFormat($product->price, 2, $product->currency->currency_code) }}</span>
                           @elseif($product->price)
-                            <span
-                              class="text-white" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') style="direction: rtl; text-align: right; display: block;" @endif>{{ currencyFormat($product->price, 2, getUserCurrencyIcon($vcard->user->id)) }}</span>
+                            <span class="text-white"
+                              @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') style="direction: rtl; text-align: right; display: block;" @endif>{{ currencyFormat($product->price, 2, getUserCurrencyIcon($vcard->user->id)) }}</span>
                           @endif
                         </div>
                       </div>
@@ -699,8 +727,8 @@
                     <div
                       class="card justify-content-between testimonial-card p-4 border-0 w-100 position-relative shadow h-100">
                       <i class="fas fa-quote-left testimonial-quote"></i>
-                      <p
-                        class="review-message mb-3 text-center {{ \Illuminate\Support\Str::length($testimonial->description) > 80 ? 'more' : '' }}" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
+                      <p class="review-message mb-3 text-center {{ \Illuminate\Support\Str::length($testimonial->description) > 80 ? 'more' : '' }}"
+                        @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
                         {!! $testimonial->description !!}
                       </p>
                       <div

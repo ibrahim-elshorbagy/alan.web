@@ -54,7 +54,34 @@
     <style>
       @if (checkFeature('custom-fonts'))
         @if ($vcard->font_family)
-          body {
+          body,
+          body *,
+          button,
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6,
+          p,
+          div,
+          span,
+          a,
+          input,
+          textarea,
+          select,
+          label,
+          li,
+          ul,
+          ol,
+          table,
+          th,
+          td,
+          blockquote,
+          strong,
+          b,
+          em,
+          i {
             font-family: {{ $vcard->font_family }} !important;
           }
         @endif
@@ -1016,7 +1043,7 @@
                   <div class="position-relative">
                     {{ Form::text('date', null, [
                         'class' => 'form-control date appointment-input
-                                                                                                                                    text-start',
+                                                                                                                                                        text-start',
                         'placeholder' => __('messages.form.pick_date'),
                         'id' => 'pickUpDate',
                     ]) }}

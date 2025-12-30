@@ -34,7 +34,7 @@
   <!-- Bootstrap CSS -->
   <link href="{{ asset('front/css/bootstrap.min.css') }}" rel="stylesheet">
   <link rel="icon" href="{{ getVcardFavicon($vcard) }}" type="image/png">
-
+  z
   {{-- css link --}}
   <link rel="stylesheet" href="{{ asset('assets/css/slider/css/slick.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/css/slider/css/slick-theme.min.css') }}">
@@ -57,7 +57,34 @@
     <style>
       @if (checkFeature('custom-fonts'))
         @if ($vcard->font_family)
-          body {
+          body,
+          body *,
+          button,
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6,
+          p,
+          div,
+          span,
+          a,
+          input,
+          textarea,
+          select,
+          label,
+          li,
+          ul,
+          ol,
+          table,
+          th,
+          td,
+          blockquote,
+          strong,
+          b,
+          em,
+          i {
             font-family: {{ $vcard->font_family }} !important;
           }
         @endif
