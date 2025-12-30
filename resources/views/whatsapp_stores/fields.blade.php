@@ -307,7 +307,7 @@
               <div class="">
                 <div class="">
                   <span class="input-group-text bg-light text-muted w-100 justify-content-center">
-                    <i class="bi bi-moon me-2"></i>
+                    <i class="bi bi-moon mx-2"></i>
                     <span>{{ __('messages.common.closed') }}</span>
                   </span>
                 </div>

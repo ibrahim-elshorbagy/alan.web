@@ -1199,7 +1199,7 @@
                       <div class="wrapper-file-input">
                         <div class="input-box" id="fileInputTrigger">
                           <h4 class="text-primary"> <i
-                              class="fa-solid fa-upload me-2"></i>{{ __('messages.choose_file') }}
+                              class="fa-solid fa-upload mx-2"></i>{{ __('messages.choose_file') }}
                           </h4> <input type="file" id="attachment" name="attachment" hidden multiple />
                         </div> <small class="text-black">{{ __('messages.file_supported') }}</small>
                       </div>

@@ -51,7 +51,34 @@
     <style>
       @if (checkFeature('custom-fonts'))
         @if ($vcard->font_family)
-          body, body *, button, h1, h2, h3, h4, h5, h6, p, div, span, a, input, textarea, select, label, li, ul, ol, table, th, td, blockquote, strong, b, em, i {
+          body,
+          body *,
+          button,
+          h1,
+          h2,
+          h3,
+          h4,
+          h5,
+          h6,
+          p,
+          div,
+          span,
+          a,
+          input,
+          textarea,
+          select,
+          label,
+          li,
+          ul,
+          ol,
+          table,
+          th,
+          td,
+          blockquote,
+          strong,
+          b,
+          em,
+          i {
             font-family: {{ $vcard->font_family }} !important;
           }
         @endif
@@ -1018,7 +1045,7 @@
                     <div class="mb-3 mt-3">
                       <div class="wrapper-file-input">
                         <div class="input-box" id="fileInputTrigger">
-                          <h4> <i class="fa-solid fa-upload me-2"></i>{{ __('messages.choose_file') }}
+                          <h4> <i class="fa-solid fa-upload mx-2"></i>{{ __('messages.choose_file') }}
                           </h4> <input type="file" id="attachment" name="attachment" hidden multiple />
                         </div> <small>{{ __('messages.file_supported') }}</small>
                       </div>
@@ -1081,7 +1108,7 @@
                     <div class="mb-3">
                       <div class="wrapper-file-input">
                         <div class="input-box" id="fileInputTrigger">
-                          <h4> <i class="fa-solid fa-upload me-2"></i>{{ __('messages.choose_file') }}
+                          <h4> <i class="fa-solid fa-upload mx-2"></i>{{ __('messages.choose_file') }}
                           </h4> <input type="file" id="attachment" name="attachment" hidden multiple />
                         </div> <small>{{ __('messages.file_supported') }}</small>
                       </div>

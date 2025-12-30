@@ -148,7 +148,7 @@
                     <a href="{{ route('social.login', 'facebook') }}"
                       class="btn facebook-btn py-3 d-flex align-items-center justify-content-center text-white flex-fill modern-social-btn"
                       style="transition: all 0.3s ease;">
-                      <i class="fab fa-facebook-f me-2"></i>
+                      <i class="fab fa-facebook-f mx-2"></i>
                       <span
                         style="font-size: 15px; font-weight: 600;">{{ __('messages.placeholder.login_via_facebook') }}</span>
                     </a>

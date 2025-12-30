@@ -252,31 +252,31 @@
 
           <div class="col-lg-4 col-md-6 mb-2 pt-3 pt-sm-0">
             <h5 class="fw-bold text-white mb-3">
-              <i class="fas fa-headset me-2 text-white"></i>{{ __('messages.whatsapp_stores.support_services') }}
+              <i class="fas fa-headset mx-2 text-white"></i>{{ __('messages.whatsapp_stores.support_services') }}
             </h5>
             <ul class="list-unstyled">
               <li class="mb-2">
                 <a href="{{ route('whatsapp.store.show-terms-conditions', $whatsappStore->url_alias) }}"
                   target="_blank" class="text-decoration-none text-white footer-link-hover">
-                  <i class="fas fa-file-contract me-2"></i>{{ __('messages.vcard.term_condition') }}
+                  <i class="fas fa-file-contract mx-2"></i>{{ __('messages.vcard.term_condition') }}
                 </a>
               </li>
               <li class="mb-2">
                 <a href="{{ route('whatsapp.store.show-privacy-policy', $whatsappStore->url_alias) }}"
                   target="_blank" class="text-decoration-none text-white footer-link-hover">
-                  <i class="fas fa-shield-alt me-2"></i>{{ __('messages.vcard.privacy_policy') }}
+                  <i class="fas fa-shield-alt mx-2"></i>{{ __('messages.vcard.privacy_policy') }}
                 </a>
               </li>
               <li class="mb-2">
                 <a href="{{ route('whatsapp.store.show-refund-cancellation', $whatsappStore->url_alias) }}"
                   target="_blank" class="text-decoration-none text-white footer-link-hover">
-                  <i class="fas fa-undo-alt me-2"></i>{{ __('messages.vcard.refund_cancellation_policy') }}
+                  <i class="fas fa-undo-alt mx-2"></i>{{ __('messages.vcard.refund_cancellation_policy') }}
                 </a>
               </li>
               <li class="mb-2">
                 <a href="{{ route('whatsapp.store.show-shipping-delivery', $whatsappStore->url_alias) }}"
                   target="_blank" class="text-decoration-none text-white footer-link-hover">
-                  <i class="fas fa-shipping-fast me-2"></i>{{ __('messages.vcard.shipping_delivery_policy') }}
+                  <i class="fas fa-shipping-fast mx-2"></i>{{ __('messages.vcard.shipping_delivery_policy') }}
                 </a>
               </li>
             </ul>
@@ -285,7 +285,7 @@
           <div class="col-md-4">
             <div class="fw-5 fs-16">
               <h5 class="fw-bold text-white mb-3">
-                <i class="fas fa-comments me-2 text-white"></i>{{ __('messages.whatsapp_stores.talk_to_us') }}
+                <i class="fas fa-comments mx-2 text-white"></i>{{ __('messages.whatsapp_stores.talk_to_us') }}
               </h5>
               <div class="mb-2 text-white">
                 <i class="fas fa-map-marker-alt"></i> {{ $whatsappStore->address }}

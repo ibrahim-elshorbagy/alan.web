@@ -41,7 +41,7 @@
               <li class="dropdown1 dropdown lang-list">
                 <a class="dropdown-toggle lang-head text-decoration-none" data-toggle="dropdown" role="button"
                   aria-haspopup="true" aria-expanded="false">
-                  <i class="fa-solid fa-language me-2"></i>Language</a>
+                  <i class="fa-solid fa-language mx-2"></i>Language</a>
                 <ul class="dropdown-menu start-0 lang-hover-list top-100">
                   <li>
                     <img src="{{ asset('assets/img/vcard1/english.png') }}" width="25px" height="20px" class="me-3"
@@ -559,12 +559,12 @@
         </div>
         <div class="d-sm-flex justify-content-center mt-5">
           <button type="submit" class="vcard-ten-btn mt-4 d-block btn">
-            <i class="fas fa-download me-2"></i> Download vCard
+            <i class="fas fa-download mx-2"></i> Download vCard
           </button>
           {{-- share btn --}}
           <button type="button" class="share-btn d-block btn mt-4 ms-sm-3">
             <a href="#" class="text-decoration-none">
-              <i class="fas fa-share-alt me-2"></i>Share</a>
+              <i class="fas fa-share-alt mx-2"></i>Share</a>
           </button>
         </div>
         <br>

@@ -1131,7 +1131,7 @@
                     <div class="my-3">
                       <div class="wrapper-file-input">
                         <div class="input-box form-control" id="fileInputTrigger">
-                          <h4> <i class="fa-solid fa-upload me-2"></i>{{ __('messages.choose_file') }}
+                          <h4> <i class="fa-solid fa-upload mx-2"></i>{{ __('messages.choose_file') }}
                           </h4> <input type="file" id="attachment" name="attachment" hidden multiple />
                         </div> <small>{{ __('messages.file_supported') }}</small>
                       </div>

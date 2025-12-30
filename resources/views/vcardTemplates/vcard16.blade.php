@@ -528,7 +528,7 @@
                   <div class="position-relative">
                     {{ Form::text('date', null, [
                         'class' => ' date form-control appointment-input
-                                                                                                                                                                            text-start',
+                                                                                                                                                                                                text-start',
                         'placeholder' => __('messages.form.pick_date'),
                         'id' => 'pickUpDate',
                     ]) }}
@@ -1119,7 +1119,7 @@
                     <div class="mb-3">
                       <div class="wrapper-file-input">
                         <div class="input-box" id="fileInputTrigger">
-                          <h4> <i class="fa-solid fa-upload me-2"></i>{{ __('messages.choose_file') }}
+                          <h4> <i class="fa-solid fa-upload mx-2"></i>{{ __('messages.choose_file') }}
                           </h4> <input type="file" id="attachment" name="attachment" hidden multiple />
                         </div> <small>{{ __('messages.file_supported') }}</small>
                       </div>
@@ -1191,7 +1191,7 @@
                     <div class="mb-3">
                       <div class="wrapper-file-input">
                         <div class="input-box" id="fileInputTrigger">
-                          <h4> <i class="fa-solid fa-upload me-2"></i>{{ __('messages.choose_file') }}
+                          <h4> <i class="fa-solid fa-upload mx-2"></i>{{ __('messages.choose_file') }}
                           </h4> <input type="file" id="attachment" name="attachment" hidden multiple />
                         </div> <small>{{ __('messages.file_supported') }}</small>
                       </div>
