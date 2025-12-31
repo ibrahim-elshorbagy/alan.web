@@ -3744,6 +3744,7 @@ textarea.form-control-lg {
     flex-wrap: wrap;
     position: relative;
     width: 100%;
+    direction:ltr;
 }
 
 .input-group>.form-control,
