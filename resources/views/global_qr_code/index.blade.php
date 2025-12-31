@@ -36,7 +36,7 @@
                               <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="card h-100">
                                   <div class="card-body text-center">
-                                    <div class="qr-code p-3 mb-3 d-flex justify-content-center align-items-center"
+                                    <div class="qr-code-image p-3 mb-3 d-flex justify-content-center align-items-center"
                                       style="background: {{ $customQrCode['background_color'] ?? '#ffffff' }}; min-height: 200px;">
                                       @if (isset($customQrCode['applySetting']) && $customQrCode['applySetting'] == 1)
                                         {!! QrCode::color(
@@ -52,6 +52,11 @@
                                         {!! QrCode::size(150)->format('svg')->generate(route('vcard.show', $vcard->url_alias)) !!}
                                       @endif
                                     </div>
+                                    <button type="button" class="btn btn-primary btn-sm mb-2 global-qr-code-download-btn"
+                                      title="{{ __('messages.vcard.qr_code') }}" data-filename="vcard_{{ $vcard->url_alias }}_qr_code.png">
+                                      <i class="fa-solid fa-download me-1"></i> {{ __('messages.common.download') }}
+                                    </button>
+                                    <br>
                                     <small class="text-muted">{{ route('vcard.show', $vcard->url_alias) }}</small>
                                   </div>
                                 </div>
@@ -63,7 +68,7 @@
                               <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="card h-100">
                                   <div class="card-body text-center">
-                                    <div class="qr-code p-3 mb-3 d-flex justify-content-center align-items-center"
+                                    <div class="qr-code-image p-3 mb-3 d-flex justify-content-center align-items-center"
                                       style="background: {{ $customQrCode['background_color'] ?? '#ffffff' }}; min-height: 200px;">
                                       @if (isset($customQrCode['applySetting']) && $customQrCode['applySetting'] == 1)
                                         {!! QrCode::color(
@@ -79,6 +84,11 @@
                                         {!! QrCode::size(150)->format('svg')->generate(route('whatsapp.store.show', $store->url_alias)) !!}
                                       @endif
                                     </div>
+                                    <button type="button" class="btn btn-primary btn-sm mb-2 global-qr-code-download-btn"
+                                      title="{{ __('messages.vcard.qr_code') }}" data-filename="whatsapp_store_{{ $store->url_alias }}_qr_code.png">
+                                      <i class="fa-solid fa-download me-1"></i> {{ __('messages.common.download') }}
+                                    </button>
+                                    <br>
                                     <small
                                       class="text-muted">{{ route('whatsapp.store.show', $store->url_alias) }}</small>
                                   </div>
@@ -167,6 +177,123 @@
       // Form submission handler
       $('#globalQrCodeForm').on('submit', function(e) {
         $('#saveGlobalQrCode').prop('disabled', true);
+      });
+
+      // QR Code download handler - robust version
+      $(document).on('click', '.global-qr-code-download-btn', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const $button = $(this);
+
+        // Disable button during processing
+        $button.prop('disabled', true);
+
+        try {
+          // Get the filename from data attribute
+          const filename = $button.data('filename') || 'qr_code.png';
+
+          // Find the QR code SVG in the same card - try multiple selectors
+          let $qrCodeDiv = $button.closest('.card-body').find('.qr-code-image').first();
+
+          // Fallback: try parent approach
+          if ($qrCodeDiv.length === 0) {
+            $qrCodeDiv = $button.parent().siblings('.qr-code-image').first();
+          }
+
+          // Fallback: try going up to card and down
+          if ($qrCodeDiv.length === 0) {
+            $qrCodeDiv = $button.closest('.card').find('.qr-code-image').first();
+          }
+
+          const svg = $qrCodeDiv.find('svg')[0];
+
+          if (!svg) {
+            console.error("No QR code found for this button.");
+            alert('QR code not found. Please try again.');
+            $button.prop('disabled', false);
+            return;
+          }
+
+          // Get SVG dimensions
+          const svgRect = svg.getBoundingClientRect();
+          const svgWidth = svgRect.width || 300;
+          const svgHeight = svgRect.height || 300;
+
+          // Serialize SVG to string
+          const svgData = new XMLSerializer().serializeToString(svg);
+          const svgBlob = new Blob([svgData], {
+            type: "image/svg+xml;charset=utf-8"
+          });
+          const url = URL.createObjectURL(svgBlob);
+
+          // Create image from SVG
+          const img = new Image();
+
+          img.onload = function() {
+            try {
+              const canvas = document.createElement('canvas');
+              // Use higher resolution for better quality
+              const scale = 2;
+              canvas.width = (img.width || svgWidth) * scale;
+              canvas.height = (img.height || svgHeight) * scale;
+              const context = canvas.getContext('2d');
+
+              // Scale context for high resolution
+              context.scale(scale, scale);
+
+              // Fill white background
+              context.fillStyle = 'white';
+              context.fillRect(0, 0, canvas.width, canvas.height);
+              context.drawImage(img, 0, 0);
+
+              // Convert to PNG and download
+              canvas.toBlob(function(blob) {
+                if (blob) {
+                  const pngUrl = URL.createObjectURL(blob);
+                  const link = document.createElement('a');
+                  link.href = pngUrl;
+                  link.download = filename;
+                  link.style.display = 'none';
+                  document.body.appendChild(link);
+                  link.click();
+
+                  // Cleanup after a delay
+                  setTimeout(function() {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(pngUrl);
+                    URL.revokeObjectURL(url);
+                    $button.prop('disabled', false);
+                  }, 100);
+                } else {
+                  console.error("Failed to create blob from canvas.");
+                  alert('Failed to generate QR code image. Please try again.');
+                  URL.revokeObjectURL(url);
+                  $button.prop('disabled', false);
+                }
+              }, 'image/png', 1.0);
+            } catch (error) {
+              console.error("Error in canvas conversion:", error);
+              alert('Failed to generate QR code image. Please try again.');
+              URL.revokeObjectURL(url);
+              $button.prop('disabled', false);
+            }
+          };
+
+          img.onerror = function(error) {
+            console.error("Failed to load SVG image:", error);
+            alert('Failed to generate QR code image. Please try again.');
+            URL.revokeObjectURL(url);
+            $button.prop('disabled', false);
+          };
+
+          img.src = url;
+
+        } catch (error) {
+          console.error("Error in QR code download:", error);
+          alert('An error occurred while downloading the QR code. Please try again.');
+          $button.prop('disabled', false);
+        }
       });
     });
   </script>

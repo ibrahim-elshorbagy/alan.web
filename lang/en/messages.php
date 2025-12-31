@@ -207,6 +207,7 @@ return [
   'checking' => 'Checking',
   'show_less' => 'Show Less',
   'flash' => [
+    'global_qr_code_updated' => 'Global QR code settings updated successfully!',
     'product_image_deleted' => 'Product image deleted successfully.',
     'custom_link_created' => 'Custom link created successfully.',
     'custom_link_updated' => 'Custom link updated successfully.',
@@ -2304,7 +2305,5 @@ return [
     'create_entities_first' => 'Create some vCards or WhatsApp Stores first to see their QR codes here.',
   ],
 
-  'flash' => [
-    'global_qr_code_updated' => 'Global QR code settings updated successfully!',
-  ],
+
 ];

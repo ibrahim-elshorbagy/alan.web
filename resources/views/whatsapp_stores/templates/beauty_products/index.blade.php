@@ -488,7 +488,19 @@
                 </button>
                 @if (!empty($whatsappStore->enable_download_qr_code))
                   <div class="qr-code-image d-none">
-                    {!! QrCode::size($whatsappStore->qr_code_download_size ?? 200)->format('svg')->generate($shareUrl) !!}
+                    @if (isset($customQrCode['applySetting']) && $customQrCode['applySetting'] == 1)
+                      {!! QrCode::color(
+                          $qrcodeColor['qrcodeColor']->red(),
+                          $qrcodeColor['qrcodeColor']->green(),
+                          $qrcodeColor['qrcodeColor']->blue(),
+                      )->backgroundColor(
+                              $qrcodeColor['background_color']->red(),
+                              $qrcodeColor['background_color']->green(),
+                              $qrcodeColor['background_color']->blue(),
+                          )->style($customQrCode['style'])->eye($customQrCode['eye_style'])->size($whatsappStore->qr_code_download_size ?? 200)->format('svg')->generate($shareUrl) !!}
+                    @else
+                      {!! QrCode::size($whatsappStore->qr_code_download_size ?? 200)->format('svg')->generate($shareUrl) !!}
+                    @endif
                   </div>
                   <a type="button"
                     class="whatsapp-store-btn-group whatsapp-store-sticky-btn d-flex justify-content-center align-items-center text-decoration-none px-2 mb-3 py-2 whatsapp-store-qr-code-btn"

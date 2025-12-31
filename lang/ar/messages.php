@@ -207,6 +207,7 @@ return [
   'checking' => 'جارٍ التحقق',
   'show_less' => 'عرض أقل',
   'flash' => [
+    'global_qr_code_updated' => 'تم تحديث إعدادات رمز QR العامة بنجاح!',
     'product_image_deleted' => 'تم حذف صورة المنتج بنجاح.',
     'custom_link_created' => 'تم إنشاء الرابط المخصص بنجاح.',
     'custom_link_updated' => 'تم تحديث الرابط المخصص بنجاح.',
@@ -2299,7 +2300,5 @@ return [
     'create_entities_first' => 'قم بإنشاء بعض بطاقات الأعمال أو متاجر الواتساب أولاً لرؤية رموز QR الخاصة بها هنا.',
   ],
 
-  'flash' => [
-    'global_qr_code_updated' => 'تم تحديث إعدادات رمز QR العامة بنجاح!',
-  ],
+
 ];

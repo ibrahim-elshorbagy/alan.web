@@ -30,6 +30,8 @@ use App\Http\Requests\CreateWhatsappStoreRequest;
 use App\Http\Requests\UpdateWhatsappStoreRequest;
 use App\Http\Requests\CreateWhatsappStoreEmailSubscribersRequest;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use App\Models\QrcodeEdit;
+use Spatie\Color\Hex;
 
 class WhatsappStoreController extends AppBaseController
 {
@@ -137,7 +139,27 @@ class WhatsappStoreController extends AppBaseController
       ksort($businessDaysTime);
     }
 
-    return view('whatsapp_stores.templates.' . $whatsappStore->template->name . '.index', compact('whatsappStore', 'enable_pwa', 'news_letter_popup', 'business_hours', 'businessDaysTime', 'hide_sticky_bar', 'whatsappStoreUrl'));
+    // Get global QR code settings (same as VcardController)
+    $customQrCode = QrcodeEdit::whereTenantId($whatsappStore->tenant_id)
+      ->where('is_global', true)
+      ->whereNull('vcard_id')
+      ->whereNull('whatsapp_store_id')
+      ->pluck('value', 'key')
+      ->toArray();
+
+    // If no global settings, use defaults
+    if (empty($customQrCode)) {
+      $customQrCode['qrcode_color'] = '#000000';
+      $customQrCode['background_color'] = '#ffffff';
+      $customQrCode['style'] = 'square';
+      $customQrCode['eye_style'] = 'square';
+      $customQrCode['applySetting'] = '1';
+    }
+
+    $qrcodeColor['qrcodeColor'] = Hex::fromString($customQrCode['qrcode_color'])->toRgb();
+    $qrcodeColor['background_color'] = Hex::fromString($customQrCode['background_color'])->toRgb();
+
+    return view('whatsapp_stores.templates.' . $whatsappStore->template->name . '.index', compact('whatsappStore', 'enable_pwa', 'news_letter_popup', 'business_hours', 'businessDaysTime', 'hide_sticky_bar', 'whatsappStoreUrl', 'customQrCode', 'qrcodeColor'));
   }
 
   public function update(WhatsappStore $whatsappStore, UpdateWhatsappStoreRequest $request)

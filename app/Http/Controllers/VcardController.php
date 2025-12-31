@@ -346,23 +346,21 @@ class VcardController extends AppBaseController
       ksort($businessDaysTime);
     }
 
-    // Get vCard-specific QR code settings
-    $customQrCode = QrcodeEdit::whereTenantId($vcard->user->tenant_id)->where('vcard_id', $vcard->id)->pluck('value', 'key')->toArray();
+    // Get global QR code settings first (these take priority over individual settings)
+    $customQrCode = QrcodeEdit::whereTenantId($vcard->user->tenant_id)
+      ->where('is_global', true)
+      ->whereNull('vcard_id')
+      ->whereNull('whatsapp_store_id')
+      ->pluck('value', 'key')
+      ->toArray();
 
-    // If no vCard-specific settings, try to get global settings
-    if (empty($customQrCode)) {
-      $customQrCode = QrcodeEdit::whereTenantId($vcard->user->tenant_id)
-        ->where('is_global', true)
-        ->whereNull('vcard_id')
-        ->whereNull('whatsapp_store_id')
-        ->pluck('value', 'key')
-        ->toArray();
-    }
-
-    // If still no settings, use defaults
+    // If no global settings, use defaults
     if (empty($customQrCode)) {
       $customQrCode['qrcode_color'] = '#000000';
       $customQrCode['background_color'] = '#ffffff';
+      $customQrCode['style'] = 'square';
+      $customQrCode['eye_style'] = 'square';
+      $customQrCode['applySetting'] = '1';
     }
 
     $qrcodeColor['qrcodeColor'] = Hex::fromString($customQrCode['qrcode_color'])->toRgb();
