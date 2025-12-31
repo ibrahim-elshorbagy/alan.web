@@ -81,6 +81,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ScheduleAppointmentController;
 use App\Http\Controllers\WhatsappStoreProductController;
 use App\Http\Controllers\EmailTemplatesController;
+use App\Http\Controllers\GlobalQrCodeController;
 use App\Http\Controllers\TwofactorAuthenticationController;
 use App\Http\Controllers\WhatsappStoreProductTransactionController;
 
@@ -456,6 +457,10 @@ Route::middleware(['freshInstall'])->group(function () {
           Route::get('/payment-method', [UserSettingController::class, 'index'])->name('user.payment.method');
           Route::post('/user-setting', [UserSettingController::class, 'update'])->name('user.setting.update');
           Route::post('/user-payment-method', [UserSettingController::class, 'paymentMethodUpdate'])->name('user.payment.method.update');
+
+          // Global QR Code Settings
+          Route::get('global-qr-code', [GlobalQrCodeController::class, 'index'])->name('global.qr.code.index');
+          Route::post('global-qr-code', [GlobalQrCodeController::class, 'store'])->name('global.qr.code.store');
 
           Route::get('custom-virtual-backgrounds', [ECardsController::class, 'custom'])->name('virtual-backgrounds.custom');
           Route::get('qr-code', [ECardsController::class, 'qrCode'])->name('qr-code');

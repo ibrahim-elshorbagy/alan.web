@@ -2293,4 +2293,18 @@ return [
     'last_generated' => 'Last Generated',
     'sitemap_description' => 'The sitemap includes all active vCards, WhatsApp stores, blogs, and custom pages. It is automatically generated daily, but you can manually regenerate it using the button below.',
   ],
+
+  'global_qr_code' => [
+    'title' => 'Global QR Code Settings',
+    'description' => 'Configure the QR code appearance for all your vCards and WhatsApp Stores.',
+    'preview' => 'QR Code Preview',
+    'preview_note' => 'Below are the actual QR codes for all your vCards and WhatsApp Stores using the current global settings.',
+    'settings' => 'QR Code Settings',
+    'no_entities' => 'No vCards or WhatsApp Stores Found',
+    'create_entities_first' => 'Create some vCards or WhatsApp Stores first to see their QR codes here.',
+  ],
+
+  'flash' => [
+    'global_qr_code_updated' => 'Global QR code settings updated successfully!',
+  ],
 ];

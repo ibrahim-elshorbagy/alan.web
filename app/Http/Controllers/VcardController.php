@@ -345,12 +345,26 @@ class VcardController extends AppBaseController
       $businessDaysTime = $openDays + $closeDays;
       ksort($businessDaysTime);
     }
+
+    // Get vCard-specific QR code settings
     $customQrCode = QrcodeEdit::whereTenantId($vcard->user->tenant_id)->where('vcard_id', $vcard->id)->pluck('value', 'key')->toArray();
 
-    if ($customQrCode == null) {
+    // If no vCard-specific settings, try to get global settings
+    if (empty($customQrCode)) {
+      $customQrCode = QrcodeEdit::whereTenantId($vcard->user->tenant_id)
+        ->where('is_global', true)
+        ->whereNull('vcard_id')
+        ->whereNull('whatsapp_store_id')
+        ->pluck('value', 'key')
+        ->toArray();
+    }
+
+    // If still no settings, use defaults
+    if (empty($customQrCode)) {
       $customQrCode['qrcode_color'] = '#000000';
       $customQrCode['background_color'] = '#ffffff';
     }
+
     $qrcodeColor['qrcodeColor'] = Hex::fromString($customQrCode['qrcode_color'])->toRgb();
     $qrcodeColor['background_color'] = Hex::fromString($customQrCode['background_color'])->toRgb();
 

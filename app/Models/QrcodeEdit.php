@@ -59,6 +59,8 @@ class QrcodeEdit extends Model
         'name',
         'tenant_id',
         'vcard_id',
+        'whatsapp_store_id',
+        'is_global',
         'key',
         'value',
     ];
@@ -66,5 +68,10 @@ class QrcodeEdit extends Model
     public function vcard(): BelongsTo
     {
         return $this->belongsTo(Vcard::class, 'vcard_id');
+    }
+
+    public function whatsappStore(): BelongsTo
+    {
+        return $this->belongsTo(WhatsappStore::class, 'whatsapp_store_id');
     }
 }
