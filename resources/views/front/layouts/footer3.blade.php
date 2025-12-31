@@ -28,7 +28,7 @@
         <div class="flex flex-col md:flex-row justify-between items-center mb-6">
             <div class="flex items-center mb-6 md:mb-0">
                 <div
-                    class="h-8 w-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white shadow-md mr-2 @if (checkFrontLanguageSession() == 'ar' || checkFrontLanguageSession() == 'fa') ml-2 mr-0 @endif">
+                    class=" flex items-center justify-center text-white shadow-md mr-2 @if (checkFrontLanguageSession() == 'ar' || checkFrontLanguageSession() == 'fa') ml-2 mr-0 @endif">
                     <img src="{{ getLogoUrl() }}" alt="company-logo" class="w-7 h-7" />
                 </div>
                 <span
