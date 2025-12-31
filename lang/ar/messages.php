@@ -569,6 +569,8 @@ return [
     'duplicate_whatsapp_store_create' => 'تم إنشاء نسخة مكررة من متجر واتساب بنجاح',
     'vcard_visitors' => 'زوار بطاقات vCard',
     'wp_visitors' => 'زوار متجر واتساب',
+    'copy' => 'نسخ',
+    'copied' => 'تم النسخ!',
   ],
   'user' => [
     'registered' => 'مستخدم جديد مسجل',
@@ -2275,5 +2277,15 @@ return [
     'please_enter_6_digit_code_from_your_authenticator_app_to_login' => 'الرجاء إدخال رمز الـ 6 أرقام من تطبيق المصادقة الخاص بك لإكمال تسجيل الدخول',
     '2fa_enabled_successfully' => 'تم تفعيل 2FA بنجاح',
     'two_factor_authentication_has_been_disabled' => 'تم تعطيل المصادقة ذات العاملين.',
+  ],
+
+  // ترجمات خريطة الموقع
+  'sitemap' => [
+    'sitemap' => 'خريطة الموقع',
+    'sitemap_url' => 'رابط خريطة الموقع',
+    'view_sitemap' => 'عرض خريطة الموقع',
+    'regenerate_sitemap' => 'إعادة تكوين خريطة الموقع',
+    'last_generated' => 'آخر تكوين',
+    'sitemap_description' => 'تتضمن خريطة الموقع جميع بطاقات الأعمال النشطة ومتاجر الواتساب والمدونات والصفحات المخصصة. يتم إنشاؤها تلقائيًا يوميًا، ولكن يمكنك إعادة تكوينها يدويًا باستخدام الزر أدناه.',
   ],
 ];

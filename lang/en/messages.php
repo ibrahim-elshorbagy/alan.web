@@ -569,6 +569,8 @@ return [
     'duplicate_whatsapp_store_create' => 'Duplicate Whatsapp Store created successfully',
     'vcard_visitors' => 'vCard Visitors',
     'wp_visitors' => 'WhatsApp Store Visitors',
+    'copy' => 'Copy',
+    'copied' => 'Copied!',
   ],
   'user' => [
     'registered' => 'New User Registered',
@@ -2280,5 +2282,15 @@ return [
     'please_enter_6_digit_code_from_your_authenticator_app_to_login' => 'Please enter the 6-digit code from Your Authenticator App to complete login',
     '2fa_enabled_successfully' => '2FA enabled successfully',
     'two_factor_authentication_has_been_disabled' => 'Two-Factor Authentication has been disabled.',
+  ],
+
+  // Sitemap translations
+  'sitemap' => [
+    'sitemap' => 'Sitemap',
+    'sitemap_url' => 'Sitemap URL',
+    'view_sitemap' => 'View Sitemap',
+    'regenerate_sitemap' => 'Regenerate Sitemap',
+    'last_generated' => 'Last Generated',
+    'sitemap_description' => 'The sitemap includes all active vCards, WhatsApp stores, blogs, and custom pages. It is automatically generated daily, but you can manually regenerate it using the button below.',
   ],
 ];
