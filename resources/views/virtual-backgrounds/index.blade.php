@@ -6,9 +6,7 @@
     <div class="container-fluid">
         <div class="row justify-content-around">
             <p class="text-primary">{{__('messages.common.virtual_note') }}</p>
-            <div class="alert-info w-100 my-4 p-2">
-                <strong>{{ __('messages.common.note') }}:</strong> {{ __('messages.e_card.english_only_note') }}
-            </div>
+
             <div class="w-100 mb-4">
                 <a href="{{ route('virtual-backgrounds.custom') }}" class="btn float-end btn-primary" data-turbo="false">{{ __('messages.common.add_custom') }} <i class="fas fa-plus"></i></a>
             </div>
