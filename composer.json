@@ -27,7 +27,7 @@
     "iyzico/iyzipay-php": "^2.0",
     "jenssegers/agent": "^2.6",
     "jeroendesloovere/vcard": "^1.7",
-    "khaled.alshamaa/ar-php": "*",
+    "khaled.alshamaa/ar-php": "^7.0",
     "kingflamez/laravelrave": "^4.2",
     "lab404/laravel-impersonate": "^1.7",
     "laracasts/flash": "^3.2",
