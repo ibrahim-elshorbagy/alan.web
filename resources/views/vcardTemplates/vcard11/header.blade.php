@@ -347,3 +347,4 @@
   </div>
   @include('vcardTemplates.contact-request')
 </header>
+

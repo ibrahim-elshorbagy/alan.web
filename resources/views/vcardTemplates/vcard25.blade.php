@@ -83,8 +83,7 @@
           blockquote,
           strong,
           b,
-          em,
-          {
+          em { 
           font-family: {{ $vcard->font_family }} !important;
         }
       @endif
@@ -1866,3 +1865,4 @@
 </script>
 
 </html>
+

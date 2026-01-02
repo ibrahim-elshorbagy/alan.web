@@ -71,8 +71,7 @@
           blockquote,
           strong,
           b,
-          em,
-          {
+          em { 
           font-family: {{ $whatsappStore->font_family }} !important;
         }
       @endif
@@ -286,3 +285,4 @@
 </script>
 
 </html>
+

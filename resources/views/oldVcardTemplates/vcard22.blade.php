@@ -93,8 +93,7 @@
           blockquote,
           strong,
           b,
-          em,
-          {
+          em { 
           font-family: {{ $vcard->font_family }} !important;
         }
       @endif
@@ -1776,3 +1775,4 @@
 <script src="{{ mix('assets/js/lightbox.js') }}"></script>
 
 </html>
+

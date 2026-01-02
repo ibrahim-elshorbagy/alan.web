@@ -7,3 +7,4 @@
 @elseif($row->status == App\Models\WpOrder::CANCELLED)
     <span class="text-danger">{{ __('messages.cancelled') }}</span>
 @endif
+

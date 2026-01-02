@@ -54,3 +54,4 @@
 @push('scripts')
   <script src="{{ asset('js/image_paste_component.js') }}"></script>
 @endpush
+

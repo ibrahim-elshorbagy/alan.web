@@ -88,3 +88,4 @@
             "{{ getUserSettingValue('mp_public_key', $vcard->user->id) }}");
     }
 </script>
+

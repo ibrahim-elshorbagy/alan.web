@@ -82,8 +82,7 @@
           blockquote,
           strong,
           b,
-          em,
-          {
+          em { 
           font-family: {{ $vcard->font_family }} !important;
         }
       @endif
@@ -2011,3 +2010,4 @@
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer></script>
 
 </html>
+

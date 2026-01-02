@@ -299,3 +299,4 @@
         <!-- end QR-code section -->
     </div>
 @endsection
+
