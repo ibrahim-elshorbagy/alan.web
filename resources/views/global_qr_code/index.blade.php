@@ -24,8 +24,63 @@
             <div class="card">
               <div class="card-body">
                 <div class="row">
-                  <!-- QR Code Preview Grid -->
+                  <!-- QR Code Settings -->
                   <div class="col-lg-12 mb-4">
+                    <div class="card">
+                      <div class="card-header">
+                        <h5 class="mb-0">{{ __('messages.global_qr_code.settings') }}</h5>
+                      </div>
+                      <div class="">
+                        <div class="row">
+                          <div class="col-md-6 mb-4">
+                            {{ Form::label('qrcode_color', __('messages.vcard.qrcode_color') . ':', ['class' => 'form-label required']) }}
+                            {{ Form::color('qrcode_color', $customQrCode['qrcode_color'] ?? '#000000', ['class' => 'form-control form-control-color w-100', 'id' => 'qrcode_color', 'required']) }}
+                          </div>
+
+                          <div class="col-md-6 mb-4">
+                            {{ Form::label('background_color', __('messages.vcard.back_color') . ':', ['class' => 'form-label required']) }}
+                            {{ Form::color('background_color', $customQrCode['background_color'] ?? '#ffffff', ['class' => 'form-control form-control-color w-100', 'id' => 'background_color', 'required']) }}
+                          </div>
+
+                          <div class="col-md-6 mb-4">
+                            <label for="style"
+                              class="form-label required">{{ __('messages.vcard.qrcode_style') }}</label>
+                            @php
+                              $qrcodeStyle = collect(App\Models\QrcodeEdit::QRCODE_STYLE)->map(function ($value) {
+                                  return trans('messages.qr_code.' . $value);
+                              });
+                            @endphp
+                            {{ Form::select('style', $qrcodeStyle, $customQrCode['style'] ?? 'square', ['class' => 'form-control form-select', 'data-control' => 'select2', 'id' => 'qrcodeStyle', 'required']) }}
+                          </div>
+
+                          <div class="col-md-6 mb-4">
+                            <label for="eye_style"
+                              class="form-label required">{{ __('messages.vcard.qrcode_eye_style') }}</label>
+                            @php
+                              $qrcodeEyeStyle = collect(App\Models\QrcodeEdit::QRCODE_EYE_STYLE)->map(function (
+                                  $value,
+                              ) {
+                                  return trans('messages.qr_code.' . $value);
+                              });
+                            @endphp
+                            {{ Form::select('eye_style', $qrcodeEyeStyle, $customQrCode['eye_style'] ?? 'square', ['class' => 'form-control form-select', 'data-control' => 'select2', 'id' => 'qrcodeEyeStyle', 'required']) }}
+                          </div>
+                        </div>
+
+                        <input type="hidden" name="applySetting" value="1">
+
+                        <div class="d-flex justify-content-end">
+                          <button type="submit" class="btn btn-primary" id="saveGlobalQrCode">
+                            <i class="fas fa-save me-2"></i>
+                            {{ __('messages.common.save') }}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- QR Code Preview Grid -->
+                  <div class="col-lg-12">
                     <div class="card">
                       <div class="card-body">
 
@@ -103,61 +158,6 @@
                             <p class="text-muted">{{ __('messages.global_qr_code.create_entities_first') }}</p>
                           </div>
                         @endif
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- QR Code Settings -->
-                  <div class="col-lg-12">
-                    <div class="card">
-                      <div class="card-header">
-                        <h5 class="mb-0">{{ __('messages.global_qr_code.settings') }}</h5>
-                      </div>
-                      <div class="card-body">
-                        <div class="row">
-                          <div class="col-md-6 mb-4">
-                            {{ Form::label('qrcode_color', __('messages.vcard.qrcode_color') . ':', ['class' => 'form-label required']) }}
-                            {{ Form::color('qrcode_color', $customQrCode['qrcode_color'] ?? '#000000', ['class' => 'form-control form-control-color w-100', 'id' => 'qrcode_color', 'required']) }}
-                          </div>
-
-                          <div class="col-md-6 mb-4">
-                            {{ Form::label('background_color', __('messages.vcard.back_color') . ':', ['class' => 'form-label required']) }}
-                            {{ Form::color('background_color', $customQrCode['background_color'] ?? '#ffffff', ['class' => 'form-control form-control-color w-100', 'id' => 'background_color', 'required']) }}
-                          </div>
-
-                          <div class="col-md-6 mb-4">
-                            <label for="style"
-                              class="form-label required">{{ __('messages.vcard.qrcode_style') }}</label>
-                            @php
-                              $qrcodeStyle = collect(App\Models\QrcodeEdit::QRCODE_STYLE)->map(function ($value) {
-                                  return trans('messages.qr_code.' . $value);
-                              });
-                            @endphp
-                            {{ Form::select('style', $qrcodeStyle, $customQrCode['style'] ?? 'square', ['class' => 'form-control form-select', 'data-control' => 'select2', 'id' => 'qrcodeStyle', 'required']) }}
-                          </div>
-
-                          <div class="col-md-6 mb-4">
-                            <label for="eye_style"
-                              class="form-label required">{{ __('messages.vcard.qrcode_eye_style') }}</label>
-                            @php
-                              $qrcodeEyeStyle = collect(App\Models\QrcodeEdit::QRCODE_EYE_STYLE)->map(function (
-                                  $value,
-                              ) {
-                                  return trans('messages.qr_code.' . $value);
-                              });
-                            @endphp
-                            {{ Form::select('eye_style', $qrcodeEyeStyle, $customQrCode['eye_style'] ?? 'square', ['class' => 'form-control form-select', 'data-control' => 'select2', 'id' => 'qrcodeEyeStyle', 'required']) }}
-                          </div>
-                        </div>
-
-                        <input type="hidden" name="applySetting" value="1">
-
-                        <div class="d-flex justify-content-end">
-                          <button type="submit" class="btn btn-primary" id="saveGlobalQrCode">
-                            <i class="fas fa-save me-2"></i>
-                            {{ __('messages.common.save') }}
-                          </button>
-                        </div>
                       </div>
                     </div>
                   </div>

@@ -21,11 +21,11 @@
           <p class="text-lg text-secondary-600 leading-relaxed mb-8">
             {{ $setting['sub_text'] ?? '' }}</p>
           <div class="bg-gradient-to-r from-blue-500 to-pink-500 p-[2px] rounded-md shadow-md w-full max-w-xl mx-auto">
-            <div class="flex items-center bg-white rounded-md overflow-hidden w-full">
+            <div class="flex items-center bg-white rounded-md overflow-hidden w-full @if (checkFrontLanguageSession() == 'ar' || checkFrontLanguageSession() == 'fa') flex-row-reverse @endif">
               <input id="search-alias-input" type="text" placeholder="{{ __('messages.vcard.search_vcard_alias') }}"
-                class="flex-1 px-4 py-2.5 text-sm text-gray-700 bg-transparent focus:outline-none @if (checkFrontLanguageSession() == 'ar' || checkFrontLanguageSession() == 'fa') text-left @endif"
+                class="flex-1 px-4 py-2.5 text-sm text-gray-700 bg-transparent focus:outline-none"
                 required>
-              <button id="search-alias-btn" type="submit"
+              <button id="search-alias-btn" type="submit" dir="ltr"
                 class="px-6 py-2.5 text-sm text-white font-medium bg-gradient-to-r from-sky-500 to-pink-500 hover:from-sky-600 hover:to-pink-600 transition-all duration-300 rounded-md flex items-center justify-center gap-2 relative overflow-hidden">
                 <!-- Loader Icon -->
                 <svg id="loader-icon" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
