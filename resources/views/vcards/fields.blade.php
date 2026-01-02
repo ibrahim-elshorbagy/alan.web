@@ -1095,8 +1095,8 @@
           <div class="position-relative mb-3">
             <div class="mb-3 position-relative">
               <input class="form-control" type="password" placeholder="{{ __('messages.form.password') }}"
-                name="password" value="{{ !empty($vcard->password) ? Crypt::decrypt($vcard->password) : '' }}"
-                autocomplete="off" aria-label="Password" data-toggle="password" />
+                value="{{ !empty($vcard->password) ? Crypt::decrypt($vcard->password) : '' }}" autocomplete="off"
+                aria-label="Password" data-toggle="password" disabled />
               <span
                 class="position-absolute d-flex align-items-center top-0 bottom-0 end-0 me-4 input-icon input-password-hide cursor-pointer text-gray-600">
                 <i class="bi bi-eye-slash-fill"></i>
