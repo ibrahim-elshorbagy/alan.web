@@ -24,7 +24,7 @@
         <div class="card mt-3">
           <div class="card-body">
             <div class="qr-code-image d-flex justify-content-center" id="qr-code-one">
-              {!! QrCode::size(130)->format('svg')->generate(url('/auto/' . $redirectLink->uri)) !!}
+              {!! QrCode::size(130)->format('svg')->generate(url('/auto-' . $redirectLink->uri)) !!}
             </div>
             <div class="d-flex justify-content-center mt-3">
               <a href="" class="btn btn-primary" id="qr-code-btn" download="qr_code.png">

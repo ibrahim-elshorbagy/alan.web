@@ -56,11 +56,12 @@
     </a>
   </li>
 
+  {{-- Fuck --}}
   <li class="nav-item {{ Request::is('sadmin/redirect-links*') ? 'active' : '' }}">
     <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
       href="{{ route('redirect-links.index') }}">
       <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span> <span
-        class="aside-menu-title">{{ __('messages.nfc.sell_nfc_cards') }}</span>
+        class="aside-menu-title">{{ __('messages.redirect_links.title') }}</span>
     </a>
   </li>
 
@@ -266,6 +267,15 @@
     </li>
   @endif
 
+  <li class="nav-item {{ Request::is('admin/redirect-links*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('client.redirect-links.index') }}">
+      <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span>
+      <span class="aside-menu-title">{{ __('messages.redirect_links.title') }}</span>
+    </a>
+  </li>
+
+
   <li class="nav-item {{ Request::is('admin/global-qr-code*') ? 'active' : '' }}">
     <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
       href="{{ route('global.qr.code.index') }}">
@@ -306,13 +316,6 @@
     </a>
   </li>
 
-  <li class="nav-item {{ Request::is('admin/redirect-links*') ? 'active' : '' }}">
-    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
-      href="{{ route('client.redirect-links.index') }}">
-      <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span>
-      <span class="aside-menu-title">{{ __('messages.redirect_links.title') }}</span>
-    </a>
-  </li>
 
   <li class="nav-item {{ Request::is('admin/appointments*') ? 'active' : '' }}">
     <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"

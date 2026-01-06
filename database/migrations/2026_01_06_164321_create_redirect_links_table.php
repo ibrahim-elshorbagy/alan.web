@@ -20,10 +20,14 @@ return new class extends Migration
       $table->unsignedTinyInteger('redirect_link_type');
       $table->unsignedTinyInteger('status')->default(0); // 0=not redeemed, 1=redeemed
       $table->unsignedBigInteger('nfcs_id');
+      $table->unsignedBigInteger('nfc_order_id')->nullable();
+
       $table->timestamps();
 
       $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
       $table->foreign('nfcs_id')->references('id')->on('nfcs')->onDelete('cascade');
+      $table->foreign('nfc_order_id')->references('id')->on('nfc_orders')->onDelete('set null');
+
     });
   }
 

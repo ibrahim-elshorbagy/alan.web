@@ -2,7 +2,7 @@
   <div class="col-lg-6">
     <div class="mb-5">
       {{ Form::label('uri', __('messages.redirect_links.uri') . ':', ['class' => 'form-label']) }}
-      {{ Form::text('uri', url('/auto/' . (isset($redirectLink) ? $redirectLink->uri : '')), ['class' => 'form-control', 'readonly']) }}
+      {{ Form::text('uri', url('/auto-' . (isset($redirectLink) ? $redirectLink->uri : '')), ['class' => 'form-control', 'readonly']) }}
     </div>
   </div>
   <div class="col-lg-6">
