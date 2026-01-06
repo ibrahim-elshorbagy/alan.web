@@ -84,6 +84,7 @@ use App\Http\Controllers\EmailTemplatesController;
 use App\Http\Controllers\GlobalQrCodeController;
 use App\Http\Controllers\TwofactorAuthenticationController;
 use App\Http\Controllers\WhatsappStoreProductTransactionController;
+use App\Http\Controllers\RedirectLinkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -564,6 +565,8 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('/download-logo/{id}', [NfcCardOrderController::class, 'downloadLogo'])->name('nfc.download.logo');
       Route::post('nfc-card-tax', [NfcController::class, 'nfcCardTax'])->name('nfc.tax');
       Route::get('nfc-card-tax', [NfcController::class, 'getNfcCardTax'])->name('nfc.tax.get');
+
+      Route::get('redirect-links', [RedirectLinkController::class, 'index'])->name('redirect-links.index');
 
       //user
       Route::resource('/users', UserController::class);
@@ -1160,6 +1163,8 @@ Route::middleware(['freshInstall'])->group(function () {
   Route::get('phonepe-Product-response', [UserPhonepeController::class, 'productBuySuccess'])->name('phonepe-Product-response');
 
   Route::get('/getCookie', [VcardController::class, 'getCookie'])->name('getCookie');
+
+  Route::get('auto-{uri:uri}', [RedirectLinkController::class, 'redirectLink'])->name('redirect.link');
 
   Route::get('{alias}', [VcardController::class, 'show'])->name('vcard.show')->middleware([
     'analytics',

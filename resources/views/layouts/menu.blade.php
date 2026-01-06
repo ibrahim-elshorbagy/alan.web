@@ -52,8 +52,15 @@
     <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
       href="{{ route('sadmin.nfc.card.types') }}">
       <span class="aside-menu-icon"><i class="fa-solid fa-credit-card icon-color-bs-orange"></i></span>
-      {{-- <span class="aside-menu-icon"><i class="fa-solid fa-credit-card icon-color-gray"></i></span> --}}
-      <span class="aside-menu-title">{{ __('messages.nfc.sell_nfc_cards') }}</span>
+      {{-- <span class="aside-menu-icon"><i class="fa-solid fa-credit-card icon-color-gray"></i></span> --}} <span class="aside-menu-title">{{ __('messages.nfc.sell_nfc_cards') }}</span>
+    </a>
+  </li>
+
+  <li class="nav-item {{ Request::is('sadmin/redirect-links*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('redirect-links.index') }}">
+      <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span> <span
+        class="aside-menu-title">{{ __('messages.nfc.sell_nfc_cards') }}</span>
     </a>
   </li>
 
@@ -266,7 +273,7 @@
       <span class="aside-menu-title">{{ __('messages.global_qr_code.title') }}</span>
     </a>
   </li>
-  
+
   @if (moduleExists('GoogleWallet'))
     <li class="vcard-option nav-item {{ Request::is('admin/google-wallet*') ? 'active' : '' }}">
       <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"

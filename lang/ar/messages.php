@@ -2300,5 +2300,33 @@ return [
     'create_entities_first' => 'قم بإنشاء بعض بطاقات الأعمال أو متاجر الواتساب أولاً لرؤية رموز QR الخاصة بها هنا.',
   ],
 
+  'redirect_links' => [
+    'title' => 'روابط إعادة التوجيه',
+    'id' => 'المعرف',
+    'user' => 'المستخدم',
+    'redeem_code' => 'رمز الاسترداد',
+    'uri' => 'URI',
+    'redirect_link' => 'رابط إعادة التوجيه',
+    'redirect_link_type' => 'النوع',
+    'status' => 'الحالة',
+    'nfc' => 'NFC',
+    'created_at' => 'تاريخ الإنشاء',
+    'updated_at' => 'تاريخ التحديث',
+    'not_redeemed' => 'غير مسترد',
+    'redeemed' => 'مسترد',
+    'types' => [
+      'website' => 'موقع إلكتروني',
+      'facebook' => 'فيسبوك',
+      'instagram' => 'إنستغرام',
+      'tiktok' => 'تيك توك',
+      'twitter' => 'تويتر',
+      'linkedin' => 'لينكد إن',
+      'youtube' => 'يوتيوب',
+      'whatsapp' => 'واتساب',
+      'snapchat' => 'سناب شات',
+    ],
+    'search' => 'بحث',
+  ],
+
 
 ];

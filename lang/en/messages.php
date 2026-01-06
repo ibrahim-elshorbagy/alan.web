@@ -2305,5 +2305,33 @@ return [
     'create_entities_first' => 'Create some vCards or WhatsApp Stores first to see their QR codes here.',
   ],
 
+  'redirect_links' => [
+    'title' => 'Redirect Links',
+    'id' => 'ID',
+    'user' => 'User',
+    'redeem_code' => 'Redeem Code',
+    'uri' => 'URI',
+    'redirect_link' => 'Redirect Link',
+    'redirect_link_type' => 'Type',
+    'status' => 'Status',
+    'nfc' => 'NFC',
+    'created_at' => 'Created At',
+    'updated_at' => 'Updated At',
+    'not_redeemed' => 'Not Redeemed',
+    'redeemed' => 'Redeemed',
+    'types' => [
+      'website' => 'Website',
+      'facebook' => 'Facebook',
+      'instagram' => 'Instagram',
+      'tiktok' => 'TikTok',
+      'twitter' => 'Twitter',
+      'linkedin' => 'LinkedIn',
+      'youtube' => 'YouTube',
+      'whatsapp' => 'WhatsApp',
+      'snapchat' => 'Snapchat',
+    ],
+    'search' => 'Search',
+  ],
+
 
 ];
