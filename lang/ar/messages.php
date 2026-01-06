@@ -2314,7 +2314,7 @@ return [
     'created_at' => 'تاريخ الإنشاء',
     'updated_at' => 'تاريخ التحديث',
     'not_redeemed' => 'غير مستخدم',
-    'redeemed' => 'مستخدم',
+    'redeemed' => 'مفعل',
     'rejected' => 'مرفوض',
     'types' => [
       'website' => 'موقع إلكتروني',

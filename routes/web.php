@@ -48,6 +48,7 @@ use App\Http\Controllers\VcardBlogController;
 use App\Http\Controllers\CouponCodeController;
 use App\Http\Controllers\CustomLinkController;
 use App\Http\Controllers\CustomPageController;
+use App\Http\Controllers\ClientRedirectLinkController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\SslcommerzController;
 use App\Http\Controllers\FlutterwaveController;
@@ -242,6 +243,10 @@ Route::middleware(['freshInstall'])->group(function () {
           ->name('nfc.razorpay.success');
         Route::post('nfc-razorpay-payment-failed', [RazorpayController::class, 'nfcPaymentFailed'])
           ->name('nfc.razorpay.failed');
+
+        Route::get('redirect-links', [ClientRedirectLinkController::class, 'index'])->name('client.redirect-links.index');
+        Route::get('redirect-links/{id}/edit', [ClientRedirectLinkController::class, 'edit'])->name('client.redirect-links.edit');
+        Route::put('redirect-links/{id}', [ClientRedirectLinkController::class, 'update'])->name('client.redirect-links.update');
 
         Route::middleware('subscription')->group(function () {
           //admin dashboard route
