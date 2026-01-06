@@ -14,18 +14,18 @@ enum RedirectLinkTypeEnum: int
   case WHATSAPP = 8;
   case SNAPCHAT = 9;
 
-  // public function label(): string
-  // {
-  //   return match ($this) {
-  //     self::WEBSITE => __('messages.website'),
-  //     self::FACEBOOK => __('messages.facebook'),
-  //     self::INSTAGRAM => __('messages.instagram'),
-  //     self::TIKTOK => __('messages.tiktok'),
-  //     self::TWITTER => __('messages.twitter'),
-  //     self::LINKEDIN => __('messages.linkedin'),
-  //     self::YOUTUBE => __('messages.youtube'),
-  //     self::WHATSAPP => __('messages.whatsapp'),
-  //     self::SNAPCHAT => __('messages.snapchat'),
-  //   };
-  // }
+  public function label(): string
+  {
+    return match ($this) {
+      self::WEBSITE => __('messages.redirect_links.types.website'),
+      self::FACEBOOK => __('messages.redirect_links.types.facebook'),
+      self::INSTAGRAM => __('messages.redirect_links.types.instagram'),
+      self::TIKTOK => __('messages.redirect_links.types.tiktok'),
+      self::TWITTER => __('messages.redirect_links.types.twitter'),
+      self::LINKEDIN => __('messages.redirect_links.types.linkedin'),
+      self::YOUTUBE => __('messages.redirect_links.types.youtube'),
+      self::WHATSAPP => __('messages.redirect_links.types.whatsapp'),
+      self::SNAPCHAT => __('messages.redirect_links.types.snapchat'),
+    };
+  }
 }

@@ -2331,7 +2331,9 @@ return [
       'snapchat' => 'Snapchat',
     ],
     'search' => 'Search',
+    'edit' => 'Edit Redirect Link',
+    'updated' => 'Redirect Link updated successfully',
+    'select_user' => 'Select User',
   ],
-
 
 ];

@@ -21,6 +21,11 @@ class RedirectLinksTable extends LivewireTableComponent
     $this->setQueryStringStatus(false);
     $this->resetPage('redirect-links-table');
 
+    $this->setEagerLoadAllRelationsEnabled();
+
+    // Add this to force eager load
+    $this->setAdditionalSelects(['redirect_links.user_id', 'redirect_links.nfcs_id']);
+
     $this->setThAttributes(function (Column $column) {
       return [
         'class' => 'text-center',
@@ -54,12 +59,14 @@ class RedirectLinksTable extends LivewireTableComponent
         })->view('admin.redirect_links.columns.nfc'),
       Column::make(__('messages.redirect_links.created_at'), 'created_at')->sortable(),
       Column::make(__('messages.redirect_links.updated_at'), 'updated_at')->sortable(),
+      Column::make(__('messages.common.action'), 'id')
+        ->view('admin.redirect_links.columns.action'),
     ];
   }
 
   public function builder(): Builder
   {
-    return RedirectLink::with(['user', 'nfc']);
+    return RedirectLink::query()->with(['user', 'nfc']);
   }
 
   public function resetPageTable($pageName = 'redirect-links-table')

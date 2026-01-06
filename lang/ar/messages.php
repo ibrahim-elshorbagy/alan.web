@@ -2304,7 +2304,7 @@ return [
     'title' => 'روابط إعادة التوجيه',
     'id' => 'المعرف',
     'user' => 'المستخدم',
-    'redeem_code' => 'رمز الاسترداد',
+    'redeem_code' => 'الرمز',
     'uri' => 'URI',
     'redirect_link' => 'رابط إعادة التوجيه',
     'redirect_link_type' => 'النوع',
@@ -2312,8 +2312,8 @@ return [
     'nfc' => 'NFC',
     'created_at' => 'تاريخ الإنشاء',
     'updated_at' => 'تاريخ التحديث',
-    'not_redeemed' => 'غير مسترد',
-    'redeemed' => 'مسترد',
+    'not_redeemed' => 'غير مستخدم',
+    'redeemed' => 'مستخدم',
     'types' => [
       'website' => 'موقع إلكتروني',
       'facebook' => 'فيسبوك',
@@ -2326,7 +2326,8 @@ return [
       'snapchat' => 'سناب شات',
     ],
     'search' => 'بحث',
+    'edit' => 'تحرير رابط إعادة التوجيه',
+    'updated' => 'تم تحديث رابط إعادة التوجيه بنجاح',
+    'select_user' => 'اختر المستخدم',
   ],
-
-
 ];
