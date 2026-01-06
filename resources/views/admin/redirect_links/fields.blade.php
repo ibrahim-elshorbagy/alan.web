@@ -19,8 +19,8 @@
   </div>
   <div class="col-lg-6">
     <div class="mb-5">
-      {{ Form::label('redirect_link', __('messages.redirect_links.redirect_link') . ':', ['class' => 'form-label required']) }}
-      {{ Form::text('redirect_link', isset($redirectLink) ? $redirectLink->redirect_link : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.redirect_link'), 'required']) }}
+      {{ Form::label('redirect_link', __('messages.redirect_links.redirect_link') . ':', ['class' => 'form-label']) }}
+      {{ Form::text('redirect_link', isset($redirectLink) ? $redirectLink->redirect_link : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.redirect_link')]) }}
     </div>
   </div>
   <div class="col-lg-6">
@@ -32,7 +32,7 @@
   <div class="col-lg-6">
     <div class="mb-5">
       {{ Form::label('status', __('messages.redirect_links.status') . ':', ['class' => 'form-label required']) }}
-      {{ Form::select('status', [0 => __('messages.redirect_links.not_redeemed'), 1 => __('messages.redirect_links.redeemed')], isset($redirectLink) ? $redirectLink->status : 0, ['class' => 'form-control', 'required']) }}
+      {{ Form::select('status', [0 => __('messages.redirect_links.not_redeemed'), 1 => __('messages.redirect_links.redeemed'), 2 => __('messages.redirect_links.rejected')], isset($redirectLink) ? $redirectLink->status : 0, ['class' => 'form-control', 'required']) }}
     </div>
   </div>
   <div class="col-lg-6">

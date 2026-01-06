@@ -16,7 +16,7 @@ return new class extends Migration
       $table->unsignedBigInteger('user_id')->nullable();
       $table->string('redeem_code', 16)->nullable();
       $table->string('uri')->unique();
-      $table->text('redirect_link');
+      $table->text('redirect_link')->nullable();
       $table->unsignedTinyInteger('redirect_link_type');
       $table->unsignedTinyInteger('status')->default(0); // 0=not redeemed, 1=redeemed
       $table->unsignedBigInteger('nfcs_id');

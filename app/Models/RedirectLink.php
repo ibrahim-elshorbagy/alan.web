@@ -15,6 +15,7 @@ class RedirectLink extends Model
   // Status
   const STATUS_NOT_REDEEMED = 0;
   const STATUS_REDEEMED = 1;
+  const STATUS_REJECTED = 2;
 
   public function user(): BelongsTo
   {

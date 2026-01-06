@@ -567,8 +567,12 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('nfc-card-tax', [NfcController::class, 'getNfcCardTax'])->name('nfc.tax.get');
 
       Route::get('redirect-links', [RedirectLinkController::class, 'index'])->name('redirect-links.index');
+      Route::get('redirect-links/create', [RedirectLinkController::class, 'create'])->name('redirect-links.create');
+      Route::get('redirect-links/extract-all', [RedirectLinkController::class, 'extractAll'])->name('redirect-links.extract-all');
+      Route::post('redirect-links', [RedirectLinkController::class, 'store'])->name('redirect-links.store');
       Route::get('redirect-links/{redirectLink}/edit', [RedirectLinkController::class, 'edit'])->name('redirect-links.edit');
       Route::put('redirect-links/{redirectLink}', [RedirectLinkController::class, 'update'])->name('redirect-links.update');
+      Route::delete('redirect-links/{redirectLink}', [RedirectLinkController::class, 'destroy'])->name('redirect-links.destroy');
 
       //user
       Route::resource('/users', UserController::class);

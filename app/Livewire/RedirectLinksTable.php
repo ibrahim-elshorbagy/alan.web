@@ -9,7 +9,8 @@ use Rappasoft\LaravelLivewireTables\Views\Column;
 class RedirectLinksTable extends LivewireTableComponent
 {
   protected $model = RedirectLink::class;
-  public bool $showButtonOnHeader = false; // No add button for now
+  public bool $showButtonOnHeader = true;
+  public string $buttonComponent = 'livewire.redirect_links.add-button';
   protected $listeners = ['refresh' => '$refresh', 'changeFilter', 'resetPageTable'];
 
   public function configure(): void

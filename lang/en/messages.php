@@ -485,6 +485,7 @@ return [
     'back_subscription' => 'Back to Subscriptions',
     'action' => 'Action',
     'add' => 'Add',
+    'extract_all' => 'Extract All',
     'add_social_link' => 'Add Social Link',
     'edit' => 'Edit',
     'subject' => 'Subject',
@@ -2319,6 +2320,7 @@ return [
     'updated_at' => 'Updated At',
     'not_redeemed' => 'Not Redeemed',
     'redeemed' => 'Redeemed',
+    'rejected' => 'Rejected',
     'types' => [
       'website' => 'Website',
       'facebook' => 'Facebook',
@@ -2332,8 +2334,12 @@ return [
     ],
     'search' => 'Search',
     'edit' => 'Edit Redirect Link',
+    'create' => 'Create Redirect Link',
     'updated' => 'Redirect Link updated successfully',
+    'created' => ':count Redirect Links created successfully',
+    'deleted' => 'Redirect Link deleted successfully',
     'select_user' => 'Select User',
+    'number_of_cards' => 'Number of Cards',
   ],
 
 ];
