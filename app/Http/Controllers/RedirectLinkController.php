@@ -84,6 +84,28 @@ class RedirectLinkController extends Controller
     return $this->generatePackage($redirectLinks);
   }
 
+  public function exportSelected(Request $request)
+  {
+    $ids = $request->input('ids');
+
+    if (!$ids) {
+      return redirect()->back()->with('error', __('messages.redirect_links.no_items_selected'));
+    }
+
+    // Convert comma-separated string to array
+    $idsArray = explode(',', $ids);
+
+    // Get selected redirect links
+    $redirectLinks = RedirectLink::whereIn('id', $idsArray)->get();
+
+    if ($redirectLinks->isEmpty()) {
+      return redirect()->back()->with('error', __('messages.redirect_links.no_items_found'));
+    }
+
+    // Generate package for selected links
+    return $this->generatePackage($redirectLinks);
+  }
+
   private function generatePackage($redirectLinks)
   {
     $timestamp = time();

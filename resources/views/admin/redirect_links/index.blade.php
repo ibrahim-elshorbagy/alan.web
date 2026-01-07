@@ -15,7 +15,7 @@
         </div>
       @endif
 
-      <livewire:redirect-links-table lazy />
+      <livewire:redirect-links-table />
     </div>
   </div>
 @endsection

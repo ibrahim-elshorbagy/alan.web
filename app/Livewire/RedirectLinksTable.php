@@ -13,6 +13,8 @@ class RedirectLinksTable extends LivewireTableComponent
   public string $buttonComponent = 'livewire.redirect_links.add-button';
   protected $listeners = ['refresh' => '$refresh', 'changeFilter', 'resetPageTable'];
 
+  public $selectedRecordId;
+
   public function configure(): void
   {
     $this->setPrimaryKey('id');
@@ -22,9 +24,17 @@ class RedirectLinksTable extends LivewireTableComponent
     $this->setQueryStringStatus(false);
     $this->resetPage('redirect-links-table');
 
+    // Enable bulk actions
+    $this->setBulkActionsEnabled();
+
+    // Make sure bulk actions dropdown is always visible
+    $this->setBulkActionsStatus(true);
+
+    // Show bulk actions even when nothing is selected
+    $this->setHideBulkActionsWhenEmptyDisabled();
+
     $this->setEagerLoadAllRelationsEnabled();
 
-    // Add this to force eager load
     $this->setAdditionalSelects(['redirect_links.user_id', 'redirect_links.nfcs_id']);
 
     $this->setThAttributes(function (Column $column) {
@@ -32,6 +42,32 @@ class RedirectLinksTable extends LivewireTableComponent
         'class' => 'text-center',
       ];
     });
+  }
+
+
+
+  public function bulkActions(): array
+  {
+    return [
+      'exportSelected' => __('messages.redirect_links.export_selected'),
+    ];
+  }
+
+  public function setSelectedRecord($recordId)
+  {
+    $this->selectedRecordId = $recordId;
+  }
+
+  public function exportSelected()
+  {
+    $selectedIds = $this->getSelected();
+
+    if (empty($selectedIds)) {
+      return redirect()->back()->with('error', __('messages.redirect_links.no_items_selected'));
+    }
+
+    // Redirect to controller method with selected IDs
+    return redirect()->route('redirect-links.export-selected', ['ids' => implode(',', $selectedIds)]);
   }
 
   public function columns(): array
