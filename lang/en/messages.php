@@ -2377,6 +2377,7 @@ return [
     'invalid_youtube_url' => 'The redirect link must be a valid YouTube URL.',
     'invalid_whatsapp_url' => 'The redirect link must be a valid WhatsApp URL.',
     'invalid_snapchat_url' => 'The redirect link must be a valid Snapchat URL.',
+    'no_redirect_link_message' => 'No redirect link specified yet. Please update this field with your website link.',
   ],
 
 ];
