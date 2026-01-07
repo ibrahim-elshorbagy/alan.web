@@ -483,7 +483,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          {{-- <div class="col-md-6">
             <div class="card shadow p-4">
               <label for="qrCodeDownloadSize" class="form-label fw-semibold">
                 {{ __('messages.vcard.qr_code_download_size') }}
@@ -496,7 +496,7 @@
                 <span id="download-result" class="fw-bold">{{ $vcard['qr_code_download_size'] . 'px' }}</span>
               </div>
             </div>
-          </div>
+          </div> --}}
         @endif
         <div class="pt-3">
           {{ Form::submit(__('messages.common.save'), ['class' => 'btn btn-primary me-3', 'id' => 'vcardSaveBtn']) }}
