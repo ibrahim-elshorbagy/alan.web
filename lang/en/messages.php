@@ -2336,7 +2336,7 @@ return [
     'edit' => 'Edit Redirect Link',
     'create' => 'Create Redirect Link',
     'updated' => 'Redirect Link updated successfully',
-    'created' => ':count Redirect Links created successfully',
+    'created' => 'Redirect Links created successfully',
     'deleted' => 'Redirect Link deleted successfully',
     'select_user' => 'Select User',
     'number_of_cards' => 'Number of Cards',

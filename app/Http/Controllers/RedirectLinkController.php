@@ -63,9 +63,13 @@ class RedirectLinkController extends Controller
       $createdLinks[] = $redirectLink;
     }
 
+    // Store success message in session BEFORE download
+    session()->flash('success', __('messages.redirect_links.created'));
+
     // Generate all downloads
     return $this->generatePackage($createdLinks);
   }
+
 
   public function extractAll()
   {

@@ -16,7 +16,11 @@
         </div>
         <div class="card">
           <div class="card-body">
-            {!! Form::open(['route' => 'redirect-links.store', 'method' => 'post']) !!}
+            {!! Form::open([
+                'route' => 'redirect-links.store',
+                'method' => 'post',
+                'id' => 'createForm',
+            ]) !!}
             @include('admin.redirect_links.fields_create')
             {{ Form::close() }}
           </div>
@@ -24,4 +28,44 @@
       </div>
     </div>
   </div>
+
+  <script>
+    document.getElementById('createForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Create form data
+      const formData = new FormData(this);
+
+      // Open download in new tab
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '{{ route('redirect-links.store') }}';
+      form.target = '_blank';
+
+      // Add CSRF token
+      const csrfInput = document.createElement('input');
+      csrfInput.type = 'hidden';
+      csrfInput.name = '_token';
+      csrfInput.value = '{{ csrf_token() }}';
+      form.appendChild(csrfInput);
+
+      // Add all form fields
+      for (let [key, value] of formData.entries()) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = key;
+        input.value = value;
+        form.appendChild(input);
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+
+      // Redirect current page with flash message parameter
+      setTimeout(function() {
+        window.location.href = '{{ route('redirect-links.index') }}?success=1';
+      }, 500);
+    });
+  </script>
 @endsection

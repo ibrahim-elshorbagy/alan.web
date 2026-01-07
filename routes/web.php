@@ -247,7 +247,7 @@ Route::middleware(['freshInstall'])->group(function () {
         Route::get('redirect-links', [ClientRedirectLinkController::class, 'index'])->name('client.redirect-links.index');
         Route::get('redirect-links/{id}/edit', [ClientRedirectLinkController::class, 'edit'])->name('client.redirect-links.edit');
         Route::put('redirect-links/{id}', [ClientRedirectLinkController::class, 'update'])->name('client.redirect-links.update');
-        Route::post('redirect-links/redeem', [ClientRedirectLinkController::class, 'redeem'])->name('client.redirect-links.redeem');
+        Route::post('redirect-links/redeem', [ClientRedirectLinkController::class, 'redeem'])->name('client.redirect-links.redeem')->middleware('throttle:20,1');
 
         Route::middleware('subscription')->group(function () {
           //admin dashboard route
