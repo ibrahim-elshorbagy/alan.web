@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\AdminRedirectLinkRedeemMail;
 use Laracasts\Flash\Flash;
 use App\Enums\RedirectLinkTypeEnum;
+use Illuminate\Support\Facades\Auth;
 
 class ClientRedirectLinkController extends Controller
 {
@@ -191,5 +192,34 @@ class ClientRedirectLinkController extends Controller
       Flash::error(__('messages.redirect_links.redeem_failed') . ': ' . $e->getMessage());
       return redirect()->route('client.redirect-links.index');
     }
+  }
+
+  public function redirectLink(RedirectLink $uri)
+  {
+    // If not redeemed yet, redirect to redeem flow
+    if ($uri->status == RedirectLink::STATUS_NOT_REDEEMED) {
+      // Store redeem code in session for auto-fill
+
+      // If user is not logged in, redirect to login with intended URL
+      if (!Auth::check()) {
+        return redirect()->route('login')
+          ->with('info', __('messages.redirect_links.please_login_to_redeem'));
+      }
+
+      // If logged in, redirect to redeem page with modal trigger
+      return redirect()->route('client.redirect-links.index');
+    }
+
+    // If rejected, show 404
+    if ($uri->status == RedirectLink::STATUS_REJECTED) {
+      abort(404);
+    }
+
+    // If redeemed, validate and redirect to the actual link
+    if (!filter_var($uri->redirect_link, FILTER_VALIDATE_URL)) {
+      abort(404);
+    }
+
+    return redirect()->away($uri->redirect_link);
   }
 }

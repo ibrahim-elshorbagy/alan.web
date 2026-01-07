@@ -306,19 +306,6 @@ class RedirectLinkController extends Controller
     return redirect()->route('redirect-links.index')->with('success', __('messages.redirect_links.updated'));
   }
 
-  public function redirectLink(RedirectLink $uri)
-  {
-    if ($uri->status != RedirectLink::STATUS_REDEEMED) {
-      abort(404);
-    }
-
-    if (!filter_var($uri->redirect_link, FILTER_VALIDATE_URL)) {
-      abort(404);
-    }
-
-    return redirect()->away($uri->redirect_link);
-  }
-
   public function destroy($id)
   {
     $redirectLink = RedirectLink::findOrFail($id);
