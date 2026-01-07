@@ -48,6 +48,7 @@ use App\Http\Controllers\VcardBlogController;
 use App\Http\Controllers\CouponCodeController;
 use App\Http\Controllers\CustomLinkController;
 use App\Http\Controllers\CustomPageController;
+use App\Http\Controllers\ClientRedirectLinkController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\SslcommerzController;
 use App\Http\Controllers\FlutterwaveController;
@@ -84,6 +85,7 @@ use App\Http\Controllers\EmailTemplatesController;
 use App\Http\Controllers\GlobalQrCodeController;
 use App\Http\Controllers\TwofactorAuthenticationController;
 use App\Http\Controllers\WhatsappStoreProductTransactionController;
+use App\Http\Controllers\RedirectLinkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -241,6 +243,11 @@ Route::middleware(['freshInstall'])->group(function () {
           ->name('nfc.razorpay.success');
         Route::post('nfc-razorpay-payment-failed', [RazorpayController::class, 'nfcPaymentFailed'])
           ->name('nfc.razorpay.failed');
+
+        Route::get('redirect-links', [ClientRedirectLinkController::class, 'index'])->name('client.redirect-links.index');
+        Route::get('redirect-links/{id}/edit', [ClientRedirectLinkController::class, 'edit'])->name('client.redirect-links.edit');
+        Route::put('redirect-links/{id}', [ClientRedirectLinkController::class, 'update'])->name('client.redirect-links.update');
+        Route::post('redirect-links/redeem', [ClientRedirectLinkController::class, 'redeem'])->name('client.redirect-links.redeem')->middleware('throttle:20,1');
 
         Route::middleware('subscription')->group(function () {
           //admin dashboard route
@@ -564,6 +571,15 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('/download-logo/{id}', [NfcCardOrderController::class, 'downloadLogo'])->name('nfc.download.logo');
       Route::post('nfc-card-tax', [NfcController::class, 'nfcCardTax'])->name('nfc.tax');
       Route::get('nfc-card-tax', [NfcController::class, 'getNfcCardTax'])->name('nfc.tax.get');
+
+      Route::get('redirect-links', [RedirectLinkController::class, 'index'])->name('redirect-links.index');
+      Route::get('redirect-links/create', [RedirectLinkController::class, 'create'])->name('redirect-links.create');
+      Route::get('redirect-links/extract-all', [RedirectLinkController::class, 'extractAll'])->name('redirect-links.extract-all');
+      Route::get('redirect-links/export-selected', [RedirectLinkController::class, 'exportSelected'])->name('redirect-links.export-selected');
+      Route::post('redirect-links', [RedirectLinkController::class, 'store'])->name('redirect-links.store');
+      Route::get('redirect-links/{redirectLink}/edit', [RedirectLinkController::class, 'edit'])->name('redirect-links.edit');
+      Route::put('redirect-links/{redirectLink}', [RedirectLinkController::class, 'update'])->name('redirect-links.update');
+      Route::delete('redirect-links/{redirectLink}', [RedirectLinkController::class, 'destroy'])->name('redirect-links.destroy');
 
       //user
       Route::resource('/users', UserController::class);
@@ -1160,6 +1176,8 @@ Route::middleware(['freshInstall'])->group(function () {
   Route::get('phonepe-Product-response', [UserPhonepeController::class, 'productBuySuccess'])->name('phonepe-Product-response');
 
   Route::get('/getCookie', [VcardController::class, 'getCookie'])->name('getCookie');
+
+  Route::get('auto-{uri:uri}', [ClientRedirectLinkController::class, 'redirectLink'])->name('redirect.link');
 
   Route::get('{alias}', [VcardController::class, 'show'])->name('vcard.show')->middleware([
     'analytics',
