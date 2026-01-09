@@ -43,6 +43,7 @@
     "mariuzzo/laravel-js-localization": "^1.10",
     "mews/purifier": "^3.4",
     "mhmiton/laravel-modules-livewire": "^2.3",
+    "mpdf/mpdf": "^8.2",
     "nwidart/laravel-modules": "^v10.0",
     "opcodesio/log-viewer": "^3.8",
     "paypal/paypal-payouts-sdk": "^1.0",
