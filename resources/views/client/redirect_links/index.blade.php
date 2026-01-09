@@ -31,7 +31,8 @@
               <label for="Code"
                 class="form-label required">{{ __('messages.redirect_links.enter_redeem_code') }}</label>
               <input type="text" class="form-control" id="uri" name="uri" required
-                placeholder="{{ __('messages.redirect_links.redeem_code_placeholder') }}">
+                placeholder="{{ __('messages.redirect_links.redeem_code_placeholder') }}"
+                value="{{ session('pending_redeem_uri') }}">
               <small class="text-muted">{{ __('messages.redirect_links.redeem_code_hint') }}</small>
             </div>
           </div>
@@ -45,3 +46,15 @@
     </div>
   </div>
 @endsection
+
+@push('scripts')
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    @if(session('pending_redeem_uri'))
+      // Auto-open the redeem modal if there's a pending URI in session
+      var redeemModal = new bootstrap.Modal(document.getElementById('redeemModal'));
+      redeemModal.show();
+    @endif
+  });
+</script>
+@endpush

@@ -191,6 +191,7 @@ class ClientRedirectLinkController extends Controller
       DB::commit();
 
       Flash::success(__('messages.redirect_links.redeemed_successfully'));
+      session()->forget('pending_redeem_uri');
       return redirect()->route('client.redirect-links.index');
     } catch (\Exception $e) {
       DB::rollBack();
@@ -204,6 +205,7 @@ class ClientRedirectLinkController extends Controller
     // If not redeemed yet, redirect to redeem flow
     if ($uri->status == RedirectLink::STATUS_NOT_REDEEMED) {
       // Store redeem code in session for auto-fill
+      session(['pending_redeem_uri' => $uri->uri]);
 
       // If user is not logged in, redirect to login with intended URL
       if (!Auth::check()) {
