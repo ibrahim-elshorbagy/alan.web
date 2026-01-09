@@ -41,21 +41,29 @@
                 <input type="hidden" name="redirect" value="{{ request()->get('redirect') }}">
                 <div class="mb-sm-7 mb-4 element">
                   <label for="email" class="form-label">
-                    {{ __('messages.user.email') . ':' }}<span class="required"></span>
+                    {{ __('messages.common.email_or_phone') . ':' }}<span class="required"></span>
                   </label>
-                  <input name="email" type="email" class="form-control" id="email" aria-describedby="emailHelp"
-                    required placeholder=" {{ __('messages.user.email') }}"
+                  <input name="email" type="text" class="form-control" id="email" aria-describedby="emailHelp"
+                    required placeholder="{{ __('messages.common.email_or_phone') }}"
                     value="{{ old('email', \Cookie::get('email', '')) }}">
                 </div>
                 <div class="mb-sm-7 mb-4 element">
                   <div class="d-flex justify-content-between">
                     <label for="password" class="form-label">{{ __('messages.user.password') . ':' }}<span
                         class="required"></span></label>
-                    @if (Route::has('password.request'))
-                      <a href="{{ route('password.request') }}" class="link-info fs-6 text-decoration-none">
+                    <div class="dropdown">
+                      <a href="#" class="link-info fs-6 text-decoration-none dropdown-toggle"
+                        data-bs-toggle="dropdown">
                         {{ __('messages.common.forgot_your_password') . '?' }}
                       </a>
-                    @endif
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item"
+                            href="{{ route('password.request') }}">{{ __('messages.common.reset_via_email') }}</a></li>
+                        <li><a class="dropdown-item"
+                            href="{{ route('password.phone.request') }}">{{ __('messages.common.reset_via_phone') }}</a>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                   <div class="mb-3 position-relative ">
                     <input name="password" type="password" class="form-control" id="password" required

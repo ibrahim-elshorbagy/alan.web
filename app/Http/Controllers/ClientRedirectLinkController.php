@@ -149,9 +149,9 @@ class ClientRedirectLinkController extends Controller
         'card_type' => $redirectLink->nfcs_id,
         'name' => $user->first_name . ' ' . $user->last_name,
         'designation' => $user->occupation ?? 'N/A',
-        'phone' => $user->contact ?? '0000000000',
+        'phone' => $user->contact ?? '',
         'region_code' => $user->region_code ?? '+1',
-        'email' => $user->email,
+        'email' => $user->email ?? '',
         'address' => $user->location ?? 'N/A',
         'quantity' => 1,
         'company_name' => $user->company ?? 'N/A',
@@ -202,7 +202,7 @@ class ClientRedirectLinkController extends Controller
 
       // If user is not logged in, redirect to login with intended URL
       if (!Auth::check()) {
-        return redirect()->route('login')
+        return redirect()->route('register')
           ->with('info', __('messages.redirect_links.please_login_to_redeem'));
       }
 

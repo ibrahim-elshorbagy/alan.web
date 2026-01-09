@@ -340,7 +340,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
   public static $rules = [
     'first_name' => 'required|string|max:180',
     'last_name' => 'required|string|max:180',
-    'email' => 'required|email:filter|max:191|unique:users,email,',
+    'email' => 'nullable|email:filter|max:191|unique:users,email,',
+    'contact' => 'nullable|unique:users,contact,',
     'referral_code' => 'nullable|exists:users,affiliate_code',
   ];
 

@@ -41,7 +41,7 @@ return [
 
     'login' => [
         'title' => 'سجل الدخول لبدء جلستك',
-        'forgot_password' => 'نسيت كلمة المرور',
+        'forgot_password' => '؟نسيت كلمة المرور',
         'register_membership' => 'سجل عضوية جديدة',
     ],
 

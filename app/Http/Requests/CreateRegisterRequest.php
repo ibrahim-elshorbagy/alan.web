@@ -9,51 +9,74 @@ use App\Services\RecaptchaV2Async;
 
 class CreateRegisterRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
+  /**
+   * Determine if the user is authorized to make this request.
+   */
+  public function authorize(): bool
+  {
+    return true;
+  }
+
+  /**
+   * Get the validation rules that apply to the request.
+   */
+  public function rules(): array
+  {
+    $rules = User::$rules;
+
+    // Require either email or phone (at least one must be provided)
+    $rules['email'] = 'required_without:contact|nullable|email:filter|max:191|unique:users,email';
+    $rules['contact'] = 'required_without:email|nullable|unique:users,contact';
+
+    // If phone is provided, validate it's a Jordan number
+    if ($this->filled('contact')) {
+      $rules['contact'] = [
+        'required_without:email',
+        'nullable',
+        'unique:users,contact',
+        'regex:/^(00962|962)7[789]\d{7}$/', // Jordan phone format: 009627xxxxxxxx or 9627xxxxxxxx
+      ];
+      // region_code will be set automatically to 'JO' when contact is provided
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
-    public function rules(): array
-    {
-        $rules = User::$rules;
-        if (getSuperAdminSettingValue('phone_number_required') == 1) {
-            $rules['contact'] = 'required';
-        }
-        $rules['password'] = 'required|same:password_confirmation|min:8';
-        $rules['term_policy_check'] = 'required';
-        if (getSuperAdminSettingValue('captcha_enable')) {
-            $rules['g-recaptcha-response'] = ['required', function ($attribute, $value, $fail) {
-                if(getRecaptchaVersion() == 1) {
-                    if (!verifyRecaptcha($value)) {
-                        $fail(__('messages.placeholder.invalid_captcha'));
-                    }
-                } else {
-                    $recaptchaService = new RecaptchaV3Async();
-                    $promise = $recaptchaService->verifyAsync($value);
-                    $promise->then(function ($isValid) use ($fail) {
-                        if (!$isValid) {
-                            $fail(__('messages.placeholder.invalid_captcha'));
-                        }
-                    })->wait();
-                }
-            }];
-        }
-        return $rules;
+    if (getSuperAdminSettingValue('phone_number_required') == 1) {
+      $rules['contact'] = 'required';
     }
 
-    public function messages(): array
-    {
-        return [
-            'term_policy_check.required' => __('messages.placeholder.agree_term'),
-            'g-recaptcha-response.required' =>  __('messages.placeholder.required_captcha'),
-            'referral_code.exists' => __('messages.placeholder.referral_code_invalid'),
-        ];
+    $rules['password'] = 'required|same:password_confirmation|min:8';
+    $rules['term_policy_check'] = 'required';
+
+    if (getSuperAdminSettingValue('captcha_enable')) {
+      $rules['g-recaptcha-response'] = ['required', function ($attribute, $value, $fail) {
+        if (getRecaptchaVersion() == 1) {
+          if (!verifyRecaptcha($value)) {
+            $fail(__('messages.placeholder.invalid_captcha'));
+          }
+        } else {
+          $recaptchaService = new RecaptchaV3Async();
+          $promise = $recaptchaService->verifyAsync($value);
+          $promise->then(function ($isValid) use ($fail) {
+            if (!$isValid) {
+              $fail(__('messages.placeholder.invalid_captcha'));
+            }
+          })->wait();
+        }
+      }];
     }
+
+    return $rules;
+  }
+
+  public function messages(): array
+  {
+    return [
+      'email.required_without' => __('Either email or phone number is required.'),
+      'contact.required_without' => __('Either email or phone number is required.'),
+      'contact.regex' => __('Please enter a valid Jordan phone number starting with 00962 or 962 (e.g., 009627xxxxxxxx or 9627xxxxxxxx).'),
+      'region_code.required_with' => __('Region code is required when providing a phone number.'),
+      'term_policy_check.required' => __('messages.placeholder.agree_term'),
+      'g-recaptcha-response.required' =>  __('messages.placeholder.required_captcha'),
+      'referral_code.exists' => __('messages.placeholder.referral_code_invalid'),
+    ];
+  }
 }

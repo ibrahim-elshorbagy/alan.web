@@ -66,20 +66,23 @@
                       placeholder=" {{ __('messages.user.email') }}" value="{{ old('email') }}" required>
                     <span id="email-error-msg" class="text-danger fw-400 fs-small mt-2"></span>
                   </div>
-                  @if (getSuperAdminSettingValue('phone_number_required'))
-                    <div class="col-md-12 mb-4">
-                      <label for="phone" class="form-label">
-                        {{ __('messages.common.phone') . ':' }}<span class="required"></span>
-                      </label>
-                      {{ Form::tel('contact', getDefaultPhoneCode(), ['class' => 'form-control text-start', 'placeholder' => __('messages.form.contact'), 'onkeyup' => 'if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,"")', 'id' => 'phoneNumber']) }}
-                      {{ Form::hidden('region_code', getDefaultPhoneCode(), ['id' => 'prefix_code']) }}
-                      <span id="valid-msg"
-                        class="text-success d-none fw-400 fs-small mt-2">{{ __('messages.placeholder.valid_number') }}</span>
-                      <span id="error-msg" class="text-danger d-none fw-400 fs-small mt-2">Invalid
-                        Number</span>
-                      <div class="fv-plugins-message-container invalid-feedback"></div>
-                    </div>
-                  @endif
+                  <div class="col-md-12 mb-4">
+                    <label for="phone" class="form-label">
+                      {{ __('messages.common.phone') . ':' }}
+                    </label>
+                    <input type="tel" name="contact" id="phoneNumber" class="form-control text-start"
+                      placeholder="00962 7X XXX XXXX or 962 7X XXX XXXX" value="{{ old('contact') }}"
+                      pattern="^(00962|962)7[789]\d{7}$"
+                      title="Please enter a valid Jordan mobile number starting with 00962 or 962"
+                      style="padding-left: 50px; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjE2QzE0IDE3LjEgMTMuMSAxOCA5IDE4VjE2QzQuOSAxNiA0IDE1LjEgNCAxNFY0QzQgMi45IDQuOSAyIDYgMkgxOFoiIGZpbGw9IiM2MzY2RjEiLz4KPHN2ZyB4PSI2IiB5PSI2IiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSI+Cjx0ZXh0IHg9IjAiIHk9IjEwIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjM2NkYxIj5KTzwvdGV4dD4KPHN2Zz4KPHN2Zz4K'); background-repeat: no-repeat; background-position: 10px center;">
+                    <span class="text-muted fs-small mt-1 d-block">Enter Jordan mobile number starting with 00962 or 962
+                      followed by 77, 78, or 79</span>
+                    <span id="valid-msg"
+                      class="text-success d-none fw-400 fs-small mt-2">{{ __('messages.placeholder.valid_number') }}</span>
+                    <span id="error-msg" class="text-danger d-none fw-400 fs-small mt-2">Invalid
+                      Number</span>
+                    <div class="fv-plugins-message-container invalid-feedback"></div>
+                  </div>
                   <div class="col-md-12 mb-4">
                     <label for="password" class="form-label">
                       {{ __('messages.user.password') . ':' }}<span class="required"></span>

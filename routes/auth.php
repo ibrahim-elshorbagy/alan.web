@@ -8,57 +8,88 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\PhonePasswordResetController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/register', [RegisteredUserController::class, 'create'])
-    ->middleware(['guest', 'setLanguage', 'checkCustomDomain'])
-    ->name('register');
+  ->middleware(['guest', 'setLanguage', 'checkCustomDomain'])
+  ->name('register');
 
 Route::post('/register', [RegisteredUserController::class, 'store'])
-    ->middleware(['guest', 'setLanguage']);
+  ->middleware(['guest', 'setLanguage']);
 
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])
-    ->middleware(['guest', 'setLanguage', 'checkCustomDomain'])
-    ->name('login');
+  ->middleware(['guest', 'setLanguage', 'checkCustomDomain'])
+  ->name('login');
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])
-    ->middleware(['guest', 'setLanguage']);
+  ->middleware(['guest', 'setLanguage']);
 
 Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
-    ->middleware(['guest', 'setLanguage', 'checkCustomDomain'])
-    ->name('password.request');
+  ->middleware(['guest', 'setLanguage', 'checkCustomDomain'])
+  ->name('password.request');
 
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-    ->middleware('guest', 'setLanguage')
-    ->name('password.email');
+  ->middleware('guest', 'setLanguage')
+  ->name('password.email');
 
 Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
-    ->middleware(['guest', 'setLanguage'])
-    ->name('password.reset');
+  ->middleware(['guest', 'setLanguage'])
+  ->name('password.reset');
 
 Route::post('/reset-password', [NewPasswordController::class, 'store'])
-    ->middleware('guest', 'setLanguage')
-    ->name('password.update');
+  ->middleware('guest', 'setLanguage')
+  ->name('password.update');
 
 Route::get('/verify-email', [EmailVerificationPromptController::class, '__invoke'])
-    ->middleware(['auth', 'setLanguage'])
-    ->name('verification.notice');
+  ->middleware(['auth', 'setLanguage'])
+  ->name('verification.notice');
 
 Route::get('/verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-    ->name('verification.verify');
+  ->name('verification.verify');
 
 Route::post('/email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-    ->middleware(['auth', 'throttle:6,1'])
-    ->name('verification.send');
+  ->middleware(['auth', 'throttle:6,1'])
+  ->name('verification.send');
 
 Route::get('/confirm-password', [ConfirmablePasswordController::class, 'show'])
-    ->middleware(['auth', 'setLanguage'])
-    ->name('password.confirm');
+  ->middleware(['auth', 'setLanguage'])
+  ->name('password.confirm');
 
 Route::post('/confirm-password', [ConfirmablePasswordController::class, 'store'])
-    ->middleware('auth', 'setLanguage');
+  ->middleware('auth', 'setLanguage');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->middleware('auth')
-    ->name('logout');
+  ->middleware('auth')
+  ->name('logout');
 Route::get('change-email-verification/{user_id}/{token}', [VerifyEmailController::class, 'verifyEmail'])->name('user-verify-email');
+
+// Phone verification routes
+Route::get('/verify-phone', [RegisteredUserController::class, 'showPhoneVerification'])
+  ->middleware(['guest', 'setLanguage', 'checkCustomDomain'])
+  ->name('phone.verification.show');
+
+Route::post('/verify-phone', [RegisteredUserController::class, 'verifyPhone'])
+  ->middleware(['guest', 'setLanguage', 'throttle:10,1'])
+  ->name('phone.verify');
+
+Route::post('/resend-phone-verification', [RegisteredUserController::class, 'resendPhoneVerification'])
+  ->middleware(['guest', 'setLanguage', 'throttle:10,1'])
+  ->name('phone.verification.resend');
+
+// Phone-based password reset routes
+Route::get('/forgot-password-phone', [PhonePasswordResetController::class, 'create'])
+  ->middleware(['guest', 'setLanguage', 'checkCustomDomain'])
+  ->name('password.phone.request');
+
+Route::post('/forgot-password-phone', [PhonePasswordResetController::class, 'store'])
+  ->middleware(['guest', 'setLanguage', 'throttle:10,1'])
+  ->name('password.phone.email');
+
+Route::get('/reset-password-phone', [PhonePasswordResetController::class, 'showResetForm'])
+  ->middleware(['guest', 'setLanguage', 'checkCustomDomain'])
+  ->name('password.phone.reset');
+
+Route::post('/reset-password-phone', [PhonePasswordResetController::class, 'reset'])
+  ->middleware(['guest', 'setLanguage'])
+  ->name('password.phone.update');

@@ -11,75 +11,99 @@ use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
+  /**
+   * Determine if the user is authorized to make this request.
+   */
+  public function authorize(): bool
+  {
+    return true;
+  }
+
+  /**
+   * Get the validation rules that apply to the request.
+   */
+  public function rules(): array
+  {
+    return [
+      'email' => 'required|string',
+      'password' => 'required|string',
+    ];
+  }
+
+  /**
+   * Attempt to authenticate the request's credentials.
+   *
+   *
+   * @throws \Illuminate\Validation\ValidationException
+   */
+  public function authenticate(): void
+  {
+    $this->ensureIsNotRateLimited();
+
+    $credentials = $this->getCredentials();
+
+    if (! Auth::attempt($credentials, $this->boolean('remember'))) {
+      RateLimiter::hit($this->throttleKey());
+
+      throw ValidationException::withMessages([
+        'email' => __('auth.failed'),
+      ]);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     */
-    public function rules(): array
-    {
-        return [
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ];
+    RateLimiter::clear($this->throttleKey());
+  }
+
+  /**
+   * Get credentials for authentication (email or phone)
+   */
+  protected function getCredentials(): array
+  {
+    $login = $this->input('email');
+
+    // Check if input is phone number (contains only digits)
+    if (preg_match('/^[0-9+]+$/', $login)) {
+      return [
+        'contact' => $login,
+        'password' => $this->input('password')
+      ];
     }
 
-    /**
-     * Attempt to authenticate the request's credentials.
-     *
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function authenticate(): void
-    {
-        $this->ensureIsNotRateLimited();
+    // Otherwise treat as email
+    return [
+      'email' => $login,
+      'password' => $this->input('password')
+    ];
+  }
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
-
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
-
-        RateLimiter::clear($this->throttleKey());
+  /**
+   * Ensure the login request is not rate limited.
+   *
+   *
+   * @throws \Illuminate\Validation\ValidationException
+   */
+  public function ensureIsNotRateLimited(): void
+  {
+    if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+      return;
     }
 
-    /**
-     * Ensure the login request is not rate limited.
-     *
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function ensureIsNotRateLimited(): void
-    {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
-            return;
-        }
+    event(new Lockout($this));
 
-        event(new Lockout($this));
+    $seconds = RateLimiter::availableIn($this->throttleKey());
 
-        $seconds = RateLimiter::availableIn($this->throttleKey());
+    throw ValidationException::withMessages([
+      'email' => trans('auth.throttle', [
+        'seconds' => $seconds,
+        'minutes' => ceil($seconds / 60),
+      ]),
+    ]);
+  }
 
-        throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
-        ]);
-    }
-
-    /**
-     * Get the rate limiting throttle key for the request.
-     */
-    public function throttleKey(): string
-    {
-        return Str::lower($this->input('email')).'|'.$this->ip();
-    }
+  /**
+   * Get the rate limiting throttle key for the request.
+   */
+  public function throttleKey(): string
+  {
+    return Str::lower($this->input('email')) . '|' . $this->ip();
+  }
 }
