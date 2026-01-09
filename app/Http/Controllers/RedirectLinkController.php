@@ -108,6 +108,7 @@ class RedirectLinkController extends Controller
 
     $excelData = [];
     $qrCodes = [];
+    $qrImages = []; // Store raw image data
 
     $customQrCode = QrcodeEdit::withoutGlobalScopes()
       ->whereNull('tenant_id')
@@ -131,7 +132,7 @@ class RedirectLinkController extends Controller
     foreach ($redirectLinks as $link) {
       $fullUrl = url('/auto-' . $link->uri);
 
-      // Generate PNG QR code with colors (Imagick enabled!)
+      // Generate PNG QR code with colors
       $qrImage = QrCode::format('png')
         ->size(400)
         ->color(
@@ -158,12 +159,10 @@ class RedirectLinkController extends Controller
         'full_link' => $fullUrl,
       ];
 
-      $qrCodes[] = [
-        'id' => $link->id,
+      // Store for PDF - use raw base64
+      $qrImages[] = [
         'uri' => $link->uri,
-        'full_link' => $fullUrl,
-        'qr_path' => $pngPath,
-        'qr_base64' => base64_encode($qrImage),
+        'image_data' => 'data:image/png;base64,' . base64_encode($qrImage),
       ];
     }
 
@@ -173,10 +172,15 @@ class RedirectLinkController extends Controller
     $excelContent = Excel::raw(new RedirectLinksExport($excelData), \Maatwebsite\Excel\Excel::XLSX);
     file_put_contents($excelPath, $excelContent);
 
-    // Generate PDF with PNG images
+    // Generate PDF - Enable remote images for DomPDF
     $pdfFileName = 'redirect_links_qr_codes.pdf';
     $pdfPath = $tempDirectory . '/' . $pdfFileName;
-    $pdf = Pdf::loadView('pdf.redirect_qr_codes', ['qrCodes' => $qrCodes]);
+
+    $pdf = Pdf::setOption('isRemoteEnabled', true)
+      ->setOption('isPhpEnabled', true)
+      ->setOption('isHtml5ParserEnabled', true)
+      ->loadView('pdf.redirect_qr_codes', ['qrCodes' => $qrImages]);
+
     $pdf->setPaper('a4', 'portrait');
     $pdf->save($pdfPath);
 
@@ -217,6 +221,7 @@ class RedirectLinkController extends Controller
       ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
       ->header('Content-Length', strlen($zipContent));
   }
+
 
   private function deleteDirectory($dir)
   {
