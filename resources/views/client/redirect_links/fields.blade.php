@@ -15,6 +15,9 @@
     <div class="mb-5">
       {{ Form::label('redirect_link', __('messages.redirect_links.redirect_link') . ':', ['class' => 'form-label']) }}
       {{ Form::text('redirect_link', isset($redirectLink) ? $redirectLink->redirect_link : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.redirect_link')]) }}
+      <small class="text-muted">{{ __('messages.redirect_links.valid_url_examples') }}<br>
+        https://www.example.com<br>
+        http://example.com</small>
     </div>
   </div>
   <div>

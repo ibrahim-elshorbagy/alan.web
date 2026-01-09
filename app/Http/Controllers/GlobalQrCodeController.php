@@ -6,6 +6,7 @@ use App\Models\QrcodeEdit;
 use App\Models\Vcard;
 use App\Models\WhatsappStore;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Laracasts\Flash\Flash;
 use Spatie\Color\Hex;
@@ -41,7 +42,10 @@ class GlobalQrCodeController extends Controller
     // Get all WhatsApp stores for the current tenant
     $whatsappStores = WhatsappStore::whereTenantId(getLogInTenantId())->get();
 
-    return view('global_qr_code.index', compact('customQrCode', 'qrcodeColor', 'vcards', 'whatsappStores'));
+    // Get all redirect links for the current tenant
+    $redirectLinks = \App\Models\RedirectLink::where('user_id',Auth::id())->with('nfc')->get();
+
+    return view('global_qr_code.index', compact('customQrCode', 'qrcodeColor', 'vcards', 'whatsappStores', 'redirectLinks'));
   }
 
   public function store(Request $request)

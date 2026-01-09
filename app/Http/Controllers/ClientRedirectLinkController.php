@@ -23,7 +23,30 @@ class ClientRedirectLinkController extends Controller
   {
     $redirectLink = RedirectLink::where('user_id', auth()->id())->findOrFail($id);
 
-    return view('client.redirect_links.edit', compact('redirectLink'));
+    // Get global QR code settings for the current tenant
+    $customQrCode = \App\Models\QrcodeEdit::whereTenantId(getLogInTenantId())
+      ->where('is_global', true)
+      ->whereNull('vcard_id')
+      ->whereNull('whatsapp_store_id')
+      ->pluck('value', 'key')
+      ->toArray();
+
+    // Set default values if no global settings exist
+    if (empty($customQrCode)) {
+      $customQrCode['qrcode_color'] = '#000000';
+      $customQrCode['background_color'] = '#ffffff';
+      $customQrCode['style'] = 'square';
+      $customQrCode['eye_style'] = 'square';
+      $customQrCode['applySetting'] = '1';
+    }
+
+    // Convert hex colors to RGB for QR code generation
+    $qrcodeColor = [
+      'qrcodeColor' => \Spatie\Color\Hex::fromString($customQrCode['qrcode_color'])->toRgb(),
+      'background_color' => \Spatie\Color\Hex::fromString($customQrCode['background_color'])->toRgb(),
+    ];
+
+    return view('client.redirect_links.edit', compact('redirectLink', 'customQrCode', 'qrcodeColor'));
   }
 
   public function update(Request $request, $id)

@@ -2389,6 +2389,7 @@ return [
     'invalid_snapchat_url' => 'The redirect link must be a valid Snapchat URL.',
     'invalid_google_business_url' => 'The redirect link must be a valid Google Business URL.',
     'no_redirect_link_message' => 'No redirect link specified yet. Please update this field with your website link.',
+    'valid_url_examples' => 'Valid URL examples:',
   ],
   'verify_phone' => [
     'title' => 'Verify Your Phone Number',
