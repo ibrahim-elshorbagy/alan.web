@@ -243,33 +243,24 @@ class RedirectLinkController extends Controller
 
   private function generateUniqueUri()
   {
-    $lastUri = RedirectLink::where('uri', 'regexp', '^[a-z]{6}$')->orderBy('uri', 'desc')->value('uri');
-
-    if (!$lastUri) {
-      $uri = 'aaaaaa';
-    } else {
-      $uri = $this->incrementString($lastUri);
-    }
-
-    while (RedirectLink::where('uri', $uri)->exists()) {
-      $uri = $this->incrementString($uri);
-    }
+    do {
+      $uri = $this->generateRandomUri();
+    } while (RedirectLink::where('uri', $uri)->exists());
 
     return $uri;
   }
 
-  private function incrementString($string)
+  private function generateRandomUri()
   {
-    $length = strlen($string);
-    for ($i = $length - 1; $i >= 0; $i--) {
-      if ($string[$i] < 'z') {
-        $string[$i] = chr(ord($string[$i]) + 1);
-        return $string;
-      } else {
-        $string[$i] = 'a';
-      }
+    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $length = 10;
+    $uri = '';
+
+    for ($i = 0; $i < $length; $i++) {
+      $uri .= $characters[rand(0, strlen($characters) - 1)];
     }
-    return 'a' . $string;
+
+    return $uri;
   }
 
   public function edit($id)

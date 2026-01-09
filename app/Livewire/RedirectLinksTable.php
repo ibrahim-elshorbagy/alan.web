@@ -19,7 +19,7 @@ class RedirectLinksTable extends LivewireTableComponent
   {
     $this->setPrimaryKey('id');
     $this->setPageName('redirect-links-table');
-    $this->setDefaultSort('created_at', 'desc');
+    $this->setDefaultSort('updated_at', 'desc');
     $this->setColumnSelectStatus(false);
     $this->setQueryStringStatus(false);
     $this->resetPage('redirect-links-table');
@@ -82,19 +82,11 @@ class RedirectLinksTable extends LivewireTableComponent
         })->view('admin.redirect_links.columns.user'),
       Column::make(__('messages.redirect_links.redeem_code'), 'redeem_code')->sortable()->searchable(),
       Column::make(__('messages.redirect_links.uri'), 'uri')->sortable()->searchable(),
-      Column::make(__('messages.redirect_links.redirect_link'), 'redirect_link')->sortable()->searchable()
-        ->view('admin.redirect_links.columns.redirect_link'),
       Column::make(__('messages.redirect_links.redirect_link_type'), 'redirect_link_type')
         ->view('admin.redirect_links.columns.redirect_link_type'),
       Column::make(__('messages.redirect_links.status'), 'status')
         ->view('admin.redirect_links.columns.status'),
-      Column::make(__('messages.redirect_links.nfc'), 'nfc.name')
-        ->searchable(function (Builder $query, $direction) {
-          $query->whereHas('nfc', function ($q) use ($direction) {
-            $q->where('name', 'like', '%' . $direction . '%');
-          });
-        })->view('admin.redirect_links.columns.nfc'),
-      Column::make(__('messages.redirect_links.created_at'), 'created_at')->sortable(),
+      Column::make(__('messages.redirect_links.nfc'), 'nfcs_id')->sortable()->searchable(),
       Column::make(__('messages.redirect_links.updated_at'), 'updated_at')->sortable(),
       Column::make(__('messages.common.action'), 'id')
         ->view('admin.redirect_links.columns.action'),
@@ -103,7 +95,7 @@ class RedirectLinksTable extends LivewireTableComponent
 
   public function builder(): Builder
   {
-    return RedirectLink::query()->with(['user', 'nfc']);
+    return RedirectLink::query()->with(['user']);
   }
 
   public function resetPageTable($pageName = 'redirect-links-table')
