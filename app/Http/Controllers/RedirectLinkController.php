@@ -107,8 +107,6 @@ class RedirectLinkController extends Controller
     }
 
     $excelData = [];
-    $qrCodes = [];
-    $qrImages = []; // Store raw image data
 
     $customQrCode = QrcodeEdit::withoutGlobalScopes()
       ->whereNull('tenant_id')
@@ -128,6 +126,16 @@ class RedirectLinkController extends Controller
 
     $qrcodeColor['qrcodeColor'] = Hex::fromString($customQrCode['qrcode_color'])->toRgb();
     $qrcodeColor['background_color'] = Hex::fromString($customQrCode['background_color'])->toRgb();
+
+    // Create PDF manually with TCPDF
+    $pdf = new \TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+    $pdf->SetCreator('NFC System');
+    $pdf->SetAuthor('NFC System');
+    $pdf->SetTitle('QR Codes');
+    $pdf->setPrintHeader(false);
+    $pdf->setPrintFooter(false);
+    $pdf->SetMargins(0, 0, 0);
+    $pdf->SetAutoPageBreak(false);
 
     foreach ($redirectLinks as $link) {
       $fullUrl = url('/auto-' . $link->uri);
@@ -159,30 +167,28 @@ class RedirectLinkController extends Controller
         'full_link' => $fullUrl,
       ];
 
-      // Store for PDF - use raw base64
-      $qrImages[] = [
-        'uri' => $link->uri,
-        'image_data' => 'data:image/png;base64,' . base64_encode($qrImage),
-      ];
+      // Add page to PDF
+      $pdf->AddPage();
+
+      // Add QR image (centered at 30mm from left, 50mm from top, 100mm x 100mm)
+      $pdf->Image($pngPath, 55, 50, 100, 100, 'PNG');
+
+      // Add text (centered below image)
+      $pdf->SetFont('helvetica', 'B', 36);
+      $pdf->SetXY(0, 170);
+      $pdf->Cell(210, 10, $link->uri, 0, 0, 'C');
     }
+
+    // Save PDF
+    $pdfFileName = 'redirect_links_qr_codes.pdf';
+    $pdfPath = $tempDirectory . '/' . $pdfFileName;
+    $pdf->Output($pdfPath, 'F');
 
     // Generate Excel
     $excelFileName = 'redirect_links_data.xlsx';
     $excelPath = $tempDirectory . '/' . $excelFileName;
     $excelContent = Excel::raw(new RedirectLinksExport($excelData), \Maatwebsite\Excel\Excel::XLSX);
     file_put_contents($excelPath, $excelContent);
-
-    // Generate PDF - Enable remote images for DomPDF
-    $pdfFileName = 'redirect_links_qr_codes.pdf';
-    $pdfPath = $tempDirectory . '/' . $pdfFileName;
-
-    $pdf = Pdf::setOption('isRemoteEnabled', true)
-      ->setOption('isPhpEnabled', true)
-      ->setOption('isHtml5ParserEnabled', true)
-      ->loadView('pdf.redirect_qr_codes', ['qrCodes' => $qrImages]);
-
-    $pdf->setPaper('a4', 'portrait');
-    $pdf->save($pdfPath);
 
     // Create ZIP
     $zipFileName = 'redirect_links_' . $timestamp . '.zip';
