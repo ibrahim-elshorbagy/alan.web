@@ -7,12 +7,14 @@ use App\Models\RedirectLink;
 use App\Models\User;
 use App\Models\Nfc;
 use Illuminate\Support\Facades\Validator;
-use LaravelQRCode\Facades\QRCode;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\RedirectLinksExport;
 use ZipArchive;
 use Illuminate\Support\Facades\File;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\QrcodeEdit;
+use Spatie\Color\Hex;
 
 class RedirectLinkController extends Controller
 {
@@ -61,24 +63,19 @@ class RedirectLinkController extends Controller
       $createdLinks[] = $redirectLink;
     }
 
-    // Store success message in session BEFORE download
     session()->flash('success', __('messages.redirect_links.created'));
 
-    // Generate all downloads
     return $this->generatePackage($createdLinks);
   }
 
-
   public function extractAll()
   {
-    // Get all redirect links
     $redirectLinks = RedirectLink::all();
 
     if ($redirectLinks->isEmpty()) {
       return redirect()->back()->with('error', 'No redirect links found to extract');
     }
 
-    // Generate package for all links
     return $this->generatePackage($redirectLinks);
   }
 
@@ -90,17 +87,13 @@ class RedirectLinkController extends Controller
       return redirect()->back()->with('error', __('messages.redirect_links.no_items_selected'));
     }
 
-    // Convert comma-separated string to array
     $idsArray = explode(',', $ids);
-
-    // Get selected redirect links
     $redirectLinks = RedirectLink::whereIn('id', $idsArray)->get();
 
     if ($redirectLinks->isEmpty()) {
       return redirect()->back()->with('error', __('messages.redirect_links.no_items_found'));
     }
 
-    // Generate package for selected links
     return $this->generatePackage($redirectLinks);
   }
 
@@ -109,7 +102,6 @@ class RedirectLinkController extends Controller
     $timestamp = time();
     $tempDirectory = storage_path('app/temp_redirect_qr/' . $timestamp);
 
-    // Create directory if it doesn't exist
     if (!is_dir($tempDirectory)) {
       File::makeDirectory($tempDirectory, 0777, true);
     }
@@ -117,57 +109,83 @@ class RedirectLinkController extends Controller
     $excelData = [];
     $qrCodes = [];
 
-    // Generate QR codes
+    $customQrCode = QrcodeEdit::withoutGlobalScopes()
+      ->whereNull('tenant_id')
+      ->where('is_global', true)
+      ->whereNull('vcard_id')
+      ->whereNull('whatsapp_store_id')
+      ->pluck('value', 'key')
+      ->toArray();
+
+    if (empty($customQrCode)) {
+      $customQrCode['qrcode_color'] = '#000000';
+      $customQrCode['background_color'] = '#ffffff';
+      $customQrCode['style'] = 'square';
+      $customQrCode['eye_style'] = 'square';
+      $customQrCode['applySetting'] = '1';
+    }
+
+    $qrcodeColor['qrcodeColor'] = Hex::fromString($customQrCode['qrcode_color'])->toRgb();
+    $qrcodeColor['background_color'] = Hex::fromString($customQrCode['background_color'])->toRgb();
+
     foreach ($redirectLinks as $link) {
-      // Generate full URL
       $fullUrl = url('/auto-' . $link->uri);
 
-      // Generate QR code with URI as filename (since URI is now the redeem code)
-      $qrCodePath = $tempDirectory . '/' . $link->uri . '.png';
-      QRCode::url($fullUrl)
-        ->setSize(10)
-        ->setMargin(2)
-        ->setOutfile($qrCodePath)
-        ->png();
+      // Generate PNG QR code with colors (Imagick enabled!)
+      $qrImage = QrCode::format('png')
+        ->size(400)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($fullUrl);
 
-      // Prepare data for Excel
+      $pngPath = $tempDirectory . '/' . $link->uri . '.png';
+      file_put_contents($pngPath, $qrImage);
+
       $excelData[] = [
         'id' => $link->id,
-        'uri' => $link->uri, // Use URI as redeem code
+        'uri' => $link->uri,
         'full_link' => $fullUrl,
       ];
 
-      // Store QR code info for PDF
       $qrCodes[] = [
         'id' => $link->id,
-        'uri' => $link->uri, // Use URI as redeem code
+        'uri' => $link->uri,
         'full_link' => $fullUrl,
-        'qr_path' => $qrCodePath,
+        'qr_path' => $pngPath,
+        'qr_base64' => base64_encode($qrImage),
       ];
     }
 
-    // 1. Generate Excel file
+    // Generate Excel
     $excelFileName = 'redirect_links_data.xlsx';
     $excelPath = $tempDirectory . '/' . $excelFileName;
-
     $excelContent = Excel::raw(new RedirectLinksExport($excelData), \Maatwebsite\Excel\Excel::XLSX);
     file_put_contents($excelPath, $excelContent);
 
-    // 2. Generate PDF with only QR codes and redeem codes
+    // Generate PDF with PNG images
     $pdfFileName = 'redirect_links_qr_codes.pdf';
     $pdfPath = $tempDirectory . '/' . $pdfFileName;
-
     $pdf = Pdf::loadView('pdf.redirect_qr_codes', ['qrCodes' => $qrCodes]);
     $pdf->setPaper('a4', 'portrait');
     $pdf->save($pdfPath);
 
-    // 3. Create main ZIP file with QR images, Excel, and PDF
+    // Create ZIP
     $zipFileName = 'redirect_links_' . $timestamp . '.zip';
     $zipPath = $tempDirectory . '/' . $zipFileName;
 
     $zip = new ZipArchive();
     if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
-      // Add QR code images folder
       foreach ($redirectLinks as $link) {
         $qrCodePath = $tempDirectory . '/' . $link->uri . '.png';
         if (file_exists($qrCodePath)) {
@@ -175,12 +193,10 @@ class RedirectLinkController extends Controller
         }
       }
 
-      // Add Excel file
       if (file_exists($excelPath)) {
         $zip->addFile($excelPath, $excelFileName);
       }
 
-      // Add PDF
       if (file_exists($pdfPath)) {
         $zip->addFile($pdfPath, $pdfFileName);
       }
@@ -188,19 +204,14 @@ class RedirectLinkController extends Controller
       $zip->close();
     }
 
-    // Check if ZIP was created successfully
     if (!file_exists($zipPath)) {
       $this->deleteDirectory($tempDirectory);
       return redirect()->back()->with('error', 'Failed to create ZIP file');
     }
 
-    // Read ZIP file content
     $zipContent = file_get_contents($zipPath);
-
-    // Delete the entire temp directory immediately
     $this->deleteDirectory($tempDirectory);
 
-    // Return the ZIP as a download response
     return response($zipContent)
       ->header('Content-Type', 'application/zip')
       ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')

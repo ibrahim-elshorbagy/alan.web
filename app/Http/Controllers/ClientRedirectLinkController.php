@@ -24,12 +24,23 @@ class ClientRedirectLinkController extends Controller
     $redirectLink = RedirectLink::where('user_id', auth()->id())->findOrFail($id);
 
     // Get global QR code settings for the current tenant
-    $customQrCode = \App\Models\QrcodeEdit::whereTenantId(getLogInTenantId())
+    $tenantId = getLogInTenantId();
+    $customQrCode = \App\Models\QrcodeEdit::whereTenantId($tenantId)
       ->where('is_global', true)
       ->whereNull('vcard_id')
       ->whereNull('whatsapp_store_id')
       ->pluck('value', 'key')
       ->toArray();
+
+    // If no tenant global, get super admin global
+    if (empty($customQrCode)) {
+      $customQrCode = \App\Models\QrcodeEdit::withoutGlobalScopes()->whereNull('tenant_id')
+        ->where('is_global', true)
+        ->whereNull('vcard_id')
+        ->whereNull('whatsapp_store_id')
+        ->pluck('value', 'key')
+        ->toArray();
+    }
 
     // Set default values if no global settings exist
     if (empty($customQrCode)) {

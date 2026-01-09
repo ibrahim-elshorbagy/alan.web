@@ -581,6 +581,10 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::put('redirect-links/{redirectLink}', [RedirectLinkController::class, 'update'])->name('redirect-links.update');
       Route::delete('redirect-links/{redirectLink}', [RedirectLinkController::class, 'destroy'])->name('redirect-links.destroy');
 
+      // Global QR Code Settings
+      Route::get('global-qr-code', [GlobalQrCodeController::class, 'index'])->name('sadmin.global.qr.code.index');
+      Route::post('global-qr-code', [GlobalQrCodeController::class, 'store'])->name('sadmin.global.qr.code.store');
+
       //user
       Route::resource('/users', UserController::class);
       Route::resource('/admins', AdminUserController::class);
