@@ -100,10 +100,15 @@ class RedirectLinkController extends Controller
   private function generatePackage($redirectLinks)
   {
     $timestamp = time();
-    $tempDirectory = storage_path('app/temp_redirect_qr/' . $timestamp);
+    $publicDirectory = public_path('temp_redirect_qr/' . $timestamp);
+    $storageDirectory = storage_path('app/temp_redirect_qr/' . $timestamp);
 
-    if (!is_dir($tempDirectory)) {
-      File::makeDirectory($tempDirectory, 0777, true);
+    // Create both directories
+    if (!is_dir($publicDirectory)) {
+      File::makeDirectory($publicDirectory, 0777, true);
+    }
+    if (!is_dir($storageDirectory)) {
+      File::makeDirectory($storageDirectory, 0777, true);
     }
 
     $excelData = [];
@@ -149,11 +154,9 @@ class RedirectLinkController extends Controller
         ->errorCorrection('H')
         ->generate($fullUrl);
 
-      $pngPath = $tempDirectory . '/' . $link->uri . '.png';
-      file_put_contents($pngPath, $qrImage);
-
-      // Convert to base64 IMMEDIATELY for PDF
-      $qrBase64 = base64_encode($qrImage);
+      // Save to PUBLIC folder for DomPDF
+      $publicPngPath = $publicDirectory . '/' . $link->uri . '.png';
+      file_put_contents($publicPngPath, $qrImage);
 
       $excelData[] = [
         'id' => $link->id,
@@ -165,32 +168,31 @@ class RedirectLinkController extends Controller
         'id' => $link->id,
         'uri' => $link->uri,
         'full_link' => $fullUrl,
-        'qr_path' => $pngPath,
-        'qr_base64' => $qrBase64, // Store base64 for PDF
+        'qr_path' => $publicPngPath, // Use public path for DomPDF
       ];
     }
 
-    // Generate PDF with base64 images
+    // Generate PDF with public file paths
     $pdfFileName = 'redirect_links_qr_codes.pdf';
-    $pdfPath = $tempDirectory . '/' . $pdfFileName;
+    $pdfPath = $storageDirectory . '/' . $pdfFileName;
     $pdf = Pdf::loadView('pdf.redirect_qr_codes', ['qrCodes' => $qrCodes]);
     $pdf->setPaper('a4', 'portrait');
     $pdf->save($pdfPath);
 
     // Generate Excel
     $excelFileName = 'redirect_links_data.xlsx';
-    $excelPath = $tempDirectory . '/' . $excelFileName;
+    $excelPath = $storageDirectory . '/' . $excelFileName;
     $excelContent = Excel::raw(new RedirectLinksExport($excelData), \Maatwebsite\Excel\Excel::XLSX);
     file_put_contents($excelPath, $excelContent);
 
     // Create ZIP
     $zipFileName = 'redirect_links_' . $timestamp . '.zip';
-    $zipPath = $tempDirectory . '/' . $zipFileName;
+    $zipPath = $storageDirectory . '/' . $zipFileName;
 
     $zip = new ZipArchive();
     if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
       foreach ($redirectLinks as $link) {
-        $qrCodePath = $tempDirectory . '/' . $link->uri . '.png';
+        $qrCodePath = $publicDirectory . '/' . $link->uri . '.png';
         if (file_exists($qrCodePath)) {
           $zip->addFile($qrCodePath, 'qr_codes/' . basename($qrCodePath));
         }
@@ -208,18 +210,23 @@ class RedirectLinkController extends Controller
     }
 
     if (!file_exists($zipPath)) {
-      $this->deleteDirectory($tempDirectory);
+      $this->deleteDirectory($publicDirectory);
+      $this->deleteDirectory($storageDirectory);
       return redirect()->back()->with('error', 'Failed to create ZIP file');
     }
 
     $zipContent = file_get_contents($zipPath);
-    $this->deleteDirectory($tempDirectory);
+
+    // Clean up both directories
+    $this->deleteDirectory($publicDirectory);
+    $this->deleteDirectory($storageDirectory);
 
     return response($zipContent)
       ->header('Content-Type', 'application/zip')
       ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
       ->header('Content-Length', strlen($zipContent));
   }
+
 
   private function deleteDirectory($dir)
   {

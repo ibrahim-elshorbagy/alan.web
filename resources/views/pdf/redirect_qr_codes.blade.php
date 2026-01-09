@@ -20,13 +20,10 @@
             width: 350px;
             height: 350px;
             margin: 0 auto 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         .qr-image img {
-            max-width: 100%;
-            max-height: 100%;
+            width: 100%;
+            height: 100%;
         }
         .redeem-code {
             font-size: 36px;
@@ -40,7 +37,7 @@
     @foreach ($qrCodes as $qr)
         <div class="page">
             <div class="qr-image">
-                <img src="data:image/png;base64,{{ $qr['qr_base64'] }}" alt="QR Code">
+                <img src="{{ $qr['qr_path'] }}" alt="QR Code">
             </div>
             <div class="redeem-code">{{ $qr['uri'] }}</div>
         </div>
