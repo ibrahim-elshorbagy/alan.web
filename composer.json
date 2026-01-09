@@ -61,6 +61,7 @@
     "stancl/tenancy": "^3.7",
     "stevebauman/location": "^6.6",
     "stripe/stripe-php": "^9.0.0",
+    "tecnickcom/tcpdf": "^6.10",
     "tightenco/ziggy": "^1.1",
     "unicodeveloper/laravel-paystack": "^1.1",
     "wandesnet/mercadopago-laravel": "^1.4",
