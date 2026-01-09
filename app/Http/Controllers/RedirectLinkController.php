@@ -131,7 +131,7 @@ class RedirectLinkController extends Controller
     foreach ($redirectLinks as $link) {
       $fullUrl = url('/auto-' . $link->uri);
 
-      // Generate PNG QR code with colors (Imagick enabled!)
+      // Generate PNG QR code with colors
       $qrImage = QrCode::format('png')
         ->size(400)
         ->color(
@@ -152,6 +152,9 @@ class RedirectLinkController extends Controller
       $pngPath = $tempDirectory . '/' . $link->uri . '.png';
       file_put_contents($pngPath, $qrImage);
 
+      // Convert to base64 IMMEDIATELY for PDF
+      $qrBase64 = base64_encode($qrImage);
+
       $excelData[] = [
         'id' => $link->id,
         'uri' => $link->uri,
@@ -163,22 +166,22 @@ class RedirectLinkController extends Controller
         'uri' => $link->uri,
         'full_link' => $fullUrl,
         'qr_path' => $pngPath,
-        'qr_base64' => base64_encode($qrImage),
+        'qr_base64' => $qrBase64, // Store base64 for PDF
       ];
     }
+
+    // Generate PDF with base64 images
+    $pdfFileName = 'redirect_links_qr_codes.pdf';
+    $pdfPath = $tempDirectory . '/' . $pdfFileName;
+    $pdf = Pdf::loadView('pdf.redirect_qr_codes', ['qrCodes' => $qrCodes]);
+    $pdf->setPaper('a4', 'portrait');
+    $pdf->save($pdfPath);
 
     // Generate Excel
     $excelFileName = 'redirect_links_data.xlsx';
     $excelPath = $tempDirectory . '/' . $excelFileName;
     $excelContent = Excel::raw(new RedirectLinksExport($excelData), \Maatwebsite\Excel\Excel::XLSX);
     file_put_contents($excelPath, $excelContent);
-
-    // Generate PDF with PNG images
-    $pdfFileName = 'redirect_links_qr_codes.pdf';
-    $pdfPath = $tempDirectory . '/' . $pdfFileName;
-    $pdf = Pdf::loadView('pdf.redirect_qr_codes', ['qrCodes' => $qrCodes]);
-    $pdf->setPaper('a4', 'portrait');
-    $pdf->save($pdfPath);
 
     // Create ZIP
     $zipFileName = 'redirect_links_' . $timestamp . '.zip';
