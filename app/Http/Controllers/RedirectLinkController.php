@@ -12,9 +12,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\RedirectLinksExport;
 use ZipArchive;
 use Illuminate\Support\Facades\File;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\QrcodeEdit;
 use Spatie\Color\Hex;
+use Mpdf\Mpdf;
 
 class RedirectLinkController extends Controller
 {
@@ -26,7 +26,6 @@ class RedirectLinkController extends Controller
   public function create()
   {
     $nfcs = Nfc::all();
-
     return view('admin.redirect_links.create', compact('nfcs'));
   }
 
@@ -100,15 +99,10 @@ class RedirectLinkController extends Controller
   private function generatePackage($redirectLinks)
   {
     $timestamp = time();
-    $publicDirectory = public_path('temp_redirect_qr/' . $timestamp);
-    $storageDirectory = storage_path('app/temp_redirect_qr/' . $timestamp);
+    $tempDirectory = storage_path('app/temp_redirect_qr/' . $timestamp);
 
-    // Create both directories
-    if (!is_dir($publicDirectory)) {
-      File::makeDirectory($publicDirectory, 0777, true);
-    }
-    if (!is_dir($storageDirectory)) {
-      File::makeDirectory($storageDirectory, 0777, true);
+    if (!is_dir($tempDirectory)) {
+      File::makeDirectory($tempDirectory, 0777, true);
     }
 
     $excelData = [];
@@ -154,9 +148,8 @@ class RedirectLinkController extends Controller
         ->errorCorrection('H')
         ->generate($fullUrl);
 
-      // Save to PUBLIC folder for DomPDF
-      $publicPngPath = $publicDirectory . '/' . $link->uri . '.png';
-      file_put_contents($publicPngPath, $qrImage);
+      $pngPath = $tempDirectory . '/' . $link->uri . '.png';
+      file_put_contents($pngPath, $qrImage);
 
       $excelData[] = [
         'id' => $link->id,
@@ -168,31 +161,49 @@ class RedirectLinkController extends Controller
         'id' => $link->id,
         'uri' => $link->uri,
         'full_link' => $fullUrl,
-        'qr_path' => $publicPngPath, // Use public path for DomPDF
+        'qr_path' => $pngPath,
+        'qr_base64' => base64_encode($qrImage),
       ];
     }
 
-    // Generate PDF with public file paths
+    // Generate PDF with MPDF (not DomPDF!)
     $pdfFileName = 'redirect_links_qr_codes.pdf';
-    $pdfPath = $storageDirectory . '/' . $pdfFileName;
-    $pdf = Pdf::loadView('pdf.redirect_qr_codes', ['qrCodes' => $qrCodes]);
-    $pdf->setPaper('a4', 'portrait');
-    $pdf->save($pdfPath);
+    $pdfPath = $tempDirectory . '/' . $pdfFileName;
+
+    try {
+      $mpdf = new Mpdf(['mode' => 'utf-8', 'format' => 'A4', 'margin_top' => 0, 'margin_bottom' => 0, 'margin_left' => 0, 'margin_right' => 0]);
+
+      $html = '';
+      foreach ($qrCodes as $qr) {
+        $html .= '<div style="width: 210mm; height: 297mm; page-break-after: always; text-align: center; padding-top: 100px;">';
+        $html .= '<div style="width: 350px; height: 350px; margin: 0 auto 50px;">';
+        $html .= '<img src="data:image/png;base64,' . $qr['qr_base64'] . '" style="width: 100%; height: 100%;" />';
+        $html .= '</div>';
+        $html .= '<div style="font-size: 36px; font-weight: bold; letter-spacing: 4px;">' . $qr['uri'] . '</div>';
+        $html .= '</div>';
+      }
+
+      $mpdf->WriteHTML($html);
+      $mpdf->Output($pdfPath, 'F');
+    } catch (\Exception $e) {
+      $this->deleteDirectory($tempDirectory);
+      return redirect()->back()->with('error', 'Failed to generate PDF: ' . $e->getMessage());
+    }
 
     // Generate Excel
     $excelFileName = 'redirect_links_data.xlsx';
-    $excelPath = $storageDirectory . '/' . $excelFileName;
+    $excelPath = $tempDirectory . '/' . $excelFileName;
     $excelContent = Excel::raw(new RedirectLinksExport($excelData), \Maatwebsite\Excel\Excel::XLSX);
     file_put_contents($excelPath, $excelContent);
 
     // Create ZIP
     $zipFileName = 'redirect_links_' . $timestamp . '.zip';
-    $zipPath = $storageDirectory . '/' . $zipFileName;
+    $zipPath = $tempDirectory . '/' . $zipFileName;
 
     $zip = new ZipArchive();
     if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
       foreach ($redirectLinks as $link) {
-        $qrCodePath = $publicDirectory . '/' . $link->uri . '.png';
+        $qrCodePath = $tempDirectory . '/' . $link->uri . '.png';
         if (file_exists($qrCodePath)) {
           $zip->addFile($qrCodePath, 'qr_codes/' . basename($qrCodePath));
         }
@@ -210,23 +221,18 @@ class RedirectLinkController extends Controller
     }
 
     if (!file_exists($zipPath)) {
-      $this->deleteDirectory($publicDirectory);
-      $this->deleteDirectory($storageDirectory);
+      $this->deleteDirectory($tempDirectory);
       return redirect()->back()->with('error', 'Failed to create ZIP file');
     }
 
     $zipContent = file_get_contents($zipPath);
-
-    // Clean up both directories
-    $this->deleteDirectory($publicDirectory);
-    $this->deleteDirectory($storageDirectory);
+    $this->deleteDirectory($tempDirectory);
 
     return response($zipContent)
       ->header('Content-Type', 'application/zip')
       ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
       ->header('Content-Length', strlen($zipContent));
   }
-
 
   private function deleteDirectory($dir)
   {
