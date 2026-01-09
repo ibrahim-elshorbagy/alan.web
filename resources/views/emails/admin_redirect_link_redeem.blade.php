@@ -31,7 +31,7 @@
   @component('mail::table')
     | | |
     |--|--|
-    | الرمز | **`{{ $redirectLink->redeem_code }}`** |
+    | الرمز | **`{{ $redirectLink->uri }}`** |
     | نوع البطاقة | {{ $nfcCard?->name ?? 'N/A' }} |
     | النوع | {{ $redirectType }} |
     | الكمية | 1 |

@@ -19,7 +19,9 @@
         </div>
 
         <div class="col-lg-12">
-          <form method="POST" action="{{ route('global.qr.code.store') }}" id="globalQrCodeForm">
+          <form method="POST"
+            action="{{ auth()->user()->hasRole('super_admin') ? route('sadmin.global.qr.code.store') : route('global.qr.code.store') }}"
+            id="globalQrCodeForm">
             @csrf
             <div class="card">
               <div class="card-body">
@@ -84,15 +86,22 @@
                     <div class="card">
                       <div class="card-body">
 
-                        @if ($vcards->count() > 0 || $whatsappStores->count() > 0)
+                        @if ($vcards->count() > 0 || $whatsappStores->count() > 0 || $redirectLinks->count() > 0)
                           <div class="row">
                             <!-- vCards QR Codes -->
                             @foreach ($vcards as $vcard)
                               <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="card h-100">
                                   <div class="card-body text-center">
+                                    <h6 class="mb-3">{{ $vcard->name }}</h6>
                                     <div class="qr-code-image p-3 mb-3 d-flex justify-content-center align-items-center"
                                       style="background: {{ $customQrCode['background_color'] ?? '#ffffff' }}; min-height: 200px;">
+                                      @php
+                                        $qrUrl =
+                                            isset($vcard->is_demo) && $vcard->is_demo
+                                                ? $vcard->url
+                                                : route('vcard.show', $vcard->url_alias);
+                                      @endphp
                                       @if (isset($customQrCode['applySetting']) && $customQrCode['applySetting'] == 1)
                                         {!! QrCode::color(
                                             $qrcodeColor['qrcodeColor']->red(),
@@ -102,17 +111,18 @@
                                                 $qrcodeColor['background_color']->red(),
                                                 $qrcodeColor['background_color']->green(),
                                                 $qrcodeColor['background_color']->blue(),
-                                            )->style($customQrCode['style'])->eye($customQrCode['eye_style'])->size(150)->format('svg')->generate(route('vcard.show', $vcard->url_alias)) !!}
+                                            )->style($customQrCode['style'])->eye($customQrCode['eye_style'])->size(150)->format('svg')->generate($qrUrl) !!}
                                       @else
-                                        {!! QrCode::size(150)->format('svg')->generate(route('vcard.show', $vcard->url_alias)) !!}
+                                        {!! QrCode::size(150)->format('svg')->generate($qrUrl) !!}
                                       @endif
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm mb-2 global-qr-code-download-btn"
-                                      title="{{ __('messages.vcard.qr_code') }}" data-filename="vcard_{{ $vcard->url_alias }}_qr_code.png">
+                                      title="{{ __('messages.vcard.qr_code') }}"
+                                      data-filename="vcard_{{ isset($vcard->is_demo) && $vcard->is_demo ? 'demo' : $vcard->url_alias }}_qr_code.png">
                                       <i class="fa-solid fa-download me-1"></i> {{ __('messages.common.download') }}
                                     </button>
                                     <br>
-                                    <small class="text-muted">{{ route('vcard.show', $vcard->url_alias) }}</small>
+                                    <small class="text-muted">{{ $qrUrl }}</small>
                                   </div>
                                 </div>
                               </div>
@@ -140,12 +150,46 @@
                                       @endif
                                     </div>
                                     <button type="button" class="btn btn-primary btn-sm mb-2 global-qr-code-download-btn"
-                                      title="{{ __('messages.vcard.qr_code') }}" data-filename="whatsapp_store_{{ $store->url_alias }}_qr_code.png">
+                                      title="{{ __('messages.vcard.qr_code') }}"
+                                      data-filename="whatsapp_store_{{ $store->url_alias }}_qr_code.png">
                                       <i class="fa-solid fa-download me-1"></i> {{ __('messages.common.download') }}
                                     </button>
                                     <br>
                                     <small
                                       class="text-muted">{{ route('whatsapp.store.show', $store->url_alias) }}</small>
+                                  </div>
+                                </div>
+                              </div>
+                            @endforeach
+
+                            <!-- Redirect Links QR Codes -->
+                            @foreach ($redirectLinks as $redirectLink)
+                              <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card h-100">
+                                  <div class="card-body text-center">
+                                    <div class="qr-code-image p-3 mb-3 d-flex justify-content-center align-items-center"
+                                      style="background: {{ $customQrCode['background_color'] ?? '#ffffff' }}; min-height: 200px;">
+                                      @if (isset($customQrCode['applySetting']) && $customQrCode['applySetting'] == 1)
+                                        {!! QrCode::color(
+                                            $qrcodeColor['qrcodeColor']->red(),
+                                            $qrcodeColor['qrcodeColor']->green(),
+                                            $qrcodeColor['qrcodeColor']->blue(),
+                                        )->backgroundColor(
+                                                $qrcodeColor['background_color']->red(),
+                                                $qrcodeColor['background_color']->green(),
+                                                $qrcodeColor['background_color']->blue(),
+                                            )->style($customQrCode['style'])->eye($customQrCode['eye_style'])->size(150)->format('svg')->generate(url('/auto-' . $redirectLink->uri)) !!}
+                                      @else
+                                        {!! QrCode::size(150)->format('svg')->generate(url('/auto-' . $redirectLink->uri)) !!}
+                                      @endif
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-sm mb-2 global-qr-code-download-btn"
+                                      title="{{ __('messages.redirect_links.uri') }}"
+                                      data-filename="redirect_link_{{ $redirectLink->uri }}_qr_code.png">
+                                      <i class="fa-solid fa-download me-1"></i> {{ __('messages.common.download') }}
+                                    </button>
+                                    <br>
+                                    <small class="text-muted">{{ url('/auto-' . $redirectLink->uri) }}</small>
                                   </div>
                                 </div>
                               </div>

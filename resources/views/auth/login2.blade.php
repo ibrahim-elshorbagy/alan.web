@@ -36,10 +36,11 @@
 
                 <div class="mb-4 pt-2">
                   <label for="email" class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
-                    {{ __('messages.user.email') }}:<span class="required"></span>
+                    {{ __('messages.common.email_or_phone') }}:<span class="required"></span>
                   </label>
-                  <input name="email" type="email" class="form-control modern-input" id="email" required
-                    placeholder="{{ __('messages.user.email') }}" value="{{ old('email', \Cookie::get('email', '')) }}"
+                  <input name="email" type="text" class="form-control modern-input" id="email" required
+                    placeholder="{{ __('messages.common.email_or_phone') }}"
+                    value="{{ old('email', \Cookie::get('email', '')) }}"
                     style="padding: 8px 13px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; background: #fafbfc; transition: all 0.3s ease;">
                 </div>
 
@@ -81,10 +82,19 @@
                   </label>
 
                   @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="modern-link order-2 mt-1 mt-sm-0"
-                      style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 14px;">
-                      {{ __('messages.common.forgot_your_password') }}?
-                    </a>
+                    <div class="dropdown  mt-1 mt-sm-0">
+                      <a href="#" class="modern-link " data-bs-toggle="dropdown"
+                        style="color: #667eea; text-decoration: none; font-weight: 600; font-size: 14px;">
+                        {{ __('messages.common.forgot_your_password') }}
+                      </a>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item"
+                            href="{{ route('password.request') }}">{{ __('messages.common.reset_via_email') }}</a></li>
+                        <li><a class="dropdown-item"
+                            href="{{ route('password.phone.request') }}">{{ __('messages.common.reset_via_phone') }}</a>
+                        </li>
+                      </ul>
+                    </div>
                   @endif
                 </div>
 

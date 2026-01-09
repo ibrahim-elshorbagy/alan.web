@@ -64,36 +64,34 @@
 
                 <div class="mb-4">
                   <label for="email" class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
-                    {{ __('messages.user.email') }}:<span class="required"></span>
+                    {{ __('messages.user.email') }}:
                   </label>
                   <input name="email" type="email"
                     class="form-control modern-input @if (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' ||
                             getLanguageByKey(checkFrontLanguageSession()) == 'Persian') text-end @else text-start @endif"
                     id="email" aria-describedby="email" placeholder="{{ __('messages.user.email') }}"
-                    value="{{ old('email') }}" required
+                    value="{{ old('email') }}"
                     style="padding: 8px 13px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; background: #fafbfc; transition: all 0.3s ease;">
                   <span id="email-error-msg"
                     class="text-danger fw-400 fs-small mt-2 @if (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' ||
                             getLanguageByKey(checkFrontLanguageSession()) == 'Persian') text-end @else text-start @endif"></span>
                 </div>
 
-                @if (getSuperAdminSettingValue('phone_number_required'))
-                  <div class="mb-4">
-                    <label for="phoneNumber" class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
-                      {{ __('messages.common.phone') }}:<span class="required"></span>
-                    </label>
-                    {{ Form::tel('contact', getDefaultPhoneCode(), ['class' => 'form-control modern-input' . (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' || getLanguageByKey(checkFrontLanguageSession()) == 'Persian' ? ' text-end' : ' text-start'), 'placeholder' => __('messages.form.contact'), 'onkeyup' => 'if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,"")', 'id' => 'phoneNumber', 'style' => ' border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; background: #fafbfc; transition: all 0.3s ease; ' . (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' || getLanguageByKey(checkFrontLanguageSession()) == 'Persian' ? 'padding: 8px 80px 8px 81px;' : 'padding: 8px 13px;')]) }}
-                    {{ Form::hidden('region_code', getDefaultPhoneCode(), ['id' => 'prefix_code']) }}
-                    <span id="valid-msg"
-                      class="text-success d-none fw-400 fs-small mt-2 @if (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' ||
-                              getLanguageByKey(checkFrontLanguageSession()) == 'Persian') text-end @else text-start @endif">{{ __('messages.placeholder.valid_number') }}</span>
-                    <span id="error-msg"
-                      class="text-danger d-none fw-400 fs-small mt-2 @if (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' ||
-                              getLanguageByKey(checkFrontLanguageSession()) == 'Persian') text-end @else text-start @endif">Invalid
-                      Number</span>
-                    <div class="fv-plugins-message-container invalid-feedback"></div>
-                  </div>
-                @endif
+                <div class="mb-4">
+                  <label for="contact" class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
+                    {{ __('messages.common.phone') }}:
+                  </label>
+                  <input type="tel" name="contact" id="contact"
+                    class="form-control modern-input @if (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' ||
+                            getLanguageByKey(checkFrontLanguageSession()) == 'Persian') text-end @else text-start @endif"
+                    placeholder="962 XXX XXXX" value="{{ old('contact') }}"
+                    pattern="^(962)7[789]\d{7}$"
+                    title="Please enter a valid Jordan mobile number starting with 962"
+                    style="padding: 8px 13px; padding-left: 50px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; background: #fafbfc; transition: all 0.3s ease; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjE2QzE0IDE3LjEgMTMuMSAxOCA5IDE4VjE2QzQuOSAxNiA0IDE1LjEgNCAxNFY0QzQgMi45IDQuOSAyIDYgMkgxOFoiIGZpbGw9IiM2MzY2RjEiLz4KPHN2ZyB4PSI2IiB5PSI2IiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSI+Cjx0ZXh0IHg9IjAiIHk9IjEwIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjM2NkYxIj5KTzwvdGV4dD4KPHN2Zz4KPHN2Zz4K'); background-repeat: no-repeat; background-position: 10px center;">
+
+                  <div class="fv-plugins-message-container invalid-feedback"></div>
+                </div>
+
 
                 <div class="mb-4">
                   <label for="password" class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">

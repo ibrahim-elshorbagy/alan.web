@@ -23,7 +23,41 @@ class ClientRedirectLinkController extends Controller
   {
     $redirectLink = RedirectLink::where('user_id', auth()->id())->findOrFail($id);
 
-    return view('client.redirect_links.edit', compact('redirectLink'));
+    // Get global QR code settings for the current tenant
+    $tenantId = getLogInTenantId();
+    $customQrCode = \App\Models\QrcodeEdit::whereTenantId($tenantId)
+      ->where('is_global', true)
+      ->whereNull('vcard_id')
+      ->whereNull('whatsapp_store_id')
+      ->pluck('value', 'key')
+      ->toArray();
+
+    // If no tenant global, get super admin global
+    if (empty($customQrCode)) {
+      $customQrCode = \App\Models\QrcodeEdit::withoutGlobalScopes()->whereNull('tenant_id')
+        ->where('is_global', true)
+        ->whereNull('vcard_id')
+        ->whereNull('whatsapp_store_id')
+        ->pluck('value', 'key')
+        ->toArray();
+    }
+
+    // Set default values if no global settings exist
+    if (empty($customQrCode)) {
+      $customQrCode['qrcode_color'] = '#000000';
+      $customQrCode['background_color'] = '#ffffff';
+      $customQrCode['style'] = 'square';
+      $customQrCode['eye_style'] = 'square';
+      $customQrCode['applySetting'] = '1';
+    }
+
+    // Convert hex colors to RGB for QR code generation
+    $qrcodeColor = [
+      'qrcodeColor' => \Spatie\Color\Hex::fromString($customQrCode['qrcode_color'])->toRgb(),
+      'background_color' => \Spatie\Color\Hex::fromString($customQrCode['background_color'])->toRgb(),
+    ];
+
+    return view('client.redirect_links.edit', compact('redirectLink', 'customQrCode', 'qrcodeColor'));
   }
 
   public function update(Request $request, $id)
@@ -81,6 +115,11 @@ class ClientRedirectLinkController extends Controller
                   $fail(__('messages.redirect_links.invalid_snapchat_url'));
                 }
                 break;
+              case RedirectLinkTypeEnum::GOOGLE_BUSINESS->value:
+                if (!preg_match('/^https?:\/\/(g\.page|maps\.google\.com|www\.google\.com\/maps|share\.google\.com)/', $value)) {
+                  $fail(__('messages.redirect_links.invalid_google_business_url'));
+                }
+                break;
               default:
                 // For unknown types, allow any URL
                 break;
@@ -102,7 +141,7 @@ class ClientRedirectLinkController extends Controller
   public function redeem(Request $request)
   {
     $validator = Validator::make($request->all(), [
-      'redeem_code' => 'required|string|max:16',
+      'uri' => 'required|string|max:10',
     ]);
 
     if ($validator->fails()) {
@@ -112,8 +151,8 @@ class ClientRedirectLinkController extends Controller
     try {
       DB::beginTransaction();
 
-      // Find the redirect link by redeem code
-      $redirectLink = RedirectLink::where('redeem_code', $request->redeem_code)->first();
+      // Find the redirect link by URI (which is now the redeem code)
+      $redirectLink = RedirectLink::where('uri', $request->uri)->first();
 
       if (!$redirectLink) {
         Flash::error(__('messages.redirect_links.invalid_redeem_code'));
@@ -149,9 +188,9 @@ class ClientRedirectLinkController extends Controller
         'card_type' => $redirectLink->nfcs_id,
         'name' => $user->first_name . ' ' . $user->last_name,
         'designation' => $user->occupation ?? 'N/A',
-        'phone' => $user->contact ?? '0000000000',
+        'phone' => $user->contact ?? '',
         'region_code' => $user->region_code ?? '+1',
-        'email' => $user->email,
+        'email' => $user->email ?? '',
         'address' => $user->location ?? 'N/A',
         'quantity' => 1,
         'company_name' => $user->company ?? 'N/A',
@@ -165,7 +204,7 @@ class ClientRedirectLinkController extends Controller
       \App\Models\NfcOrderTransaction::create([
         'nfc_order_id' => $nfcOrder->id,
         'type' => \App\Models\NfcOrders::MANUALLY, // Paid manually outside the system
-        'transaction_id' => 'REDEEM-' . $redirectLink->redeem_code,
+        'transaction_id' => 'REDEEM-' . $redirectLink->uri,
         'amount' => $nfcCard->price ?? 0,
         'user_id' => $user->id,
         'status' => \App\Models\NfcOrders::SUCCESS, // Already paid
@@ -186,6 +225,7 @@ class ClientRedirectLinkController extends Controller
       DB::commit();
 
       Flash::success(__('messages.redirect_links.redeemed_successfully'));
+      session()->forget('pending_redeem_uri');
       return redirect()->route('client.redirect-links.index');
     } catch (\Exception $e) {
       DB::rollBack();
@@ -199,10 +239,11 @@ class ClientRedirectLinkController extends Controller
     // If not redeemed yet, redirect to redeem flow
     if ($uri->status == RedirectLink::STATUS_NOT_REDEEMED) {
       // Store redeem code in session for auto-fill
+      session(['pending_redeem_uri' => $uri->uri]);
 
       // If user is not logged in, redirect to login with intended URL
       if (!Auth::check()) {
-        return redirect()->route('login')
+        return redirect()->route('register')
           ->with('info', __('messages.redirect_links.please_login_to_redeem'));
       }
 

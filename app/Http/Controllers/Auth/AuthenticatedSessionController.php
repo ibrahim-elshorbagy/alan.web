@@ -20,87 +20,92 @@ use Illuminate\Support\Facades\Cookie;
 
 class AuthenticatedSessionController extends Controller
 {
-    /**
-     * Display the login view.
-     *
-     * @return Application|Factory|View|\Illuminate\View\View
-     */
-    public function create(): \Illuminate\View\View
-    {
-        $registerImage = Setting::where('key', 'register_image')->value('value');
-        $authTheme = Setting::where('key', 'auth_page_theme')->value('value') ?? 1;
+  /**
+   * Display the login view.
+   *
+   * @return Application|Factory|View|\Illuminate\View\View
+   */
+  public function create(): \Illuminate\View\View
+  {
+    $registerImage = Setting::where('key', 'register_image')->value('value');
+    $authTheme = Setting::where('key', 'auth_page_theme')->value('value') ?? 1;
 
-        $themeViews = [
-            1 => 'auth.login',
-            2 => 'auth.login2',
-        ];
+    $themeViews = [
+      1 => 'auth.login',
+      2 => 'auth.login2',
+    ];
 
-        $loginView = $themeViews[$authTheme] ?? $themeViews[1];
+    $loginView = $themeViews[$authTheme] ?? $themeViews[1];
 
-        return view($loginView, ['registerImage' => $registerImage]);
+    return view($loginView, ['registerImage' => $registerImage]);
+  }
 
+  /**
+   * Handle an incoming authentication request.
+   */
+  public function store(LoginRequest $request): RedirectResponse
+  {
+    if (! isset($request->remember)) {
+      Cookie::queue(Cookie::forget('email'));
+      Cookie::queue(Cookie::forget('password'));
+      Cookie::queue(Cookie::forget('remember'));
+    } else {
+      Cookie::queue('email', $request->email, 3600);
+      Cookie::queue('password', $request->password, 3600);
+      Cookie::queue('remember', 1, 3600);
+    }
+    // Find user by email or phone
+    $login = $request->email;
+    if (preg_match('/^[0-9+]+$/', $login)) {
+      $user = User::where('contact', $login)->first();
+    } else {
+      $user = User::whereEmail($login)->first();
     }
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(LoginRequest $request): RedirectResponse
-    {
-        if (! isset($request->remember)) {
-            Cookie::queue(Cookie::forget('email'));
-            Cookie::queue(Cookie::forget('password'));
-            Cookie::queue(Cookie::forget('remember'));
+    if (! empty($user)) {
+      if ($user['email_verified_at'] != null) {
+        if ($user['is_active'] == User::IS_ACTIVE) {
+          $request->authenticate();
+
+          $request->session()->regenerate();
+
+          if ($user->hasRole('admin') && $request->redirect == "delete") {
+            return redirect()->route('delete-account');
+          }
+          if ($user->enable_two_factor_authentication == 1 && $user->hasRole('admin')) {
+            session(['2fa:user:id' => $user->id]);
+            auth()->logout();
+            return redirect()->route('2fa.verify');
+          }
+          return redirect()->intended(getDashboardURL());
         } else {
-            Cookie::queue('email', $request->email, 3600);
-            Cookie::queue('password', $request->password, 3600);
-            Cookie::queue('remember', 1, 3600);
+          throw ValidationException::withMessages([
+            'email' => __('auth.account_deactivate'),
+          ]);
         }
-        $user = User::whereEmail($request->email)->first();
-
-        if (! empty($user)) {
-            if ($user['email_verified_at'] != null) {
-                if ($user['is_active'] == User::IS_ACTIVE) {
-                    $request->authenticate();
-
-                    $request->session()->regenerate();
-
-                    if ($user->hasRole('admin') && $request->redirect == "delete") {
-                        return redirect()->route('delete-account');
-                    }
-                    if ($user->enable_two_factor_authentication == 1 && $user->hasRole('admin')) {
-                        session(['2fa:user:id' => $user->id]);
-                        auth()->logout();
-                        return redirect()->route('2fa.verify');
-                    }
-                    return redirect()->intended(getDashboardURL());
-                } else {
-                    throw ValidationException::withMessages([
-                        'email' => __('auth.account_deactivate'),
-                    ]);
-                }
-            } else {
-                throw ValidationException::withMessages([
-                    'email' => __('auth.email_verify'),
-                ]);
-            }
-        } else {
-            throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
-            ]);
-        }
+      } else {
+        throw ValidationException::withMessages([
+          'email' => __('auth.email_verify'),
+        ]);
+      }
+    } else {
+      throw ValidationException::withMessages([
+        'email' => __('auth.failed'),
+      ]);
     }
+  }
 
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        Auth::guard('web')->logout();
+  /**
+   * Destroy an authenticated session.
+   */
+  public function destroy(Request $request): RedirectResponse
+  {
+    Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+    $request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+    $request->session()->regenerateToken();
 
-        return redirect('/login');
-    }
+    return redirect('/login');
+  }
 }

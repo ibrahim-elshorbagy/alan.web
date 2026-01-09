@@ -15,7 +15,7 @@ class ClientRedirectLinksTable extends LivewireTableComponent
   {
     $this->setPrimaryKey('id');
     $this->setPageName('client-redirect-links-table');
-    $this->setDefaultSort('created_at', 'desc');
+    $this->setDefaultSort('updated_at', 'desc');
     $this->setColumnSelectStatus(false);
     $this->setQueryStringStatus(false);
     $this->resetPage('client-redirect-links-table');
@@ -47,7 +47,6 @@ class ClientRedirectLinksTable extends LivewireTableComponent
             $q->where('name', 'like', '%' . $direction . '%');
           });
         })->view('client.redirect_links.columns.nfc'),
-      Column::make(__('messages.redirect_links.created_at'), 'created_at')->sortable(),
       Column::make(__('messages.redirect_links.updated_at'), 'updated_at')->sortable(),
       Column::make(__('messages.common.action'), 'id')
         ->view('client.redirect_links.columns.action'),

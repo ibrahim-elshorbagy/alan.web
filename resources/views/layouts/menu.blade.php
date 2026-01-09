@@ -152,6 +152,14 @@
     </a>
   </li>
 
+  <li class="nav-item {{ Request::is('sadmin/global-qr-code*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('sadmin.global.qr.code.index') }}">
+      <span class="aside-menu-icon"><i class="fa-solid fa-qrcode icon-color-bs-purple"></i></span>
+      <span class="aside-menu-title">{{ __('messages.global_qr_code.title') }}</span>
+    </a>
+  </li>
+
   <li class="nav-item {{ Request::is('sadmin/countries*', 'sadmin/states*', 'sadmin/cities*') ? 'active' : '' }}">
     <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
       href="{{ route('countries.index') }}">
@@ -369,6 +377,14 @@
       <span class="aside-menu-icon"> <i class="fa-solid fa-memory icon-color-bs-red"></i></span>
       {{-- <span class="aside-menu-icon"> <i class="fa-solid fa-memory icon-color-gray"></i></span> --}}
       <span class="aside-menu-title">{{ __('messages.storage') }}</span>
+    </a>
+  </li>
+
+  <li class="nav-item {{ Request::is('admin/global-qr-code*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('global.qr.code.index') }}">
+      <span class="aside-menu-icon"><i class="fa-solid fa-qrcode icon-color-bs-purple"></i></span>
+      <span class="aside-menu-title">{{ __('messages.global_qr_code.title') }}</span>
     </a>
   </li>
 

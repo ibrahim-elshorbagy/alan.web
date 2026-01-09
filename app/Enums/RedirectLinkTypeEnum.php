@@ -13,6 +13,7 @@ enum RedirectLinkTypeEnum: int
   case YOUTUBE = 7;
   case WHATSAPP = 8;
   case SNAPCHAT = 9;
+  case GOOGLE_BUSINESS = 10;
 
   public function label(): string
   {
@@ -26,6 +27,7 @@ enum RedirectLinkTypeEnum: int
       self::YOUTUBE => __('messages.redirect_links.types.youtube'),
       self::WHATSAPP => __('messages.redirect_links.types.whatsapp'),
       self::SNAPCHAT => __('messages.redirect_links.types.snapchat'),
+      self::GOOGLE_BUSINESS => __('messages.redirect_links.types.google_business'),
     };
   }
 }
