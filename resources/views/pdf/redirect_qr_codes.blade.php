@@ -37,7 +37,7 @@
     @foreach ($qrCodes as $qr)
         <div class="page">
             <div class="qr-image">
-                <img src="data:image/png;base64,{{ $qr['qr_base64'] }}" alt="QR Code">
+                <img src="{{ $qr['qr_path'] }}" alt="QR Code">
             </div>
             <div class="redeem-code">{{ $qr['uri'] }}</div>
         </div>
