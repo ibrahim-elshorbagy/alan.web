@@ -107,7 +107,7 @@ class ClientRedirectLinkController extends Controller
   public function redeem(Request $request)
   {
     $validator = Validator::make($request->all(), [
-      'redeem_code' => 'required|string|max:16',
+      'uri' => 'required|string|max:10',
     ]);
 
     if ($validator->fails()) {
@@ -117,8 +117,8 @@ class ClientRedirectLinkController extends Controller
     try {
       DB::beginTransaction();
 
-      // Find the redirect link by redeem code
-      $redirectLink = RedirectLink::where('redeem_code', $request->redeem_code)->first();
+      // Find the redirect link by URI (which is now the redeem code)
+      $redirectLink = RedirectLink::where('uri', $request->uri)->first();
 
       if (!$redirectLink) {
         Flash::error(__('messages.redirect_links.invalid_redeem_code'));
@@ -170,7 +170,7 @@ class ClientRedirectLinkController extends Controller
       \App\Models\NfcOrderTransaction::create([
         'nfc_order_id' => $nfcOrder->id,
         'type' => \App\Models\NfcOrders::MANUALLY, // Paid manually outside the system
-        'transaction_id' => 'REDEEM-' . $redirectLink->redeem_code,
+        'transaction_id' => 'REDEEM-' . $redirectLink->uri,
         'amount' => $nfcCard->price ?? 0,
         'user_id' => $user->id,
         'status' => \App\Models\NfcOrders::SUCCESS, // Already paid

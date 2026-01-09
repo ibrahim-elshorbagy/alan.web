@@ -80,8 +80,8 @@ class RedirectLinksTable extends LivewireTableComponent
             $q->whereRaw("TRIM(CONCAT(first_name,' ',last_name,' ')) like '%{$direction}%'");
           });
         })->view('admin.redirect_links.columns.user'),
-      Column::make(__('messages.redirect_links.redeem_code'), 'redeem_code')->sortable()->searchable(),
-      Column::make(__('messages.redirect_links.uri'), 'uri')->sortable()->searchable(),
+      Column::make(__('messages.redirect_links.redeem_code'), 'uri')->sortable()->searchable()
+        ->view('admin.redirect_links.columns.uri'),
       Column::make(__('messages.redirect_links.redirect_link_type'), 'redirect_link_type')
         ->view('admin.redirect_links.columns.redirect_link_type'),
       Column::make(__('messages.redirect_links.status'), 'status')

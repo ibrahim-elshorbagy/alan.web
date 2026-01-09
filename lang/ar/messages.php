@@ -2352,7 +2352,7 @@ return [
     'my_redirect_links' => 'روابط إعادة التوجيه الخاصة بي',
     'redeem' => 'تفعيل',
     'enter_redeem_code' => 'أدخل رمز التفعيل',
-    'redeem_code_placeholder' => 'أدخل رمز التفعيل المكون من 16 حرفًا',
+    'redeem_code_placeholder' => 'أدخل رمز التفعيل المكون من 10 أحرف',
     'redeem_code_hint' => 'أدخل الرمز الذي حصلت عليه لتفعيل رابط إعادة التوجيه',
     'invalid_redeem_code' => 'رمز تفعيل غير صالح. يرجى التحقق والمحاولة مرة أخرى.',
     'code_already_redeemed' => 'تم استخدام هذا الرمز بالفعل.',

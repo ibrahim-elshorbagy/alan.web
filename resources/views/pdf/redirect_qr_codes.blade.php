@@ -40,7 +40,6 @@
             letter-spacing: 4px;
             color: #000;
             margin-top: 50px;
-            text-transform: uppercase;
         }
     </style>
 </head>
@@ -48,7 +47,7 @@
 @foreach($qrCodes as $qr)
     <div class="page">
         <img src="{{ $qr['qr_path'] }}" class="qr-image" alt="QR Code">
-        <div class="redeem-code">{{ $qr['redeem_code'] }}</div>
+        <div class="redeem-code">{{ $qr['uri'] }}</div>
     </div>
 @endforeach
 </body>

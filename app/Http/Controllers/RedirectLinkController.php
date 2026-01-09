@@ -47,12 +47,10 @@ class RedirectLinkController extends Controller
     $createdLinks = [];
 
     for ($i = 0; $i < $numberOfCards; $i++) {
-      $redeemCode = $this->generateUniqueRedeemCode();
       $uri = $this->generateUniqueUri();
 
       $redirectLink = RedirectLink::create([
         'user_id' => null,
-        'redeem_code' => $redeemCode,
         'uri' => $uri,
         'redirect_link' => null,
         'redirect_link_type' => $redirectLinkType,
@@ -124,8 +122,8 @@ class RedirectLinkController extends Controller
       // Generate full URL
       $fullUrl = url('/auto-' . $link->uri);
 
-      // Generate QR code with redeem code as filename
-      $qrCodePath = $tempDirectory . '/' . $link->redeem_code . '.png';
+      // Generate QR code with URI as filename (since URI is now the redeem code)
+      $qrCodePath = $tempDirectory . '/' . $link->uri . '.png';
       QRCode::url($fullUrl)
         ->setSize(10)
         ->setMargin(2)
@@ -135,14 +133,14 @@ class RedirectLinkController extends Controller
       // Prepare data for Excel
       $excelData[] = [
         'id' => $link->id,
-        'redeem_code' => $link->redeem_code,
+        'uri' => $link->uri, // Use URI as redeem code
         'full_link' => $fullUrl,
       ];
 
       // Store QR code info for PDF
       $qrCodes[] = [
         'id' => $link->id,
-        'redeem_code' => $link->redeem_code,
+        'uri' => $link->uri, // Use URI as redeem code
         'full_link' => $fullUrl,
         'qr_path' => $qrCodePath,
       ];
@@ -171,7 +169,7 @@ class RedirectLinkController extends Controller
     if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
       // Add QR code images folder
       foreach ($redirectLinks as $link) {
-        $qrCodePath = $tempDirectory . '/' . $link->redeem_code . '.png';
+        $qrCodePath = $tempDirectory . '/' . $link->uri . '.png';
         if (file_exists($qrCodePath)) {
           $zip->addFile($qrCodePath, 'qr_codes/' . basename($qrCodePath));
         }
@@ -232,15 +230,6 @@ class RedirectLinkController extends Controller
     return rmdir($dir);
   }
 
-  private function generateUniqueRedeemCode()
-  {
-    do {
-      $code = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 16));
-    } while (RedirectLink::where('redeem_code', $code)->exists());
-
-    return $code;
-  }
-
   private function generateUniqueUri()
   {
     do {
@@ -280,8 +269,7 @@ class RedirectLinkController extends Controller
 
     $validator = Validator::make($request->all(), [
       'user_id' => 'nullable|exists:users,id',
-      'redeem_code' => 'nullable|string|max:16',
-      'uri' => 'required|string|unique:redirect_links,uri,' . $id,
+      'uri' => 'required|string|max:10|unique:redirect_links,uri,' . $id,
       'redirect_link' => 'nullable|url',
       'redirect_link_type' => 'required|integer|min:1|max:10',
       'status' => 'required|integer|in:0,1,2',

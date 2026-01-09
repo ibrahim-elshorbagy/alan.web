@@ -7,14 +7,8 @@
   </div>
   <div class="col-lg-6">
     <div class="mb-5">
-      {{ Form::label('redeem_code', __('messages.redirect_links.redeem_code') . ':', ['class' => 'form-label']) }}
-      {{ Form::text('redeem_code', isset($redirectLink) ? $redirectLink->redeem_code : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.redeem_code')]) }}
-    </div>
-  </div>
-  <div class="col-lg-6">
-    <div class="mb-5">
-      {{ Form::label('uri', __('messages.redirect_links.uri') . ':', ['class' => 'form-label required']) }}
-      {{ Form::text('uri', isset($redirectLink) ? $redirectLink->uri : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.uri'), 'required']) }}
+      {{ Form::label('uri', __('messages.redirect_links.redeem_code') . ':', ['class' => 'form-label required']) }}
+      {{ Form::text('uri', isset($redirectLink) ? $redirectLink->uri : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.redeem_code'), 'required']) }}
     </div>
   </div>
   <div class="col-lg-6">

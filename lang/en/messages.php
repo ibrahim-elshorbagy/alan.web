@@ -2357,7 +2357,7 @@ return [
     'my_redirect_links' => 'My Redirect Links',
     'redeem' => 'Redeem',
     'enter_redeem_code' => 'Enter Redeem Code',
-    'redeem_code_placeholder' => 'Enter your 16-character redeem code',
+    'redeem_code_placeholder' => 'Enter your 10-character redeem code',
     'redeem_code_hint' => 'Enter the code you received to activate your redirect link',
     'invalid_redeem_code' => 'Invalid redeem code. Please check and try again.',
     'code_already_redeemed' => 'This code has already been redeemed.',

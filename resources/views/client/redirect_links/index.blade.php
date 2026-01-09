@@ -28,9 +28,9 @@
           @csrf
           <div class="modal-body">
             <div class="mb-3">
-              <label for="redeem_code"
+              <label for="Code"
                 class="form-label required">{{ __('messages.redirect_links.enter_redeem_code') }}</label>
-              <input type="text" class="form-control" id="redeem_code" name="redeem_code" required
+              <input type="text" class="form-control" id="uri" name="uri" required
                 placeholder="{{ __('messages.redirect_links.redeem_code_placeholder') }}">
               <small class="text-muted">{{ __('messages.redirect_links.redeem_code_hint') }}</small>
             </div>
