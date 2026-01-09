@@ -2341,6 +2341,7 @@ return [
       'youtube' => 'YouTube',
       'whatsapp' => 'WhatsApp',
       'snapchat' => 'Snapchat',
+      'google_business' => 'Google Business',
     ],
     'search' => 'Search',
     'edit' => 'Edit Redirect Link',
@@ -2386,6 +2387,7 @@ return [
     'invalid_youtube_url' => 'The redirect link must be a valid YouTube URL.',
     'invalid_whatsapp_url' => 'The redirect link must be a valid WhatsApp URL.',
     'invalid_snapchat_url' => 'The redirect link must be a valid Snapchat URL.',
+    'invalid_google_business_url' => 'The redirect link must be a valid Google Business URL.',
     'no_redirect_link_message' => 'No redirect link specified yet. Please update this field with your website link.',
   ],
   'verify_phone' => [

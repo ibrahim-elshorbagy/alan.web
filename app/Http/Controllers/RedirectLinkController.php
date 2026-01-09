@@ -31,7 +31,7 @@ class RedirectLinkController extends Controller
   public function store(Request $request)
   {
     $validator = Validator::make($request->all(), [
-      'redirect_link_type' => 'required|integer|min:1|max:9',
+      'redirect_link_type' => 'required|integer|min:1|max:10',
       'nfcs_id' => 'required|exists:nfcs,id',
       'number_of_cards' => 'required|integer|min:1|max:100',
     ]);
@@ -292,7 +292,7 @@ class RedirectLinkController extends Controller
       'redeem_code' => 'nullable|string|max:16',
       'uri' => 'required|string|unique:redirect_links,uri,' . $id,
       'redirect_link' => 'nullable|url',
-      'redirect_link_type' => 'required|integer|min:1|max:9',
+      'redirect_link_type' => 'required|integer|min:1|max:10',
       'status' => 'required|integer|in:0,1,2',
       'nfcs_id' => 'required|exists:nfcs,id',
     ]);

@@ -81,6 +81,11 @@ class ClientRedirectLinkController extends Controller
                   $fail(__('messages.redirect_links.invalid_snapchat_url'));
                 }
                 break;
+              case RedirectLinkTypeEnum::GOOGLE_BUSINESS->value:
+                if (!preg_match('/^https?:\/\/(g\.page|maps\.google\.com|www\.google\.com\/maps|share\.google\.com)/', $value)) {
+                  $fail(__('messages.redirect_links.invalid_google_business_url'));
+                }
+                break;
               default:
                 // For unknown types, allow any URL
                 break;
