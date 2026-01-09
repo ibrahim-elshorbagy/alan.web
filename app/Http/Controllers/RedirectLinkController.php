@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\File;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\QrcodeEdit;
 use Spatie\Color\Hex;
-
+use TCPDF;
 class RedirectLinkController extends Controller
 {
   public function index()
@@ -127,8 +127,8 @@ class RedirectLinkController extends Controller
     $qrcodeColor['qrcodeColor'] = Hex::fromString($customQrCode['qrcode_color'])->toRgb();
     $qrcodeColor['background_color'] = Hex::fromString($customQrCode['background_color'])->toRgb();
 
-    // Create PDF manually with TCPDF
-    $pdf = new \TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+    // Create PDF with TCPDF
+    $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
     $pdf->SetCreator('NFC System');
     $pdf->SetAuthor('NFC System');
     $pdf->SetTitle('QR Codes');
@@ -170,10 +170,10 @@ class RedirectLinkController extends Controller
       // Add page to PDF
       $pdf->AddPage();
 
-      // Add QR image (centered at 30mm from left, 50mm from top, 100mm x 100mm)
+      // Add QR image (centered: x=55mm, y=50mm, width=100mm, height=100mm)
       $pdf->Image($pngPath, 55, 50, 100, 100, 'PNG');
 
-      // Add text (centered below image)
+      // Add URI text below image
       $pdf->SetFont('helvetica', 'B', 36);
       $pdf->SetXY(0, 170);
       $pdf->Cell(210, 10, $link->uri, 0, 0, 'C');
@@ -227,6 +227,7 @@ class RedirectLinkController extends Controller
       ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
       ->header('Content-Length', strlen($zipContent));
   }
+
 
 
   private function deleteDirectory($dir)
