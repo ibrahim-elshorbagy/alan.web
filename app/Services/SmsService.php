@@ -29,14 +29,8 @@ class SmsService
   public function sendSms(string $recipient, string $message, ?string $scheduleTime = null): array
   {
     try {
-      // Format recipient: remove leading zeros and ensure proper format
-      $recipient = preg_replace('/^00/', '', $recipient); // Remove 00 prefix if exists
-      $recipient = preg_replace('/^\+/', '', $recipient); // Remove + prefix if exists
-      
-      // Ensure Jordan numbers start with 962
-      if (!preg_match('/^962/', $recipient)) {
-        $recipient = '962' . ltrim($recipient, '0');
-      }
+      // Normalize phone number using the global helper function
+      $recipient = normalizePhoneNumber($recipient);
 
       $payload = [
         'api_token' => $this->apiToken,

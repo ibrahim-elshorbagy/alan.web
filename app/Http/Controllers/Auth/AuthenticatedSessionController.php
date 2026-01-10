@@ -57,7 +57,9 @@ class AuthenticatedSessionController extends Controller
     // Find user by email or phone
     $login = $request->email;
     if (preg_match('/^[0-9+]+$/', $login)) {
-      $user = User::where('contact', $login)->first();
+      // Normalize phone number for login
+      $normalizedLogin = normalizePhoneNumber($login);
+      $user = User::where('contact', $normalizedLogin)->first();
     } else {
       $user = User::whereEmail($login)->first();
     }

@@ -3545,3 +3545,26 @@ if (!function_exists('hexToRgb')) {
     return "$r, $g, $b";
   }
 }
+
+/**
+ * Normalize phone number by removing leading zero if present
+ * This ensures consistent phone number storage and comparison
+ */
+if (!function_exists('normalizePhoneNumber')) {
+  function normalizePhoneNumber($phone)
+  {
+    if (!$phone) {
+      return $phone;
+    }
+
+    // Remove all non-numeric characters first
+    $phone = preg_replace('/[^0-9]/', '', $phone);
+
+    // If the phone starts with 9620, remove the 0 (9620799504930 -> 962799504930)
+    if (preg_match('/^9620/', $phone)) {
+      $phone = '962' . substr($phone, 4);
+    }
+
+    return $phone;
+  }
+}

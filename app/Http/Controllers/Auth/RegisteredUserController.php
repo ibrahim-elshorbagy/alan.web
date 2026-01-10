@@ -107,12 +107,15 @@ class RegisteredUserController extends AppBaseController
         $isVerified = false;
       }
 
+      // Normalize phone number if provided
+      $normalizedContact = $request->filled('contact') ? normalizePhoneNumber($request->contact) : $request->contact;
+
       $user = User::create([
         'first_name' => $request->first_name,
         'last_name' => $request->last_name,
         'email' => $request->email,
         'region_code' => $registerType === 'phone' ? 'JO' : $request->region_code,
-        'contact' =>  $request->contact,
+        'contact' => $normalizedContact,
         'language' => $userDefaultLanguage,
         'steps' => 0,
         'email_verified_at' => $isVerified ? Carbon::now() : null,
@@ -166,13 +169,13 @@ class RegisteredUserController extends AppBaseController
 
         // Store verification code
         PhoneVerification::create([
-          'phone' => $request->contact,
+          'phone' => $normalizedContact,
           'code' => $verificationCode,
           'expires_at' => Carbon::now()->addMinutes(10),
         ]);
 
         // Send SMS
-        $smsResult = $smsService->sendVerificationCode($request->contact, $verificationCode);
+        $smsResult = $smsService->sendVerificationCode($normalizedContact, $verificationCode);
 
         if (!$smsResult['success']) {
           Log::error('Failed to send verification SMS', $smsResult);
@@ -191,7 +194,7 @@ class RegisteredUserController extends AppBaseController
       } elseif ($registerType === 'phone') {
         // Store phone and user_id in session for verification page
         session([
-          'phone_number' => $request->contact,
+          'phone_number' => $normalizedContact,
           'phone_verification_user_id' => $user->id
         ]);
         return redirect(route('phone.verification.show'));
@@ -248,7 +251,10 @@ class RegisteredUserController extends AppBaseController
         ]);
       }
 
-      $verification = PhoneVerification::where('phone', $phone)
+      // Normalize phone number for verification lookup
+      $normalizedPhone = normalizePhoneNumber($phone);
+
+      $verification = PhoneVerification::where('phone', $normalizedPhone)
         ->where('code', $request->code)
         ->unverified()
         ->valid()
@@ -331,17 +337,20 @@ class RegisteredUserController extends AppBaseController
       $smsService = new SmsService();
       $verificationCode = $smsService->generateVerificationCode();
 
-      PhoneVerification::where('phone', $phone)
+      // Normalize phone number for verification
+      $normalizedPhone = normalizePhoneNumber($phone);
+
+      PhoneVerification::where('phone', $normalizedPhone)
         ->unverified()
         ->delete();
 
       PhoneVerification::create([
-        'phone' => $phone,
+        'phone' => $normalizedPhone,
         'code' => $verificationCode,
         'expires_at' => Carbon::now()->addMinutes(10),
       ]);
 
-      $smsResult = $smsService->sendVerificationCode($phone, $verificationCode);
+      $smsResult = $smsService->sendVerificationCode($normalizedPhone, $verificationCode);
 
       if (!$smsResult['success']) {
         Log::error('SMS send failed', ['phone' => $phone, 'error' => $smsResult['message']]);

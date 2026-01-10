@@ -39,8 +39,11 @@ class PhonePasswordResetController extends AppBaseController
       // Clean and format phone number
       $phone = preg_replace('/[^0-9]/', '', $request->phone);
 
+      // Normalize phone number by removing leading zero if present
+      $normalizedPhone = normalizePhoneNumber($phone);
+
       // Find user by phone number
-      $user = User::where('contact', $phone)->first();
+      $user = User::where('contact', $normalizedPhone)->first();
 
       if (!$user) {
         return $this->sendError(__('messages.verify_phone.user_not_found'), 404);
@@ -51,26 +54,26 @@ class PhonePasswordResetController extends AppBaseController
       $verificationCode = $smsService->generateVerificationCode();
 
       // Delete any existing verification for this phone
-      PhoneVerification::where('phone', $phone)->delete();
+      PhoneVerification::where('phone', $normalizedPhone)->delete();
 
       // Create new verification record
       PhoneVerification::create([
-        'phone' => $phone,
+        'phone' => $normalizedPhone,
         'code' => $verificationCode,
         'expires_at' => Carbon::now()->addMinutes(10),
       ]);
 
       // Send SMS
-      $smsResult = $smsService->sendVerificationCode($phone, $verificationCode);
+      $smsResult = $smsService->sendVerificationCode($normalizedPhone, $verificationCode);
 
       if (!$smsResult['success']) {
-        Log::error('Password reset SMS failed', ['phone' => $phone, 'error' => $smsResult['message']]);
+        Log::error('Password reset SMS failed', ['phone' => $normalizedPhone, 'error' => $smsResult['message']]);
         return $this->sendError(__('messages.verify_phone.sms_failed'), 500);
       }
 
       // Store phone in session for verification
       session([
-        'password_reset_phone' => $phone,
+        'password_reset_phone' => $normalizedPhone,
         'password_reset_user_id' => $user->id,
       ]);
 
