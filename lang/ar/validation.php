@@ -117,7 +117,7 @@ return [
     'prohibited_unless' => 'حقل :attribute محظور إلا إذا كان :other ضمن :values.',
     'prohibits' => 'حقل :attribute يمنع وجود :other.',
     'regex' => 'تنسيق حقل :attribute غير صالح.',
-    'required' => 'حقل :attribute مطلوب.',
+    'required' => 'حقل :attribute مطلوب',
     'required_array_keys' => 'يجب أن يحتوي حقل :attribute على إدخالات لـ: :values.',
     'required_if' => 'حقل :attribute مطلوب عندما يكون :other يساوي :value.',
     'required_if_accepted' => 'حقل :attribute مطلوب عندما يتم قبول :other.',
