@@ -582,6 +582,9 @@ return [
     'wp_visitors' => 'WhatsApp Store Visitors',
     'copy' => 'Copy',
     'copied' => 'Copied!',
+    'is_required' => 'is required.',
+    'register_with_email_or_phone' => 'Do you want to register with email or mobile number?',
+    'phone_validation_title' => 'Please enter a valid Jordan mobile number starting with 962',
   ],
   'user' => [
     'registered' => 'New User Registered',

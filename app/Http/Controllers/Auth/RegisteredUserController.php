@@ -95,12 +95,15 @@ class RegisteredUserController extends AppBaseController
         }
       }
 
-      // Determine verification status
+      // Determine verification status based on registration type
+      $registerType = $request->input('register_type', 'email');
       $isVerified = false;
-      if ($request->filled('email') && getSuperAdminSettingValue('user_verified_email') == 0) {
-        $isVerified = true;
-      } elseif ($request->filled('contact') && !$request->filled('email')) {
-        // If only phone is provided, don't verify yet (will verify via SMS)
+
+      if ($registerType === 'email') {
+        // Email registration - verify immediately if setting allows
+        $isVerified = (getSuperAdminSettingValue('user_verified_email') == 0);
+      } elseif ($registerType === 'phone') {
+        // Phone registration - will verify via SMS later
         $isVerified = false;
       }
 
@@ -108,7 +111,7 @@ class RegisteredUserController extends AppBaseController
         'first_name' => $request->first_name,
         'last_name' => $request->last_name,
         'email' => $request->email,
-        'region_code' => $request->filled('contact') ? 'JO' : $request->region_code,
+        'region_code' => $registerType === 'phone' ? 'JO' : $request->region_code,
         'contact' =>  $request->contact,
         'language' => $userDefaultLanguage,
         'steps' => 0,
@@ -148,7 +151,7 @@ class RegisteredUserController extends AppBaseController
       }
 
       // Send verification based on registration method
-      if ($request->filled('email')) {
+      if ($registerType === 'email' && $request->filled('email')) {
         $token = Password::getRepository()->create($user);
         $data['url'] = config('app.url') . '/verify-email/' . $user->id . '/' . $token;
         $data['user'] = $user;
@@ -156,7 +159,7 @@ class RegisteredUserController extends AppBaseController
         if (getSuperAdminSettingValue('user_verified_email')) {
           Mail::to($user->email)->send(new VerifyMail($data));
         }
-      } elseif ($request->filled('contact')) {
+      } elseif ($registerType === 'phone' && $request->filled('contact')) {
         // Send phone verification SMS
         $smsService = new SmsService();
         $verificationCode = $smsService->generateVerificationCode();
@@ -182,10 +185,10 @@ class RegisteredUserController extends AppBaseController
 
       DB::commit();
 
-      if ($request->filled('email') && getSuperAdminSettingValue('user_verified_email')) {
+      if ($registerType === 'email' && getSuperAdminSettingValue('user_verified_email')) {
         Flash::success(__('messages.placeholder.registered_success'));
         return redirect(route('login'));
-      } elseif ($request->filled('contact') && !$request->filled('email')) {
+      } elseif ($registerType === 'phone') {
         // Store phone and user_id in session for verification page
         session([
           'phone_number' => $request->contact,

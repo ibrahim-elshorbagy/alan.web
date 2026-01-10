@@ -63,30 +63,51 @@
                 </div>
 
                 <div class="mb-4">
+                  <label class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
+                    {{ __('messages.common.register_with_email_or_phone') }}
+                  </label>
+                  <div class="d-flex gap-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="register_type" id="register_email"
+                        value="email" checked>
+                      <label class="form-check-label" for="register_email">
+                        {{ __('messages.user.email') }}
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="register_type" id="register_phone"
+                        value="phone">
+                      <label class="form-check-label" for="register_phone">
+                        {{ __('messages.common.phone') }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="email-field" class="mb-4">
                   <label for="email" class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
-                    {{ __('messages.user.email') }}:
+                    {{ __('messages.user.email') }}:<span class="required"></span>
                   </label>
                   <input name="email" type="email"
                     class="form-control modern-input @if (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' ||
                             getLanguageByKey(checkFrontLanguageSession()) == 'Persian') text-end @else text-start @endif"
                     id="email" aria-describedby="email" placeholder="{{ __('messages.user.email') }}"
-                    value="{{ old('email') }}"
+                    value="{{ old('email') }}" required
                     style="padding: 8px 13px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; background: #fafbfc; transition: all 0.3s ease;">
                   <span id="email-error-msg"
                     class="text-danger fw-400 fs-small mt-2 @if (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' ||
                             getLanguageByKey(checkFrontLanguageSession()) == 'Persian') text-end @else text-start @endif"></span>
                 </div>
 
-                <div class="mb-4">
+                <div id="phone-field" class="mb-4" style="display: none;">
                   <label for="contact" class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
-                    {{ __('messages.common.phone') }}:
+                    {{ __('messages.common.phone') }}:<span class="required"></span>
                   </label>
                   <input type="tel" name="contact" id="contact"
                     class="form-control modern-input @if (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' ||
                             getLanguageByKey(checkFrontLanguageSession()) == 'Persian') text-end @else text-start @endif"
-                    placeholder="962 XXX XXXX" value="{{ old('contact') }}"
-                    pattern="^(962)7[789]\d{7}$"
-                    title="Please enter a valid Jordan mobile number starting with 962"
+                    placeholder="962 XXX XXXX" value="{{ old('contact') }}" pattern="^(962)7[789]\d{7}$"
+                    title="يرجى إدخال رقم هاتف أردني صالح يبدأ بـ 962"
                     style="padding: 8px 13px; padding-left: 50px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; background: #fafbfc; transition: all 0.3s ease; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjE2QzE0IDE3LjEgMTMuMSAxOCA5IDE4VjE2QzQuOSAxNiA0IDE1LjEgNCAxNFY0QzQgMi45IDQuOSAyIDYgMkgxOFoiIGZpbGw9IiM2MzY2RjEiLz4KPHN2ZyB4PSI2IiB5PSI2IiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSI+Cjx0ZXh0IHg9IjAiIHk9IjEwIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjM2NkYxIj5KTzwvdGV4dD4KPHN2Zz4KPHN2Zz4K'); background-repeat: no-repeat; background-position: 10px center;">
 
                   <div class="fv-plugins-message-container invalid-feedback"></div>
@@ -235,3 +256,36 @@
     </div>
   </div>
 @endsection
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const emailRadio = document.getElementById('register_email');
+    const phoneRadio = document.getElementById('register_phone');
+    const emailField = document.getElementById('email-field');
+    const phoneField = document.getElementById('phone-field');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('contact');
+
+    function toggleFields() {
+      if (emailRadio.checked) {
+        emailField.style.display = 'block';
+        phoneField.style.display = 'none';
+        emailInput.required = true;
+        phoneInput.required = false;
+        phoneInput.value = ''; // Clear phone if switching
+      } else {
+        emailField.style.display = 'none';
+        phoneField.style.display = 'block';
+        emailInput.required = false;
+        phoneInput.required = true;
+        emailInput.value = ''; // Clear email if switching
+      }
+    }
+
+    emailRadio.addEventListener('change', toggleFields);
+    phoneRadio.addEventListener('change', toggleFields);
+
+    // Initial state
+    toggleFields();
+  });
+</script>

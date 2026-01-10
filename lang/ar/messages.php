@@ -582,6 +582,9 @@ return [
     'wp_visitors' => 'زوار متجر واتساب',
     'copy' => 'نسخ',
     'copied' => 'تم النسخ!',
+    'is_required' => 'مطلوب.',
+    'register_with_email_or_phone' => 'تريد تسجيل الدخول بالايميل ام برقم الموبايل؟',
+    'phone_validation_title' => 'يرجى إدخال رقم هاتف أردني صالح يبدأ بـ 962',
   ],
   'user' => [
     'registered' => 'مستخدم جديد مسجل',
