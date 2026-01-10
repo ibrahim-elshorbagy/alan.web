@@ -132,6 +132,16 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     'remember_token' => 'string',
   ];
 
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::deleting(function ($user) {
+      // Set status to 0 for all redirect links before user is deleted
+      $user->redirectLinks()->update(['status' => 0]);
+    });
+  }
+
   const LANGUAGES = [
     'ar' => 'Arabic',
     'zh' => 'Chinese',
@@ -433,5 +443,10 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
   public function address()
   {
     return  $this->hasOne(Address::class, 'user_id', 'id');
+  }
+
+  public function redirectLinks()
+  {
+    return $this->hasMany(RedirectLink::class);
   }
 }

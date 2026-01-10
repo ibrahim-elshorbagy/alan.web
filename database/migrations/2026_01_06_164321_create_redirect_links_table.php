@@ -27,7 +27,6 @@ return new class extends Migration
       $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
       $table->foreign('nfcs_id')->references('id')->on('nfcs')->onDelete('cascade');
       $table->foreign('nfc_order_id')->references('id')->on('nfc_orders')->onDelete('set null');
-
     });
   }
 
