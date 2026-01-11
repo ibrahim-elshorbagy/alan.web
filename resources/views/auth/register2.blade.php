@@ -66,7 +66,7 @@
                   <label class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
                     {{ __('messages.common.register_with_email_or_phone') }}
                   </label>
-                  <div class="d-flex gap-3">
+                  <div class=" gap-3">
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="register_type" id="register_email"
                         value="email" checked>
