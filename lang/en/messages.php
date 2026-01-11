@@ -585,6 +585,9 @@ return [
     'is_required' => 'is required.',
     'register_with_email_or_phone' => 'Do you want to register with email or mobile number?',
     'phone_validation_title' => 'Please enter a valid Jordan mobile number starting with 962',
+    'use_email' => 'Use Email',
+    'use_phone' => 'Use Phone',
+    'login_with' => 'Login with:',
   ],
   'user' => [
     'registered' => 'New User Registered',

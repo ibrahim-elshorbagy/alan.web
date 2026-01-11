@@ -62,36 +62,35 @@
                   </div>
                 </div>
 
-                <div class="mb-4">
-                  <label class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
-                    {{ __('messages.common.register_with_email_or_phone') }}
-                  </label>
-                  <div class=" gap-3">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="register_type" id="register_email"
-                        value="email" checked>
-                      <label class="form-check-label" for="register_email">
-                        {{ __('messages.user.email') }}
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="register_type" id="register_phone"
-                        value="phone">
-                      <label class="form-check-label" for="register_phone">
-                        {{ __('messages.common.phone') }}
-                      </label>
-                    </div>
+                <p class="fw-semibold mb-2" style="color: #374151; font-size: 14px;">{{ __('messages.common.login_with') }}</p>
+
+                <div class="d-flex flex-column gap-3 pb-2">
+                  <div class="form-check d-flex flex-row align-items-center gap-10">
+                    <input class="form-check-input" type="radio" name="register_type" id="register_email" value="email"
+                      checked>
+                    <label class="form-check-label" for="register_email">
+                      {{ __('messages.user.email') }}
+                    </label>
+                  </div>
+
+                  <div class="form-check d-flex flex-row align-items-center gap-10">
+                    <input class="form-check-input" type="radio" name="register_type" id="register_phone"
+                      value="phone">
+                    <label class="form-check-label" for="register_phone">
+                      {{ __('messages.user.phone') }}
+                    </label>
                   </div>
                 </div>
 
+
                 <div id="email-field" class="mb-4">
                   <label for="email" class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
-                    {{ __('messages.user.email') }}:<span class="required"></span>
+                    {{ __('messages.common.use_email') }}:<span class="required"></span>
                   </label>
                   <input name="email" type="email"
                     class="form-control modern-input @if (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' ||
                             getLanguageByKey(checkFrontLanguageSession()) == 'Persian') text-end @else text-start @endif"
-                    id="email" aria-describedby="email" placeholder="{{ __('messages.user.email') }}"
+                    id="email" aria-describedby="email" placeholder="{{ __('messages.common.use_email') }}"
                     value="{{ old('email') }}" required
                     style="padding: 8px 13px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; background: #fafbfc; transition: all 0.3s ease;">
                   <span id="email-error-msg"
@@ -101,7 +100,7 @@
 
                 <div id="phone-field" class="mb-4" style="display: none;">
                   <label for="contact" class="form-label fw-semibold mb-2" style="color: #374151; font-size: 14px;">
-                    {{ __('messages.common.phone') }}:<span class="required"></span>
+                    {{ __('messages.common.use_phone') }}:<span class="required"></span>
                   </label>
                   <input type="tel" name="contact" id="contact"
                     class="form-control modern-input @if (getLanguageByKey(checkFrontLanguageSession()) == 'Arabic' ||
