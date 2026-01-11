@@ -17,6 +17,12 @@
       {{ Form::number('number_of_cards', 1, ['class' => 'form-control', 'required', 'min' => 1, 'max' => 100]) }}
     </div>
   </div>
+  <div class="col-lg-6">
+    <div class="mb-5">
+      {{ Form::label('assigned_id', __('messages.redirect_links.assigned_to') . ':', ['class' => 'form-label']) }}
+      {{ Form::select('assigned_id', ['' => __('messages.common.select_sales')] + $salesUsers->pluck('first_name', 'id')->toArray(), null, ['class' => 'form-control']) }}
+    </div>
+  </div>
   <div>
     {{ Form::submit(__('messages.common.save'), ['class' => 'btn btn-primary me-3']) }}
     <a href="{{ route('redirect-links.index') }}" class="btn btn-secondary">{{ __('messages.common.discard') }}</a>

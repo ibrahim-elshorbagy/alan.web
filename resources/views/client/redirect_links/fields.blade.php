@@ -13,15 +13,33 @@
   </div>
   <div class="col-lg-6">
     <div class="mb-5">
+      <label class="form-label">{{ __('messages.redirect_links.redirect_link_type') }}:</label>
+      <p class="form-control-plaintext">
+        {{ isset($redirectLink) ? \App\Enums\RedirectLinkTypeEnum::from($redirectLink->redirect_link_type)->label() : '' }}
+      </p>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="mb-5">
       {{ Form::label('redirect_link', __('messages.redirect_links.redirect_link') . ':', ['class' => 'form-label']) }}
-      {{ Form::text('redirect_link', isset($redirectLink) ? $redirectLink->redirect_link : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.redirect_link')]) }}
+      {{ Form::text('redirect_link', isset($redirectLink) ? $redirectLink->redirect_link : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.redirect_link'), 'disabled' => isset($redirectLink) && $redirectLink->status == 2]) }}
       <small class="text-muted">{{ __('messages.redirect_links.valid_url_examples') }}<br>
         https://www.example.com<br>
         http://example.com</small>
     </div>
   </div>
+  @if (isset($redirectLink) && $redirectLink->status == 2)
+    <div class="col-12">
+      <div class="alert alert-danger">
+        <strong>{{ __('messages.redirect_links.rejected_note') }}</strong>
+      </div>
+    </div>
+  @endif
   <div>
-    {{ Form::submit(__('messages.common.save'), ['class' => 'btn btn-primary me-3']) }}
-    <a href="{{ route('client.redirect-links.index') }}" class="btn btn-secondary">{{ __('messages.common.discard') }}</a>
+    @if (!isset($redirectLink) || $redirectLink->status != 2)
+      {{ Form::submit(__('messages.common.save'), ['class' => 'btn btn-primary me-3']) }}
+    @endif
+    <a href="{{ route('client.redirect-links.index') }}"
+      class="btn btn-secondary">{{ __('messages.common.discard') }}</a>
   </div>
 </div>

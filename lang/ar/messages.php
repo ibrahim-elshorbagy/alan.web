@@ -163,7 +163,7 @@ return [
   'by_signing_up_you_agree_to_our' => 'بتسجيلك فإنك توافق على',
   'type_in_script' => 'اكتب كود js داخل الوسم',
   'extra_scripts' => 'نصوص إضافية',
-  'admins' => 'المدراء',
+  'admins' => 'الموظفين',
   'subscriber' => 'مشتركي النشرة الاخبارية',
   'email_not_found' => 'لم نتمكن من العثور على مستخدم بهذا البريد الإلكتروني',
   'product_details' => 'تفاصيل طلب المنتج',
@@ -427,8 +427,9 @@ return [
   ],
   'common' => [
 
-    'use_email'=>'ايميل: يستقبل رابط تفعيل',
-    'use_phone'=>'موبايل: رقم اردني يستقبل كود تفعيل',
+    'select_sales' => "اختر - لا احد",
+    'use_email' => 'ايميل: يستقبل رابط تفعيل',
+    'use_phone' => 'موبايل: رقم اردني يستقبل كود تفعيل',
     'new_password' => 'كلمة المرور الجديدة',
     'reset_password' => 'إعادة تعيين كلمة المرور',
     'confirm_password' => 'تأكيد كلمة المرور',
@@ -627,7 +628,7 @@ return [
     'your_name' => 'اسمك',
     'your_message' => 'رسالتك',
     'admin_details' => 'تفاصيل المسؤول',
-    'add_admin' => 'إضافة مسؤول',
+    'add_admin' => 'إضافة',
     'delete_my_account' => 'حذف حسابي',
     'new_user_add' => 'تم تسجيل مستخدم جديد!',
     'referral_code' => 'كود الإحالة - إن وجد',
@@ -1741,6 +1742,10 @@ return [
     'admin' => 'المسؤول',
     'admin_created_successfully' => 'تم إنشاء المسؤول بنجاح.',
     'admin_updated_successfully' => 'تم تحديث المسؤول بنجاح.',
+    'role' => 'الدور',
+    'super_admin' => 'المدير العام',
+    'sales' => 'تاجر',
+
   ],
   'vcard_11' => [
     'read_more' => 'اقرأ المزيد',
@@ -2328,6 +2333,7 @@ return [
     'redirect_link_type' => 'النوع',
     'status' => 'الحالة',
     'nfc' => 'NFC',
+    'assigned_to' => 'مخصص ل',
     'created_at' => 'تاريخ الإنشاء',
     'updated_at' => 'تاريخ التحديث',
     'not_redeemed' => 'غير مستخدم',
@@ -2392,7 +2398,16 @@ return [
     'invalid_google_business_url' => 'يجب أن يكون رابط إعادة التوجيه رابط جوجل بيزنس صالح.',
     'no_redirect_link_message' => 'لم يتم تحديد رابط إعادة التوجيه بعد. يرجى تحديث هذا الحقل برابط موقعك الإلكتروني.',
     'valid_url_examples' => 'أمثلة على روابط صالحة:',
+
+    'received' => 'مستلم',
+    'not_received' => 'غير مستلم',
+    'mark_as_received' => 'وضع علامة كمستلم',
+    'received_status' => 'حالة الاستلام',
+    'received_all' => 'استلمت الكل',
+    'rejected_note' => 'تم رفض رابط إعادة التوجيه هذا.',
+
   ],
+
   'verify_phone' => [
     'title' => 'تحقق من رقم هاتفك',
     'subtitle' => 'لقد أرسلنا رمز التحقق إلى',
@@ -2424,5 +2439,6 @@ return [
     'reset_password_subtitle' => 'أدخل رمز التحقق وكلمة المرور الجديدة.',
     'reset_password_button' => 'إعادة تعيين كلمة المرور',
     'resetting' => 'جارٍ إعادة التعيين...',
+
   ],
 ];

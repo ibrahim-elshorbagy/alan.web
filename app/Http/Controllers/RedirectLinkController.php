@@ -16,6 +16,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\QrcodeEdit;
 use Spatie\Color\Hex;
 use TCPDF;
+
 class RedirectLinkController extends Controller
 {
   public function index()
@@ -26,8 +27,9 @@ class RedirectLinkController extends Controller
   public function create()
   {
     $nfcs = Nfc::all();
+    $salesUsers = User::role('sales')->get();
 
-    return view('admin.redirect_links.create', compact('nfcs'));
+    return view('admin.redirect_links.create', compact('nfcs', 'salesUsers'));
   }
 
   public function store(Request $request)
@@ -36,6 +38,7 @@ class RedirectLinkController extends Controller
       'redirect_link_type' => 'required|integer|min:1|max:10',
       'nfcs_id' => 'required|exists:nfcs,id',
       'number_of_cards' => 'required|integer|min:1|max:100',
+      'assigned_id' => 'nullable|exists:users,id',
     ]);
 
     if ($validator->fails()) {
@@ -58,6 +61,7 @@ class RedirectLinkController extends Controller
         'redirect_link_type' => $redirectLinkType,
         'status' => 0,
         'nfcs_id' => $nfcsId,
+        'assigned_id' => $request->assigned_id,
       ]);
 
       $createdLinks[] = $redirectLink;
@@ -71,6 +75,11 @@ class RedirectLinkController extends Controller
   public function extractAll()
   {
     $redirectLinks = RedirectLink::all();
+
+    // For sales, filter to only their assigned links
+    if (auth()->user()->hasRole('sales')) {
+      $redirectLinks = $redirectLinks->where('assigned_id', auth()->id());
+    }
 
     if ($redirectLinks->isEmpty()) {
       return redirect()->back()->with('error', 'No redirect links found to extract');
@@ -90,11 +99,35 @@ class RedirectLinkController extends Controller
     $idsArray = explode(',', $ids);
     $redirectLinks = RedirectLink::whereIn('id', $idsArray)->get();
 
+    // For sales, filter to only their assigned links
+    if (auth()->user()->hasRole('sales')) {
+      $redirectLinks = $redirectLinks->where('assigned_id', auth()->id());
+    }
+
     if ($redirectLinks->isEmpty()) {
       return redirect()->back()->with('error', __('messages.redirect_links.no_items_found'));
     }
 
     return $this->generatePackage($redirectLinks);
+  }
+
+  public function markAllAsReceived()
+  {
+    if (!auth()->user()->hasRole('sales')) {
+      return redirect()->back()->with('error', 'Unauthorized');
+    }
+
+    $updated = RedirectLink::where('assigned_id', auth()->id())
+      ->where('received_status', RedirectLink::RECEIVED_STATUS_NOT_RECEIVED)
+      ->update(['received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED]);
+
+    if ($updated > 0) {
+      session()->flash('success', __('messages.redirect_links.received_all') . ' (' . $updated . ' links)');
+    } else {
+      session()->flash('info', __('messages.redirect_links.no_items_found'));
+    }
+
+    return redirect()->back();
   }
 
   private function generatePackage($redirectLinks)
@@ -278,32 +311,57 @@ class RedirectLinkController extends Controller
   public function edit($id)
   {
     $redirectLink = RedirectLink::findOrFail($id);
+
+    if (auth()->user()->hasRole('sales') && $redirectLink->assigned_id != auth()->id()) {
+      abort(403, 'Unauthorized');
+    }
+
     $users = User::whereDoesntHave('roles', function ($q) {
       $q->where('name', 'super_admin');
     })->get();
     $nfcs = Nfc::all();
+    $salesUsers = User::role('sales')->get();
 
-    return view('admin.redirect_links.edit', compact('redirectLink', 'users', 'nfcs'));
+    return view('admin.redirect_links.edit', compact('redirectLink', 'users', 'nfcs', 'salesUsers'));
   }
 
   public function update(Request $request, $id)
   {
     $redirectLink = RedirectLink::findOrFail($id);
 
+    if (auth()->user()->hasRole('sales') && $redirectLink->assigned_id != auth()->id()) {
+      abort(403, 'Unauthorized');
+    }
+
+    if (auth()->user()->hasRole('sales') && $redirectLink->status == 2) {
+      return redirect()->back()->with('error', 'Cannot update rejected links');
+    }
+
+    $statusRule = auth()->user()->hasRole('sales') ? 'required|integer|in:0,1' : 'required|integer|in:0,1,2';
+
     $validator = Validator::make($request->all(), [
       'user_id' => 'nullable|exists:users,id',
       'uri' => 'required|string|max:10|unique:redirect_links,uri,' . $id,
       'redirect_link' => 'nullable|url',
       'redirect_link_type' => 'required|integer|min:1|max:10',
-      'status' => 'required|integer|in:0,1,2',
+      'status' => $statusRule,
       'nfcs_id' => 'required|exists:nfcs,id',
+      'assigned_id' => 'nullable|exists:users,id',
+      'received_status' => 'nullable|integer|in:0,1',
     ]);
 
     if ($validator->fails()) {
       return redirect()->back()->withErrors($validator)->withInput();
     }
 
-    $redirectLink->update($request->all());
+    $updateData = $request->all();
+
+    if (auth()->user()->hasRole('sales')) {
+      // For sales, only allow updating redirect_link and status
+      $updateData = array_intersect_key($updateData, array_flip(['redirect_link', 'status']));
+    }
+
+    $redirectLink->update($updateData);
 
     return redirect()->route('redirect-links.index')->with('success', __('messages.redirect_links.updated'));
   }
@@ -311,6 +369,11 @@ class RedirectLinkController extends Controller
   public function destroy($id)
   {
     $redirectLink = RedirectLink::findOrFail($id);
+
+    if (auth()->user()->hasRole('sales')) {
+      abort(403, 'Unauthorized');
+    }
+
     $redirectLink->delete();
 
     return redirect()->route('redirect-links.index')->with('success', __('messages.redirect_links.deleted'));

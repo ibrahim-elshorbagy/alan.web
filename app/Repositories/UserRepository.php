@@ -84,7 +84,7 @@ class UserRepository extends BaseRepository
       $input['language'] = $userDefaultLanguage;
       $input['password'] = Hash::make($input['password']);
       if (isset($input['role'])) {
-        $user = User::create($input)->assignRole(Role::ROLE_SUPER_ADMIN);
+        $user = User::create($input)->assignRole($input['role']);
         $user->email_verified_at = Carbon::now();
         $user->is_active = true;
         $user->save();
@@ -195,6 +195,10 @@ class UserRepository extends BaseRepository
     }
 
     $user->update($input);
+
+    if (isset($input['role'])) {
+      $user->syncRoles([$input['role']]);
+    }
 
     if (isset($input['profile']) && !empty($input['profile'])) {
       $user->clearMediaCollection(User::PROFILE);

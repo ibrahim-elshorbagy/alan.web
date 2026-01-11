@@ -66,6 +66,18 @@ class RedirectLinksTable extends LivewireTableComponent
       return redirect()->back()->with('error', __('messages.redirect_links.no_items_selected'));
     }
 
+    // For sales, ensure they can only export their assigned links
+    if (auth()->user()->hasRole('sales')) {
+      $selectedIds = RedirectLink::whereIn('id', $selectedIds)
+        ->where('assigned_id', auth()->id())
+        ->pluck('id')
+        ->toArray();
+
+      if (empty($selectedIds)) {
+        return redirect()->back()->with('error', __('messages.redirect_links.no_items_selected'));
+      }
+    }
+
     // Redirect to controller method with selected IDs
     return redirect()->route('redirect-links.export-selected', ['ids' => implode(',', $selectedIds)]);
   }
@@ -87,7 +99,12 @@ class RedirectLinksTable extends LivewireTableComponent
       Column::make(__('messages.redirect_links.status'), 'status')
         ->view('admin.redirect_links.columns.status'),
       Column::make(__('messages.redirect_links.nfc'), 'nfcs_id')->sortable()->searchable(),
+      Column::make(__('messages.redirect_links.assigned_to'), 'assigned_id')
+        ->view('admin.redirect_links.columns.assigned_to')
+        ->hideIf(auth()->user()->hasRole('sales')),
       Column::make(__('messages.redirect_links.updated_at'), 'updated_at')->sortable(),
+      Column::make(__('messages.redirect_links.received_status'), 'received_status')
+        ->view('admin.redirect_links.columns.received_status'),
       Column::make(__('messages.common.action'), 'id')
         ->view('admin.redirect_links.columns.action'),
     ];
@@ -95,17 +112,23 @@ class RedirectLinksTable extends LivewireTableComponent
 
   public function builder(): Builder
   {
-    return RedirectLink::query()->with(['user']);
+    $query = RedirectLink::query()->with(['user', 'assignedUser']);
+
+    if (auth()->user()->hasRole('sales')) {
+      $query->where('assigned_id', auth()->id());
+    }
+
+    return $query;
   }
 
-  public function resetPageTable($pageName = 'redirect-links-table')
+  public function markAsReceived($id)
   {
-    $rowsPropertyData = $this->getRows()->toArray();
-    $prevPageNum = $rowsPropertyData['current_page'] - 1;
-    $prevPageNum = $prevPageNum > 0 ? $prevPageNum : 1;
-    $pageNum = count($rowsPropertyData['data']) > 0 ? $rowsPropertyData['current_page'] : $prevPageNum;
+    $redirectLink = RedirectLink::findOrFail($id);
 
-    $this->setPage($pageNum, $pageName);
+    if (auth()->user()->hasRole('sales') && $redirectLink->assigned_id == auth()->id() && $redirectLink->received_status == RedirectLink::RECEIVED_STATUS_NOT_RECEIVED) {
+      $redirectLink->update(['received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED]);
+      $this->dispatch('refresh');
+    }
   }
 
   public function placeholder()

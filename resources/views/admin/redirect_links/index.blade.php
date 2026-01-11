@@ -7,10 +7,24 @@
     <div class="d-flex flex-column table-striped">
       @include('flash::message')
 
-      {{-- Manual flash message for download success --}}
-      @if(request()->get('success') == '1')
+
+      @if (session()->has('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-          {{ __('messages.redirect_links.created') }}
+          {{ session('success') }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      @endif
+
+      @if (session()->has('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          {{ session('error') }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      @endif
+
+      @if (session()->has('info'))
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+          {{ session('info') }}
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
       @endif

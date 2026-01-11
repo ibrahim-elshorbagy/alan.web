@@ -42,38 +42,40 @@ use Spatie\Permission\Models\Role as roleModal;
  */
 class Role extends roleModal
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $table = 'roles';
+  protected $table = 'roles';
 
-    const ROLE_SUPER_ADMIN = 'super_admin';
+  const ROLE_SUPER_ADMIN = 'super_admin';
 
-    const ROLE_ADMIN = 'admin';
+  const ROLE_ADMIN = 'admin';
 
-    const ROLE_USER = 'user';
+  const ROLE_USER = 'user';
 
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'name',
-        'display_name',
-        'is_default',
-        'guard_name',
-    ];
+  const ROLE_SALES = 'sales';
 
-    protected $casts = [
-        'name' => 'string',
-        'display_name' => 'string',
-        'is_default' => 'integer',
-        'guard_name' => 'string',
-    ];
+  /**
+   * @var array
+   */
+  protected $fillable = [
+    'name',
+    'display_name',
+    'is_default',
+    'guard_name',
+  ];
 
-    /**
-     * @var array
-     */
-    public static $rules = [
-        'display_name' => 'required|unique:roles,name',
-        'permission_id' => 'required',
-    ];
+  protected $casts = [
+    'name' => 'string',
+    'display_name' => 'string',
+    'is_default' => 'integer',
+    'guard_name' => 'string',
+  ];
+
+  /**
+   * @var array
+   */
+  public static $rules = [
+    'display_name' => 'required|unique:roles,name',
+    'permission_id' => 'required',
+  ];
 }

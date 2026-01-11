@@ -17,9 +17,17 @@ class RedirectLink extends Model
   const STATUS_REDEEMED = 1;
   const STATUS_REJECTED = 2;
 
+  const RECEIVED_STATUS_NOT_RECEIVED = 0;
+  const RECEIVED_STATUS_RECEIVED = 1;
+
   public function user(): BelongsTo
   {
     return $this->belongsTo(User::class);
+  }
+
+  public function assignedUser(): BelongsTo
+  {
+    return $this->belongsTo(User::class, 'assigned_id');
   }
 
   public function nfc(): BelongsTo

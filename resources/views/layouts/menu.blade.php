@@ -245,6 +245,23 @@
   </li>
 @endrole
 
+@hasrole('sales')
+  <li class="nav-item {{ Request::is('sadmin/dashboard*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('redirect-links.index') }}">
+      <span class="aside-menu-icon"><i class="fas fa-tachometer-alt icon-color-bs-blue"></i></span>
+      <span class="aside-menu-title">{{ __('messages.dashboard') }}</span>
+    </a>
+  </li>
+
+  <li class="nav-item {{ Request::is('sadmin/redirect-links*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('redirect-links.index') }}">
+      <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span>
+      <span class="aside-menu-title">{{ __('messages.redirect_links.title') }}</span>
+    </a>
+  </li>
+@endhasrole
 
 @role(App\Models\Role::ROLE_ADMIN)
   <li class="user-dashboard nav-item {{ Request::is('admin/dashboard*') ? 'active' : '' }}">

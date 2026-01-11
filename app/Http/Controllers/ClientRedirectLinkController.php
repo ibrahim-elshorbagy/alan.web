@@ -236,6 +236,11 @@ class ClientRedirectLinkController extends Controller
 
   public function redirectLink(RedirectLink $uri)
   {
+    // If assigned to sales and not received, don't allow access
+    if ($uri->assigned_id && $uri->received_status != RedirectLink::RECEIVED_STATUS_RECEIVED) {
+      abort(404);
+    }
+
     // If not redeemed yet, redirect to redeem flow
     if ($uri->status == RedirectLink::STATUS_NOT_REDEEMED) {
       // Store redeem code in session for auto-fill

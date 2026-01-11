@@ -544,7 +544,7 @@ Route::middleware(['freshInstall'])->group(function () {
       });
     });
 
-    Route::prefix('sadmin')->middleware('role:super_admin')->group(function () {
+    Route::prefix('sadmin')->middleware('role:super_admin|admin|sales')->group(function () {
       Route::get('/generate-sitemap', [SettingController::class, 'generateSitemap'])->name('generateSitemap');
       //dashboard chart
       Route::post('/dashboard-plan-chart', [DashboardController::class, 'planChartData'])->name('dashboard.plan-chart');
@@ -572,10 +572,12 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::post('nfc-card-tax', [NfcController::class, 'nfcCardTax'])->name('nfc.tax');
       Route::get('nfc-card-tax', [NfcController::class, 'getNfcCardTax'])->name('nfc.tax.get');
 
+      // Redirect Links
       Route::get('redirect-links', [RedirectLinkController::class, 'index'])->name('redirect-links.index');
       Route::get('redirect-links/create', [RedirectLinkController::class, 'create'])->name('redirect-links.create');
       Route::get('redirect-links/extract-all', [RedirectLinkController::class, 'extractAll'])->name('redirect-links.extract-all');
       Route::get('redirect-links/export-selected', [RedirectLinkController::class, 'exportSelected'])->name('redirect-links.export-selected');
+      Route::post('redirect-links/mark-all-as-received', [RedirectLinkController::class, 'markAllAsReceived'])->name('redirect-links.mark-all-as-received');
       Route::post('redirect-links', [RedirectLinkController::class, 'store'])->name('redirect-links.store');
       Route::get('redirect-links/{redirectLink}/edit', [RedirectLinkController::class, 'edit'])->name('redirect-links.edit');
       Route::put('redirect-links/{redirectLink}', [RedirectLinkController::class, 'update'])->name('redirect-links.update');

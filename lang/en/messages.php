@@ -426,6 +426,8 @@ return [
     'attachment' => 'Attachment',
   ],
   'common' => [
+    'select_sales' => "Select - No one",
+
     'reset_password' => 'Reset Password',
     'remember_password' => 'Remembered your password',
     'new_password' => 'New Password',
@@ -1742,6 +1744,9 @@ return [
     'admin' => 'Admin',
     'admin_created_successfully' => 'Admin Created Successfully.',
     'admin_updated_successfully' => 'Admin Updated Successfully.',
+    'role' => 'Role',
+    'super_admin' => 'Super Admin',
+    'sales' => 'Sales',
   ],
   'vcard_11' => [
     'read_more' => 'Read More',
@@ -2332,6 +2337,7 @@ return [
     'redirect_link_type' => 'Type',
     'status' => 'Status',
     'nfc' => 'NFC',
+    'assigned_to' => 'Assigned To',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
     'not_redeemed' => 'Not Redeemed',
@@ -2396,6 +2402,13 @@ return [
     'invalid_google_business_url' => 'The redirect link must be a valid Google Business URL.',
     'no_redirect_link_message' => 'No redirect link specified yet. Please update this field with your website link.',
     'valid_url_examples' => 'Valid URL examples:',
+    'received' => 'Received',
+    'not_received' => 'Not Received',
+    'mark_as_received' => 'Mark as Received',
+    'received_status' => 'Received Status',
+    'received_all' => 'Received All',
+    'rejected_note' => 'This redirect link has been rejected.',
+
   ],
   'verify_phone' => [
     'title' => 'Verify Your Phone Number',
@@ -2428,5 +2441,6 @@ return [
     'reset_password_subtitle' => 'Enter the verification code and your new password.',
     'reset_password_button' => 'Reset Password',
     'resetting' => 'Resetting...',
+
   ],
 ];

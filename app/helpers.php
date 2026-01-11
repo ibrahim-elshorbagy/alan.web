@@ -292,6 +292,8 @@ if (!function_exists('getDashboardURL')) {
       return RouteServiceProvider::DASHBOARD;
     } elseif (Auth::user()->hasRole(CustomRole::ROLE_ADMIN)) {
       return RouteServiceProvider::ADMIN_DASHBOARD;
+    } elseif (Auth::user()->hasRole(CustomRole::ROLE_SALES)) {
+      return route('redirect-links.index');
     }
 
     return RouteServiceProvider::HOME;
