@@ -16,16 +16,23 @@
   </div>
   <div class="col-lg-6">
     <div class="mb-5">
-      {{ Form::label('redirect_link', __('messages.redirect_links.redirect_link') . ':', ['class' => 'form-label']) }}
-      {{ Form::text('redirect_link', isset($redirectLink) ? $redirectLink->redirect_link : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.redirect_link'), 'disabled' => $isDisabled]) }}
-    </div>
-  </div>
-  <div class="col-lg-6">
-    <div class="mb-5">
       {{ Form::label('redirect_link_type', __('messages.redirect_links.redirect_link_type') . ':', ['class' => 'form-label required']) }}
       {{ Form::select('redirect_link_type', collect(\App\Enums\RedirectLinkTypeEnum::cases())->mapWithKeys(fn($case) => [$case->value => $case->label()])->toArray(), isset($redirectLink) ? $redirectLink->redirect_link_type : null, ['class' => 'form-control', 'required', 'disabled' => auth()->user()->hasRole('sales') || $isDisabled]) }}
     </div>
   </div>
+  <div class="col-lg-6">
+    <div class="mb-5">
+      {{ Form::label('nfcs_id', __('messages.redirect_links.nfc') . ':', ['class' => 'form-label required']) }}
+      {{ Form::select('nfcs_id', $nfcs->pluck('name', 'id'), isset($redirectLink) ? $redirectLink->nfcs_id : null, ['class' => 'form-control', 'required', 'disabled' => auth()->user()->hasRole('sales') || $isDisabled]) }}
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="mb-5">
+      {{ Form::label('redirect_link', __('messages.redirect_links.redirect_link') . ':', ['class' => 'form-label']) }}
+      {{ Form::text('redirect_link', isset($redirectLink) ? $redirectLink->redirect_link : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.redirect_link'), 'disabled' => $isDisabled]) }}
+    </div>
+  </div>
+
   <div class="col-lg-6">
     <div class="mb-5">
       {{ Form::label('status', __('messages.redirect_links.status') . ':', ['class' => 'form-label required']) }}
@@ -40,20 +47,14 @@
       @endif
     </div>
   </div>
+  @if (!auth()->user()->hasRole('sales'))
   <div class="col-lg-6">
     <div class="mb-5">
-      {{ Form::label('nfcs_id', __('messages.redirect_links.nfc') . ':', ['class' => 'form-label required']) }}
-      {{ Form::select('nfcs_id', $nfcs->pluck('name', 'id'), isset($redirectLink) ? $redirectLink->nfcs_id : null, ['class' => 'form-control', 'required', 'disabled' => auth()->user()->hasRole('sales') || $isDisabled]) }}
+      {{ Form::label('assigned_id', __('messages.redirect_links.assigned_to') . ':', ['class' => 'form-label']) }}
+      {{ Form::select('assigned_id', ['' => __('messages.common.select_sales')] + $salesUsers->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray(), isset($redirectLink) ? $redirectLink->assigned_id : null, ['class' => 'form-control', 'disabled' => $isDisabled]) }}
     </div>
   </div>
-  @if (!auth()->user()->hasRole('sales'))
-    <div class="col-lg-6">
-      <div class="mb-5">
-        {{ Form::label('assigned_id', __('messages.redirect_links.assigned_to') . ':', ['class' => 'form-label']) }}
-        {{ Form::select('assigned_id', ['' => __('messages.common.select_sales')] + $salesUsers->pluck('first_name', 'id')->toArray(), isset($redirectLink) ? $redirectLink->assigned_id : null, ['class' => 'form-control', 'disabled' => $isDisabled]) }}
-      </div>
-    </div>
-  @endif
+@endif
   <div class="col-lg-6">
     <div class="mb-5">
       {{ Form::label('received_status', __('messages.redirect_links.received_status') . ':', ['class' => 'form-label']) }}

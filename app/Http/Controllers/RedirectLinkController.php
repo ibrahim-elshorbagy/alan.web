@@ -35,9 +35,9 @@ class RedirectLinkController extends Controller
   public function store(Request $request)
   {
     $validator = Validator::make($request->all(), [
-      'redirect_link_type' => 'required|integer|min:1|max:10',
+      'redirect_link_type' => 'required|integer',
       'nfcs_id' => 'required|exists:nfcs,id',
-      'number_of_cards' => 'required|integer|min:1|max:100',
+      'number_of_cards' => 'required|integer|min:1|max:1000',
       'assigned_id' => 'nullable|exists:users,id',
     ]);
 
@@ -339,16 +339,23 @@ class RedirectLinkController extends Controller
 
     $statusRule = auth()->user()->hasRole('sales') ? 'required|integer|in:0,1' : 'required|integer|in:0,1,2';
 
-    $validator = Validator::make($request->all(), [
-      'user_id' => 'nullable|exists:users,id',
-      'uri' => 'required|string|max:10|unique:redirect_links,uri,' . $id,
+    $rules = [
       'redirect_link' => 'nullable|url',
-      'redirect_link_type' => 'required|integer|min:1|max:10',
       'status' => $statusRule,
-      'nfcs_id' => 'required|exists:nfcs,id',
-      'assigned_id' => 'nullable|exists:users,id',
-      'received_status' => 'nullable|integer|in:0,1',
-    ]);
+    ];
+
+    if (!auth()->user()->hasRole('sales')) {
+      $rules = array_merge($rules, [
+        'user_id' => 'nullable|exists:users,id',
+        'uri' => 'required|string|max:10|unique:redirect_links,uri,' . $id,
+        'redirect_link_type' => 'required|integer|min:1|max:11',
+        'nfcs_id' => 'required|exists:nfcs,id',
+        'assigned_id' => 'nullable|exists:users,id',
+        'received_status' => 'nullable|integer|in:0,1',
+      ]);
+    }
+
+    $validator = Validator::make($request->all(), $rules);
 
     if ($validator->fails()) {
       return redirect()->back()->withErrors($validator)->withInput();

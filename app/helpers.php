@@ -983,12 +983,20 @@ if (!function_exists('checkFeature')) {
   function checkFeature($partName)
   {
     if (Auth::check() && getLoggedInUserRoleId() != getSuperAdminRoleId()) {
-      $currentPlan = getCurrentSubscription()->plan;
+      $subscription = getCurrentSubscription();
+      if (!$subscription) {
+        return false;
+      }
+      $currentPlan = $subscription->plan;
     } else {
       $urlAlias = Route::current()->parameters['alias'];
       $vcard = Vcard::whereUrlAlias($urlAlias)->first();
       if ($vcard) {
-        $currentPlan = $vcard->subscriptions()->get()->where('status', 1)->first()->plan;
+        $subscription = $vcard->subscriptions()->where('status', 1)->first();
+        if (!$subscription) {
+          return false;
+        }
+        $currentPlan = $subscription->plan;
       } else {
         return false;
       }

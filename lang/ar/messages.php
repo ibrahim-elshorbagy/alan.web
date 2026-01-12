@@ -2350,6 +2350,7 @@ return [
       'whatsapp' => 'واتساب',
       'snapchat' => 'سناب شات',
       'google_business' => 'جوجل بيزنس',
+      'vcard' => 'بطاقة اعمال ذكية vCard',
     ],
     'search' => 'بحث',
     'edit' => 'تحرير رابط إعادة التوجيه',
@@ -2396,6 +2397,7 @@ return [
     'invalid_whatsapp_url' => 'يجب أن يكون رابط إعادة التوجيه رابط واتساب صالح.',
     'invalid_snapchat_url' => 'يجب أن يكون رابط إعادة التوجيه رابط سناب شات صالح.',
     'invalid_google_business_url' => 'يجب أن يكون رابط إعادة التوجيه رابط جوجل بيزنس صالح.',
+    'invalid_vcard_url' => 'رابط vCard غير صالح. يجب أن يكون بالتنسيق https://nfcjo.com/slug',
     'no_redirect_link_message' => 'لم يتم تحديد رابط إعادة التوجيه بعد. يرجى تحديث هذا الحقل برابط موقعك الإلكتروني.',
     'valid_url_examples' => 'أمثلة على روابط صالحة:',
 
