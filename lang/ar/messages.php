@@ -163,7 +163,7 @@ return [
   'by_signing_up_you_agree_to_our' => 'بتسجيلك فإنك توافق على',
   'type_in_script' => 'اكتب كود js داخل الوسم',
   'extra_scripts' => 'نصوص إضافية',
-  'admins' => 'الموظفين',
+  'admins' => 'المدراء والمندوبين',
   'subscriber' => 'مشتركي النشرة الاخبارية',
   'email_not_found' => 'لم نتمكن من العثور على مستخدم بهذا البريد الإلكتروني',
   'product_details' => 'تفاصيل طلب المنتج',
@@ -1742,9 +1742,9 @@ return [
     'admin' => 'المسؤول',
     'admin_created_successfully' => 'تم إنشاء المسؤول بنجاح.',
     'admin_updated_successfully' => 'تم تحديث المسؤول بنجاح.',
-    'role' => 'الدور',
-    'super_admin' => 'المدير العام',
-    'sales' => 'تاجر',
+    'role' => 'الدور - الصلاحيات',
+    'super_admin' => 'المدير العام سوبر أدمن',
+    'sales' => 'مندوب مبيعات',
 
   ],
   'vcard_11' => [
