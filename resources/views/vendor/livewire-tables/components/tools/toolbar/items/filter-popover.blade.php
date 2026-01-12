@@ -6,6 +6,7 @@
             'dropdown-menu w-100 mt-md-5' => $component->isBootstrap4(),
             'dropdown-menu w-100' => $component->isBootstrap5(),
         ])
+        style="transform: translateY(0)!important;"
         x-bind:class="{ 'show': filterPopoverOpen }"
         role="menu"
     >

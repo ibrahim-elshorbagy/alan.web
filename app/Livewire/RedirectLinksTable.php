@@ -3,8 +3,11 @@
 namespace App\Livewire;
 
 use App\Models\RedirectLink;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
+use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
+use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
 
 class RedirectLinksTable extends LivewireTableComponent
 {
@@ -19,7 +22,7 @@ class RedirectLinksTable extends LivewireTableComponent
   {
     $this->setPrimaryKey('id');
     $this->setPageName('redirect-links-table');
-    $this->setDefaultSort('updated_at', 'desc');
+    $this->setDefaultSort('redirect_links.updated_at', 'desc');
     $this->setColumnSelectStatus(false);
     $this->setQueryStringStatus(false);
     $this->resetPage('redirect-links-table');
@@ -35,7 +38,11 @@ class RedirectLinksTable extends LivewireTableComponent
 
     $this->setEagerLoadAllRelationsEnabled();
 
-    $this->setAdditionalSelects(['redirect_links.user_id', 'redirect_links.nfcs_id']);
+    $this->setAdditionalSelects(['redirect_links.user_id', 'redirect_links.nfcs_id', 'redirect_links.created_at', 'redirect_links.updated_at', 'redirect_links.received_status']);
+
+    $this->setFiltersEnabled();
+
+    $this->setPerPageAccepted([10, 25, 50, 100, 200]);
 
     $this->setThAttributes(function (Column $column) {
       return [
@@ -45,6 +52,49 @@ class RedirectLinksTable extends LivewireTableComponent
   }
 
 
+
+  public function filters(): array
+  {
+    $filters = [
+      SelectFilter::make(__('messages.redirect_links.status'), 'status')
+        ->setFilterPillTitle(__('messages.redirect_links.status'))
+        ->options([
+          '' => __('messages.common.all'),
+          0 => __('messages.redirect_links.not_redeemed'),
+          1 => __('messages.redirect_links.redeemed'),
+          2 => __('messages.redirect_links.rejected'),
+        ])
+        ->filter(function (Builder $builder, string $value) {
+          if ($value !== '') {
+            $builder->where('status', $value);
+          }
+        }),
+      DateRangeFilter::make(__('messages.common.dates'))
+        ->setFilterPillTitle(__('messages.common.dates'))
+        ->filter(function (Builder $builder, array $dateRange) {
+          if (!empty($dateRange['minDate']) && !empty($dateRange['maxDate'])) {
+            $builder->where(function ($q) use ($dateRange) {
+              $q->whereBetween('redirect_links.created_at', [$dateRange['minDate'], $dateRange['maxDate']])
+                ->orWhereBetween('redirect_links.updated_at', [$dateRange['minDate'], $dateRange['maxDate']]);
+            });
+          }
+        }),
+    ];
+
+    if (!auth()->user()->hasRole('sales')) {
+      $assignedOptions = ['' => __('messages.common.all')] + User::role('sales')->get()->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray();
+      $filters[] = SelectFilter::make(__('messages.redirect_links.assigned_to'), 'assigned_id')
+        ->setFilterPillTitle(__('messages.redirect_links.assigned_to'))
+        ->options($assignedOptions)
+        ->filter(function (Builder $builder, string $value) {
+          if ($value !== '') {
+            $builder->where('assigned_id', $value);
+          }
+        });
+    }
+
+    return $filters;
+  }
 
   public function bulkActions(): array
   {
@@ -84,8 +134,7 @@ class RedirectLinksTable extends LivewireTableComponent
 
   public function columns(): array
   {
-    return [
-      Column::make(__('messages.redirect_links.id'), 'id')->sortable()->searchable(),
+    $columns = [
       Column::make(__('messages.redirect_links.user'), 'user.first_name')
         ->searchable(function (Builder $query, $direction) {
           $query->whereHas('user', function ($q) use ($direction) {
@@ -97,22 +146,25 @@ class RedirectLinksTable extends LivewireTableComponent
       Column::make(__('messages.redirect_links.redirect_link_type'), 'redirect_link_type')
         ->view('admin.redirect_links.columns.redirect_link_type'),
       Column::make(__('messages.redirect_links.status'), 'status')
-        ->view('admin.redirect_links.columns.status'),
-      Column::make(__('messages.redirect_links.nfc'), 'nfcs_id')->sortable()->searchable(),
+        ->view('admin.redirect_links.columns.combined_status'),
+      Column::make(__('messages.redirect_links.nfc_price'), 'nfcs_id')->view('admin.redirect_links.columns.nfc_price')
+        ->footer(fn() => __('messages.common.total') . ': ' . currencyFormat($this->getPageSum(), 0)),
       Column::make(__('messages.redirect_links.assigned_to'), 'assigned_id')
         ->view('admin.redirect_links.columns.assigned_to')
         ->hideIf(auth()->user()->hasRole('sales')),
-      Column::make(__('messages.redirect_links.updated_at'), 'updated_at')->sortable(),
-      Column::make(__('messages.redirect_links.received_status'), 'received_status')
-        ->view('admin.redirect_links.columns.received_status'),
+      Column::make(__('messages.common.dates'), 'created_at')
+        ->view('admin.redirect_links.columns.dates'),
       Column::make(__('messages.common.action'), 'id')
         ->view('admin.redirect_links.columns.action'),
     ];
+
+
+    return $columns;
   }
 
   public function builder(): Builder
   {
-    $query = RedirectLink::query()->with(['user', 'assignedUser']);
+    $query = RedirectLink::query()->with(['user', 'assignedUser', 'nfc']);
 
     if (auth()->user()->hasRole('sales')) {
       $query->where('assigned_id', auth()->id());
@@ -127,8 +179,15 @@ class RedirectLinksTable extends LivewireTableComponent
 
     if (auth()->user()->hasRole('sales') && $redirectLink->assigned_id == auth()->id() && $redirectLink->received_status == RedirectLink::RECEIVED_STATUS_NOT_RECEIVED) {
       $redirectLink->update(['received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED]);
-      $this->dispatch('refresh');
+      $this->dispatchSelf('refresh');
     }
+  }
+
+  public function getPageSum()
+  {
+    return $this->getRows()->sum(function ($row) {
+      return $row->nfc->price ?? 0;
+    });
   }
 
   public function placeholder()

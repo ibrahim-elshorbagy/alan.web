@@ -1,7 +1,7 @@
 @aware(['component', 'tableName'])
 @props(['filterGenericData'])
 
-<div x-cloak x-show="!currentlyReorderingStatus" 
+<div x-cloak x-show="!currentlyReorderingStatus"
                 @class([
                     'ml-0 ml-md-2 mb-3 mb-md-0' => $component->isBootstrap4(),
                     'ms-0 ms-md-2 mb-3 mb-md-0' => $component->isBootstrap5() && $component->searchIsEnabled(),
@@ -39,7 +39,8 @@
                     <span @class([
                             'badge badge-info' => $component->isBootstrap(),
                             'ml-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium leading-4 bg-indigo-100 text-indigo-800 capitalize dark:bg-indigo-200 dark:text-indigo-900' => $component->isTailwind(),
-                        ])>
+                        ])
+                        style="color:green;">
                         {{ $count }}
                     </span>
                 @endif
