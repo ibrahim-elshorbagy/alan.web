@@ -37,4 +37,3 @@
 @endphp
 
 <i class="{{ $icon }}" data-bs-toggle="tooltip" title="{{ $tooltip }}"></i>
-<small class="d-block text-muted" style="font-size: 10px;">Debug: {{ $rawValue }} ({{ gettype($rawValue) }})</small>
