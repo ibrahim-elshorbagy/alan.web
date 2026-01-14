@@ -24,6 +24,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -291,10 +292,13 @@ class RegisteredUserController extends AppBaseController
       $user->markEmailAsVerified();
       session()->forget(['phone_number', 'phone_verification_user_id']);
 
+      // Auto-login the user after successful verification
+      Auth::login($user);
+
       return response()->json([
         'success' => true,
         'message' => __('messages.verify_phone.phone_verified'),
-        'redirect' => route('login')
+        'redirect' => route('user.dashboard')
       ]);
     } catch (\Exception $e) {
       Log::error('Phone verification error', ['error' => $e->getMessage()]);
