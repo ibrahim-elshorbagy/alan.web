@@ -262,6 +262,13 @@
         </div>
     </div>
 @endsection
+<style>
+@media (min-width: 576px) {
+    #nfcCardDetailModal .modal-dialog {
+        max-width: 1000px !important;
+    }
+}
+</style>
 @pushOnce('scripts')
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script>
