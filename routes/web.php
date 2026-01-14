@@ -590,6 +590,7 @@ Route::middleware(['freshInstall'])->group(function () {
       //user
       Route::resource('/users', UserController::class);
       Route::resource('/admins', AdminUserController::class);
+      Route::get('/admins/update-status/{admin}', [AdminUserController::class, 'updateStatus'])->name('admins.status');
 
       //FAQs
       Route::resource('/frontFaqs', FrontFAQsController::class);

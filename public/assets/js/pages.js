@@ -43997,7 +43997,10 @@ listenClick(".user-is-verified", function () {
 });
 listenClick(".user-active", function () {
   var userId = $(this).data("id");
-  var updateUrl = route("users.status", userId);
+  // Detect if we're on admin users page or regular users page
+  var isAdminPage = window.location.pathname.includes('/admins');
+  var routeName = isAdminPage ? "admins.status" : "users.status";
+  var updateUrl = route(routeName, userId);
   $.ajax({
     type: "get",
     url: updateUrl,
