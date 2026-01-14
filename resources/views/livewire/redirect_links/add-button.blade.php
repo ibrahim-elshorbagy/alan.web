@@ -15,7 +15,9 @@
     @hasrole('sales')
       <form action="{{ route('redirect-links.mark-all-as-received') }}" method="POST" style="display: inline;">
         @csrf
-        <button type="submit" class="btn btn-success">{{ __('messages.redirect_links.received_all') }}</button>
+        <button type="submit" class="btn btn-success" data-bs-toggle="tooltip"
+          title="تحديث جميع الروابط المخصصة لك كمستلمة"
+          onclick="return confirm('هل أنت متأكد من أنك تريد تحديث جميع الروابط المخصصة لك كمستلمة؟ هذا الإجراء لا يمكن التراجع عنه.')">{{ __('messages.redirect_links.received_all') }}</button>
       </form>
     @endhasrole
 
