@@ -1,1 +1,2 @@
-{{ $row->nfcs_id }}: {{ currencyFormat($row->nfc->price ?? 0, 0) }}
+<i class="bi bi-cpu fs-5 me-1" title="{{ $row->nfc->name ?? 'N/A' }}"
+  data-bs-toggle="tooltip"></i> {{ currencyFormat($row->nfc->price ?? 0, 0) }}
