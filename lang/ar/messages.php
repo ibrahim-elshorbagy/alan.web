@@ -1876,7 +1876,7 @@ return [
     'Confirm_the_order_and_make_a_payment' => 'أكد الطلب وقم بالدفع.',
     'Wait_for_the_admin_to_write_the_URL_and_dispatch_the_card' => 'انتظر حتى يقوم المسؤول بكتابة الرابط وشحن البطاقة.',
     'Receive_and_enjoy_your_NFC_card' => 'استلم واستمتع ببطاقة NFC الخاصة بك.',
-    'nfc_image' => 'صورة البطاقة',
+    'nfc_image' => 'صورة وجه البطاقة',
     'nfc_back_image' => 'صورة ظهر البطاقة',
     'nfc_card' => 'بطاقة NFC',
     'sell_nfc_cards' => 'بطاقات NFC',
