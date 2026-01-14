@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Laracasts\Flash\Flash;
 
 class VerifyEmailController extends Controller
@@ -42,16 +43,17 @@ class VerifyEmailController extends Controller
 
             event(new Verified($request->user()));
         }
+
+        // Auto-login the user after successful verification
+        Auth::login($user);
+
         Flash::success(__('messages.placeholder.successfully_verified'));
 
-        return redirect(route('login'));
+        return redirect(route('user.dashboard'));
     }
 
-    /**
-    @param $token
-    @return Redirect|RedirectResponse|Application
-     */
-    public function verifyEmail($userId, $token): RedirectResponse
+
+    public function verifyEmail($userId, $token)
     {
         $verifiedUser = EmailVerification::where('token', $token)->where('user_id', $userId)->firstOrFail();
 
@@ -70,9 +72,13 @@ class VerifyEmailController extends Controller
             }
 
             $verifiedUser->delete();
+
+            // Auto-login the user after successful verification
+            Auth::login($user);
+
             Flash::success(__('Your email has been verified successfully.'));
 
-            return redirect(route('login'));
+            return redirect(route('user.dashboard'));
         }
     }
 }
