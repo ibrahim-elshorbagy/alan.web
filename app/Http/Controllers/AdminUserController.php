@@ -92,6 +92,18 @@ class AdminUserController extends AppBaseController
   }
 
   /**
+   * Update the active status of the admin user
+   */
+  public function updateStatus(User $admin)
+  {
+    $admin->update([
+      'is_active' => ! $admin->is_active,
+    ]);
+
+    return $this->sendSuccess(__('messages.flash.user_status'));
+  }
+
+  /**
    * @param  User  $user
    * @return mixed
    */
