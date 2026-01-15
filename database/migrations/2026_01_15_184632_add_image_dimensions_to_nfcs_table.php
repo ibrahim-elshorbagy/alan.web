@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('nfcs', function (Blueprint $table) {
-            $table->integer('image_width')->nullable()->after('qr_position_side');
-            $table->integer('image_height')->nullable()->after('image_width');
+            $table->decimal('image_width', 8, 2)->nullable()->after('qr_position_side');
+            $table->decimal('image_height', 8, 2)->nullable()->after('image_width');
         });
     }
 

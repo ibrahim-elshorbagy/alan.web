@@ -73,11 +73,11 @@
           <div class="row">
             <div class="col-md-6 mb-3">
               {{ Form::label('image_width', 'Image Width (mm):', ['class' => 'form-label']) }}
-              {{ Form::number('image_width', null, ['class' => 'form-control', 'placeholder' => 'Width in mm', 'id' => 'editImageWidth']) }}
+              {{ Form::number('image_width', null, ['class' => 'form-control', 'placeholder' => 'Width in mm', 'id' => 'editImageWidth', 'step' => '0.01']) }}
             </div>
             <div class="col-md-6 mb-3">
               {{ Form::label('image_height', 'Image Height (mm):', ['class' => 'form-label']) }}
-              {{ Form::number('image_height', null, ['class' => 'form-control', 'placeholder' => 'Height in mm', 'id' => 'editImageHeight']) }}
+              {{ Form::number('image_height', null, ['class' => 'form-control', 'placeholder' => 'Height in mm', 'id' => 'editImageHeight', 'step' => '0.01']) }}
             </div>
           </div>
 
