@@ -432,7 +432,7 @@ class RedirectLinkController extends Controller
     $serialText = 'Serial No : ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
 
     // Position directly below QR code
-    $textY = $qrY + $qrSize + 30; // 20px margin below QR
+    $textY = $qrY + $qrSize + 20;
     $fontSize = 8;
 
     if ($fontPath) {
