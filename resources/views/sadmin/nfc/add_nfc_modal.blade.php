@@ -1,5 +1,5 @@
 <div class="modal fade common-modal-card" id="addNfcModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">{{ __('messages.nfc.new_nfc_card') }}</h3>
@@ -51,19 +51,21 @@
 
         <div id="coordinatesFields" style="display: none;">
           <div class="row">
-            <div class="col-md-3 mb-3">
+            <div class="col-md-6 mb-3">
               {{ Form::label('qr_x_position', __('messages.redirect_links.qr_x_position') . ':', ['class' => 'form-label']) }}
               {{ Form::number('qr_x_position', null, ['class' => 'form-control', 'placeholder' => 'X', 'id' => 'qrXPosition']) }}
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-6 mb-3">
               {{ Form::label('qr_y_position', __('messages.redirect_links.qr_y_position') . ':', ['class' => 'form-label']) }}
               {{ Form::number('qr_y_position', null, ['class' => 'form-control', 'placeholder' => 'Y', 'id' => 'qrYPosition']) }}
             </div>
-            <div class="col-md-3 mb-3">
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
               {{ Form::label('qr_size', __('messages.redirect_links.qr_size') . ':', ['class' => 'form-label']) }}
               {{ Form::number('qr_size', 100, ['class' => 'form-control', 'placeholder' => '100', 'id' => 'qrSize']) }}
             </div>
-            <div class="col-md-3 mb-3">
+            <div class="col-md-6 mb-3">
               {{ Form::label('qr_position_side', __('messages.redirect_links.qr_position_side') . ':', ['class' => 'form-label']) }}
               {{ Form::select('qr_position_side', ['front' => __('messages.redirect_links.qr_front'), 'back' => __('messages.redirect_links.qr_back')], 'front', ['class' => 'form-select', 'id' => 'qrPositionSide']) }}
             </div>

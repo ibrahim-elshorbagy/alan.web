@@ -357,8 +357,10 @@ class RedirectLinkController extends Controller
       imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
     }
 
-    // Add text overlays to front
-    $this->addTextOverlays($frontImage, $fullUrl, $link->id);
+    // Add text overlays to front if QR is on front and coordinates applied
+    if ($qrSide === 'front' && $nfc->apply_coordinates) {
+      $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize);
+    }
 
     // Save front image
     $frontPath = $tempDirectory . '/' . $link->uri . '_front.png';
@@ -375,8 +377,10 @@ class RedirectLinkController extends Controller
       imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
     }
 
-    // Add text overlays to back
-    $this->addTextOverlays($backImage, $fullUrl, $link->id);
+    // Add text overlays to back if QR is on back and coordinates applied
+    if ($qrSide === 'back' && $nfc->apply_coordinates) {
+      $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize);
+    }
 
     // Save back image
     $backPath = $tempDirectory . '/' . $link->uri . '_back.png';
@@ -392,7 +396,7 @@ class RedirectLinkController extends Controller
     ];
   }
 
-  private function addTextOverlays($image, $fullUrl, $linkId)
+  private function addTextOverlays($image, $uri, $linkId, $qrX, $qrY, $qrSize)
   {
     // Get image dimensions
     $width = imagesx($image);
@@ -409,26 +413,26 @@ class RedirectLinkController extends Controller
     }
 
     // Text content
-    $serialText = 'Serial: ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
-    $urlText = 'URL: ' . $fullUrl;
+    $urlText = 'URL: ' . $uri;
+    $serialText = 'Serial No: ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
 
-    // Position at bottom of image
-    $textY = $height - 80;
-    $fontSize = 24;
+    // Position directly below QR code
+    $textY = $qrY + $qrSize + 10; // 10px margin below QR
+    $fontSize = 8;
 
     if ($fontPath) {
       // Add white outline for better visibility
-      imagettftext($image, $fontSize, 0, 22, $textY + 2, $white, $fontPath, $serialText);
-      imagettftext($image, $fontSize, 0, 18, $textY - 2, $white, $fontPath, $serialText);
-      imagettftext($image, $fontSize, 0, 20, $textY, $black, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, $qrX + 2, $textY + 2, $white, $fontPath, $urlText);
+      imagettftext($image, $fontSize, 0, $qrX - 2, $textY - 2, $white, $fontPath, $urlText);
+      imagettftext($image, $fontSize, 0, $qrX, $textY, $black, $fontPath, $urlText);
 
-      imagettftext($image, $fontSize - 4, 0, 22, $textY + 42, $white, $fontPath, $urlText);
-      imagettftext($image, $fontSize - 4, 0, 18, $textY + 38, $white, $fontPath, $urlText);
-      imagettftext($image, $fontSize - 4, 0, 20, $textY + 40, $black, $fontPath, $urlText);
+      imagettftext($image, $fontSize, 0, $qrX + 2, $textY + 22, $white, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, $qrX - 2, $textY + 18, $white, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, $qrX, $textY + 20, $black, $fontPath, $serialText);
     } else {
       // Fallback to default font
-      imagestring($image, 5, 20, $textY, $serialText, $black);
-      imagestring($image, 4, 20, $textY + 40, $urlText, $black);
+      imagestring($image, 2, $qrX, $textY, $urlText, $black);
+      imagestring($image, 2, $qrX, $textY + 20, $serialText, $black);
     }
   }
 
