@@ -194,36 +194,41 @@ class RedirectLinkController extends Controller
           'full_link' => $fullUrl,
         ];
 
-        // Add front page
+        // Add single page with both front and back images side by side
         $pdf->AddPage();
-        list($imgWidth, $imgHeight) = getimagesize($images['front']);
-        $imgWidthMm = $imgWidth * 0.264583; // Convert pixels to mm
-        $imgHeightMm = $imgHeight * 0.264583;
 
-        // Scale to fit A4 (210x297mm) with margins
-        $maxWidth = 190;
-        $maxHeight = 277;
-        $scale = min($maxWidth / $imgWidthMm, $maxHeight / $imgHeightMm);
-        $newWidth = $imgWidthMm * $scale;
-        $newHeight = $imgHeightMm * $scale;
-        $x = (210 - $newWidth) / 2;
-        $y = (297 - $newHeight) / 2;
+        // Get dimensions for both images
+        list($frontWidth, $frontHeight) = getimagesize($images['front']);
+        list($backWidth, $backHeight) = getimagesize($images['back']);
 
-        $pdf->Image($images['front'], $x, $y, $newWidth, $newHeight, 'PNG');
+        $frontWidthMm = $frontWidth * 0.264583;
+        $frontHeightMm = $frontHeight * 0.264583;
+        $backWidthMm = $backWidth * 0.264583;
+        $backHeightMm = $backHeight * 0.264583;
 
-        // Add back page
-        $pdf->AddPage();
-        list($imgWidth, $imgHeight) = getimagesize($images['back']);
-        $imgWidthMm = $imgWidth * 0.264583;
-        $imgHeightMm = $imgHeight * 0.264583;
+        // Calculate scale to fit both images side by side on A4 (210x297mm)
+        // Each image gets half the width with 5mm spacing
+        $maxWidthPerImage = (210 - 15) / 2; // 15mm total margins (5mm left, 5mm center, 5mm right)
+        $maxHeight = 277; // Height with margins
 
-        $scale = min($maxWidth / $imgWidthMm, $maxHeight / $imgHeightMm);
-        $newWidth = $imgWidthMm * $scale;
-        $newHeight = $imgHeightMm * $scale;
-        $x = (210 - $newWidth) / 2;
-        $y = (297 - $newHeight) / 2;
+        // Scale front image
+        $frontScale = min($maxWidthPerImage / $frontWidthMm, $maxHeight / $frontHeightMm);
+        $frontNewWidth = $frontWidthMm * $frontScale;
+        $frontNewHeight = $frontHeightMm * $frontScale;
 
-        $pdf->Image($images['back'], $x, $y, $newWidth, $newHeight, 'PNG');
+        // Scale back image
+        $backScale = min($maxWidthPerImage / $backWidthMm, $maxHeight / $backHeightMm);
+        $backNewWidth = $backWidthMm * $backScale;
+        $backNewHeight = $backHeightMm * $backScale;
+
+        // Position images side by side centered
+        $frontX = 5;
+        $frontY = (297 - $frontNewHeight) / 2;
+        $backX = 210 - $backNewWidth - 5;
+        $backY = (297 - $backNewHeight) / 2;
+
+        $pdf->Image($images['front'], $frontX, $frontY, $frontNewWidth, $frontNewHeight, 'PNG');
+        $pdf->Image($images['back'], $backX, $backY, $backNewWidth, $backNewHeight, 'PNG');
       } else {
         // Use default behavior - generate QR code PNG
         $qrImage = QrCode::format('png')
@@ -433,16 +438,16 @@ class RedirectLinkController extends Controller
 
     // Position directly below QR code
     $textY = $qrY + $qrSize + 20;
-    $fontSize = 8;
+    $fontSize = 10; // Increased from 8 to 10 for slightly bigger text
 
     if ($fontPath) {
       // Normal text without outline
       imagettftext($image, $fontSize, 0, $qrX, $textY, $black, $fontPath, $urlText);
-      imagettftext($image, $fontSize, 0, $qrX, $textY + 20, $black, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, $qrX, $textY + 25, $black, $fontPath, $serialText);
     } else {
       // Fallback to default font
       imagestring($image, 2, $qrX, $textY, $urlText, $black);
-      imagestring($image, 2, $qrX, $textY + 20, $serialText, $black);
+      imagestring($image, 2, $qrX, $textY + 25, $serialText, $black);
     }
   }
 
