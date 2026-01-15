@@ -194,41 +194,20 @@ class RedirectLinkController extends Controller
           'full_link' => $fullUrl,
         ];
 
-        // Add single page with both front and back images side by side
+        // Add single page with both front and back images vertically
         $pdf->AddPage();
 
-        // Get dimensions for both images
-        list($frontWidth, $frontHeight) = getimagesize($images['front']);
-        list($backWidth, $backHeight) = getimagesize($images['back']);
+        // Use exact dimensions from NFC settings (in mm)
+        $imageWidthMm = $nfc->image_width ?? 85; // Default 85mm if not set
+        $imageHeightMm = $nfc->image_height ?? 54; // Default 54mm if not set
 
-        $frontWidthMm = $frontWidth * 0.264583;
-        $frontHeightMm = $frontHeight * 0.264583;
-        $backWidthMm = $backWidth * 0.264583;
-        $backHeightMm = $backHeight * 0.264583;
+        // Position images vertically centered
+        $x = (210 - $imageWidthMm) / 2; // Center horizontally on A4 (210mm width)
+        $frontY = 20; // Top margin
+        $backY = $frontY + $imageHeightMm + 10; // 10mm spacing between images
 
-        // Calculate scale to fit both images side by side on A4 (210x297mm)
-        // Each image gets half the width with 5mm spacing
-        $maxWidthPerImage = (210 - 15) / 2; // 15mm total margins (5mm left, 5mm center, 5mm right)
-        $maxHeight = 277; // Height with margins
-
-        // Scale front image
-        $frontScale = min($maxWidthPerImage / $frontWidthMm, $maxHeight / $frontHeightMm);
-        $frontNewWidth = $frontWidthMm * $frontScale;
-        $frontNewHeight = $frontHeightMm * $frontScale;
-
-        // Scale back image
-        $backScale = min($maxWidthPerImage / $backWidthMm, $maxHeight / $backHeightMm);
-        $backNewWidth = $backWidthMm * $backScale;
-        $backNewHeight = $backHeightMm * $backScale;
-
-        // Position images side by side centered
-        $frontX = 5;
-        $frontY = (297 - $frontNewHeight) / 2;
-        $backX = 210 - $backNewWidth - 5;
-        $backY = (297 - $backNewHeight) / 2;
-
-        $pdf->Image($images['front'], $frontX, $frontY, $frontNewWidth, $frontNewHeight, 'PNG');
-        $pdf->Image($images['back'], $backX, $backY, $backNewWidth, $backNewHeight, 'PNG');
+        $pdf->Image($images['front'], $x, $frontY, $imageWidthMm, $imageHeightMm, 'PNG');
+        $pdf->Image($images['back'], $x, $backY, $imageWidthMm, $imageHeightMm, 'PNG');
       } else {
         // Use default behavior - generate QR code PNG
         $qrImage = QrCode::format('png')

@@ -93,6 +93,10 @@ function nfcRenderDataShow(id) {
                 $("#editQrYPosition").val(result.data.qr_y_position);
                 $("#editQrSize").val(result.data.qr_size);
                 $("#editQrPositionSide").val(result.data.qr_position_side || 'front');
+                
+                // Set image dimensions
+                $("#editImageWidth").val(result.data.image_width);
+                $("#editImageHeight").val(result.data.image_height);
 
                 // Toggle coordinate fields visibility
                 toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");

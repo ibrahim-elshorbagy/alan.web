@@ -72,6 +72,17 @@
           </div>
         </div>
 
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            {{ Form::label('image_width', 'Image Width (mm):', ['class' => 'form-label']) }}
+            {{ Form::number('image_width', null, ['class' => 'form-control', 'placeholder' => 'Width in mm', 'id' => 'imageWidth']) }}
+          </div>
+          <div class="col-md-6 mb-3">
+            {{ Form::label('image_height', 'Image Height (mm):', ['class' => 'form-label']) }}
+            {{ Form::number('image_height', null, ['class' => 'form-control', 'placeholder' => 'Height in mm', 'id' => 'imageHeight']) }}
+          </div>
+        </div>
+
         <div class="col-sm-12 mt-4 d-flex">
           <div class="mb-3" io-image-input="true">
             <label for="nfcImgId" class="form-label required">{{ __('messages.nfc.nfc_image') . ' : ' }}</label>
