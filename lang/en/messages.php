@@ -2352,6 +2352,11 @@ return [
     'not_redeemed' => 'Not Redeemed',
     'redeemed' => 'Redeemed',
     'rejected' => 'Rejected',
+    'apply_coordinates' => 'Apply Custom QR Position',
+    'qr_x_position' => 'QR X Position',
+    'qr_y_position' => 'QR Y Position',
+    'qr_size' => 'QR Code Size',
+    'qr_position_hint' => 'Enable to customize QR code position on NFC card image',
     'types' => [
       'website' => 'Website',
       'facebook' => 'Facebook',

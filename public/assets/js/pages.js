@@ -48195,10 +48195,26 @@ listenClick("#adminguideNfc", function () {
 listenClick("#newNfc", function () {
   $("#addNfcModal").modal("show");
   resetModalForm("#addNfcForm");
+  toggleCoordinateFields("#applyCoordinates", "#coordinatesFields");
 });
 listenHiddenBsModal("#addNfcModal", function () {
   resetModalForm("#addNfcForm");
 });
+
+// Toggle coordinate fields when checkbox is clicked
+listen("change", "#applyCoordinates", function () {
+  toggleCoordinateFields("#applyCoordinates", "#coordinatesFields");
+});
+listen("change", "#editApplyCoordinates", function () {
+  toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");
+});
+function toggleCoordinateFields(checkboxId, fieldsId) {
+  if ($(checkboxId).is(":checked")) {
+    $(fieldsId).show();
+  } else {
+    $(fieldsId).hide();
+  }
+}
 listenSubmit("#addNfcForm", function (e) {
   e.preventDefault();
   $.ajax({
@@ -48250,6 +48266,15 @@ function nfcRenderDataShow(id) {
         $("#editNfcTitle").val(result.data.name);
         $("#editNfcDescription").val(result.data.description);
         $("#editNfcPrice").val(result.data.price);
+
+        // Set coordinate fields
+        $("#editApplyCoordinates").prop("checked", result.data.apply_coordinates == 1);
+        $("#editQrXPosition").val(result.data.qr_x_position);
+        $("#editQrYPosition").val(result.data.qr_y_position);
+        $("#editQrSize").val(result.data.qr_size);
+
+        // Toggle coordinate fields visibility
+        toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");
         $("#editNfcPreview").css("background-image", 'url("' + result.data.nfc_image + '")');
         $("#editNfcBackPreview").css("background-image", 'url("' + result.data.nfc_back_image + '")');
         $("<img>").attr("src", result.data.nfc_image).on("error", function () {

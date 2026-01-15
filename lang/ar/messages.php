@@ -2348,6 +2348,11 @@ return [
     'not_redeemed' => 'غير مستخدم',
     'redeemed' => 'مفعل',
     'rejected' => 'مرفوض',
+    'apply_coordinates' => 'تطبيق موضع QR مخصص',
+    'qr_x_position' => 'موضع X للـ QR',
+    'qr_y_position' => 'موضع Y للـ QR',
+    'qr_size' => 'حجم رمز QR',
+    'qr_position_hint' => 'قم بالتفعيل لتخصيص موضع رمز QR على صورة بطاقة NFC',
     'types' => [
       'website' => 'موقع إلكتروني',
       'facebook' => 'فيسبوك',

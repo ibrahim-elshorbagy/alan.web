@@ -35,6 +35,35 @@
             {{ Form::label('description', __('messages.common.description') . ':', ['class' => 'form-label required']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control', 'id' => 'editNfcDescription', 'placeholder' => __('messages.form.short_description'), 'rows' => '5', 'required']) }}
           </div>
+
+          <div class="col-sm-12 mb-3">
+            <div class="form-check">
+              {{ Form::checkbox('apply_coordinates', 1, null, ['class' => 'form-check-input', 'id' => 'editApplyCoordinates']) }}
+              {{ Form::label('editApplyCoordinates', __('messages.redirect_links.apply_coordinates'), ['class' => 'form-check-label']) }}
+              <span data-bs-toggle="tooltip" data-placement="top"
+                data-bs-original-title="{{ __('messages.redirect_links.qr_position_hint') }}">
+                <i class="fas fa-question-circle ml-1 general-question-mark"></i>
+              </span>
+            </div>
+          </div>
+
+          <div id="editCoordinatesFields" style="display: none;">
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                {{ Form::label('qr_x_position', __('messages.redirect_links.qr_x_position') . ':', ['class' => 'form-label']) }}
+                {{ Form::number('qr_x_position', null, ['class' => 'form-control', 'placeholder' => 'X', 'id' => 'editQrXPosition']) }}
+              </div>
+              <div class="col-md-4 mb-3">
+                {{ Form::label('qr_y_position', __('messages.redirect_links.qr_y_position') . ':', ['class' => 'form-label']) }}
+                {{ Form::number('qr_y_position', null, ['class' => 'form-control', 'placeholder' => 'Y', 'id' => 'editQrYPosition']) }}
+              </div>
+              <div class="col-md-4 mb-3">
+                {{ Form::label('qr_size', __('messages.redirect_links.qr_size') . ':', ['class' => 'form-label']) }}
+                {{ Form::number('qr_size', null, ['class' => 'form-control', 'placeholder' => '100', 'id' => 'editQrSize']) }}
+              </div>
+            </div>
+          </div>
+
           <div class="col-sm-12 mb-3 d-flex">
             <div class="mb-3" io-image-input="true">
               <label for="NfcImgId" class="form-label required">{{ __('messages.nfc.nfc_image') . ' : ' }}

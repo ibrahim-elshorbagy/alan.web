@@ -11,87 +11,84 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class nfcRepository extends BaseRepository
 {
-    /**
-     * @var array
-     */
-    protected $fieldSearchable = [
-        'name',
-        'description',
-    ];
+  /**
+   * @var array
+   */
+  protected $fieldSearchable = [
+    'name',
+    'description',
+  ];
 
-    /**
-     * Return searchable fields
-     */
-    public function getFieldsSearchable(): array
-    {
-        return $this->fieldSearchable;
-    }
+  /**
+   * Return searchable fields
+   */
+  public function getFieldsSearchable(): array
+  {
+    return $this->fieldSearchable;
+  }
 
-    /**
-     * Configure the Model
-     **/
-    public function model()
-    {
-        return Nfc::class;
-    }
+  /**
+   * Configure the Model
+   **/
+  public function model()
+  {
+    return Nfc::class;
+  }
 
-    public function store($input)
-    {
+  public function store($input)
+  {
     try {
-        DB::beginTransaction();
+      DB::beginTransaction();
 
-        $inputArray = Arr::only($input, ['name', 'description', 'price']);
-        $nfc = Nfc::create($inputArray);
+      $inputArray = Arr::only($input, ['name', 'description', 'price', 'apply_coordinates', 'qr_x_position', 'qr_y_position', 'qr_size']);
+      $nfc = Nfc::create($inputArray);
 
-        if (isset($input['nfc_img']) && !empty($input['nfc_img'])) {
-            $nfc->addMedia($input['nfc_img'])->toMediaCollection(Nfc::NFC_PATH);
-        }
-        if (isset($input['nfc_back_img']) && !empty($input['nfc_back_img'])) {
-            $nfc->addMedia($input['nfc_back_img'])->toMediaCollection(Nfc::NFC_BACK_IMAGE);
-        }
+      if (isset($input['nfc_img']) && !empty($input['nfc_img'])) {
+        $nfc->addMedia($input['nfc_img'])->toMediaCollection(Nfc::NFC_PATH);
+      }
+      if (isset($input['nfc_back_img']) && !empty($input['nfc_back_img'])) {
+        $nfc->addMedia($input['nfc_back_img'])->toMediaCollection(Nfc::NFC_BACK_IMAGE);
+      }
 
-        DB::commit();
-
+      DB::commit();
     } catch (Exception $e) {
-        DB::rollBack();
+      DB::rollBack();
 
-        throw new UnprocessableEntityHttpException($e->getMessage());
+      throw new UnprocessableEntityHttpException($e->getMessage());
     }
 
     return $nfc;
+  }
 
-    }
+  public function update($input, $id)
+  {
 
-    public function update($input,$id){
+    try {
+      DB::beginTransaction();
 
-        try {
-            DB::beginTransaction();
+      $inputArray = Arr::only($input, ['name', 'description', 'price', 'apply_coordinates', 'qr_x_position', 'qr_y_position', 'qr_size']);
 
-        $inputArray = Arr::only($input, ['name', 'description', 'price']);
+      $nfc = Nfc::findOrFail($id);
+      $nfc->update($inputArray);
 
-        $nfc = Nfc::findOrFail($id);
-        $nfc->update($inputArray);
+      if (isset($input['nfc_img']) && ! empty($input['nfc_img'])) {
+        $nfc->clearMediaCollection(Nfc::NFC_PATH);
+        $nfc->addMedia($input['nfc_img'])->toMediaCollection(Nfc::NFC_PATH);
+      }
 
-        if (isset($input['nfc_img']) && ! empty($input['nfc_img'])) {
-            $nfc->clearMediaCollection(Nfc::NFC_PATH);
-            $nfc->addMedia($input['nfc_img'])->toMediaCollection(Nfc::NFC_PATH);
-        }
+      if (isset($input['nfc_back_img']) && ! empty($input['nfc_back_img'])) {
+        $nfc->clearMediaCollection(Nfc::NFC_BACK_IMAGE);
+        $nfc->addMedia($input['nfc_back_img'])->toMediaCollection(Nfc::NFC_BACK_IMAGE);
+      }
 
-        if (isset($input['nfc_back_img']) && ! empty($input['nfc_back_img'])) {
-            $nfc->clearMediaCollection(Nfc::NFC_BACK_IMAGE);
-            $nfc->addMedia($input['nfc_back_img'])->toMediaCollection(Nfc::NFC_BACK_IMAGE);
-        }
-
-        DB::commit();
-
+      DB::commit();
     } catch (Exception $e) {
 
-        DB::rollBack();
+      DB::rollBack();
 
-        throw new UnprocessableEntityHttpException($e->getMessage());
+      throw new UnprocessableEntityHttpException($e->getMessage());
     }
 
-        return $nfc;
-    }
-
+    return $nfc;
+  }
 }

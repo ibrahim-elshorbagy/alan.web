@@ -160,6 +160,10 @@ class RedirectLinkController extends Controller
     $qrcodeColor['qrcodeColor'] = Hex::fromString($customQrCode['qrcode_color'])->toRgb();
     $qrcodeColor['background_color'] = Hex::fromString($customQrCode['background_color'])->toRgb();
 
+    // Get NFC card information for the first link (all should have the same NFC)
+    $nfc = $redirectLinks->first()->nfc;
+    $useCustomPosition = $nfc && $nfc->apply_coordinates;
+
     // Create PDF with TCPDF
     $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
     $pdf->SetCreator('NFC System');
@@ -173,43 +177,65 @@ class RedirectLinkController extends Controller
     foreach ($redirectLinks as $link) {
       $fullUrl = url('/auto-' . $link->uri);
 
-      // Generate PNG QR code with colors
-      $qrImage = QrCode::format('png')
-        ->size(400)
-        ->color(
-          $qrcodeColor['qrcodeColor']->red(),
-          $qrcodeColor['qrcodeColor']->green(),
-          $qrcodeColor['qrcodeColor']->blue()
-        )
-        ->backgroundColor(
-          $qrcodeColor['background_color']->red(),
-          $qrcodeColor['background_color']->green(),
-          $qrcodeColor['background_color']->blue()
-        )
-        ->style($customQrCode['style'])
-        ->eye($customQrCode['eye_style'])
-        ->errorCorrection('H')
-        ->generate($fullUrl);
+      if ($useCustomPosition) {
+        // Use custom positioning on NFC card image
+        $finalImagePath = $this->generateQROnNfcImage(
+          $link,
+          $fullUrl,
+          $nfc,
+          $qrcodeColor,
+          $customQrCode,
+          $tempDirectory
+        );
 
-      $pngPath = $tempDirectory . '/' . $link->uri . '.png';
-      file_put_contents($pngPath, $qrImage);
+        $excelData[] = [
+          'id' => $link->id,
+          'uri' => $link->uri,
+          'full_link' => $fullUrl,
+        ];
 
-      $excelData[] = [
-        'id' => $link->id,
-        'uri' => $link->uri,
-        'full_link' => $fullUrl,
-      ];
+        // Add page to PDF with custom positioned QR on NFC image
+        $pdf->AddPage();
+        $pdf->Image($finalImagePath, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
+      } else {
+        // Use default behavior - generate QR code PNG
+        $qrImage = QrCode::format('png')
+          ->size(400)
+          ->color(
+            $qrcodeColor['qrcodeColor']->red(),
+            $qrcodeColor['qrcodeColor']->green(),
+            $qrcodeColor['qrcodeColor']->blue()
+          )
+          ->backgroundColor(
+            $qrcodeColor['background_color']->red(),
+            $qrcodeColor['background_color']->green(),
+            $qrcodeColor['background_color']->blue()
+          )
+          ->style($customQrCode['style'])
+          ->eye($customQrCode['eye_style'])
+          ->errorCorrection('H')
+          ->generate($fullUrl);
 
-      // Add page to PDF
-      $pdf->AddPage();
+        $pngPath = $tempDirectory . '/' . $link->uri . '.png';
+        file_put_contents($pngPath, $qrImage);
 
-      // Add QR image (centered: x=55mm, y=50mm, width=100mm, height=100mm)
-      $pdf->Image($pngPath, 55, 50, 100, 100, 'PNG');
+        $excelData[] = [
+          'id' => $link->id,
+          'uri' => $link->uri,
+          'full_link' => $fullUrl,
+        ];
 
-      // Add URI text below image
-      $pdf->SetFont('helvetica', 'B', 36);
-      $pdf->SetXY(0, 170);
-      $pdf->Cell(210, 10, $link->uri, 0, 0, 'C');
+        // Add page to PDF
+        $pdf->AddPage();
+
+        // Add QR image (centered: x=55mm, y=50mm, width=100mm, height=100mm)
+        $pdf->Image($pngPath, 55, 50, 100, 100, 'PNG');
+
+        // Add URI text below image
+        $pdf->SetFont('helvetica', 'B', 36);
+        $pdf->SetXY(0, 170);
+        $pdf->Cell(210, 10, $link->uri, 0, 0, 'C');
+      }
     }
 
     // Save PDF
@@ -230,9 +256,14 @@ class RedirectLinkController extends Controller
     $zip = new ZipArchive();
     if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
       foreach ($redirectLinks as $link) {
-        $qrCodePath = $tempDirectory . '/' . $link->uri . '.png';
-        if (file_exists($qrCodePath)) {
-          $zip->addFile($qrCodePath, 'qr_codes/' . basename($qrCodePath));
+        if ($useCustomPosition) {
+          $imagePath = $tempDirectory . '/' . $link->uri . '_final.png';
+        } else {
+          $imagePath = $tempDirectory . '/' . $link->uri . '.png';
+        }
+
+        if (file_exists($imagePath)) {
+          $zip->addFile($imagePath, 'qr_codes/' . basename($imagePath));
         }
       }
 
@@ -259,6 +290,63 @@ class RedirectLinkController extends Controller
       ->header('Content-Type', 'application/zip')
       ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
       ->header('Content-Length', strlen($zipContent));
+  }
+
+  private function generateQROnNfcImage($link, $fullUrl, $nfc, $qrcodeColor, $customQrCode, $tempDirectory)
+  {
+    // Get NFC front image
+    $nfcImageUrl = $nfc->nfc_image;
+
+    // Generate QR code image
+    $qrSize = $nfc->qr_size ?? 400;
+    $qrImage = QrCode::format('png')
+      ->size($qrSize)
+      ->color(
+        $qrcodeColor['qrcodeColor']->red(),
+        $qrcodeColor['qrcodeColor']->green(),
+        $qrcodeColor['qrcodeColor']->blue()
+      )
+      ->backgroundColor(
+        $qrcodeColor['background_color']->red(),
+        $qrcodeColor['background_color']->green(),
+        $qrcodeColor['background_color']->blue()
+      )
+      ->style($customQrCode['style'])
+      ->eye($customQrCode['eye_style'])
+      ->errorCorrection('H')
+      ->generate($fullUrl);
+
+    // Save QR code temporarily
+    $qrPath = $tempDirectory . '/' . $link->uri . '_qr.png';
+    file_put_contents($qrPath, $qrImage);
+
+    // Load NFC background image
+    $nfcImageContent = file_get_contents($nfcImageUrl);
+    $nfcImage = imagecreatefromstring($nfcImageContent);
+
+    // Load QR code image
+    $qrImageGd = imagecreatefrompng($qrPath);
+
+    // Get positions from NFC settings
+    $xPos = $nfc->qr_x_position ?? 0;
+    $yPos = $nfc->qr_y_position ?? 0;
+
+    // Get QR dimensions
+    $qrWidth = imagesx($qrImageGd);
+    $qrHeight = imagesy($qrImageGd);
+
+    // Overlay QR code on NFC image at specified position
+    imagecopy($nfcImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+
+    // Save final image
+    $finalPath = $tempDirectory . '/' . $link->uri . '_final.png';
+    imagepng($nfcImage, $finalPath);
+
+    // Clean up
+    imagedestroy($nfcImage);
+    imagedestroy($qrImageGd);
+
+    return $finalPath;
   }
 
 
