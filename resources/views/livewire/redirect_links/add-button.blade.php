@@ -11,7 +11,7 @@
         <form action="{{ route('redirect-links.restore-selected') }}" method="POST" style="display: inline;"
           onsubmit="return confirm('{{ __('messages.redirect_links.restore_confirmation') }}')">
           @csrf
-          <input type="hidden" name="ids" value="{{ implode(',', $this->selectedRows) }}">
+          <input type="hidden" name="ids" value="{{ implode(',', $this->getSelected()) }}">
           <button type="submit" class="btn btn-info">
             <i class="fas fa-undo"></i> {{ __('messages.redirect_links.restore_selected') }}
           </button>

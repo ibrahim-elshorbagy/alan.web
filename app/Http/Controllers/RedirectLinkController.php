@@ -449,7 +449,7 @@ class RedirectLinkController extends Controller
 
     // Position directly below QR code
     $textY = $qrY + $qrSize + 20;
-    $fontSize = 14; // Font size for URI and serial number text
+    $fontSize = 12; // Font size for URI and serial number text
 
     if ($fontPath) {
       // Normal text without outline
