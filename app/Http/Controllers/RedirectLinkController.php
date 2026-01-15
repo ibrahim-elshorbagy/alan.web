@@ -130,6 +130,38 @@ class RedirectLinkController extends Controller
     return redirect()->back();
   }
 
+  public function restoreSelected(Request $request)
+  {
+    // Only super admin can restore
+    if (!auth()->user()->hasRole('super_admin')) {
+      return redirect()->back()->with('error', 'Unauthorized');
+    }
+
+    $ids = $request->input('ids');
+
+    if (!$ids) {
+      return redirect()->back()->with('error', __('messages.redirect_links.no_items_selected'));
+    }
+
+    $idsArray = explode(',', $ids);
+
+    // Only restore redirect links that are NOT connected to user_id
+    $updated = RedirectLink::whereIn('id', $idsArray)
+      ->whereNull('user_id') // Only links not connected to users
+      ->update([
+        'assigned_id' => null,
+        'received_status' => RedirectLink::RECEIVED_STATUS_NOT_RECEIVED
+      ]);
+
+    if ($updated > 0) {
+      session()->flash('success', __('messages.redirect_links.restored_successfully') . ' (' . $updated . ' links)');
+    } else {
+      session()->flash('info', __('messages.redirect_links.no_items_to_restore'));
+    }
+
+    return redirect()->back();
+  }
+
   private function generatePackage($redirectLinks)
   {
     $timestamp = time();
@@ -417,7 +449,7 @@ class RedirectLinkController extends Controller
 
     // Position directly below QR code
     $textY = $qrY + $qrSize + 20;
-    $fontSize = 10; // Increased from 8 to 10 for slightly bigger text
+    $fontSize = 14; // Font size for URI and serial number text
 
     if ($fontPath) {
       // Normal text without outline

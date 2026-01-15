@@ -6,6 +6,17 @@
       <a type="button" class="btn btn-warning" wire:click="exportSelected">
         <i class="fas fa-file-export"></i> {{ __('messages.common.export_selected') }}
       </a>
+
+      @hasrole('super_admin')
+        <form action="{{ route('redirect-links.restore-selected') }}" method="POST" style="display: inline;"
+          onsubmit="return confirm('{{ __('messages.redirect_links.restore_confirmation') }}')">
+          @csrf
+          <input type="hidden" name="ids" value="{{ implode(',', $this->selectedRows) }}">
+          <button type="submit" class="btn btn-info">
+            <i class="fas fa-undo"></i> {{ __('messages.redirect_links.restore_selected') }}
+          </button>
+        </form>
+      @endhasrole
     @endif
 
     <a type="button" class="btn btn-success" href="{{ route('redirect-links.extract-all') }}">

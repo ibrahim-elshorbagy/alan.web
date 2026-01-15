@@ -578,6 +578,7 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('redirect-links/extract-all', [RedirectLinkController::class, 'extractAll'])->name('redirect-links.extract-all');
       Route::get('redirect-links/export-selected', [RedirectLinkController::class, 'exportSelected'])->name('redirect-links.export-selected');
       Route::post('redirect-links/mark-all-as-received', [RedirectLinkController::class, 'markAllAsReceived'])->name('redirect-links.mark-all-as-received');
+      Route::post('redirect-links/restore-selected', [RedirectLinkController::class, 'restoreSelected'])->name('redirect-links.restore-selected');
       Route::post('redirect-links', [RedirectLinkController::class, 'store'])->name('redirect-links.store');
       Route::get('redirect-links/{redirectLink}/edit', [RedirectLinkController::class, 'edit'])->name('redirect-links.edit');
       Route::put('redirect-links/{redirectLink}', [RedirectLinkController::class, 'update'])->name('redirect-links.update');
