@@ -164,7 +164,7 @@ class RedirectLinkController extends Controller
     $nfc = $redirectLinks->first()->nfc;
     $useCustomPosition = $nfc && $nfc->apply_coordinates;
 
-    // Create PDF with TCPDF
+    // Create PDF with TCPDF - use A4 and scale images to fit
     $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
     $pdf->SetCreator('NFC System');
     $pdf->SetAuthor('NFC System');
@@ -194,21 +194,36 @@ class RedirectLinkController extends Controller
           'full_link' => $fullUrl,
         ];
 
-        // Add front page with actual image dimensions
+        // Add front page
+        $pdf->AddPage();
         list($imgWidth, $imgHeight) = getimagesize($images['front']);
-        $imgWidthMm = $imgWidth * 0.264583; // Convert pixels to mm (1px = 0.264583mm)
+        $imgWidthMm = $imgWidth * 0.264583; // Convert pixels to mm
         $imgHeightMm = $imgHeight * 0.264583;
 
-        $pdf->AddPage('P', [$imgWidthMm, $imgHeightMm]);
-        $pdf->Image($images['front'], 0, 0, $imgWidthMm, $imgHeightMm, 'PNG');
+        // Scale to fit A4 (210x297mm) with margins
+        $maxWidth = 190;
+        $maxHeight = 277;
+        $scale = min($maxWidth / $imgWidthMm, $maxHeight / $imgHeightMm);
+        $newWidth = $imgWidthMm * $scale;
+        $newHeight = $imgHeightMm * $scale;
+        $x = (210 - $newWidth) / 2;
+        $y = (297 - $newHeight) / 2;
 
-        // Add back page with actual image dimensions
+        $pdf->Image($images['front'], $x, $y, $newWidth, $newHeight, 'PNG');
+
+        // Add back page
+        $pdf->AddPage();
         list($imgWidth, $imgHeight) = getimagesize($images['back']);
         $imgWidthMm = $imgWidth * 0.264583;
         $imgHeightMm = $imgHeight * 0.264583;
 
-        $pdf->AddPage('P', [$imgWidthMm, $imgHeightMm]);
-        $pdf->Image($images['back'], 0, 0, $imgWidthMm, $imgHeightMm, 'PNG');
+        $scale = min($maxWidth / $imgWidthMm, $maxHeight / $imgHeightMm);
+        $newWidth = $imgWidthMm * $scale;
+        $newHeight = $imgHeightMm * $scale;
+        $x = (210 - $newWidth) / 2;
+        $y = (297 - $newHeight) / 2;
+
+        $pdf->Image($images['back'], $x, $y, $newWidth, $newHeight, 'PNG');
       } else {
         // Use default behavior - generate QR code PNG
         $qrImage = QrCode::format('png')
@@ -413,8 +428,8 @@ class RedirectLinkController extends Controller
     }
 
     // Text content
-    $urlText = 'URL: ' . $uri;
-    $serialText = 'Serial No: ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
+    $urlText = 'URL : ' . $uri;
+    $serialText = 'Serial No : ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
 
     // Position directly below QR code
     $textY = $qrY + $qrSize + 30; // 20px margin below QR
