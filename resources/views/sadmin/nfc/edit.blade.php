@@ -49,17 +49,21 @@
 
           <div id="editCoordinatesFields" style="display: none;">
             <div class="row">
-              <div class="col-md-4 mb-3">
+              <div class="col-md-3 mb-3">
                 {{ Form::label('qr_x_position', __('messages.redirect_links.qr_x_position') . ':', ['class' => 'form-label']) }}
                 {{ Form::number('qr_x_position', null, ['class' => 'form-control', 'placeholder' => 'X', 'id' => 'editQrXPosition']) }}
               </div>
-              <div class="col-md-4 mb-3">
+              <div class="col-md-3 mb-3">
                 {{ Form::label('qr_y_position', __('messages.redirect_links.qr_y_position') . ':', ['class' => 'form-label']) }}
                 {{ Form::number('qr_y_position', null, ['class' => 'form-control', 'placeholder' => 'Y', 'id' => 'editQrYPosition']) }}
               </div>
-              <div class="col-md-4 mb-3">
+              <div class="col-md-3 mb-3">
                 {{ Form::label('qr_size', __('messages.redirect_links.qr_size') . ':', ['class' => 'form-label']) }}
                 {{ Form::number('qr_size', null, ['class' => 'form-control', 'placeholder' => '100', 'id' => 'editQrSize']) }}
+              </div>
+              <div class="col-md-3 mb-3">
+                {{ Form::label('qr_position_side', __('messages.redirect_links.qr_position_side') . ':', ['class' => 'form-label']) }}
+                {{ Form::select('qr_position_side', ['front' => __('messages.redirect_links.qr_front'), 'back' => __('messages.redirect_links.qr_back')], null, ['class' => 'form-select', 'id' => 'editQrPositionSide']) }}
               </div>
             </div>
           </div>

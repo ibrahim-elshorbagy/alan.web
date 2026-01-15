@@ -178,8 +178,8 @@ class RedirectLinkController extends Controller
       $fullUrl = url('/auto-' . $link->uri);
 
       if ($useCustomPosition) {
-        // Use custom positioning on NFC card image
-        $finalImagePath = $this->generateQROnNfcImage(
+        // Generate both front and back images with QR on selected side
+        $images = $this->generateBothImagesWithQR(
           $link,
           $fullUrl,
           $nfc,
@@ -194,9 +194,21 @@ class RedirectLinkController extends Controller
           'full_link' => $fullUrl,
         ];
 
-        // Add page to PDF with custom positioned QR on NFC image
-        $pdf->AddPage();
-        $pdf->Image($finalImagePath, 0, 0, 210, 297, '', '', '', false, 300, '', false, false, 0);
+        // Add front page with actual image dimensions
+        list($imgWidth, $imgHeight) = getimagesize($images['front']);
+        $imgWidthMm = $imgWidth * 0.264583; // Convert pixels to mm (1px = 0.264583mm)
+        $imgHeightMm = $imgHeight * 0.264583;
+
+        $pdf->AddPage('P', [$imgWidthMm, $imgHeightMm]);
+        $pdf->Image($images['front'], 0, 0, $imgWidthMm, $imgHeightMm, 'PNG');
+
+        // Add back page with actual image dimensions
+        list($imgWidth, $imgHeight) = getimagesize($images['back']);
+        $imgWidthMm = $imgWidth * 0.264583;
+        $imgHeightMm = $imgHeight * 0.264583;
+
+        $pdf->AddPage('P', [$imgWidthMm, $imgHeightMm]);
+        $pdf->Image($images['back'], 0, 0, $imgWidthMm, $imgHeightMm, 'PNG');
       } else {
         // Use default behavior - generate QR code PNG
         $qrImage = QrCode::format('png')
@@ -257,13 +269,19 @@ class RedirectLinkController extends Controller
     if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
       foreach ($redirectLinks as $link) {
         if ($useCustomPosition) {
-          $imagePath = $tempDirectory . '/' . $link->uri . '_final.png';
+          $frontPath = $tempDirectory . '/' . $link->uri . '_front.png';
+          $backPath = $tempDirectory . '/' . $link->uri . '_back.png';
+          if (file_exists($frontPath)) {
+            $zip->addFile($frontPath, 'images/' . $link->uri . '_front.png');
+          }
+          if (file_exists($backPath)) {
+            $zip->addFile($backPath, 'images/' . $link->uri . '_back.png');
+          }
         } else {
           $imagePath = $tempDirectory . '/' . $link->uri . '.png';
-        }
-
-        if (file_exists($imagePath)) {
-          $zip->addFile($imagePath, 'qr_codes/' . basename($imagePath));
+          if (file_exists($imagePath)) {
+            $zip->addFile($imagePath, 'qr_codes/' . basename($imagePath));
+          }
         }
       }
 
@@ -292,10 +310,10 @@ class RedirectLinkController extends Controller
       ->header('Content-Length', strlen($zipContent));
   }
 
-  private function generateQROnNfcImage($link, $fullUrl, $nfc, $qrcodeColor, $customQrCode, $tempDirectory)
+  private function generateBothImagesWithQR($link, $fullUrl, $nfc, $qrcodeColor, $customQrCode, $tempDirectory)
   {
-    // Get NFC front image
-    $nfcImageUrl = $nfc->nfc_image;
+    // Determine which side gets the QR code
+    $qrSide = $nfc->qr_position_side ?? 'front';
 
     // Generate QR code image
     $qrSize = $nfc->qr_size ?? 400;
@@ -319,34 +337,99 @@ class RedirectLinkController extends Controller
     // Save QR code temporarily
     $qrPath = $tempDirectory . '/' . $link->uri . '_qr.png';
     file_put_contents($qrPath, $qrImage);
-
-    // Load NFC background image
-    $nfcImageContent = file_get_contents($nfcImageUrl);
-    $nfcImage = imagecreatefromstring($nfcImageContent);
-
-    // Load QR code image
     $qrImageGd = imagecreatefrompng($qrPath);
-
-    // Get positions from NFC settings
-    $xPos = $nfc->qr_x_position ?? 0;
-    $yPos = $nfc->qr_y_position ?? 0;
 
     // Get QR dimensions
     $qrWidth = imagesx($qrImageGd);
     $qrHeight = imagesy($qrImageGd);
 
-    // Overlay QR code on NFC image at specified position
-    imagecopy($nfcImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+    // Get positions from NFC settings
+    $xPos = $nfc->qr_x_position ?? 0;
+    $yPos = $nfc->qr_y_position ?? 0;
 
-    // Save final image
-    $finalPath = $tempDirectory . '/' . $link->uri . '_final.png';
-    imagepng($nfcImage, $finalPath);
+    // Process Front Image
+    $frontImageUrl = $nfc->nfc_image;
+    $frontImageContent = file_get_contents($frontImageUrl);
+    $frontImage = imagecreatefromstring($frontImageContent);
 
-    // Clean up
-    imagedestroy($nfcImage);
+    if ($qrSide === 'front') {
+      // Add QR code to front
+      imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+    }
+
+    // Add text overlays to front
+    $this->addTextOverlays($frontImage, $fullUrl, $link->id);
+
+    // Save front image
+    $frontPath = $tempDirectory . '/' . $link->uri . '_front.png';
+    imagepng($frontImage, $frontPath);
+    imagedestroy($frontImage);
+
+    // Process Back Image
+    $backImageUrl = $nfc->nfc_back_image;
+    $backImageContent = file_get_contents($backImageUrl);
+    $backImage = imagecreatefromstring($backImageContent);
+
+    if ($qrSide === 'back') {
+      // Add QR code to back
+      imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+    }
+
+    // Add text overlays to back
+    $this->addTextOverlays($backImage, $fullUrl, $link->id);
+
+    // Save back image
+    $backPath = $tempDirectory . '/' . $link->uri . '_back.png';
+    imagepng($backImage, $backPath);
+    imagedestroy($backImage);
+
+    // Clean up QR image
     imagedestroy($qrImageGd);
 
-    return $finalPath;
+    return [
+      'front' => $frontPath,
+      'back' => $backPath
+    ];
+  }
+
+  private function addTextOverlays($image, $fullUrl, $linkId)
+  {
+    // Get image dimensions
+    $width = imagesx($image);
+    $height = imagesy($image);
+
+    // Set colors
+    $black = imagecolorallocate($image, 0, 0, 0);
+    $white = imagecolorallocate($image, 255, 255, 255);
+
+    // Font paths - use system fonts or default
+    $fontPath = public_path('fonts/Zain-Regular.ttf');
+    if (!file_exists($fontPath)) {
+      $fontPath = null; // Will use default font
+    }
+
+    // Text content
+    $serialText = 'Serial: ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
+    $urlText = 'URL: ' . $fullUrl;
+
+    // Position at bottom of image
+    $textY = $height - 80;
+    $fontSize = 24;
+
+    if ($fontPath) {
+      // Add white outline for better visibility
+      imagettftext($image, $fontSize, 0, 22, $textY + 2, $white, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, 18, $textY - 2, $white, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, 20, $textY, $black, $fontPath, $serialText);
+
+      imagettftext($image, $fontSize - 4, 0, 22, $textY + 42, $white, $fontPath, $urlText);
+      imagettftext($image, $fontSize - 4, 0, 18, $textY + 38, $white, $fontPath, $urlText);
+      imagettftext($image, $fontSize - 4, 0, 20, $textY + 40, $black, $fontPath, $urlText);
+    } else {
+      // Fallback to default font
+      imagestring($image, 5, 20, $textY, $serialText, $black);
+      imagestring($image, 4, 20, $textY + 40, $urlText, $black);
+    }
   }
 
 

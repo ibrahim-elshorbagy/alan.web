@@ -2356,7 +2356,10 @@ return [
     'qr_x_position' => 'QR X Position',
     'qr_y_position' => 'QR Y Position',
     'qr_size' => 'QR Code Size',
+    'qr_position_side' => 'QR Position Side',
     'qr_position_hint' => 'Enable to customize QR code position on NFC card image',
+    'qr_front' => 'Front',
+    'qr_back' => 'Back',
     'types' => [
       'website' => 'Website',
       'facebook' => 'Facebook',

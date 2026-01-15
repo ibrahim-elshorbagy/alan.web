@@ -40,7 +40,7 @@ class nfcRepository extends BaseRepository
     try {
       DB::beginTransaction();
 
-      $inputArray = Arr::only($input, ['name', 'description', 'price', 'apply_coordinates', 'qr_x_position', 'qr_y_position', 'qr_size']);
+$inputArray = Arr::only($input, ['name', 'description', 'price', 'apply_coordinates', 'qr_x_position', 'qr_y_position', 'qr_size', 'qr_position_side']);
       $nfc = Nfc::create($inputArray);
 
       if (isset($input['nfc_img']) && !empty($input['nfc_img'])) {
@@ -66,7 +66,7 @@ class nfcRepository extends BaseRepository
     try {
       DB::beginTransaction();
 
-      $inputArray = Arr::only($input, ['name', 'description', 'price', 'apply_coordinates', 'qr_x_position', 'qr_y_position', 'qr_size']);
+        $inputArray = Arr::only($input, ['name', 'description', 'price', 'apply_coordinates', 'qr_x_position', 'qr_y_position', 'qr_size', 'qr_position_side']);
 
       $nfc = Nfc::findOrFail($id);
       $nfc->update($inputArray);

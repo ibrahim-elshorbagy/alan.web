@@ -2352,7 +2352,10 @@ return [
     'qr_x_position' => 'موضع X للـ QR',
     'qr_y_position' => 'موضع Y للـ QR',
     'qr_size' => 'حجم رمز QR',
+    'qr_position_side' => 'جانب موضع QR',
     'qr_position_hint' => 'قم بالتفعيل لتخصيص موضع رمز QR على صورة بطاقة NFC',
+    'qr_front' => 'الواجهة',
+    'qr_back' => 'الخلفية',
     'types' => [
       'website' => 'موقع إلكتروني',
       'facebook' => 'فيسبوك',

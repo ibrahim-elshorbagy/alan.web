@@ -30,6 +30,8 @@ class Nfc extends Model implements HasMedia
     'qr_x_position' => 'nullable|integer',
     'qr_y_position' => 'nullable|integer',
     'qr_size' => 'nullable|integer',
+    'qr_position_side' => 'nullable|string|in:front,back',
+
   ];
 
   protected $appends = ['nfc_image', 'nfc_back_image'];
@@ -67,6 +69,7 @@ class Nfc extends Model implements HasMedia
     'qr_x_position',
     'qr_y_position',
     'qr_size',
+    'qr_position_side',
   ];
 
 

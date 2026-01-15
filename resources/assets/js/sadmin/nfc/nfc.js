@@ -92,6 +92,7 @@ function nfcRenderDataShow(id) {
                 $("#editQrXPosition").val(result.data.qr_x_position);
                 $("#editQrYPosition").val(result.data.qr_y_position);
                 $("#editQrSize").val(result.data.qr_size);
+                $("#editQrPositionSide").val(result.data.qr_position_side || 'front');
 
                 // Toggle coordinate fields visibility
                 toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");
