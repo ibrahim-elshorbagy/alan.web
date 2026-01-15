@@ -417,17 +417,12 @@ class RedirectLinkController extends Controller
     $serialText = 'Serial No: ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
 
     // Position directly below QR code
-    $textY = $qrY + $qrSize + 10; // 10px margin below QR
+    $textY = $qrY + $qrSize + 30; // 20px margin below QR
     $fontSize = 8;
 
     if ($fontPath) {
-      // Add white outline for better visibility
-      imagettftext($image, $fontSize, 0, $qrX + 2, $textY + 2, $white, $fontPath, $urlText);
-      imagettftext($image, $fontSize, 0, $qrX - 2, $textY - 2, $white, $fontPath, $urlText);
+      // Normal text without outline
       imagettftext($image, $fontSize, 0, $qrX, $textY, $black, $fontPath, $urlText);
-
-      imagettftext($image, $fontSize, 0, $qrX + 2, $textY + 22, $white, $fontPath, $serialText);
-      imagettftext($image, $fontSize, 0, $qrX - 2, $textY + 18, $white, $fontPath, $serialText);
       imagettftext($image, $fontSize, 0, $qrX, $textY + 20, $black, $fontPath, $serialText);
     } else {
       // Fallback to default font
