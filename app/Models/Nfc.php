@@ -33,6 +33,11 @@ class Nfc extends Model implements HasMedia
     'qr_position_side' => 'nullable|string|in:front,back',
     'image_width' => 'nullable|numeric',
     'image_height' => 'nullable|numeric',
+    'print_format' => 'nullable|string|in:fixed,a5',
+    'print_front_image' => 'boolean',
+    'print_back_image' => 'boolean',
+    'print_only_qr' => 'boolean',
+    'text_font_size' => 'nullable|integer|min:8|max:72',
 
   ];
 
@@ -74,6 +79,11 @@ class Nfc extends Model implements HasMedia
     'qr_position_side',
     'image_width',
     'image_height',
+    'print_format',
+    'print_front_image',
+    'print_back_image',
+    'print_only_qr',
+    'text_font_size',
   ];
 
 

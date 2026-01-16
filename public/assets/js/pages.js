@@ -48278,6 +48278,13 @@ function nfcRenderDataShow(id) {
         $("#editImageWidth").val(result.data.image_width);
         $("#editImageHeight").val(result.data.image_height);
 
+        // Set print settings
+        $("#editPrintFormat").val(result.data.print_format || 'fixed');
+        $("#editTextFontSize").val(result.data.text_font_size || 14);
+        $("#editPrintFrontImage").prop("checked", result.data.print_front_image == 1);
+        $("#editPrintBackImage").prop("checked", result.data.print_back_image == 1);
+        $("#editPrintOnlyQr").prop("checked", result.data.print_only_qr == 1);
+
         // Toggle coordinate fields visibility
         toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");
         $("#editNfcPreview").css("background-image", 'url("' + result.data.nfc_image + '")');

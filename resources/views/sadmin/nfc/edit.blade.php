@@ -81,6 +81,42 @@
             </div>
           </div>
 
+          <div class="mb-3">
+            <h5 class="mb-3">Print Settings</h5>
+            
+            <div class="row mb-3">
+              <div class="col-md-6">
+                {{ Form::label('print_format', 'Print Format:', ['class' => 'form-label']) }}
+                {{ Form::select('print_format', ['fixed' => 'Fixed Width/Height', 'a5' => 'A5 Format'], null, ['class' => 'form-select', 'id' => 'editPrintFormat']) }}
+              </div>
+              <div class="col-md-6">
+                {{ Form::label('text_font_size', 'Text Font Size:', ['class' => 'form-label']) }}
+                {{ Form::number('text_font_size', null, ['class' => 'form-control', 'id' => 'editTextFontSize', 'min' => '8', 'max' => '72']) }}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <div class="form-check">
+                  {{ Form::checkbox('print_front_image', 1, null, ['class' => 'form-check-input', 'id' => 'editPrintFrontImage']) }}
+                  {{ Form::label('editPrintFrontImage', 'Print Front Image', ['class' => 'form-check-label']) }}
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="form-check">
+                  {{ Form::checkbox('print_back_image', 1, null, ['class' => 'form-check-input', 'id' => 'editPrintBackImage']) }}
+                  {{ Form::label('editPrintBackImage', 'Print Back Image', ['class' => 'form-check-label']) }}
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <div class="form-check">
+                  {{ Form::checkbox('print_only_qr', 1, null, ['class' => 'form-check-input', 'id' => 'editPrintOnlyQr']) }}
+                  {{ Form::label('editPrintOnlyQr', 'Print Only QR Code', ['class' => 'form-check-label']) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="col-sm-12 mb-3 d-flex">
             <div class="mb-3" io-image-input="true">
               <label for="NfcImgId" class="form-label required">{{ __('messages.nfc.nfc_image') . ' : ' }}

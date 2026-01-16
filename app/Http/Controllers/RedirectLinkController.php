@@ -196,8 +196,16 @@ class RedirectLinkController extends Controller
     $nfc = $redirectLinks->first()->nfc;
     $useCustomPosition = $nfc && $nfc->apply_coordinates;
 
-    // Create PDF with TCPDF - use A4 and scale images to fit
-    $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
+    // Get print settings from NFC
+    $printFormat = $nfc->print_format ?? 'fixed';
+    $printFrontImage = $nfc->print_front_image ?? true;
+    $printBackImage = $nfc->print_back_image ?? true;
+    $printOnlyQr = $nfc->print_only_qr ?? false;
+    $textFontSize = $nfc->text_font_size ?? 14;
+
+    // Create PDF with TCPDF
+    $pageFormat = $printFormat === 'a5' ? 'A5' : 'A4';
+    $pdf = new TCPDF('P', 'mm', $pageFormat, true, 'UTF-8', false);
     $pdf->SetCreator('NFC System');
     $pdf->SetAuthor('NFC System');
     $pdf->SetTitle('QR Codes');
@@ -206,78 +214,278 @@ class RedirectLinkController extends Controller
     $pdf->SetMargins(0, 0, 0);
     $pdf->SetAutoPageBreak(false);
 
-    foreach ($redirectLinks as $link) {
-      $fullUrl = url('/auto-' . $link->uri);
+    // A5 dimensions: 148mm x 210mm
+    $a5Width = 148;
+    $a5Height = 210;
 
-      if ($useCustomPosition) {
-        // Generate both front and back images with QR on selected side
-        $images = $this->generateBothImagesWithQR(
-          $link,
-          $fullUrl,
-          $nfc,
-          $qrcodeColor,
-          $customQrCode,
-          $tempDirectory
-        );
+    if ($printFormat === 'a5') {
+      // A5 Format handling
+      if ($printFrontImage && $printBackImage) {
+        // Front and back on same page - one card per page
+        foreach ($redirectLinks as $link) {
+          $fullUrl = url('/auto-' . $link->uri);
 
-        $excelData[] = [
-          'id' => $link->id,
-          'uri' => $link->uri,
-          'full_link' => $fullUrl,
-        ];
+          if ($useCustomPosition) {
+            $images = $this->generateBothImagesWithQR(
+              $link,
+              $fullUrl,
+              $nfc,
+              $qrcodeColor,
+              $customQrCode,
+              $tempDirectory
+            );
 
-        // Add single page with both front and back images vertically
-        $pdf->AddPage();
+            $excelData[] = [
+              'id' => $link->id,
+              'uri' => $link->uri,
+              'full_link' => $fullUrl,
+            ];
 
-        // Use exact dimensions from NFC settings (in mm)
-        $imageWidthMm = $nfc->image_width ?? 85; // Default 85mm if not set
-        $imageHeightMm = $nfc->image_height ?? 54; // Default 54mm if not set
+            $pdf->AddPage();
 
-        // Position images vertically centered
-        $x = (210 - $imageWidthMm) / 2; // Center horizontally on A4 (210mm width)
-        $frontY = 20; // Top margin
-        $backY = $frontY + $imageHeightMm + 10; // 10mm spacing between images
+            // Front image on top half, back image on bottom half
+            $imageWidthMm = $nfc->image_width ?? 85;
+            $imageHeightMm = $nfc->image_height ?? 54;
 
-        $pdf->Image($images['front'], $x, $frontY, $imageWidthMm, $imageHeightMm, 'PNG');
-        $pdf->Image($images['back'], $x, $backY, $imageWidthMm, $imageHeightMm, 'PNG');
-      } else {
-        // Use default behavior - generate QR code PNG
-        $qrImage = QrCode::format('png')
-          ->size(400)
-          ->color(
-            $qrcodeColor['qrcodeColor']->red(),
-            $qrcodeColor['qrcodeColor']->green(),
-            $qrcodeColor['qrcodeColor']->blue()
-          )
-          ->backgroundColor(
-            $qrcodeColor['background_color']->red(),
-            $qrcodeColor['background_color']->green(),
-            $qrcodeColor['background_color']->blue()
-          )
-          ->style($customQrCode['style'])
-          ->eye($customQrCode['eye_style'])
-          ->errorCorrection('H')
-          ->generate($fullUrl);
+            $x = ($a5Width - $imageWidthMm) / 2; // Center horizontally
+            $frontY = 10; // Top section
+            $backY = $a5Height / 2 + 5; // Bottom section
 
-        $pngPath = $tempDirectory . '/' . $link->uri . '.png';
-        file_put_contents($pngPath, $qrImage);
+            $pdf->Image($images['front'], $x, $frontY, $imageWidthMm, $imageHeightMm, 'PNG');
+            $pdf->Image($images['back'], $x, $backY, $imageWidthMm, $imageHeightMm, 'PNG');
+          }
+        }
+      } elseif ($printFrontImage) {
+        // Only front images - 2 images per page
+        $linkIndex = 0;
+        $totalLinks = count($redirectLinks);
 
-        $excelData[] = [
-          'id' => $link->id,
-          'uri' => $link->uri,
-          'full_link' => $fullUrl,
-        ];
+        while ($linkIndex < $totalLinks) {
+          $pdf->AddPage();
 
-        // Add page to PDF
-        $pdf->AddPage();
+          // First card on top
+          if ($linkIndex < $totalLinks) {
+            $link = $redirectLinks[$linkIndex];
+            $fullUrl = url('/auto-' . $link->uri);
 
-        // Add QR image (centered: x=55mm, y=50mm, width=100mm, height=100mm)
-        $pdf->Image($pngPath, 55, 50, 100, 100, 'PNG');
+            if ($useCustomPosition) {
+              $images = $this->generateBothImagesWithQR(
+                $link,
+                $fullUrl,
+                $nfc,
+                $qrcodeColor,
+                $customQrCode,
+                $tempDirectory
+              );
 
-        // Add URI text below image
-        $pdf->SetFont('helvetica', 'B', 36);
-        $pdf->SetXY(0, 170);
-        $pdf->Cell(210, 10, $link->uri, 0, 0, 'C');
+              $excelData[] = [
+                'id' => $link->id,
+                'uri' => $link->uri,
+                'full_link' => $fullUrl,
+              ];
+
+              $imageWidthMm = $nfc->image_width ?? 85;
+              $imageHeightMm = $nfc->image_height ?? 54;
+
+              $x = ($a5Width - $imageWidthMm) / 2;
+              $y = 10; // Top position
+
+              $pdf->Image($images['front'], $x, $y, $imageWidthMm, $imageHeightMm, 'PNG');
+            }
+            $linkIndex++;
+          }
+
+          // Second card on bottom
+          if ($linkIndex < $totalLinks) {
+            $link = $redirectLinks[$linkIndex];
+            $fullUrl = url('/auto-' . $link->uri);
+
+            if ($useCustomPosition) {
+              $images = $this->generateBothImagesWithQR(
+                $link,
+                $fullUrl,
+                $nfc,
+                $qrcodeColor,
+                $customQrCode,
+                $tempDirectory
+              );
+
+              $excelData[] = [
+                'id' => $link->id,
+                'uri' => $link->uri,
+                'full_link' => $fullUrl,
+              ];
+
+              $imageWidthMm = $nfc->image_width ?? 85;
+              $imageHeightMm = $nfc->image_height ?? 54;
+
+              $x = ($a5Width - $imageWidthMm) / 2;
+              $y = $a5Height / 2 + 5; // Bottom position
+
+              $pdf->Image($images['front'], $x, $y, $imageWidthMm, $imageHeightMm, 'PNG');
+            }
+            $linkIndex++;
+          }
+        }
+      } elseif ($printBackImage) {
+        // Only back images - 2 images per page
+        $linkIndex = 0;
+        $totalLinks = count($redirectLinks);
+
+        while ($linkIndex < $totalLinks) {
+          $pdf->AddPage();
+
+          // First card on top
+          if ($linkIndex < $totalLinks) {
+            $link = $redirectLinks[$linkIndex];
+            $fullUrl = url('/auto-' . $link->uri);
+
+            if ($useCustomPosition) {
+              $images = $this->generateBothImagesWithQR(
+                $link,
+                $fullUrl,
+                $nfc,
+                $qrcodeColor,
+                $customQrCode,
+                $tempDirectory
+              );
+
+              $excelData[] = [
+                'id' => $link->id,
+                'uri' => $link->uri,
+                'full_link' => $fullUrl,
+              ];
+
+              $imageWidthMm = $nfc->image_width ?? 85;
+              $imageHeightMm = $nfc->image_height ?? 54;
+
+              $x = ($a5Width - $imageWidthMm) / 2;
+              $y = 10; // Top position
+
+              $pdf->Image($images['back'], $x, $y, $imageWidthMm, $imageHeightMm, 'PNG');
+            }
+            $linkIndex++;
+          }
+
+          // Second card on bottom
+          if ($linkIndex < $totalLinks) {
+            $link = $redirectLinks[$linkIndex];
+            $fullUrl = url('/auto-' . $link->uri);
+
+            if ($useCustomPosition) {
+              $images = $this->generateBothImagesWithQR(
+                $link,
+                $fullUrl,
+                $nfc,
+                $qrcodeColor,
+                $customQrCode,
+                $tempDirectory
+              );
+
+              $excelData[] = [
+                'id' => $link->id,
+                'uri' => $link->uri,
+                'full_link' => $fullUrl,
+              ];
+
+              $imageWidthMm = $nfc->image_width ?? 85;
+              $imageHeightMm = $nfc->image_height ?? 54;
+
+              $x = ($a5Width - $imageWidthMm) / 2;
+              $y = $a5Height / 2 + 5; // Bottom position
+
+              $pdf->Image($images['back'], $x, $y, $imageWidthMm, $imageHeightMm, 'PNG');
+            }
+            $linkIndex++;
+          }
+        }
+      }
+    } else {
+      // Fixed Width/Height Format (original behavior)
+      foreach ($redirectLinks as $link) {
+        $fullUrl = url('/auto-' . $link->uri);
+
+        if ($useCustomPosition) {
+          // Generate both front and back images with QR on selected side
+          $images = $this->generateBothImagesWithQR(
+            $link,
+            $fullUrl,
+            $nfc,
+            $qrcodeColor,
+            $customQrCode,
+            $tempDirectory
+          );
+
+          $excelData[] = [
+            'id' => $link->id,
+            'uri' => $link->uri,
+            'full_link' => $fullUrl,
+          ];
+
+          $pdf->AddPage();
+
+          // Use exact dimensions from NFC settings (in mm)
+          $imageWidthMm = $nfc->image_width ?? 85;
+          $imageHeightMm = $nfc->image_height ?? 54;
+
+          // Position based on print options
+          $x = (210 - $imageWidthMm) / 2;
+
+          if ($printFrontImage && $printBackImage) {
+            // Both images vertically
+            $frontY = 20;
+            $backY = $frontY + $imageHeightMm + 10;
+
+            $pdf->Image($images['front'], $x, $frontY, $imageWidthMm, $imageHeightMm, 'PNG');
+            $pdf->Image($images['back'], $x, $backY, $imageWidthMm, $imageHeightMm, 'PNG');
+          } elseif ($printFrontImage) {
+            // Only front
+            $y = (297 - $imageHeightMm) / 2;
+            $pdf->Image($images['front'], $x, $y, $imageWidthMm, $imageHeightMm, 'PNG');
+          } elseif ($printBackImage) {
+            // Only back
+            $y = (297 - $imageHeightMm) / 2;
+            $pdf->Image($images['back'], $x, $y, $imageWidthMm, $imageHeightMm, 'PNG');
+          }
+        } else {
+          // Use default behavior - generate QR code PNG
+          $qrImage = QrCode::format('png')
+            ->size(400)
+            ->color(
+              $qrcodeColor['qrcodeColor']->red(),
+              $qrcodeColor['qrcodeColor']->green(),
+              $qrcodeColor['qrcodeColor']->blue()
+            )
+            ->backgroundColor(
+              $qrcodeColor['background_color']->red(),
+              $qrcodeColor['background_color']->green(),
+              $qrcodeColor['background_color']->blue()
+            )
+            ->style($customQrCode['style'])
+            ->eye($customQrCode['eye_style'])
+            ->errorCorrection('H')
+            ->generate($fullUrl);
+
+          $pngPath = $tempDirectory . '/' . $link->uri . '.png';
+          file_put_contents($pngPath, $qrImage);
+
+          $excelData[] = [
+            'id' => $link->id,
+            'uri' => $link->uri,
+            'full_link' => $fullUrl,
+          ];
+
+          // Add page to PDF
+          $pdf->AddPage();
+
+          // Add QR image (centered)
+          $pdf->Image($pngPath, 55, 50, 100, 100, 'PNG');
+
+          // Add URI text below image
+          $pdf->SetFont('helvetica', 'B', $textFontSize);
+          $pdf->SetXY(0, 170);
+          $pdf->Cell(210, 10, $link->uri, 0, 0, 'C');
+        }
       }
     }
 
@@ -390,7 +598,7 @@ class RedirectLinkController extends Controller
 
     // Add text overlays to front if QR is on front and coordinates applied
     if ($qrSide === 'front' && $nfc->apply_coordinates) {
-      $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize);
+      $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
     }
 
     // Save front image
@@ -410,7 +618,7 @@ class RedirectLinkController extends Controller
 
     // Add text overlays to back if QR is on back and coordinates applied
     if ($qrSide === 'back' && $nfc->apply_coordinates) {
-      $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize);
+      $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
     }
 
     // Save back image
@@ -427,7 +635,7 @@ class RedirectLinkController extends Controller
     ];
   }
 
-  private function addTextOverlays($image, $uri, $linkId, $qrX, $qrY, $qrSize)
+  private function addTextOverlays($image, $uri, $linkId, $qrX, $qrY, $qrSize, $nfc)
   {
     // Get image dimensions
     $width = imagesx($image);
@@ -449,7 +657,7 @@ class RedirectLinkController extends Controller
 
     // Position directly below QR code
     $textY = $qrY + $qrSize + 20;
-    $fontSize = 12; // Font size for URI and serial number text
+    $fontSize = $nfc->text_font_size ?? 14; // Get font size from NFC settings
 
     if ($fontPath) {
       // Normal text without outline
