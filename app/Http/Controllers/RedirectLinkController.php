@@ -173,6 +173,11 @@ class RedirectLinkController extends Controller
 
     $excelData = [];
 
+    // Convert array to collection if needed
+    if (is_array($redirectLinks)) {
+      $redirectLinks = collect($redirectLinks);
+    }
+
     $customQrCode = QrcodeEdit::withoutGlobalScopes()
       ->whereNull('tenant_id')
       ->where('is_global', true)
