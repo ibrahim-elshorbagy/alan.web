@@ -48196,6 +48196,7 @@ listenClick("#newNfc", function () {
   $("#addNfcModal").modal("show");
   resetModalForm("#addNfcForm");
   toggleCoordinateFields("#applyCoordinates", "#coordinatesFields");
+  toggleDimensionFields("#printFormat", "#dimensionFields");
 });
 listenHiddenBsModal("#addNfcModal", function () {
   resetModalForm("#addNfcForm");
@@ -48208,11 +48209,26 @@ listen("change", "#applyCoordinates", function () {
 listen("change", "#editApplyCoordinates", function () {
   toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");
 });
+
+// Toggle dimension fields when print format is changed
+listen("change", "#printFormat", function () {
+  toggleDimensionFields("#printFormat", "#dimensionFields");
+});
+listen("change", "#editPrintFormat", function () {
+  toggleDimensionFields("#editPrintFormat", "#editDimensionFields");
+});
 function toggleCoordinateFields(checkboxId, fieldsId) {
   if ($(checkboxId).is(":checked")) {
     $(fieldsId).show();
   } else {
     $(fieldsId).hide();
+  }
+}
+function toggleDimensionFields(selectId, fieldsId) {
+  if ($(selectId).val() === "a5") {
+    $(fieldsId).hide();
+  } else {
+    $(fieldsId).show();
   }
 }
 listenSubmit("#addNfcForm", function (e) {
@@ -48287,6 +48303,9 @@ function nfcRenderDataShow(id) {
 
         // Toggle coordinate fields visibility
         toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");
+
+        // Toggle dimension fields visibility
+        toggleDimensionFields("#editPrintFormat", "#editDimensionFields");
         $("#editNfcPreview").css("background-image", 'url("' + result.data.nfc_image + '")');
         $("#editNfcBackPreview").css("background-image", 'url("' + result.data.nfc_back_image + '")');
         $("<img>").attr("src", result.data.nfc_image).on("error", function () {

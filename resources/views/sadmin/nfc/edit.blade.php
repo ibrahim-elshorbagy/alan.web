@@ -70,7 +70,7 @@
             </div>
           </div>
 
-          <div class="row">
+          <div class="row" id="editDimensionFields">
             <div class="col-md-6 mb-3">
               {{ Form::label('image_width', 'Image Width (mm):', ['class' => 'form-label']) }}
               {{ Form::number('image_width', null, ['class' => 'form-control', 'placeholder' => 'Width in mm', 'id' => 'editImageWidth', 'step' => '0.01']) }}
@@ -83,7 +83,7 @@
 
           <div class="mb-3">
             <h5 class="mb-3">Print Settings</h5>
-            
+
             <div class="row mb-3">
               <div class="col-md-6">
                 {{ Form::label('print_format', 'Print Format:', ['class' => 'form-label']) }}
@@ -98,18 +98,21 @@
             <div class="row">
               <div class="col-md-4 mb-3">
                 <div class="form-check">
+                  {{ Form::hidden('print_front_image', 0) }}
                   {{ Form::checkbox('print_front_image', 1, null, ['class' => 'form-check-input', 'id' => 'editPrintFrontImage']) }}
                   {{ Form::label('editPrintFrontImage', 'Print Front Image', ['class' => 'form-check-label']) }}
                 </div>
               </div>
               <div class="col-md-4 mb-3">
                 <div class="form-check">
+                  {{ Form::hidden('print_back_image', 0) }}
                   {{ Form::checkbox('print_back_image', 1, null, ['class' => 'form-check-input', 'id' => 'editPrintBackImage']) }}
                   {{ Form::label('editPrintBackImage', 'Print Back Image', ['class' => 'form-check-label']) }}
                 </div>
               </div>
               <div class="col-md-4 mb-3">
                 <div class="form-check">
+                  {{ Form::hidden('print_only_qr', 0) }}
                   {{ Form::checkbox('print_only_qr', 1, null, ['class' => 'form-check-input', 'id' => 'editPrintOnlyQr']) }}
                   {{ Form::label('editPrintOnlyQr', 'Print Only QR Code', ['class' => 'form-check-label']) }}
                 </div>

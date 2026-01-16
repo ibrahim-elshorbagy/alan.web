@@ -11,6 +11,7 @@ listenClick("#newNfc", function () {
     $("#addNfcModal").modal("show");
     resetModalForm("#addNfcForm");
     toggleCoordinateFields("#applyCoordinates", "#coordinatesFields");
+    toggleDimensionFields("#printFormat", "#dimensionFields");
 });
 
 listenHiddenBsModal("#addNfcModal", function () {
@@ -26,11 +27,28 @@ listen("change", "#editApplyCoordinates", function () {
     toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");
 });
 
+// Toggle dimension fields when print format is changed
+listen("change", "#printFormat", function () {
+    toggleDimensionFields("#printFormat", "#dimensionFields");
+});
+
+listen("change", "#editPrintFormat", function () {
+    toggleDimensionFields("#editPrintFormat", "#editDimensionFields");
+});
+
 function toggleCoordinateFields(checkboxId, fieldsId) {
     if ($(checkboxId).is(":checked")) {
         $(fieldsId).show();
     } else {
         $(fieldsId).hide();
+    }
+}
+
+function toggleDimensionFields(selectId, fieldsId) {
+    if ($(selectId).val() === "a5") {
+        $(fieldsId).hide();
+    } else {
+        $(fieldsId).show();
     }
 }
 
@@ -93,7 +111,7 @@ function nfcRenderDataShow(id) {
                 $("#editQrYPosition").val(result.data.qr_y_position);
                 $("#editQrSize").val(result.data.qr_size);
                 $("#editQrPositionSide").val(result.data.qr_position_side || 'front');
-                
+
                 // Set image dimensions
                 $("#editImageWidth").val(result.data.image_width);
                 $("#editImageHeight").val(result.data.image_height);
@@ -107,6 +125,9 @@ function nfcRenderDataShow(id) {
 
                 // Toggle coordinate fields visibility
                 toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");
+
+                // Toggle dimension fields visibility
+                toggleDimensionFields("#editPrintFormat", "#editDimensionFields");
 
                 $("#editNfcPreview").css(
                     "background-image",
