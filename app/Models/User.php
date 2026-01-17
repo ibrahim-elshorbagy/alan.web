@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\PhoneVerification;
 use App\Models\Traits\StorageLimit;
 use App\Traits\Multitenantable;
 use Barryvdh\LaravelIdeHelper\Eloquent;
@@ -408,6 +409,22 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     return DB::table('users')->where('id', $this->id)
       ->update(['email_verified_at' => \Carbon\Carbon::now()]);
   }
+
+  public function hasVerifiedEmail()
+  {
+    if (!is_null($this->email_verified_at)) {
+      return true;
+    }
+
+    // Check if phone is verified
+    if ($this->contact) {
+      $normalizedPhone = normalizePhoneNumber($this->contact);
+      return PhoneVerification::where('phone', $normalizedPhone)->where('verified', 1)->exists();
+    }
+
+    return false;
+  }
+
   public function products()
   {
     return $this->hasMany(Product::class);
