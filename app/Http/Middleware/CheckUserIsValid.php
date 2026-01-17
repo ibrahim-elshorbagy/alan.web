@@ -17,11 +17,11 @@ class CheckUserIsValid
         }
 
         $user = getLogInUser();
-        if (Auth::check() && (! $user->is_active || ! isset($user->email_verified_at))) {
+        if (Auth::check() && (! $user->is_active || ! $user->hasVerifiedEmail())) {
             $isActive = $user->is_active;
             Auth::logout();
 
-            return redirect(route('login'))->withErrors(! $isActive ? 'Your account is not active. Please contact to administrator.' : 'Your email is not verified.');
+            return redirect(route('login'))->withErrors(! $isActive ? 'Your account is not active. Please contact to administrator.' : 'Your account is not verified.');
         }
 
         return $response;
