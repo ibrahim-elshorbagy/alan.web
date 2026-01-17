@@ -208,8 +208,8 @@ class RedirectLinkController extends Controller
     $printOnlyQr = $nfc->print_only_qr ?? false;
     $textFontSize = $nfc->text_font_size ?? 14;
 
-    // Create PDF with TCPDF
-    $pageFormat = $printFormat === 'a5' ? 'A5' : 'A4';
+    // Create PDF with TCPDF - Always use A4 format
+    $pageFormat = 'A4'; // Always A4
     $pdf = new TCPDF('P', 'mm', $pageFormat, true, 'UTF-8', false);
     $pdf->SetCreator('NFC System');
     $pdf->SetAuthor('NFC System');
@@ -219,16 +219,20 @@ class RedirectLinkController extends Controller
     $pdf->SetMargins(0, 0, 0);
     $pdf->SetAutoPageBreak(false);
 
-    // A5 dimensions: 148mm x 210mm
-    $a5Width = 148;
-    $a5Height = 210;
+    // A4 dimensions: 210mm x 297mm
+    $a4Width = 210;
+    $a4Height = 297;
+
+    // A5 dimensions: Upper half of A4 page (210mm x 148.5mm)
+    $a5Width = 210;
+    $a5Height = 148.5;
 
     if ($printFormat === 'a5') {
-      // A5 Format handling (148mm x 210mm)
-      // For A5, images should fill the available space
+      // A5 Format handling - fills upper half of A4 page
+      // For A5, images should fill the available space in upper half
 
       if ($printFrontImage && $printBackImage) {
-        // Front and back on same page - one card per page, each takes half the page
+        // Front and back on same page - one card per page, each takes half the upper half
         foreach ($redirectLinks as $link) {
           $fullUrl = url('/auto-' . $link->uri);
 
@@ -250,29 +254,29 @@ class RedirectLinkController extends Controller
 
             $pdf->AddPage();
 
-            // Fill the upper half (front) and lower half (back) of A5
-            $imageWidth = $a5Width;  // Full width: 148mm
-            $imageHeight = $a5Height / 2;  // Half height: 105mm
+            // Fill the upper half (front) and lower half of upper half (back) of A5 area
+            $imageWidth = $a5Width;  // Full width: 210mm
+            $imageHeight = $a5Height / 2;  // Half height: 74.25mm
 
-            // Front image fills upper half
+            // Front image fills upper half of A5 area (top quarter of A4)
             $pdf->Image($images['front'], 0, 0, $imageWidth, $imageHeight, 'PNG');
 
-            // Back image fills lower half
+            // Back image fills lower half of A5 area (second quarter of A4)
             $pdf->Image($images['back'], 0, $a5Height / 2, $imageWidth, $imageHeight, 'PNG');
           }
         }
       } elseif ($printFrontImage) {
-        // Only front images - 2 images per page, each takes half the page
+        // Only front images - 2 images per page in upper half of A4
         $linkIndex = 0;
         $totalLinks = count($redirectLinks);
 
         while ($linkIndex < $totalLinks) {
           $pdf->AddPage();
 
-          $imageWidth = $a5Width;  // Full width: 148mm
-          $imageHeight = $a5Height / 2;  // Half height: 105mm
+          $imageWidth = $a5Width;  // Full width: 210mm
+          $imageHeight = $a5Height / 2;  // Half height: 74.25mm
 
-          // First card fills upper half
+          // First card fills upper quarter of A4
           if ($linkIndex < $totalLinks) {
             $link = $redirectLinks[$linkIndex];
             $fullUrl = url('/auto-' . $link->uri);
@@ -298,7 +302,7 @@ class RedirectLinkController extends Controller
             $linkIndex++;
           }
 
-          // Second card fills lower half
+          // Second card fills second quarter of A4
           if ($linkIndex < $totalLinks) {
             $link = $redirectLinks[$linkIndex];
             $fullUrl = url('/auto-' . $link->uri);
@@ -325,17 +329,17 @@ class RedirectLinkController extends Controller
           }
         }
       } elseif ($printBackImage) {
-        // Only back images - 2 images per page, each takes half the page
+        // Only back images - 2 images per page in upper half of A4
         $linkIndex = 0;
         $totalLinks = count($redirectLinks);
 
         while ($linkIndex < $totalLinks) {
           $pdf->AddPage();
 
-          $imageWidth = $a5Width;  // Full width: 148mm
-          $imageHeight = $a5Height / 2;  // Half height: 105mm
+          $imageWidth = $a5Width;  // Full width: 210mm
+          $imageHeight = $a5Height / 2;  // Half height: 74.25mm
 
-          // First card fills upper half
+          // First card fills upper quarter of A4
           if ($linkIndex < $totalLinks) {
             $link = $redirectLinks[$linkIndex];
             $fullUrl = url('/auto-' . $link->uri);
@@ -361,7 +365,7 @@ class RedirectLinkController extends Controller
             $linkIndex++;
           }
 
-          // Second card fills lower half
+          // Second card fills second quarter of A4
           if ($linkIndex < $totalLinks) {
             $link = $redirectLinks[$linkIndex];
             $fullUrl = url('/auto-' . $link->uri);
