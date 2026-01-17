@@ -60,7 +60,7 @@ class PhonePasswordResetController extends AppBaseController
       PhoneVerification::create([
         'phone' => $normalizedPhone,
         'code' => $verificationCode,
-        'expires_at' => Carbon::now()->addMinutes(10),
+        'expires_at' => Carbon::now()->addHours(2),
       ]);
 
       // Send SMS

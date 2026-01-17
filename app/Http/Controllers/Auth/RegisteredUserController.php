@@ -172,7 +172,7 @@ class RegisteredUserController extends AppBaseController
         PhoneVerification::create([
           'phone' => $normalizedContact,
           'code' => $verificationCode,
-          'expires_at' => Carbon::now()->addMinutes(10),
+          'expires_at' => Carbon::now()->addHours(2),
         ]);
 
         // Send SMS
@@ -351,7 +351,7 @@ class RegisteredUserController extends AppBaseController
       PhoneVerification::create([
         'phone' => $normalizedPhone,
         'code' => $verificationCode,
-        'expires_at' => Carbon::now()->addMinutes(10),
+        'expires_at' => Carbon::now()->addHours(2),
       ]);
 
       $smsResult = $smsService->sendVerificationCode($normalizedPhone, $verificationCode);
@@ -366,5 +366,19 @@ class RegisteredUserController extends AppBaseController
       Log::error('Resend verification error', ['error' => $e->getMessage()]);
       return $this->sendError(__('messages.verify_phone.resend_failed'), 500);
     }
+  }
+
+  /**
+   * Check if email is available for registration
+   */
+  public function checkEmail($email): JsonResponse
+  {
+    $isUnique = !User::where('email', $email)->exists();
+
+    if ($isUnique) {
+      return $this->sendResponse(['isUnique' => true], 'Email is available to use.');
+    }
+
+    return $this->sendResponse(['isUnique' => false], 'This email is already in use');
   }
 }
