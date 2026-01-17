@@ -284,6 +284,7 @@ mix.js(
         "resources/assets/js/sadmin/blogs/create-edit.js",
         "resources/assets/js/sadmin/states/states.js",
         "resources/assets/js/sadmin/cities/cities.js",
+        "resources/assets/js/sadmin/receipts/receipt.js",
         "resources/assets/js/custom/phone-number-country-code.js",
         "resources/assets/js/users/user-profile.js",
         "resources/assets/js/languages/languages.js",

@@ -454,6 +454,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       "next": "\u0627\u0644\u062A\u0627\u0644\u064A",
       "nfc_card": "\u0628\u0637\u0627\u0642\u0629 NFC",
       "nfc_order": "\u0637\u0644\u0628 NFC",
+      "receipt": "\u0645\u0642\u0628\u0648\u0636",
       "no": "\u0644\u0627",
       "nov": "\u0646\u0648\u0641\u0645\u0628\u0631",
       "occupation_field_required": "\u062D\u0642\u0644 \u0627\u0644\u0645\u0647\u0646\u0629 \u0645\u0637\u0644\u0648\u0628",
@@ -840,6 +841,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       "next": "Next",
       "nfc_card": "NFC Card",
       "nfc_order": "NFC Order",
+      "receipt": "Receipt",
       "no": "No",
       "nov": "Nov",
       "occupation_field_required": "Occupation field is required",
@@ -2651,7 +2653,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -2665,20 +2667,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /************************************************************************/
-/******/ 	
+/******/
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module is referenced by other modules so it can't be inlined
 /******/ 	var __webpack_exports__ = __webpack_require__("./public/messages.js");
-/******/ 	
+/******/
 /******/ })()
 ;

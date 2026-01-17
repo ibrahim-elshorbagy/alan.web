@@ -593,6 +593,14 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::resource('/admins', AdminUserController::class);
       Route::get('/admins/update-status/{admin}', [AdminUserController::class, 'updateStatus'])->name('admins.status');
 
+      // Receipts
+      Route::get('/all-receipts', [App\Http\Controllers\ReceiptController::class, 'allReceipts'])->name('receipts.all');
+      Route::get('/receipts/{userId}', [App\Http\Controllers\ReceiptController::class, 'index'])->name('receipts.index');
+      Route::post('/receipts', [App\Http\Controllers\ReceiptController::class, 'store'])->name('receipts.store');
+      Route::get('/receipts/{id}/edit', [App\Http\Controllers\ReceiptController::class, 'edit'])->name('receipts.edit');
+      Route::post('/receipts/{id}/update', [App\Http\Controllers\ReceiptController::class, 'update'])->name('receipts.update');
+      Route::delete('/receipts/{id}', [App\Http\Controllers\ReceiptController::class, 'destroy'])->name('receipts.delete');
+
       //FAQs
       Route::resource('/frontFaqs', FrontFAQsController::class);
       Route::post(

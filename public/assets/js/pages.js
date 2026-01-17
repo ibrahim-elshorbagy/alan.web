@@ -49414,6 +49414,98 @@ listen("click", ".city-delete-btn", function (event) {
 
 // This entry need to be wrapped in an IIFE because it need to be isolated against other entry modules.
 (() => {
+/*!********************************************************!*\
+  !*** ./resources/assets/js/sadmin/receipts/receipt.js ***!
+  \********************************************************/
+// Add Receipt
+listenClick("#newReceipt", function () {
+  $("#addReceiptModal").modal("show");
+  resetModalForm("#addReceiptForm");
+  // Set user_id from hidden field
+  $("#addUserId").val($("#userId").val());
+});
+listenHiddenBsModal("#addReceiptModal", function () {
+  resetModalForm("#addReceiptForm");
+});
+listenSubmit("#addReceiptForm", function (e) {
+  e.preventDefault();
+  $.ajax({
+    url: route("receipts.store"),
+    type: "POST",
+    data: new FormData(this),
+    contentType: false,
+    processData: false,
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $("#addReceiptModal").modal("hide");
+        Livewire.dispatch('refresh');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+});
+
+// Edit Receipt
+listenClick(".receipt-edit-btn", function (event) {
+  var receiptId = $(event.currentTarget).data("id");
+  receiptRenderDataShow(receiptId);
+});
+function receiptRenderDataShow(id) {
+  $.ajax({
+    url: route("receipts.edit", {
+      id: id
+    }),
+    type: "GET",
+    success: function success(result) {
+      if (result.success) {
+        var receipt = result.data;
+        $("#receiptId").val(receipt.id);
+        $("#editUserId").val(receipt.user_id);
+        $("#editAmount").val(receipt.amount);
+        $("#editReceivedAt").val(receipt.received_at);
+        $("#editDescription").val(receipt.description);
+        $("#editReceiptModal").modal("show");
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+}
+listenSubmit("#editReceiptForm", function (event) {
+  event.preventDefault();
+  var receiptId = $("#receiptId").val();
+  $.ajax({
+    url: route("receipts.update", receiptId),
+    type: "POST",
+    data: new FormData(this),
+    contentType: false,
+    processData: false,
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $("#editReceiptModal").modal("hide");
+        Livewire.dispatch('refresh');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+});
+
+// Delete Receipt
+listenClick(".receipt-delete-btn", function (event) {
+  var recordId = $(event.currentTarget).data("id");
+  deleteItem(route("receipts.delete", recordId), Lang.get("js.receipt"));
+});
+})();
+
+// This entry need to be wrapped in an IIFE because it need to be isolated against other entry modules.
+(() => {
 /*!*****************************************************************!*\
   !*** ./resources/assets/js/custom/phone-number-country-code.js ***!
   \*****************************************************************/

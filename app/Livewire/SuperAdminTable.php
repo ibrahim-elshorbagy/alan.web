@@ -51,6 +51,8 @@ class SuperAdminTable extends LivewireTableComponent
         ->view('admin_users.columns.is_active'),
       Column::make(__('messages.user.impersonate'), 'id')
         ->view('admin_users.columns.impersonate'),
+      Column::make(__('messages.receipts.receipts'), 'id')
+        ->view('admin_users.columns.receipts'),
       Column::make(__('messages.common.action'), 'id')
         ->view('admin_users.columns.action'),
       Column::make('email', 'email')->hideIf(1)->searchable(),
