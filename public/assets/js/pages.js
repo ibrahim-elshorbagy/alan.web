@@ -49500,7 +49500,7 @@ listenSubmit("#editReceiptForm", function (event) {
 // Delete Receipt
 listenClick(".receipt-delete-btn", function (event) {
   var recordId = $(event.currentTarget).data("id");
-  deleteItem(route("receipts.delete", recordId), Lang.get("js.receipt"));
+  deleteItem(route("receipts.delete", recordId), 'السند');
 });
 })();
 
