@@ -326,7 +326,7 @@ class RegisteredUserController extends AppBaseController
       return response()->json([
         'success' => true,
         'message' => __('messages.verify_phone.phone_verified'),
-        'redirect' => route('user.dashboard')
+        'redirect' => route('admin.dashboard')
       ]);
     } catch (\Exception $e) {
       Log::error('Phone verification error', ['error' => $e->getMessage()]);
