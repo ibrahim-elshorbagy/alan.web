@@ -286,7 +286,7 @@ class RedirectLinkController extends Controller
 
             // First card takes upper half
             if ($linkIndex < $totalLinks) {
-              $link = $redirectLinks[$linkIndex];
+              $link = $links[$linkIndex];
               $fullUrl = url('/auto-' . $link->uri);
 
               if ($useCustomPosition) {
@@ -312,7 +312,7 @@ class RedirectLinkController extends Controller
 
             // Second card takes lower half
             if ($linkIndex < $totalLinks) {
-              $link = $redirectLinks[$linkIndex];
+              $link = $links[$linkIndex];
               $fullUrl = url('/auto-' . $link->uri);
 
               if ($useCustomPosition) {
@@ -349,7 +349,7 @@ class RedirectLinkController extends Controller
 
             // First card takes upper half
             if ($linkIndex < $totalLinks) {
-              $link = $redirectLinks[$linkIndex];
+              $link = $links[$linkIndex];
               $fullUrl = url('/auto-' . $link->uri);
 
               if ($useCustomPosition) {
@@ -375,7 +375,7 @@ class RedirectLinkController extends Controller
 
             // Second card takes lower half
             if ($linkIndex < $totalLinks) {
-              $link = $redirectLinks[$linkIndex];
+              $link = $links[$linkIndex];
               $fullUrl = url('/auto-' . $link->uri);
 
               if ($useCustomPosition) {
