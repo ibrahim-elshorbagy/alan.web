@@ -228,11 +228,11 @@ class RedirectLinkController extends Controller
     $a5Height = 148.5;
 
     if ($printFormat === 'a5') {
-      // A5 Format handling - fills upper half of A4 page
-      // For A5, images should fill the available space in upper half
+      // A5 Format handling - fills the full page with larger images
+      // For A5, images are sized to take half the page each
 
       if ($printFrontImage && $printBackImage) {
-        // Front and back on same page - one card per page, each takes half the upper half
+        // Front and back on same page - one card per page, each takes half the page
         foreach ($redirectLinks as $link) {
           $fullUrl = url('/auto-' . $link->uri);
 
@@ -254,19 +254,19 @@ class RedirectLinkController extends Controller
 
             $pdf->AddPage();
 
-            // Fill the upper half (front) and lower half of upper half (back) of A5 area
+            // Each image takes half the page height
             $imageWidth = $a5Width;  // Full width: 210mm
-            $imageHeight = $a5Height / 2;  // Half height: 74.25mm
+            $imageHeight = $a5Height;  // Half height: 148.5mm
 
-            // Front image fills upper half of A5 area (top quarter of A4)
+            // Front image takes upper half
             $pdf->Image($images['front'], 0, 0, $imageWidth, $imageHeight, 'PNG');
 
-            // Back image fills lower half of A5 area (second quarter of A4)
-            $pdf->Image($images['back'], 0, $a5Height / 2, $imageWidth, $imageHeight, 'PNG');
+            // Back image takes lower half
+            $pdf->Image($images['back'], 0, $a5Height, $imageWidth, $imageHeight, 'PNG');
           }
         }
       } elseif ($printFrontImage) {
-        // Only front images - 2 images per page in upper half of A4
+        // Only front images - 2 images per page, each takes half the page
         $linkIndex = 0;
         $totalLinks = count($redirectLinks);
 
@@ -274,9 +274,9 @@ class RedirectLinkController extends Controller
           $pdf->AddPage();
 
           $imageWidth = $a5Width;  // Full width: 210mm
-          $imageHeight = $a5Height / 2;  // Half height: 74.25mm
+          $imageHeight = $a5Height;  // Half height: 148.5mm
 
-          // First card fills upper quarter of A4
+          // First card takes upper half
           if ($linkIndex < $totalLinks) {
             $link = $redirectLinks[$linkIndex];
             $fullUrl = url('/auto-' . $link->uri);
@@ -302,7 +302,7 @@ class RedirectLinkController extends Controller
             $linkIndex++;
           }
 
-          // Second card fills second quarter of A4
+          // Second card takes lower half
           if ($linkIndex < $totalLinks) {
             $link = $redirectLinks[$linkIndex];
             $fullUrl = url('/auto-' . $link->uri);
@@ -323,13 +323,13 @@ class RedirectLinkController extends Controller
                 'full_link' => $fullUrl,
               ];
 
-              $pdf->Image($images['front'], 0, $a5Height / 2, $imageWidth, $imageHeight, 'PNG');
+              $pdf->Image($images['front'], 0, $a5Height, $imageWidth, $imageHeight, 'PNG');
             }
             $linkIndex++;
           }
         }
       } elseif ($printBackImage) {
-        // Only back images - 2 images per page in upper half of A4
+        // Only back images - 2 images per page, each takes half the page
         $linkIndex = 0;
         $totalLinks = count($redirectLinks);
 
@@ -337,9 +337,9 @@ class RedirectLinkController extends Controller
           $pdf->AddPage();
 
           $imageWidth = $a5Width;  // Full width: 210mm
-          $imageHeight = $a5Height / 2;  // Half height: 74.25mm
+          $imageHeight = $a5Height;  // Half height: 148.5mm
 
-          // First card fills upper quarter of A4
+          // First card takes upper half
           if ($linkIndex < $totalLinks) {
             $link = $redirectLinks[$linkIndex];
             $fullUrl = url('/auto-' . $link->uri);
@@ -365,7 +365,7 @@ class RedirectLinkController extends Controller
             $linkIndex++;
           }
 
-          // Second card fills second quarter of A4
+          // Second card takes lower half
           if ($linkIndex < $totalLinks) {
             $link = $redirectLinks[$linkIndex];
             $fullUrl = url('/auto-' . $link->uri);
@@ -386,7 +386,7 @@ class RedirectLinkController extends Controller
                 'full_link' => $fullUrl,
               ];
 
-              $pdf->Image($images['back'], 0, $a5Height / 2, $imageWidth, $imageHeight, 'PNG');
+              $pdf->Image($images['back'], 0, $a5Height, $imageWidth, $imageHeight, 'PNG');
             }
             $linkIndex++;
           }
