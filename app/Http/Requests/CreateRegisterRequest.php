@@ -46,7 +46,7 @@ class CreateRegisterRequest extends FormRequest
       $rules['contact'] = 'nullable|unique:users,contact';
     } elseif ($registerType === 'phone') {
       $rules['email'] = 'nullable|email:filter|max:191|unique:users,email';
-      $rules['contact'] = 'required|unique:users,contact|regex:/^(00962|962)7[789]\d{7}$/';
+      $rules['contact'] = 'required|unique:users,contact';
     } else {
       $rules['email'] = 'required_without:contact|nullable|email:filter|max:191|unique:users,email';
       $rules['contact'] = 'required_without:email|nullable|unique:users,contact';
