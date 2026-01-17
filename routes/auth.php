@@ -74,7 +74,7 @@ Route::post('/verify-phone', [RegisteredUserController::class, 'verifyPhone'])
   ->name('phone.verify');
 
 Route::post('/resend-phone-verification', [RegisteredUserController::class, 'resendPhoneVerification'])
-  ->middleware(['guest', 'setLanguage', 'throttle:10,1'])
+  ->middleware(['guest', 'setLanguage', 'throttle:3,10'])
   ->name('phone.verification.resend');
 
 // Phone-based password reset routes
