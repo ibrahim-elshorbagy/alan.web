@@ -255,6 +255,13 @@ class RegisteredUserController extends AppBaseController
       // Normalize phone number for verification lookup
       $normalizedPhone = normalizePhoneNumber($phone);
 
+      Log::info('Phone verification attempt', [
+        'phone' => $phone,
+        'normalized_phone' => $normalizedPhone,
+        'code' => $request->code,
+        'user_id' => $userId
+      ]);
+
       $verification = PhoneVerification::where('phone', $normalizedPhone)
         ->where('code', $request->code)
         ->unverified()
@@ -263,8 +270,29 @@ class RegisteredUserController extends AppBaseController
         ->first();
 
       if (!$verification) {
+        // Log all matching records for debugging
+        $allRecords = PhoneVerification::where('phone', $normalizedPhone)->get();
+        Log::error('Phone verification failed - no valid code found', [
+          'phone' => $normalizedPhone,
+          'code' => $request->code,
+          'all_records' => $allRecords->map(function ($r) {
+            return [
+              'id' => $r->id,
+              'code' => $r->code,
+              'verified' => $r->verified,
+              'expires_at' => $r->expires_at,
+              'is_valid' => $r->isValid()
+            ];
+          })
+        ]);
         return $this->sendError(__('messages.verify_phone.invalid_code'), 422);
       }
+
+      Log::info('Phone verification code found', [
+        'verification_id' => $verification->id,
+        'code' => $verification->code,
+        'expires_at' => $verification->expires_at
+      ]);
 
       $verification->markAsVerified();
 
