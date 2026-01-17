@@ -372,8 +372,7 @@ class RegisteredUserController extends AppBaseController
       // Normalize phone number for verification
       $normalizedPhone = normalizePhoneNumber($phone);
 
-      PhoneVerification::where('phone', $normalizedPhone)
-        ->unverified()
+      PhoneVerification::where('phone', $normalizedPhone)->where('verified', 0)
         ->delete();
 
       PhoneVerification::create([

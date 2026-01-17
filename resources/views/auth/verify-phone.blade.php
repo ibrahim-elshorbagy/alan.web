@@ -96,6 +96,7 @@
       // Handle form submission
       form.addEventListener('submit', function(e) {
         e.preventDefault();
+        console.log('Form submit triggered');
 
         verifyBtn.disabled = true;
         verifyBtn.textContent = '{{ __('messages.verify_phone.verifying') }}';
@@ -132,6 +133,7 @@
       // Handle resend code
       resendBtn.addEventListener('click', function(e) {
         e.preventDefault();
+        console.log('Resend button clicked');
 
         resendBtn.disabled = true;
         resendBtn.textContent = '{{ __('messages.verify_phone.sending') }}';
