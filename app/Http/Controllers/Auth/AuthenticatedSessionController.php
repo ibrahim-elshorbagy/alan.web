@@ -65,7 +65,7 @@ class AuthenticatedSessionController extends Controller
     }
 
     if (! empty($user)) {
-      if ($user['email_verified_at'] != null) {
+      if ($user->hasVerifiedEmail()) {
         if ($user['is_active'] == User::IS_ACTIVE) {
           $request->authenticate();
 
