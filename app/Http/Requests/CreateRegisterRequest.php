@@ -18,6 +18,18 @@ class CreateRegisterRequest extends FormRequest
   }
 
   /**
+   * Prepare the data for validation.
+   */
+  protected function prepareForValidation()
+  {
+    if ($this->filled('contact')) {
+      $this->merge([
+        'contact' => normalizePhoneNumber($this->contact),
+      ]);
+    }
+  }
+
+  /**
    * Get the validation rules that apply to the request.
    */
   public function rules(): array

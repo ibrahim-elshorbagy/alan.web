@@ -109,7 +109,7 @@ class RegisteredUserController extends AppBaseController
       }
 
       // Normalize phone number if provided
-      $normalizedContact = $request->filled('contact') ? normalizePhoneNumber($request->contact) : $request->contact;
+      $normalizedContact = $request->contact;
 
       $user = User::create([
         'first_name' => $request->first_name,
