@@ -11,8 +11,13 @@
         <div class="col-12">
           <div class="card">
             <div class="card-body">
-              <h3 class="mb-4">{{ __('messages.receipts.salesman_info') }}: {{ $user->first_name }}
-                {{ $user->last_name }}</h3>
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="mb-0">{{ __('messages.receipts.salesman_info') }}: {{ $user->first_name }}
+                  {{ $user->last_name }}</h3>
+                <a href="{{ route('receipts.pdf', $user->id) }}" class="btn btn-primary" target="_blank">
+                  <i class="fa fa-print"></i> {{ __('messages.common.print') }}
+                </a>
+              </div>
 
               <div class="row">
                 <div class="col-md-3">
@@ -37,7 +42,13 @@
                   <div class="mb-3">
                     <label class="form-label fw-bold">{{ __('messages.receipts.balance') }}:</label>
                     <p class="fs-4 {{ $balance >= 0 ? 'text-danger' : 'text-success' }}">
-                      {{ number_format($balance, 2) }}</p>
+                      {{ number_format($balance, 2) }}
+                      @if ($balance >= 0)
+                        {{ __('messages.receipts.debtor') }}
+                      @else
+                        {{ __('messages.receipts.creditor') }}
+                      @endif
+                    </p>
                   </div>
                 </div>
               </div>

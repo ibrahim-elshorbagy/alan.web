@@ -426,6 +426,7 @@ return [
     'attachment' => 'Attachment',
   ],
   'common' => [
+    'print' => 'Print',
     'select_sales' => "Select - No one",
 
     'reset_password' => 'Reset Password',
@@ -2459,6 +2460,9 @@ return [
     'total_paid' => 'Total Paid',
     'total_after_paid' => 'Total After Paid',
     'total_remaining' => 'Total Remaining',
+    'debtor' => 'Debtor',
+    'creditor' => 'Creditor',
+
   ],
   'verify_phone' => [
     'title' => 'Verify Your Phone Number',

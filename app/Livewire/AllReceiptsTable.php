@@ -59,6 +59,8 @@ class AllReceiptsTable extends LivewireTableComponent
       Column::make(__('messages.receipts.description'), "description")
         ->searchable()
         ->view('receipts.columns.description'),
+      Column::make(__('messages.common.action'), "id")
+        ->view('receipts.columns.action'),
     ];
   }
 

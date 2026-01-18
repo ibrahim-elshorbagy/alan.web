@@ -426,6 +426,7 @@ return [
     'attachment' => 'مرفق',
   ],
   'common' => [
+    'print' => 'طباعة',
     'total' => "الإجمالي",
     'select_sales' => "اختر - لا احد",
     'use_email' => 'ايميل: يستقبل رابط تفعيل',
@@ -2456,6 +2457,8 @@ return [
     'total_paid' => 'إجمالي المسدد',
     'total_after_paid' => 'الرصيد',
     'total_remaining' => 'إجمالي المتبقي',
+    'debtor' => 'مدين',
+    'creditor' => 'دائن',
   ],
 
   'verify_phone' => [

@@ -595,7 +595,10 @@ Route::middleware(['freshInstall'])->group(function () {
 
       // Receipts
       Route::get('/all-receipts', [App\Http\Controllers\ReceiptController::class, 'allReceipts'])->name('receipts.all');
+      Route::get('/all-receipts/pdf', [App\Http\Controllers\ReceiptController::class, 'allReceiptsPdf'])->name('receipts.all.pdf');
       Route::get('/receipts/{userId}', [App\Http\Controllers\ReceiptController::class, 'index'])->name('receipts.index');
+      Route::get('/receipts/{userId}/pdf', [App\Http\Controllers\ReceiptController::class, 'receiptsPdf'])->name('receipts.pdf');
+      Route::get('/receipts/single/{receiptId}/pdf', [App\Http\Controllers\ReceiptController::class, 'singleReceiptPdf'])->name('receipts.single.pdf');
       Route::post('/receipts', [App\Http\Controllers\ReceiptController::class, 'store'])->name('receipts.store');
       Route::get('/receipts/{id}/edit', [App\Http\Controllers\ReceiptController::class, 'edit'])->name('receipts.edit');
       Route::post('/receipts/{id}/update', [App\Http\Controllers\ReceiptController::class, 'update'])->name('receipts.update');
