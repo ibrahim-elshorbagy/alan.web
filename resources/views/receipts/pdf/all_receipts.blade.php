@@ -197,7 +197,13 @@
     <tbody>
       @foreach ($receipts as $index => $receipt)
         <tr>
-          <td>{!! $receipt->description ? processArabicText($receipt->description) : '-' !!}</td>
+          <td>
+            @if($receipt->description)
+              {!! processArabicText($receipt->description) !!}
+            @else
+              -
+            @endif
+          </td>
           <td class="date">
             @if ($receipt->received_at)
               {{ \Carbon\Carbon::parse($receipt->received_at)->format('d/m/Y') }}
@@ -207,7 +213,7 @@
             @endif
           </td>
           <td class="amount">${{ number_format($receipt->amount, 2) }}</td>
-          <td>{!! processArabicText($receipt->user->first_name) !!} {!! processArabicText($receipt->user->last_name) !!}</td>
+          <td> {!! processArabicText($receipt->user->last_name) !!} {!! processArabicText($receipt->user->first_name) !!}</td>
           <td style="text-align: center;">{{ $index + 1 }}</td>
         </tr>
       @endforeach

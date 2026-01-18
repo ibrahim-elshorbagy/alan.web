@@ -173,7 +173,7 @@
 
   <div class="salesman-info">
     <h3>{!! processArabicText('معلومات المندوب') !!}</h3>
-    <p>{!! processArabicText($user->first_name) !!} {!! processArabicText($user->last_name) !!}<strong>{!! processArabicText('الاسم:') !!}</strong> </p>
+    <p> {!! processArabicText($user->last_name) !!} {!! processArabicText($user->first_name) !!}<strong>{!! processArabicText('الاسم:') !!}</strong> </p>
     <p> {{ $user->email }}<strong>{!! processArabicText('البريد الإلكتروني:') !!}</strong></p>
     <p> {{ $user->phone ?? '' }}{!! $user->phone ? '' : processArabicText('غير محدد') !!}<strong>{!! processArabicText('رقم الهاتف:') !!}</strong></p>
   </div>
@@ -215,7 +215,13 @@
       <tbody>
         @foreach ($receipts as $index => $receipt)
           <tr>
-            <td>{!! $receipt->description ? processArabicText($receipt->description) : '-' !!}</td>
+            <td>
+              @if ($receipt->description)
+                {!! processArabicText($receipt->description) !!}
+              @else
+                -
+              @endif
+            </td>
             <td class="date">
               @if ($receipt->received_at)
                 {{ \Carbon\Carbon::parse($receipt->received_at)->format('d/m/Y') }}

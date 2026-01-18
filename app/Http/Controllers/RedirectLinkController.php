@@ -656,7 +656,7 @@ class RedirectLinkController extends Controller
     }
 
     // Text content
-    $urlText = 'URL : ' . $uri;
+    $urlText = 'Code : ' . $uri;
     $serialText = 'Serial No : ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
 
     // Position directly below QR code

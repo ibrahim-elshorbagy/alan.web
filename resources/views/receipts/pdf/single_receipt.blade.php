@@ -145,7 +145,7 @@
 
     <div class="info-grid">
       <div class="info-row">
-        <div class="info-cell info-value">{!! processArabicText($receipt->user->first_name) !!} {!! processArabicText($receipt->user->last_name) !!}</div>
+        <div class="info-cell info-value">{!! processArabicText($receipt->user->last_name) !!} {!! processArabicText($receipt->user->first_name) !!} </div>
         <div class="info-cell info-label">{!! processArabicText('المندوب:') !!}</div>
       </div>
       <div class="info-row">
