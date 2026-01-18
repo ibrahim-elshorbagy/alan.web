@@ -553,8 +553,10 @@ class RedirectLinkController extends Controller
       ->header('Content-Length', strlen($zipContent));
   }
 
-  private function generateBothImagesWithQR($link, $fullUrl, $nfc, $qrcodeColor, $customQrCode, $tempDirectory)
+  private function generateBothImagesWithQR($link, $fullUrl, $nfc, $qrcodeColor, $customQrCode, $tempDirectory, $printFrontImage = true, $printBackImage = true, $printOnlyQr = false)
   {
+    $generatedImages = [];
+
     // Determine which side gets the QR code
     $qrSide = $nfc->qr_position_side ?? 'front';
 
@@ -590,53 +592,61 @@ class RedirectLinkController extends Controller
     $xPos = $nfc->qr_x_position ?? 0;
     $yPos = $nfc->qr_y_position ?? 0;
 
-    // Process Front Image
-    $frontImageUrl = $nfc->nfc_image;
-    $frontImageContent = file_get_contents($frontImageUrl);
-    $frontImage = imagecreatefromstring($frontImageContent);
+    if ($printOnlyQr) {
+      // Only export QR code
+      $generatedImages['qr'] = $qrPath;
+    } else {
+      // Process Front Image
+      if ($printFrontImage) {
+        $frontImageUrl = $nfc->nfc_image;
+        $frontImageContent = file_get_contents($frontImageUrl);
+        $frontImage = imagecreatefromstring($frontImageContent);
 
-    if ($qrSide === 'front') {
-      // Add QR code to front
-      imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+        if ($qrSide === 'front') {
+          // Add QR code to front
+          imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+        }
+
+        // Add text overlays to front if QR is on front and coordinates applied
+        if ($qrSide === 'front' && $nfc->apply_coordinates) {
+          $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
+        }
+
+        // Save front image
+        $frontPath = $tempDirectory . '/' . $link->uri . '_front.png';
+        imagepng($frontImage, $frontPath);
+        $generatedImages['front'] = $frontPath;
+        imagedestroy($frontImage);
+      }
+
+      // Process Back Image
+      if ($printBackImage) {
+        $backImageUrl = $nfc->nfc_back_image;
+        $backImageContent = file_get_contents($backImageUrl);
+        $backImage = imagecreatefromstring($backImageContent);
+
+        if ($qrSide === 'back') {
+          // Add QR code to back
+          imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+        }
+
+        // Add text overlays to back if QR is on back and coordinates applied
+        if ($qrSide === 'back' && $nfc->apply_coordinates) {
+          $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
+        }
+
+        // Save back image
+        $backPath = $tempDirectory . '/' . $link->uri . '_back.png';
+        imagepng($backImage, $backPath);
+        $generatedImages['back'] = $backPath;
+        imagedestroy($backImage);
+      }
     }
-
-    // Add text overlays to front if QR is on front and coordinates applied
-    if ($qrSide === 'front' && $nfc->apply_coordinates) {
-      $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
-    }
-
-    // Save front image
-    $frontPath = $tempDirectory . '/' . $link->uri . '_front.png';
-    imagepng($frontImage, $frontPath);
-    imagedestroy($frontImage);
-
-    // Process Back Image
-    $backImageUrl = $nfc->nfc_back_image;
-    $backImageContent = file_get_contents($backImageUrl);
-    $backImage = imagecreatefromstring($backImageContent);
-
-    if ($qrSide === 'back') {
-      // Add QR code to back
-      imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
-    }
-
-    // Add text overlays to back if QR is on back and coordinates applied
-    if ($qrSide === 'back' && $nfc->apply_coordinates) {
-      $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
-    }
-
-    // Save back image
-    $backPath = $tempDirectory . '/' . $link->uri . '_back.png';
-    imagepng($backImage, $backPath);
-    imagedestroy($backImage);
 
     // Clean up QR image
     imagedestroy($qrImageGd);
 
-    return [
-      'front' => $frontPath,
-      'back' => $backPath
-    ];
+    return $generatedImages;
   }
 
   private function addTextOverlays($image, $uri, $linkId, $qrX, $qrY, $qrSize, $nfc)
