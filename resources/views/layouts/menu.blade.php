@@ -292,7 +292,7 @@
     </li>
   @endif
 
-  <li class="nav-item {{ Request::is('admin/redirect-links*') ? 'active' : '' }}">
+  <li class="redirect-links-option nav-item {{ Request::is('admin/redirect-links*') ? 'active' : '' }}">
     <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
       href="{{ route('client.redirect-links.index') }}">
       <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span>

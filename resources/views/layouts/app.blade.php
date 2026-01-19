@@ -771,6 +771,7 @@
       @endif
       @include('profile.changePassword')
       @include('profile.changelanguage')
+      <script src="{{ asset('messages.js') }}"></script>
       @include('layouts.shepherd-js')
       @include('twofactor_authentication.two_factor_authentication')
       <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
