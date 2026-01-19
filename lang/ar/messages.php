@@ -546,7 +546,7 @@ return [
     'currency_position' => 'موضع العملة',
     'show_currency_behind' => 'عرض العملة خلف السعر',
     'enable_cookie_banner' => 'تمكين لافتة الكوكيز',
-    'enable_page' => 'تمكين صفحة الهبوط',
+    'enable_page' => 'تمكين الصفحة الرئيسية',
     'use_this_configuration' => 'استخدم هذا التكوين',
     'register_enable' => 'تمكين التسجيل',
     'user_varified' => 'تمكين التحقق من البريد الإلكتروني',
