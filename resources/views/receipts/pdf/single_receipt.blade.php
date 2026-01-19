@@ -74,18 +74,7 @@
       display: table-cell;
       padding: 8px;
       vertical-align: top;
-    }
-
-    .info-label {
-      font-weight: bold;
-      width: 30%;
-      background-color: #e9ecef;
       text-align: right;
-    }
-
-    .info-value {
-      width: 70%;
-      text-align: left;
     }
 
     .amount-highlight {
@@ -98,6 +87,26 @@
       border: 2px solid #dee2e6;
       border-radius: 5px;
       margin: 20px 0;
+    }
+
+    .balance-highlight {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+      padding: 12px;
+      background-color: #fff3cd;
+      border: 2px solid #ffeaa7;
+      border-radius: 5px;
+      margin: 15px 0;
+    }
+
+    .balance-positive {
+      color: #dc3545;
+    }
+
+    .balance-negative {
+      color: #198754;
     }
 
     .footer {
@@ -145,41 +154,39 @@
 
     <div class="info-grid">
       <div class="info-row">
-        <div class="info-cell info-value">{!! processArabicText($receipt->user->last_name) !!} {!! processArabicText($receipt->user->first_name) !!} </div>
-        <div class="info-cell info-label">{!! processArabicText('المندوب:') !!}</div>
+        <div class="info-cell">{!! processArabicText($receipt->user->last_name) !!} {!! processArabicText($receipt->user->first_name) !!} <strong>{!! processArabicText('المندوب:') !!}</strong>
+        </div>
       </div>
       <div class="info-row">
-        <div class="info-cell info-value">{{ $receipt->user->email }}</div>
-        <div class="info-cell info-label">{!! processArabicText('البريد الإلكتروني:') !!}</div>
+        <div class="info-cell">{{ $receipt->user->email }} <strong>{!! processArabicText('البريد الإلكتروني:') !!}</strong></div>
       </div>
       <div class="info-row">
-        <div class="info-cell info-value">{{ $receipt->user->phone ?? '' }}{!! $receipt->user->phone ? '' : processArabicText('غير محدد') !!}</div>
-        <div class="info-cell info-label">{!! processArabicText('رقم الهاتف:') !!}</div>
+        <div class="info-cell">{{ $receipt->user->phone ?? '' }}{!! $receipt->user->phone ? '' : processArabicText('غير محدد') !!}
+          <strong>{!! processArabicText('رقم الهاتف:') !!}</strong>
+        </div>
       </div>
       <div class="info-row">
-        <div class="info-cell info-value">
+        <div class="info-cell">
           {{ $receipt->created_at->format('d/m/Y') }}
           {{ str_replace(['AM', 'PM'], ['ص', 'م'], $receipt->created_at->format('g:i A')) }}
+          <strong>{!! processArabicText('تاريخ الإيصال:') !!}</strong>
         </div>
-        <div class="info-cell info-label">{!! processArabicText('تاريخ الإيصال:') !!}</div>
       </div>
       <div class="info-row">
-        <div class="info-cell info-value">
+        <div class="info-cell">
           {{ $receipt->received_at ? \Carbon\Carbon::parse($receipt->received_at)->format('d/m/Y') : processArabicText('غير محدد') }}
+          <strong>{!! processArabicText('تاريخ الاستلام:') !!}</strong>
         </div>
-        <div class="info-cell info-label">{!! processArabicText('تاريخ الاستلام:') !!}</div>
       </div>
 
       @if ($receipt->description)
         <div class="info-row">
-          <div class="info-cell info-value">{!! processArabicText($receipt->description) !!}</div>
-          <div class="info-cell info-label">{!! processArabicText('ملاحظات:') !!}</div>
+          <div class="info-cell">{!! processArabicText($receipt->description) !!} <strong>{!! processArabicText('ملاحظات:') !!}</strong></div>
         </div>
       @endif
       @if ($receipt->notes)
         <div class="info-row">
-          <div class="info-cell info-value">{!! processArabicText($receipt->notes) !!}</div>
-          <div class="info-cell info-label">{!! processArabicText('الملاحظات:') !!}</div>
+          <div class="info-cell">{!! processArabicText($receipt->notes) !!} <strong>{!! processArabicText('الملاحظات:') !!}</strong></div>
         </div>
       @endif
     </div>
@@ -189,6 +196,25 @@
     ${{ number_format($receipt->amount, 2) }} {!! processArabicText('المبلغ المستلم') !!}
   </div>
 
+  <div class="balance-highlight">
+    ${{ number_format($balance, 2) }}
+    @if ($balance >= 0)
+      <span class="balance-positive">({!! processArabicText('مدين') !!})</span>
+    @else
+      <span class="balance-negative">({!! processArabicText('دائن') !!})</span>
+    @endif
+    {!! processArabicText('الرصيد الحالي') !!}
+  </div>
+  
+  <div class="footer">
+    <p>{{ getSuperAdminSettingValue('email') }}</p>
+    <p> {!! processArabicText(getSuperAdminSettingValue('app_name')) !!}</p>
+    <p>
+      {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}
+    </p>
+    <p> {!! processArabicText(getSuperAdminSettingValue('address')) !!}</p>
+    <p><a href="https://nfcjo.com/">https://nfcjo.com/</a></p>
+  </div>
 
 </body>
 

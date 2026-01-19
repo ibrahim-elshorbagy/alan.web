@@ -240,6 +240,15 @@
     <p style="text-align: center; font-style: italic; color: #666; margin: 40px 0;">{!! processArabicText('لا توجد إيصالات لهذا المندوب.') !!}</p>
   @endif
 
+  <div class="footer">
+    <p>{{ getSuperAdminSettingValue('email') }}</p>
+    <p> {!! processArabicText(getSuperAdminSettingValue('app_name')) !!}</p>
+    <p>
+      {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}
+    </p>
+    <p> {!! processArabicText(getSuperAdminSettingValue('address')) !!}</p>
+    <p><a href="https://nfcjo.com/">https://nfcjo.com/</a></p>
+  </div>
 </body>
 
 </html>

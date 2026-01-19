@@ -161,23 +161,30 @@
 
   <div class="analytics">
     <div class="analytics-row">
-      <div class="analytics-cell analytics-value total-paid">${{ number_format($totalPaid, 2) }}</div>
-      <div class="analytics-cell analytics-label">{!! processArabicText('إجمالي المدفوع') !!}</div>
-      <div class="analytics-cell analytics-value total-required">${{ number_format($totalRequired, 2) }}</div>
-      <div class="analytics-cell analytics-label">{!! processArabicText('إجمالي المطلوب') !!}</div>
+      <div class="analytics-cell" style="width: 50%; text-align: center;">
+        <span class="analytics-value total-paid">${{ number_format($totalPaid, 2) }}</span>
+        <br>
+        <span class="analytics-label">{!! processArabicText('إجمالي المدفوع') !!}</span>
+      </div>
+      <div class="analytics-cell" style="width: 50%; text-align: center;">
+        <span class="analytics-value total-required">${{ number_format($totalRequired, 2) }}</span>
+        <br>
+        <span class="analytics-label">{!! processArabicText('إجمالي المطلوب') !!}</span>
+      </div>
     </div>
     <div class="analytics-row">
-      <div class="analytics-cell analytics-value total-remaining">
-        ${{ number_format($totalRemaining, 2) }}
-        @if ($totalRemaining >= 0)
-          <span class="balance-positive">({!! processArabicText('مدين') !!})</span>
-        @else
-          <span class="balance-negative">({!! processArabicText('دائن') !!})</span>
-        @endif
+      <div class="analytics-cell" colspan="2" style="width: 100%; text-align: center;">
+        <span class="analytics-value total-remaining">
+          ${{ number_format($totalRemaining, 2) }}
+          @if ($totalRemaining >= 0)
+            <span class="balance-positive">({!! processArabicText('مدين') !!})</span>
+          @else
+            <span class="balance-negative">({!! processArabicText('دائن') !!})</span>
+          @endif
+        </span>
+        <br>
+        <span class="analytics-label">{!! processArabicText('إجمالي المتبقي') !!}</span>
       </div>
-      <div class="analytics-cell analytics-label">{!! processArabicText('إجمالي المتبقي') !!}</div>
-      <div class="analytics-cell analytics-value total-after-paid">${{ number_format($totalAfterPaid, 2) }}</div>
-      <div class="analytics-cell analytics-label">{!! processArabicText('إجمالي بعد الدفع') !!}</div>
     </div>
 
   </div>
@@ -198,7 +205,7 @@
       @foreach ($receipts as $index => $receipt)
         <tr>
           <td>
-            @if($receipt->description)
+            @if ($receipt->description)
               {!! processArabicText($receipt->description) !!}
             @else
               -
@@ -219,6 +226,16 @@
       @endforeach
     </tbody>
   </table>
+
+  <div class="footer">
+    <p>{{ getSuperAdminSettingValue('email') }}</p>
+    <p> {!! processArabicText(getSuperAdminSettingValue('app_name')) !!}</p>
+    <p>
+      {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}
+    </p>
+    <p> {!! processArabicText(getSuperAdminSettingValue('address')) !!}</p>
+    <p><a href="https://nfcjo.com/">https://nfcjo.com/</a></p>
+  </div>
 
 </body>
 

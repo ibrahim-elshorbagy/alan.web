@@ -101,7 +101,22 @@ class ReceiptController extends Controller
   public function singleReceiptPdf($receiptId)
   {
     $receipt = Receipt::with('user')->findOrFail($receiptId);
-    $data = compact('receipt');
+
+    // Calculate balance for the user
+    $userId = $receipt->user_id;
+    $totalSold = RedirectLink::where('assigned_id', $userId)
+      ->whereNotNull('user_id')
+      ->count();
+
+    $soldAmount = RedirectLink::where('assigned_id', $userId)
+      ->whereNotNull('user_id')
+      ->join('nfcs', 'redirect_links.nfcs_id', '=', 'nfcs.id')
+      ->sum('nfcs.price');
+
+    $totalReceived = Receipt::where('user_id', $userId)->sum('amount');
+    $balance = $soldAmount - $totalReceived;
+
+    $data = compact('receipt', 'balance');
 
     $pdf = Pdf::loadView('receipts.pdf.single_receipt', $data);
     $pdf->getDomPDF()->set_option('isHtml5ParserEnabled', true);
