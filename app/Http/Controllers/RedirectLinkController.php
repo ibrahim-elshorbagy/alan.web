@@ -251,7 +251,10 @@ class RedirectLinkController extends Controller
                 $nfc,
                 $qrcodeColor,
                 $customQrCode,
-                $tempDirectory
+                $tempDirectory,
+                $printFrontImage,
+                $printBackImage,
+                $printOnlyQr
               );
 
               $excelData[] = [
@@ -296,7 +299,10 @@ class RedirectLinkController extends Controller
                   $nfc,
                   $qrcodeColor,
                   $customQrCode,
-                  $tempDirectory
+                  $tempDirectory,
+                  true,
+                  false,
+                  false
                 );
 
                 $excelData[] = [
@@ -322,7 +328,10 @@ class RedirectLinkController extends Controller
                   $nfc,
                   $qrcodeColor,
                   $customQrCode,
-                  $tempDirectory
+                  $tempDirectory,
+                  true,
+                  false,
+                  false
                 );
 
                 $excelData[] = [
@@ -359,7 +368,10 @@ class RedirectLinkController extends Controller
                   $nfc,
                   $qrcodeColor,
                   $customQrCode,
-                  $tempDirectory
+                  $tempDirectory,
+                  false,
+                  true,
+                  false
                 );
 
                 $excelData[] = [
@@ -385,7 +397,10 @@ class RedirectLinkController extends Controller
                   $nfc,
                   $qrcodeColor,
                   $customQrCode,
-                  $tempDirectory
+                  $tempDirectory,
+                  false,
+                  true,
+                  false,
                 );
 
                 $excelData[] = [
@@ -413,7 +428,10 @@ class RedirectLinkController extends Controller
               $nfc,
               $qrcodeColor,
               $customQrCode,
-              $tempDirectory
+              $tempDirectory,
+              $printFrontImage,
+              $printBackImage,
+              $printOnlyQr
             );
 
             $excelData[] = [
