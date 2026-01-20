@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>إيصال - {{ $receipt->id }}</title>
+  <title>سند قبض - {{ $receipt->id }}</title>
   <style>
     body {
-      font-family: 'DejaVu Sans', 'Arial Unicode MS', 'Noto Sans Arabic', sans-serif;
+      font-family: 'Noto Sans Arabic','Arial Unicode MS',sans-serif,'Segoe UI Light';
       margin: 0;
       padding: 20px;
       font-size: 12px;
@@ -111,7 +111,8 @@
 
     .footer {
       margin-top: 40px;
-      text-align: center;
+      text-align: right;
+      direction:rtl;
       font-size: 10px;
       color: #666;
       border-top: 1px solid #ddd;
@@ -144,13 +145,13 @@
     <div class="logo">
       <img src="{{ getLogoUrl() }}" alt="شعار الموقع">
     </div>
-    <h1>{!! processArabicText('إيصال دفع') !!}</h1>
-    <p> #{{ $receipt->id }} {!! processArabicText('رقم الإيصال:') !!}</p>
-    <p>{{ date('d/m/Y') }} {!! processArabicText('تاريخ الإنشاء:') !!} </p>
+    <h1>{!! processArabicText('سند قبض') !!}</h1>
+    <p> #{{ $receipt->id }} {!! processArabicText('رقم السند:') !!}</p>
+    <p>{{ date('d/m/Y') }} {!! processArabicText('التاريخ:') !!} </p>
   </div>
 
   <div class="receipt-info">
-    <h3>{!! processArabicText('تفاصيل الإيصال') !!}</h3>
+    <h3>{!! processArabicText('البيان') !!}</h3>
 
     <div class="info-grid">
       <div class="info-row">
@@ -169,7 +170,7 @@
         <div class="info-cell">
           {{ $receipt->created_at->format('d/m/Y') }}
           {{ str_replace(['AM', 'PM'], ['ص', 'م'], $receipt->created_at->format('g:i A')) }}
-          <strong>{!! processArabicText('تاريخ الإيصال:') !!}</strong>
+          <strong>{!! processArabicText('التاريخ:') !!}</strong>
         </div>
       </div>
       <div class="info-row">
@@ -193,7 +194,7 @@
   </div>
 
   <div class="amount-highlight">
-    ${{ number_format($receipt->amount, 2) }} {!! processArabicText('المبلغ المستلم') !!}
+    ${{ number_format($receipt->amount, 2) }} {!! processArabicText('المبلغ') !!}
   </div>
 
   <div class="balance-highlight">
@@ -207,13 +208,9 @@
   </div>
   
   <div class="footer">
-    <p>{{ getSuperAdminSettingValue('email') }}</p>
-    <p> {!! processArabicText(getSuperAdminSettingValue('app_name')) !!}</p>
-    <p>
-      {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}
-    </p>
+    <p><b> {!! processArabicText(getSuperAdminSettingValue('app_name')) !!}</b></p>
     <p> {!! processArabicText(getSuperAdminSettingValue('address')) !!}</p>
-    <p><a href="https://nfcjo.com/">https://nfcjo.com/</a></p>
+    <p><a href="https://nfcjo.com/">www.nfcjo.com</a> | {{ getSuperAdminSettingValue('email') }} | {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}</p>
   </div>
 
 </body>

@@ -167,7 +167,7 @@ return [
   'subscriber' => 'مشتركي النشرة الاخبارية',
   'email_not_found' => 'لم نتمكن من العثور على مستخدم بهذا البريد الإلكتروني',
   'product_details' => 'تفاصيل طلب المنتج',
-  'product_orders' => 'طلبات المنتجات',
+  'product_orders' => 'طلبات الزبائن الواردة',
   'subscribed_plans' => 'الاشتراكات',
   'vcard_table_view_changed' => "تم تغيير عرض جدول vCard بنجاح.",
   'not verified' => 'غير موثق',

@@ -1420,7 +1420,7 @@ table .dropdown .dropdown-menu.show {
   transform: translate(180px, 25px) !important;
 }
 .rtl[dir=rtl] .form-check-label {
-  margin-right: 45px !important;
+  margin-right: 7px !important;
 }
 .rtl[dir=rtl] .ql-snow .ql-picker:not(.ql-color-picker):not(.ql-icon-picker) svg {
   left: 0;

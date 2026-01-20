@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تقرير إيصالات المندوب - {{ $user->first_name }} {{ $user->last_name }}</title>
+  <title>تقرير مدفوعات المندوب - {{ $user->first_name }} {{ $user->last_name }}</title>
   <style>
     body {
-      font-family: 'DejaVu Sans', 'Arial Unicode MS', 'Noto Sans Arabic', sans-serif;
+      font-family: 'Noto Sans Arabic','Arial Unicode MS',sans-serif,'Segoe UI Light';
       margin: 0;
       padding: 20px;
       font-size: 12px;
@@ -144,7 +144,8 @@
 
     .footer {
       margin-top: 40px;
-      text-align: center;
+      text-align: right;
+      direction:rtl;
       font-size: 10px;
       color: #666;
       border-top: 1px solid #ddd;
@@ -166,7 +167,7 @@
     <div class="logo">
       <img src="{{ getLogoUrl() }}" alt="شعار الموقع">
     </div>
-    <h1>{!! processArabicText('تقرير إيصالات المندوب') !!}</h1>
+    <h1>{!! processArabicText('تقرير ندفوعات المندوب') !!}</h1>
     <p> {{ date('d/m/Y') }}{!! processArabicText('تاريخ الإنشاء:') !!}</p>
     <p>{!! processArabicText('الفترة الزمنية: كل الفترات') !!}</p>
   </div>
@@ -181,13 +182,13 @@
   <div class="analytics">
     <div class="analytics-row">
       <div class="analytics-cell analytics-value total-sold">{{ $totalSold }}</div>
-      <div class="analytics-cell analytics-label">{!! processArabicText('إجمالي البطاقات المباعة') !!}</div>
+      <div class="analytics-cell analytics-label">{!! processArabicText('إجمالي البطاقات برسم البيع') !!}</div>
       <div class="analytics-cell analytics-value sold-amount">${{ number_format($soldAmount, 2) }}</div>
-      <div class="analytics-cell analytics-label">{!! processArabicText('مبلغ المبيعات') !!}</div>
+      <div class="analytics-cell analytics-label">{!! processArabicText('قيمة المبيعات') !!}</div>
     </div>
     <div class="analytics-row">
       <div class="analytics-cell analytics-value total-received">${{ number_format($totalReceived, 2) }}</div>
-      <div class="analytics-cell analytics-label">{!! processArabicText('إجمالي المستلم') !!}</div>
+      <div class="analytics-cell analytics-label">{!! processArabicText('إجمالي المسدد') !!}</div>
       <div class="analytics-cell analytics-value balance">
         ${{ number_format($balance, 2) }}
         @if ($balance >= 0)
@@ -200,7 +201,7 @@
     </div>
   </div>
 
-  <h2 style="text-align: center; margin: 30px 0 20px 0; color: #333;">{!! processArabicText('تفاصيل الإيصالات') !!}</h2>
+  <h2 style="text-align: center; margin: 30px 0 20px 0; color: #333;">{!! processArabicText('تفاصيل المدفوعات') !!}</h2>
 
   @if ($receipts->count() > 0)
     <table class="table">
@@ -237,18 +238,15 @@
       </tbody>
     </table>
   @else
-    <p style="text-align: center; font-style: italic; color: #666; margin: 40px 0;">{!! processArabicText('لا توجد إيصالات لهذا المندوب.') !!}</p>
+    <p style="text-align: center; font-style: italic; color: #666; margin: 40px 0;">{!! processArabicText('لا توجد سندات لهذا المندوب.') !!}</p>
   @endif
 
   <div class="footer">
-    <p>{{ getSuperAdminSettingValue('email') }}</p>
-    <p> {!! processArabicText(getSuperAdminSettingValue('app_name')) !!}</p>
-    <p>
-      {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}
-    </p>
+    <p><b> {!! processArabicText(getSuperAdminSettingValue('app_name')) !!}</b></p>
     <p> {!! processArabicText(getSuperAdminSettingValue('address')) !!}</p>
-    <p><a href="https://nfcjo.com/">https://nfcjo.com/</a></p>
+    <p><a href="https://nfcjo.com/">www.nfcjo.com</a> | {{ getSuperAdminSettingValue('email') }} | {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}</p>
   </div>
+  
 </body>
 
 </html>

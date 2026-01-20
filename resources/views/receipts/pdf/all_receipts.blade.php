@@ -4,10 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تقرير جميع الإيصالات</title>
+  <title>تقرير المقبوضات</title>
   <style>
     body {
-      font-family: 'DejaVu Sans', 'Arial Unicode MS', 'Noto Sans Arabic', sans-serif;
+      font-family: 'Noto Sans Arabic','Arial Unicode MS',sans-serif,'Segoe UI Light';
       margin: 0;
       padding: 20px;
       font-size: 12px;
@@ -132,7 +132,8 @@
 
     .footer {
       margin-top: 40px;
-      text-align: center;
+      text-align: right;
+      direction:rtl;
       font-size: 10px;
       color: #666;
       border-top: 1px solid #ddd;
@@ -154,7 +155,7 @@
     <div class="logo">
       <img src="{{ getLogoUrl() }}" alt="شعار الموقع">
     </div>
-    <h1>{!! processArabicText('تقرير جميع الإيصالات') !!}</h1>
+    <h1>{!! processArabicText('تقرير المقبوضات') !!}</h1>
     <p> {{ date('d/m/Y') }} {!! processArabicText('تاريخ الإنشاء:') !!}</p>
     <p>{!! processArabicText('الفترة الزمنية: كل الفترات') !!}</p>
   </div>
@@ -164,7 +165,7 @@
       <div class="analytics-cell" style="width: 50%; text-align: center;">
         <span class="analytics-value total-paid">${{ number_format($totalPaid, 2) }}</span>
         <br>
-        <span class="analytics-label">{!! processArabicText('إجمالي المدفوع') !!}</span>
+        <span class="analytics-label">{!! processArabicText('إجمالي المسدد') !!}</span>
       </div>
       <div class="analytics-cell" style="width: 50%; text-align: center;">
         <span class="analytics-value total-required">${{ number_format($totalRequired, 2) }}</span>
@@ -183,13 +184,13 @@
           @endif
         </span>
         <br>
-        <span class="analytics-label">{!! processArabicText('إجمالي المتبقي') !!}</span>
+        <span class="analytics-label">{!! processArabicText('الرصيد') !!}</span>
       </div>
     </div>
 
   </div>
 
-  <h2 style="text-align: center; margin: 30px 0 20px 0; color: #333;">{!! processArabicText('تفاصيل الإيصالات') !!}</h2>
+  <h2 style="text-align: center; margin: 30px 0 20px 0; color: #333;">{!! processArabicText('تفاصيل الوصولات') !!}</h2>
 
   <table class="table">
     <thead>
@@ -228,13 +229,9 @@
   </table>
 
   <div class="footer">
-    <p>{{ getSuperAdminSettingValue('email') }}</p>
-    <p> {!! processArabicText(getSuperAdminSettingValue('app_name')) !!}</p>
-    <p>
-      {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}
-    </p>
+    <p><b> {!! processArabicText(getSuperAdminSettingValue('app_name')) !!}</b></p>
     <p> {!! processArabicText(getSuperAdminSettingValue('address')) !!}</p>
-    <p><a href="https://nfcjo.com/">https://nfcjo.com/</a></p>
+    <p><a href="https://nfcjo.com/">www.nfcjo.com</a> | {{ getSuperAdminSettingValue('email') }} | {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}</p>
   </div>
 
 </body>
