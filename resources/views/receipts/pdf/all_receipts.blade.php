@@ -7,7 +7,6 @@
   <title>تقرير المقبوضات</title>
   <style>
     body {
-      font-family: 'Noto Sans Arabic','Arial Unicode MS',sans-serif,'Segoe UI Light';
       margin: 0;
       padding: 20px;
       font-size: 12px;

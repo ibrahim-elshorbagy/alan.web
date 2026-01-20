@@ -7,7 +7,6 @@
   <title>سند قبض - {{ $receipt->id }}</title>
   <style>
     body {
-      font-family: 'Noto Sans Arabic','Arial Unicode MS',sans-serif,'Segoe UI Light';
       margin: 0;
       padding: 20px;
       font-size: 12px;
@@ -112,7 +111,7 @@
     .footer {
       margin-top: 40px;
       text-align: right;
-      direction:rtl;
+      direction: rtl;
       font-size: 10px;
       color: #666;
       border-top: 1px solid #ddd;
@@ -173,12 +172,7 @@
           <strong>{!! processArabicText('التاريخ:') !!}</strong>
         </div>
       </div>
-      <div class="info-row">
-        <div class="info-cell">
-          {{ $receipt->received_at ? \Carbon\Carbon::parse($receipt->received_at)->format('d/m/Y') : processArabicText('غير محدد') }}
-          <strong>{!! processArabicText('تاريخ الاستلام:') !!}</strong>
-        </div>
-      </div>
+
 
       @if ($receipt->description)
         <div class="info-row">
@@ -206,11 +200,13 @@
     @endif
     {!! processArabicText('الرصيد الحالي') !!}
   </div>
-  
+
   <div class="footer">
     <p><b> {!! processArabicText(getSuperAdminSettingValue('app_name')) !!}</b></p>
     <p> {!! processArabicText(getSuperAdminSettingValue('address')) !!}</p>
-    <p><a href="https://nfcjo.com/">www.nfcjo.com</a> | {{ getSuperAdminSettingValue('email') }} | {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}</p>
+    <p><a href="https://nfcjo.com/">www.nfcjo.com</a> | {{ getSuperAdminSettingValue('email') }} |
+      {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}
+    </p>
   </div>
 
 </body>

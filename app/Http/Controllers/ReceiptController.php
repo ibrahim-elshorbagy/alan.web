@@ -41,17 +41,7 @@ class ReceiptController extends Controller
     $uniqueUsers = Receipt::distinct('user_id')->count('user_id');
     $receipts = Receipt::with('user')->orderBy('created_at', 'desc')->get();
 
-    // Process Arabic text for receipts
-    // foreach ($receipts as $receipt) {
-    //   $receipt->user->first_name = processArabicText($receipt->user->first_name);
-    //   $receipt->user->last_name = processArabicText($receipt->user->last_name);
-    //   if ($receipt->notes) {
-    //     $receipt->notes = processArabicText($receipt->notes);
-    //   }
-    //   if ($receipt->description) {
-    //     $receipt->description = processArabicText($receipt->description);
-    //   }
-    // }
+
 
     $data = compact('totalRequired', 'totalPaid', 'totalAfterPaid', 'totalRemaining', 'totalReceipts', 'uniqueUsers', 'receipts');
 
@@ -79,15 +69,6 @@ class ReceiptController extends Controller
     $balance = $soldAmount - $totalReceived;
     $receipts = Receipt::where('user_id', $userId)->orderBy('created_at', 'desc')->get();
 
-    // Process notes for receipts
-    // foreach ($receipts as $receipt) {
-    //   if ($receipt->notes) {
-    //     $receipt->notes = processArabicText($receipt->notes);
-    //   }
-    //   if ($receipt->description) {
-    //     $receipt->description = processArabicText($receipt->description);
-    //   }
-    // }
 
     $data = compact('user', 'totalSold', 'soldAmount', 'totalReceived', 'balance', 'receipts');
 

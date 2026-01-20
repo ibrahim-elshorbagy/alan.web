@@ -7,7 +7,6 @@
   <title>تقرير مدفوعات المندوب - {{ $user->first_name }} {{ $user->last_name }}</title>
   <style>
     body {
-      font-family: 'Noto Sans Arabic','Arial Unicode MS',sans-serif,'Segoe UI Light';
       margin: 0;
       padding: 20px;
       font-size: 12px;
@@ -246,7 +245,7 @@
     <p> {!! processArabicText(getSuperAdminSettingValue('address')) !!}</p>
     <p><a href="https://nfcjo.com/">www.nfcjo.com</a> | {{ getSuperAdminSettingValue('email') }} | {{ getSuperAdminSettingValue('phone') ? '+' . getSuperAdminSettingValue('prefix_code') . getSuperAdminSettingValue('phone') : processArabicText('غير محدد') }}</p>
   </div>
-  
+
 </body>
 
 </html>
