@@ -111,6 +111,8 @@ return [
   'wait_for_apporove_of_cash_payment_by_admin' => 'طلب الدفع اليدوي الخاص بك قيد الانتظار.',
   'paid_amount_can\'t_deleted' => 'لا يمكن حذف الموعد المدفوع',
   'virtual_backgrounds' => 'صمم بطاقتك بنفسك',
+  'admin_price' => 'سعر ',
+  'selling_price' => 'سعر البيع',
   'select payment gateway' => 'اختر بوابة الدفع',
   'make_appointment' => 'حجز موعد',
   'enquiry' => 'استفسار',
@@ -598,6 +600,7 @@ return [
     'from_date' => 'من تاريخ',
     'to_date' => 'إلى تاريخ',
     'all' => "الكل",
+    'sales_price' => 'سعر المندوب',
 
   ],
   'user' => [

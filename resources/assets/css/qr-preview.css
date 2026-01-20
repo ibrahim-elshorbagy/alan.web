@@ -1,0 +1,124 @@
+/* QR Code Live Preview Styles */
+
+.qr-preview-container {
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: #f8f9fa;
+    position: relative;
+    overflow: auto;
+    max-height: 400px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#qrPreviewCanvas,
+#editQrPreviewCanvas {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+#qrPreviewPlaceholder,
+#editQrPreviewPlaceholder {
+    text-align: center;
+    padding: 50px 20px;
+    color: #999;
+    font-size: 14px;
+}
+
+#qrPreviewPlaceholder i,
+#editQrPreviewPlaceholder i {
+    display: block;
+    margin-bottom: 15px;
+    color: #ccc;
+}
+
+#qrPreviewPlaceholder p,
+#editQrPreviewPlaceholder p {
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Input styling for QR position fields */
+.qr-position-input,
+.qr-position-input-edit {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.qr-position-input:focus,
+.qr-position-input-edit:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Preview container responsiveness */
+@media (max-width: 768px) {
+    .qr-preview-container {
+        max-height: 300px;
+        min-height: 250px;
+    }
+}
+
+/* Loading animation */
+.qr-preview-loading {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: qr-spin 1s linear infinite;
+}
+
+@keyframes qr-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Coordinate fields container */
+#coordinatesFields,
+#editCoordinatesFields {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+    }
+}
+
+/* Help text for inputs */
+.qr-input-help {
+    font-size: 12px;
+    color: #6c757d;
+    margin-top: 4px;
+    display: block;
+}
+
+/* Preview label styling */
+.qr-preview-container + label {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Force fullscreen modal override */
+.modal-fullscreen {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    margin: 0 !important;
+}

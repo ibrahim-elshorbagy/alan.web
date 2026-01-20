@@ -30,6 +30,26 @@
   </div>
 
   <script>
+    // NFC data
+    const nfcData = @json($nfcs->keyBy('id')->toArray());
+
+    // Show NFC price info when NFC is selected
+    document.getElementById('nfcsSelect').addEventListener('change', function() {
+      const nfcId = this.value;
+      const priceInfo = document.getElementById('nfcPriceInfo');
+
+      if (nfcId && nfcData[nfcId]) {
+        const nfc = nfcData[nfcId];
+        document.getElementById('nfcPrice').textContent = nfc.price ? '{{ currencyFormat(0, 0) }}'.replace('0', nfc
+          .price) : 'N/A';
+        document.getElementById('nfcSalesPrice').textContent = nfc.sales_price ? '{{ currencyFormat(0, 0) }}'.replace(
+          '0', nfc.sales_price) : 'N/A';
+        priceInfo.style.display = 'block';
+      } else {
+        priceInfo.style.display = 'none';
+      }
+    });
+
     document.getElementById('createForm').addEventListener('submit', function(e) {
       e.preventDefault();
 

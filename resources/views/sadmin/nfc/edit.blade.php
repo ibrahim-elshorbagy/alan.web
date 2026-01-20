@@ -1,5 +1,5 @@
 <div class="modal fade common-modal-card" id="editNfcModal" tabindex="-1" aria-modal="true" role="dialog">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog" style="max-width: none !important;">
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">{{ __('messages.nfc.edit_nfc_card') }}</h2>
@@ -32,6 +32,11 @@
           </div>
 
           <div class="col-sm-12 mb-3">
+            {{ Form::label('sales_price', __('messages.common.sales_price') . ':', ['class' => 'form-label']) }}
+            {{ Form::number('sales_price', null, ['class' => 'form-control', 'id' => 'editNfcSalesPrice', 'step' => '0.01', 'min' => '0', 'placeholder' => __('messages.common.sales_price')]) }}
+          </div>
+
+          <div class="col-sm-12 mb-3">
             {{ Form::label('description', __('messages.common.description') . ':', ['class' => 'form-label required']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control', 'id' => 'editNfcDescription', 'placeholder' => __('messages.form.short_description'), 'rows' => '5', 'required']) }}
           </div>
@@ -48,24 +53,36 @@
           </div>
 
           <div id="editCoordinatesFields" style="display: none;">
-            <div class="row">
-              <div class="col-md-6 mb-3">
+            <div class="row mb-3">
+              <div class="col-md-3">
                 {{ Form::label('qr_x_position', __('messages.redirect_links.qr_x_position') . ':', ['class' => 'form-label']) }}
-                {{ Form::number('qr_x_position', null, ['class' => 'form-control', 'placeholder' => 'X', 'id' => 'editQrXPosition']) }}
+                {{ Form::number('qr_x_position', null, ['class' => 'form-control qr-position-input-edit', 'placeholder' => 'X', 'id' => 'editQrXPosition']) }}
               </div>
-              <div class="col-md-6 mb-3">
+              <div class="col-md-3">
                 {{ Form::label('qr_y_position', __('messages.redirect_links.qr_y_position') . ':', ['class' => 'form-label']) }}
-                {{ Form::number('qr_y_position', null, ['class' => 'form-control', 'placeholder' => 'Y', 'id' => 'editQrYPosition']) }}
+                {{ Form::number('qr_y_position', null, ['class' => 'form-control qr-position-input-edit', 'placeholder' => 'Y', 'id' => 'editQrYPosition']) }}
+              </div>
+              <div class="col-md-3">
+                {{ Form::label('qr_size', __('messages.redirect_links.qr_size') . ':', ['class' => 'form-label']) }}
+                {{ Form::number('qr_size', null, ['class' => 'form-control qr-position-input-edit', 'placeholder' => '100', 'id' => 'editQrSize']) }}
+              </div>
+              <div class="col-md-3">
+                {{ Form::label('qr_position_side', __('messages.redirect_links.qr_position_side') . ':', ['class' => 'form-label']) }}
+                {{ Form::select('qr_position_side', ['front' => __('messages.redirect_links.qr_front'), 'back' => __('messages.redirect_links.qr_back')], null, ['class' => 'form-select qr-position-input-edit', 'id' => 'editQrPositionSide']) }}
               </div>
             </div>
+
             <div class="row">
-              <div class="col-md-6 mb-3">
-                {{ Form::label('qr_size', __('messages.redirect_links.qr_size') . ':', ['class' => 'form-label']) }}
-                {{ Form::number('qr_size', null, ['class' => 'form-control', 'placeholder' => '100', 'id' => 'editQrSize']) }}
-              </div>
-              <div class="col-md-6 mb-3">
-                {{ Form::label('qr_position_side', __('messages.redirect_links.qr_position_side') . ':', ['class' => 'form-label']) }}
-                {{ Form::select('qr_position_side', ['front' => __('messages.redirect_links.qr_front'), 'back' => __('messages.redirect_links.qr_back')], null, ['class' => 'form-select', 'id' => 'editQrPositionSide']) }}
+              <div class="col-12">
+                <label class="form-label">Live Preview:</label>
+                <div class="qr-preview-container"
+                  style="border: 2px solid #ddd; border-radius: 8px; padding: 10px; background: #f8f9fa; position: relative; overflow: auto;">
+                  <canvas id="editQrPreviewCanvas" style="max-width: 100%; display: block; margin: 0 auto;"></canvas>
+                  <div id="editQrPreviewPlaceholder" style="text-align: center; padding: 50px; color: #999;">
+                    <i class="fas fa-image fa-3x mb-3"></i>
+                    <p>Image will be loaded here</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

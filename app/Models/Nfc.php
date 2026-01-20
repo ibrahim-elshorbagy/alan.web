@@ -22,7 +22,8 @@ class Nfc extends Model implements HasMedia
 
   public static $rules = [
     'name' => 'required|string',
-    'price' => 'required|integer',
+    'price' => 'required|numeric',
+    'sales_price' => 'nullable|numeric',
     'description' => 'required|string',
     'nfc_img' => 'required|mimes:jpg,jpeg,png',
     'nfc_back_img' => 'required|mimes:jpg,jpeg,png',
@@ -70,6 +71,7 @@ class Nfc extends Model implements HasMedia
     'name',
     'description',
     'price',
+    'sales_price',
     'nfc_img',
     'nfc_back_img',
     'apply_coordinates',

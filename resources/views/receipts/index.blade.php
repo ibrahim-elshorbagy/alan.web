@@ -20,30 +20,51 @@
               </div>
 
               <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-2">
                   <div class="mb-3">
                     <label class="form-label fw-bold">{{ __('messages.receipts.total_sold_cards') }}:</label>
                     <p class="fs-4 text-primary">{{ $totalSold }}</p>
                   </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                   <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('messages.receipts.sold_amount') }}:</label>
-                    <p class="fs-4 text-success">{{ number_format($soldAmount, 2) }}</p>
+                    <label class="form-label fw-bold">{{ __('messages.common.price') }}:</label>
+                    <p class="fs-4 text-purple">{{ number_format($soldAmountPrice, 2) }}</p>
                   </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">{{ __('messages.common.sales_price') }}:</label>
+                    <p class="fs-4 text-success">{{ number_format($soldAmountSalesPrice, 2) }}</p>
+                  </div>
+                </div>
+                <div class="col-md-2">
                   <div class="mb-3">
                     <label class="form-label fw-bold">{{ __('messages.receipts.total_received') }}:</label>
                     <p class="fs-4 text-info">{{ number_format($totalReceived, 2) }}</p>
                   </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                   <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('messages.receipts.balance') }}:</label>
-                    <p class="fs-4 {{ $balance >= 0 ? 'text-danger' : 'text-success' }}">
-                      {{ number_format($balance, 2) }}
-                      @if ($balance >= 0)
+                    <label class="form-label fw-bold">{{ __('messages.receipts.balance') }}
+                      ({{ __('messages.common.price') }}):</label>
+                    <p class="fs-4 {{ $balancePrice >= 0 ? 'text-danger' : 'text-success' }}">
+                      {{ number_format($balancePrice, 2) }}
+                      @if ($balancePrice >= 0)
+                        {{ __('messages.receipts.debtor') }}
+                      @else
+                        {{ __('messages.receipts.creditor') }}
+                      @endif
+                    </p>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <div class="mb-3">
+                    <label class="form-label fw-bold">{{ __('messages.receipts.balance') }}
+                      ({{ __('messages.common.sales_price') }}):</label>
+                    <p class="fs-4 {{ $balanceSalesPrice >= 0 ? 'text-danger' : 'text-success' }}">
+                      {{ number_format($balanceSalesPrice, 2) }}
+                      @if ($balanceSalesPrice >= 0)
                         {{ __('messages.receipts.debtor') }}
                       @else
                         {{ __('messages.receipts.creditor') }}

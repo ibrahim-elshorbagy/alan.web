@@ -8,7 +8,13 @@
   <div class="col-lg-6">
     <div class="mb-5">
       {{ Form::label('nfcs_id', __('messages.redirect_links.nfc') . ':', ['class' => 'form-label required']) }}
-      {{ Form::select('nfcs_id', $nfcs->pluck('name', 'id'), null, ['class' => 'form-control', 'required']) }}
+      {{ Form::select('nfcs_id', $nfcs->pluck('name', 'id'), null, ['class' => 'form-control', 'required', 'id' => 'nfcsSelect']) }}
+      <div id="nfcPriceInfo" class="mt-2 text-muted" style="display: none;">
+        <small>
+          <strong>{{ __('messages.admin_price') }}:</strong> <span id="nfcPrice"></span><br>
+          <strong>{{ __('messages.common.sales_price') }}:</strong> <span id="nfcSalesPrice"></span>
+        </small>
+      </div>
     </div>
   </div>
   <div class="col-lg-6">

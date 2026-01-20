@@ -1,9 +1,10 @@
 <div class="modal fade common-modal-card" id="addNfcModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog " style="max-width: none !important;">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">{{ __('messages.nfc.new_nfc_card') }}</h3>
-        <button type="button" class="modal-close p-0 border-0 bg-transparent" data-bs-dismiss="modal" aria-label="Close">
+        <button type="button" class="modal-close p-0 border-0 bg-transparent" data-bs-dismiss="modal"
+          aria-label="Close">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -30,6 +31,10 @@
           {{ Form::label('price', __('messages.common.price') . ':', ['class' => 'form-label required']) }}
           {{ Form::number('price', null, ['class' => 'form-control', 'required', 'step' => '0.01', 'min' => '0', 'placeholder' => __('messages.form.price')]) }}
         </div>
+        <div class="mb-3">
+          {{ Form::label('sales_price', __('messages.common.sales_price') . ':', ['class' => 'form-label']) }}
+          {{ Form::number('sales_price', null, ['class' => 'form-control', 'step' => '0.01', 'min' => '0', 'placeholder' => __('messages.common.sales_price')]) }}
+        </div>
 
         <div>
           <div class="col-sm-12 mb-2">
@@ -50,27 +55,40 @@
         </div>
 
         <div id="coordinatesFields" style="display: none;">
-          <div class="row">
-            <div class="col-md-6 mb-3">
+          <div class="row mb-3">
+            <div class="col-md-3">
               {{ Form::label('qr_x_position', __('messages.redirect_links.qr_x_position') . ':', ['class' => 'form-label']) }}
-              {{ Form::number('qr_x_position', null, ['class' => 'form-control', 'placeholder' => 'X', 'id' => 'qrXPosition']) }}
+              {{ Form::number('qr_x_position', null, ['class' => 'form-control qr-position-input', 'placeholder' => 'X', 'id' => 'qrXPosition']) }}
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3">
               {{ Form::label('qr_y_position', __('messages.redirect_links.qr_y_position') . ':', ['class' => 'form-label']) }}
-              {{ Form::number('qr_y_position', null, ['class' => 'form-control', 'placeholder' => 'Y', 'id' => 'qrYPosition']) }}
+              {{ Form::number('qr_y_position', null, ['class' => 'form-control qr-position-input', 'placeholder' => 'Y', 'id' => 'qrYPosition']) }}
+            </div>
+            <div class="col-md-3">
+              {{ Form::label('qr_size', __('messages.redirect_links.qr_size') . ':', ['class' => 'form-label']) }}
+              {{ Form::number('qr_size', 100, ['class' => 'form-control qr-position-input', 'placeholder' => '100', 'id' => 'qrSize']) }}
+            </div>
+            <div class="col-md-3">
+              {{ Form::label('qr_position_side', __('messages.redirect_links.qr_position_side') . ':', ['class' => 'form-label']) }}
+              {{ Form::select('qr_position_side', ['front' => __('messages.redirect_links.qr_front'), 'back' => __('messages.redirect_links.qr_back')], 'front', ['class' => 'form-select qr-position-input', 'id' => 'qrPositionSide']) }}
             </div>
           </div>
+
           <div class="row">
-            <div class="col-md-6 mb-3">
-              {{ Form::label('qr_size', __('messages.redirect_links.qr_size') . ':', ['class' => 'form-label']) }}
-              {{ Form::number('qr_size', 100, ['class' => 'form-control', 'placeholder' => '100', 'id' => 'qrSize']) }}
-            </div>
-            <div class="col-md-6 mb-3">
-              {{ Form::label('qr_position_side', __('messages.redirect_links.qr_position_side') . ':', ['class' => 'form-label']) }}
-              {{ Form::select('qr_position_side', ['front' => __('messages.redirect_links.qr_front'), 'back' => __('messages.redirect_links.qr_back')], 'front', ['class' => 'form-select', 'id' => 'qrPositionSide']) }}
+            <div class="col-12">
+              <label class="form-label">Live Preview:</label>
+              <div class="qr-preview-container"
+                style="border: 2px solid #ddd; border-radius: 8px; padding: 10px; background: #f8f9fa; position: relative; overflow: auto; ">
+                <canvas id="qrPreviewCanvas" style="max-width: 100%; display: block; margin: 0 auto;"></canvas>
+                <div id="qrPreviewPlaceholder" style="text-align: center; padding: 50px; color: #999;">
+                  <i class="fas fa-image fa-3x mb-3"></i>
+                  <p>Upload an image to see QR position preview</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
 
         <div class="row" id="dimensionFields">
           <div class="col-md-6 mb-3">

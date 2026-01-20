@@ -48197,7 +48197,9 @@ listenClick("#newNfc", function () {
   resetModalForm("#addNfcForm");
   toggleCoordinateFields("#applyCoordinates", "#coordinatesFields");
   toggleDimensionFields("#printFormat", "#dimensionFields");
+  initQrPreview(); // Initialize QR preview for create modal
 });
+
 listenHiddenBsModal("#addNfcModal", function () {
   resetModalForm("#addNfcForm");
 });
@@ -48282,6 +48284,7 @@ function nfcRenderDataShow(id) {
         $("#editNfcTitle").val(result.data.name);
         $("#editNfcDescription").val(result.data.description);
         $("#editNfcPrice").val(result.data.price);
+        $("#editNfcSalesPrice").val(result.data.sales_price);
 
         // Set coordinate fields
         $("#editApplyCoordinates").prop("checked", result.data.apply_coordinates == 1);
@@ -48315,8 +48318,10 @@ function nfcRenderDataShow(id) {
           $("#editNfcBackPreview").css("background-image", 'url("' + defaultNfcCard + '")');
         });
         $("#editNfcModal").modal("show");
+        initQrPreviewEdit(); // Initialize QR preview for edit modal
       }
     },
+
     error: function error(result) {
       displayErrorMessage(result.responseJSON.message);
     }
@@ -48378,6 +48383,327 @@ listenClick("#newNfcTax", function () {
     }
   });
 });
+
+// ==================== QR CODE LIVE PREVIEW FUNCTIONALITY ====================
+
+// Global variables for QR preview
+var qrPreviewState = {
+  frontImage: null,
+  backImage: null,
+  currentSide: 'front'
+};
+var qrPreviewStateEdit = {
+  frontImage: null,
+  backImage: null,
+  currentSide: 'front'
+};
+
+// Initialize QR preview for CREATE modal
+function initQrPreview() {
+  qrPreviewState = {
+    frontImage: null,
+    backImage: null,
+    currentSide: 'front'
+  };
+
+  // Listen to front image upload
+  $('#nfc_img').off('change').on('change', function (e) {
+    var file = e.target.files[0];
+    if (file) {
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        var img = new Image();
+        img.onload = function () {
+          qrPreviewState.frontImage = img;
+          updateQrPreview();
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Listen to back image upload
+  $('#nfc_back_img').off('change').on('change', function (e) {
+    var file = e.target.files[0];
+    if (file) {
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        var img = new Image();
+        img.onload = function () {
+          qrPreviewState.backImage = img;
+          updateQrPreview();
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Listen to QR position inputs
+  $('.qr-position-input').off('input change').on('input change', function () {
+    updateQrPreview();
+  });
+}
+
+// Update QR preview canvas for CREATE modal
+function updateQrPreview() {
+  var canvas = document.getElementById('qrPreviewCanvas');
+  var placeholder = document.getElementById('qrPreviewPlaceholder');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var side = $('#qrPositionSide').val() || 'front';
+  qrPreviewState.currentSide = side;
+  var currentImage = side === 'front' ? qrPreviewState.frontImage : qrPreviewState.backImage;
+  if (!currentImage) {
+    canvas.style.display = 'none';
+    placeholder.style.display = 'block';
+    return;
+  }
+  canvas.style.display = 'block';
+  placeholder.style.display = 'none';
+
+  // Set canvas size to match image
+  canvas.width = currentImage.width;
+  canvas.height = currentImage.height;
+
+  // Draw the base image
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(currentImage, 0, 0);
+
+  // Get QR position and size
+  var qrX = parseInt($('#qrXPosition').val()) || 0;
+  var qrY = parseInt($('#qrYPosition').val()) || 0;
+  var qrSize = parseInt($('#qrSize').val()) || 100;
+
+  // Draw QR placeholder with semi-transparent overlay
+  ctx.fillStyle = 'rgba(0, 123, 255, 0.3)';
+  ctx.fillRect(qrX, qrY, qrSize, qrSize);
+
+  // Draw QR border
+  ctx.strokeStyle = '#007bff';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(qrX, qrY, qrSize, qrSize);
+
+  // Draw crosshair in center
+  ctx.strokeStyle = '#ff0000';
+  ctx.lineWidth = 2;
+  var centerX = qrX + qrSize / 2;
+  var centerY = qrY + qrSize / 2;
+  var crossSize = 10;
+
+  // Horizontal line
+  ctx.beginPath();
+  ctx.moveTo(centerX - crossSize, centerY);
+  ctx.lineTo(centerX + crossSize, centerY);
+  ctx.stroke();
+
+  // Vertical line
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY - crossSize);
+  ctx.lineTo(centerX, centerY + crossSize);
+  ctx.stroke();
+
+  // Draw corner markers
+  var markerSize = 8;
+  ctx.fillStyle = '#ff0000';
+
+  // Top-left
+  ctx.fillRect(qrX - 2, qrY - 2, markerSize, markerSize);
+  // Top-right
+  ctx.fillRect(qrX + qrSize - markerSize + 2, qrY - 2, markerSize, markerSize);
+  // Bottom-left
+  ctx.fillRect(qrX - 2, qrY + qrSize - markerSize + 2, markerSize, markerSize);
+  // Bottom-right
+  ctx.fillRect(qrX + qrSize - markerSize + 2, qrY + qrSize - markerSize + 2, markerSize, markerSize);
+
+  // Get font size from input
+  var fontSize = parseInt($('#textFontSize').val()) || 14;
+
+  // Add Code and Serial No text below QR box, starting from QR box left edge
+  ctx.fillStyle = '#000000';
+  ctx.font = "".concat(fontSize, "px Arial");
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  var textY = qrY + qrSize + 10;
+
+  // Draw "Code: Test123" - positioned at QR box X coordinate
+  ctx.fillText('Code: Test123', qrX, textY);
+
+  // Draw "Serial No: 00001" on next line
+  textY += fontSize + 5;
+  ctx.fillText('Serial No: 00001', qrX, textY);
+}
+
+// Initialize QR preview for EDIT modal
+function initQrPreviewEdit() {
+  qrPreviewStateEdit = {
+    frontImage: null,
+    backImage: null,
+    currentSide: 'front'
+  };
+
+  // Load existing images
+  var frontImageUrl = $('#editNfcPreview').css('background-image');
+  var backImageUrl = $('#editNfcBackPreview').css('background-image');
+  if (frontImageUrl && frontImageUrl !== 'none') {
+    var url = frontImageUrl.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+    loadImageForEdit(url, 'front');
+  }
+  if (backImageUrl && backImageUrl !== 'none') {
+    var _url = backImageUrl.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+    loadImageForEdit(_url, 'back');
+  }
+
+  // Listen to front image upload
+  $('#editNfcImg').off('change').on('change', function (e) {
+    var file = e.target.files[0];
+    if (file) {
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        var img = new Image();
+        img.onload = function () {
+          qrPreviewStateEdit.frontImage = img;
+          updateQrPreviewEdit();
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Listen to back image upload
+  $('#editNfcBackImg').off('change').on('change', function (e) {
+    var file = e.target.files[0];
+    if (file) {
+      var reader = new FileReader();
+      reader.onload = function (event) {
+        var img = new Image();
+        img.onload = function () {
+          qrPreviewStateEdit.backImage = img;
+          updateQrPreviewEdit();
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Listen to QR position inputs
+  $('.qr-position-input-edit').off('input change').on('input change', function () {
+    updateQrPreviewEdit();
+  });
+
+  // Initial preview update
+  setTimeout(updateQrPreviewEdit, 100);
+}
+
+// Helper function to load image for edit
+function loadImageForEdit(url, side) {
+  var img = new Image();
+  img.crossOrigin = 'Anonymous';
+  img.onload = function () {
+    if (side === 'front') {
+      qrPreviewStateEdit.frontImage = img;
+    } else {
+      qrPreviewStateEdit.backImage = img;
+    }
+    updateQrPreviewEdit();
+  };
+  img.onerror = function () {
+    console.log('Error loading image for preview:', url);
+  };
+  img.src = url;
+}
+
+// Update QR preview canvas for EDIT modal
+function updateQrPreviewEdit() {
+  var canvas = document.getElementById('editQrPreviewCanvas');
+  var placeholder = document.getElementById('editQrPreviewPlaceholder');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var side = $('#editQrPositionSide').val() || 'front';
+  qrPreviewStateEdit.currentSide = side;
+  var currentImage = side === 'front' ? qrPreviewStateEdit.frontImage : qrPreviewStateEdit.backImage;
+  if (!currentImage) {
+    canvas.style.display = 'none';
+    placeholder.style.display = 'block';
+    return;
+  }
+  canvas.style.display = 'block';
+  placeholder.style.display = 'none';
+
+  // Set canvas size to match image
+  canvas.width = currentImage.width;
+  canvas.height = currentImage.height;
+
+  // Draw the base image
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(currentImage, 0, 0);
+
+  // Get QR position and size
+  var qrX = parseInt($('#editQrXPosition').val()) || 0;
+  var qrY = parseInt($('#editQrYPosition').val()) || 0;
+  var qrSize = parseInt($('#editQrSize').val()) || 100;
+
+  // Draw QR placeholder with semi-transparent overlay
+  ctx.fillStyle = 'rgba(0, 123, 255, 0.3)';
+  ctx.fillRect(qrX, qrY, qrSize, qrSize);
+
+  // Draw QR border
+  ctx.strokeStyle = '#007bff';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(qrX, qrY, qrSize, qrSize);
+
+  // Draw crosshair in center
+  ctx.strokeStyle = '#ff0000';
+  ctx.lineWidth = 2;
+  var centerX = qrX + qrSize / 2;
+  var centerY = qrY + qrSize / 2;
+  var crossSize = 10;
+
+  // Horizontal line
+  ctx.beginPath();
+  ctx.moveTo(centerX - crossSize, centerY);
+  ctx.lineTo(centerX + crossSize, centerY);
+  ctx.stroke();
+
+  // Vertical line
+  ctx.beginPath();
+  ctx.moveTo(centerX, centerY - crossSize);
+  ctx.lineTo(centerX, centerY + crossSize);
+  ctx.stroke();
+
+  // Draw corner markers
+  var markerSize = 8;
+  ctx.fillStyle = '#ff0000';
+
+  // Top-left
+  ctx.fillRect(qrX - 2, qrY - 2, markerSize, markerSize);
+  // Top-right
+  ctx.fillRect(qrX + qrSize - markerSize + 2, qrY - 2, markerSize, markerSize);
+  // Bottom-left
+  ctx.fillRect(qrX - 2, qrY + qrSize - markerSize + 2, markerSize, markerSize);
+  // Bottom-right
+  ctx.fillRect(qrX + qrSize - markerSize + 2, qrY + qrSize - markerSize + 2, markerSize, markerSize);
+
+  // Get font size from input
+  var fontSize = parseInt($('#editTextFontSize').val()) || 14;
+
+  // Add Code and Serial No text below QR box, starting from QR box left edge
+  ctx.fillStyle = '#000000';
+  ctx.font = "".concat(fontSize, "px Arial");
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'top';
+  var textY = qrY + qrSize + 10;
+
+  // Draw "Code: Test123" - positioned at QR box X coordinate
+  ctx.fillText('Code: Test123', qrX, textY);
+
+  // Draw "Serial No: 00001" on next line
+  textY += fontSize + 5;
+  ctx.fillText('Serial No: 00001', qrX, textY);
+}
 })();
 
 // This entry need to be wrapped in an IIFE because it need to be isolated against other entry modules.
