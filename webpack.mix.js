@@ -178,6 +178,10 @@ mix.sass(
         "resources/assets/scss/vcard11/custom.scss",
         "public/assets/css/custom.css"
     )
+    .copy(
+        "resources/assets/css/qr-preview.css",
+        "public/assets/css/qr-preview.css"
+    )
     .sass(
         "resources/assets/scss/vcard11/home.scss",
         "public/assets/css/home.css"
