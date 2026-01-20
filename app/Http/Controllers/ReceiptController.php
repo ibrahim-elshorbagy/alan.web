@@ -13,26 +13,43 @@ class ReceiptController extends Controller
 {
   public function allReceipts()
   {
-    $totalRequired = RedirectLink::whereNotNull('assigned_id')
+    // Using redirect_links.price for admin purchase price analytics
+    $totalRequiredPrice = RedirectLink::whereNotNull('assigned_id')
       ->whereNotNull('user_id')
-      ->join('nfcs', 'redirect_links.nfcs_id', '=', 'nfcs.id')
-      ->sum('nfcs.price');
+      ->sum('price');
+
+    // Using redirect_links.sales_price for sales price analytics
+    $totalRequiredSalesPrice = RedirectLink::whereNotNull('assigned_id')
+      ->whereNotNull('user_id')
+      ->sum('sales_price');
 
     $totalPaid = Receipt::sum('amount');
-    $totalAfterPaid = $totalRequired - $totalPaid;
-    $totalRemaining = $totalAfterPaid;
+    $totalAfterPaidPrice = $totalRequiredPrice - $totalPaid;
+    $totalAfterPaidSalesPrice = $totalRequiredSalesPrice - $totalPaid;
+    $totalRemainingPrice = $totalAfterPaidPrice;
+    $totalRemainingSalesPrice = $totalAfterPaidSalesPrice;
     $totalReceipts = Receipt::count();
     $uniqueUsers = Receipt::distinct('user_id')->count('user_id');
 
-    return view('receipts.all', compact('totalRequired', 'totalPaid', 'totalAfterPaid', 'totalRemaining', 'totalReceipts', 'uniqueUsers'));
+    return view('receipts.all', compact(
+      'totalRequiredPrice',
+      'totalRequiredSalesPrice',
+      'totalPaid',
+      'totalAfterPaidPrice',
+      'totalAfterPaidSalesPrice',
+      'totalRemainingPrice',
+      'totalRemainingSalesPrice',
+      'totalReceipts',
+      'uniqueUsers'
+    ));
   }
 
   public function allReceiptsPdf()
   {
+    // For PDF, only use sales_price
     $totalRequired = RedirectLink::whereNotNull('assigned_id')
       ->whereNotNull('user_id')
-      ->join('nfcs', 'redirect_links.nfcs_id', '=', 'nfcs.id')
-      ->sum('nfcs.price');
+      ->sum('sales_price');
 
     $totalPaid = Receipt::sum('amount');
     $totalAfterPaid = $totalRequired - $totalPaid;
@@ -60,10 +77,10 @@ class ReceiptController extends Controller
       ->whereNotNull('user_id')
       ->count();
 
+    // For PDF, only use sales_price
     $soldAmount = RedirectLink::where('assigned_id', $userId)
       ->whereNotNull('user_id')
-      ->join('nfcs', 'redirect_links.nfcs_id', '=', 'nfcs.id')
-      ->sum('nfcs.price');
+      ->sum('sales_price');
 
     $totalReceived = Receipt::where('user_id', $userId)->sum('amount');
     $balance = $soldAmount - $totalReceived;
@@ -83,16 +100,16 @@ class ReceiptController extends Controller
   {
     $receipt = Receipt::with('user')->findOrFail($receiptId);
 
-    // Calculate balance for the user
+    // Calculate balance for the user using sales_price
     $userId = $receipt->user_id;
     $totalSold = RedirectLink::where('assigned_id', $userId)
       ->whereNotNull('user_id')
       ->count();
 
+    // For PDF, only use sales_price
     $soldAmount = RedirectLink::where('assigned_id', $userId)
       ->whereNotNull('user_id')
-      ->join('nfcs', 'redirect_links.nfcs_id', '=', 'nfcs.id')
-      ->sum('nfcs.price');
+      ->sum('sales_price');
 
     $totalReceived = Receipt::where('user_id', $userId)->sum('amount');
     $balance = $soldAmount - $totalReceived;
@@ -114,15 +131,29 @@ class ReceiptController extends Controller
       ->whereNotNull('user_id')
       ->count();
 
-    $soldAmount = RedirectLink::where('assigned_id', $userId)
+    // Using redirect_links.price for admin purchase price analytics
+    $soldAmountPrice = RedirectLink::where('assigned_id', $userId)
       ->whereNotNull('user_id')
-      ->join('nfcs', 'redirect_links.nfcs_id', '=', 'nfcs.id')
-      ->sum('nfcs.price');
+      ->sum('price');
+
+    // Using redirect_links.sales_price for sales price analytics
+    $soldAmountSalesPrice = RedirectLink::where('assigned_id', $userId)
+      ->whereNotNull('user_id')
+      ->sum('sales_price');
 
     $totalReceived = Receipt::where('user_id', $userId)->sum('amount');
-    $balance = $soldAmount - $totalReceived;
+    $balancePrice = $soldAmountPrice - $totalReceived;
+    $balanceSalesPrice = $soldAmountSalesPrice - $totalReceived;
 
-    return view('receipts.index', compact('user', 'totalSold', 'soldAmount', 'totalReceived', 'balance'));
+    return view('receipts.index', compact(
+      'user',
+      'totalSold',
+      'soldAmountPrice',
+      'soldAmountSalesPrice',
+      'totalReceived',
+      'balancePrice',
+      'balanceSalesPrice'
+    ));
   }
 
   public function store(Request $request)

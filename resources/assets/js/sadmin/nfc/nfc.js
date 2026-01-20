@@ -104,6 +104,7 @@ function nfcRenderDataShow(id) {
                 $("#editNfcTitle").val(result.data.name);
                 $("#editNfcDescription").val(result.data.description);
                 $("#editNfcPrice").val(result.data.price);
+                $("#editNfcSalesPrice").val(result.data.sales_price);
 
                 // Set coordinate fields
                 $("#editApplyCoordinates").prop("checked", result.data.apply_coordinates == 1);

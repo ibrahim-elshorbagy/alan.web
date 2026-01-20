@@ -210,7 +210,7 @@ class ClientRedirectLinkController extends Controller
         'nfc_order_id' => $nfcOrder->id,
         'type' => \App\Models\NfcOrders::MANUALLY, // Paid manually outside the system
         'transaction_id' => 'REDEEM-' . $redirectLink->uri,
-        'amount' => $nfcCard->price ?? 0,
+        'amount' => $redirectLink->price ?? 0,
         'user_id' => $user->id,
         'status' => \App\Models\NfcOrders::SUCCESS, // Already paid
       ]);

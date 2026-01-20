@@ -1,5 +1,5 @@
 <div class="modal fade common-modal-card" id="editNfcModal" tabindex="-1" aria-modal="true" role="dialog">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title">{{ __('messages.nfc.edit_nfc_card') }}</h2>
@@ -29,6 +29,11 @@
           <div class="col-sm-12 mb-3">
             {{ Form::label('price', __('messages.common.price') . ':', ['class' => 'form-label required']) }}
             {{ Form::number('price', null, ['class' => 'form-control', 'id' => 'editNfcPrice', 'required', 'step' => '0.01', 'min' => '0', 'placeholder' => __('messages.form.price')]) }}
+          </div>
+
+          <div class="col-sm-12 mb-3">
+            {{ Form::label('sales_price', __('messages.common.sales_price') . ':', ['class' => 'form-label']) }}
+            {{ Form::number('sales_price', null, ['class' => 'form-control', 'id' => 'editNfcSalesPrice', 'step' => '0.01', 'min' => '0', 'placeholder' => __('messages.common.sales_price')]) }}
           </div>
 
           <div class="col-sm-12 mb-3">

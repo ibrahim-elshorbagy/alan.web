@@ -49,6 +49,11 @@ class RedirectLinkController extends Controller
     $nfcsId = $request->nfcs_id;
     $numberOfCards = $request->number_of_cards;
 
+    // Get NFC price
+    $nfc = Nfc::find($nfcsId);
+    $nfcPrice = $nfc->price;
+    $nfcSalesPrice = $nfc->sales_price;
+
     $createdLinks = [];
 
     for ($i = 0; $i < $numberOfCards; $i++) {
@@ -62,6 +67,8 @@ class RedirectLinkController extends Controller
         'status' => 0,
         'nfcs_id' => $nfcsId,
         'assigned_id' => $request->assigned_id,
+        'price' => $nfcPrice,
+        'sales_price' => $nfcSalesPrice,
       ]);
 
       $createdLinks[] = $redirectLink;
