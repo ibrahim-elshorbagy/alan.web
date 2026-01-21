@@ -307,24 +307,37 @@ class NfcController extends AppBaseController
 
   private function addTestTextOverlays($image, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc)
   {
-    // Get font size from NFC settings
-    $fontSize = $nfc->text_font_size ?? 14;
+    // Get image dimensions
+    $width = imagesx($image);
+    $height = imagesy($image);
 
-    // Convert font size to GD font size (approximate)
-    $gdFontSize = max(1, min(5, round($fontSize / 3)));
+    // Set colors
+    $black = imagecolorallocate($image, 0, 0, 0);
+    $white = imagecolorallocate($image, 255, 255, 255);
 
-    // Text color (black)
-    $textColor = imagecolorallocate($image, 0, 0, 0);
+    // Font paths - use system fonts or default
+    $fontPath = public_path('fonts/Zain-Regular.ttf');
+    if (!file_exists($fontPath)) {
+      $fontPath = null; // Will use default font
+    }
 
-    // Starting Y position (below QR code)
-    $textY = $qrY + $qrSize + 10;
+    // Text content
+    $urlText = 'Code : ' . $testCode;
+    $serialText = 'Serial No : ' . str_pad($testSerialNo, 4, '0', STR_PAD_LEFT);
 
-    // Add "Code: XXXXXX"
-    imagestring($image, $gdFontSize, $qrX, $textY, "Code: " . $testCode, $textColor);
+    // Position directly below QR code
+    $textY = $qrY + $qrSize + 20;
+    $fontSize = $nfc->text_font_size ?? 14; // Get font size from NFC settings
 
-    // Add "Serial No: 00001"
-    $textY += $fontSize + 5;
-    imagestring($image, $gdFontSize, $qrX, $textY, "Serial No: " . $testSerialNo, $textColor);
+    if ($fontPath) {
+      // Normal text without outline
+      imagettftext($image, $fontSize, 0, $qrX, $textY, $black, $fontPath, $urlText);
+      imagettftext($image, $fontSize, 0, $qrX, $textY + 25, $black, $fontPath, $serialText);
+    } else {
+      // Fallback to default font
+      imagestring($image, 2, $qrX, $textY, $urlText, $black);
+      imagestring($image, 2, $qrX, $textY + 25, $serialText, $black);
+    }
   }
 
   private function deleteDirectory($dir)
