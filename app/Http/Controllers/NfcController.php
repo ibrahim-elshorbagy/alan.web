@@ -226,12 +226,13 @@ class NfcController extends AppBaseController
     $yPos = $nfc->qr_y_position ?? 0;
 
     // Get the front and back images
-    $frontImageUrl = $nfc->getFirstMediaUrl('nfc_front');
-    $backImageUrl = $nfc->getFirstMediaUrl('nfc_back');
+    $frontMedia = $nfc->getFirstMedia('nfc_front');
+    $backMedia = $nfc->getFirstMedia('nfc_back');
 
-    if ($frontImageUrl) {
+    if ($frontMedia) {
       try {
-        $frontImage = imagecreatefromstring(file_get_contents($frontImageUrl));
+        $frontImagePath = $frontMedia->getPath();
+        $frontImage = imagecreatefromstring(file_get_contents($frontImagePath));
         if ($frontImage !== false) {
           if ($qrSide === 'front') {
             imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
@@ -247,9 +248,10 @@ class NfcController extends AppBaseController
       }
     }
 
-    if ($backImageUrl) {
+    if ($backMedia) {
       try {
-        $backImage = imagecreatefromstring(file_get_contents($backImageUrl));
+        $backImagePath = $backMedia->getPath();
+        $backImage = imagecreatefromstring(file_get_contents($backImagePath));
         if ($backImage !== false) {
           if ($qrSide === 'back') {
             imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
