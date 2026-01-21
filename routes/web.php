@@ -568,6 +568,7 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::delete('/nfc/delete/{id}', [NfcController::class, 'destroy'])->name('nfc.delete');
       Route::get('/nfc/{id}', [NfcController::class, 'edit'])->name('nfc.edit');
       Route::post('/nfc/update/{id}', [NfcController::class, 'update'])->name('nfc.update');
+      Route::get('/nfc/export-test-images/{id}', [NfcController::class, 'exportTestImages'])->name('nfc.export.test');
       Route::get('/download-logo/{id}', [NfcCardOrderController::class, 'downloadLogo'])->name('nfc.download.logo');
       Route::post('nfc-card-tax', [NfcController::class, 'nfcCardTax'])->name('nfc.tax');
       Route::get('nfc-card-tax', [NfcController::class, 'getNfcCardTax'])->name('nfc.tax.get');

@@ -87,6 +87,13 @@ listenClick(".nfc-delete-btn", function (event) {
     deleteItem(route("nfc.delete", recordId), Lang.get("js.nfc_card"));
 });
 
+// Export Test Images
+
+listenClick(".nfc-export-test-btn", function (event) {
+    let nfcId = $(event.currentTarget).data("id");
+    window.location.href = route("nfc.export.test", nfcId);
+});
+
 // Edit NFC Type
 
 listenClick(".nfc-view-btn", function (event) {
