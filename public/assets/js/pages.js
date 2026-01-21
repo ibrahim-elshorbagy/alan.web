@@ -48270,7 +48270,32 @@ listenClick(".nfc-delete-btn", function (event) {
 
 listenClick(".nfc-export-test-btn", function (event) {
   var nfcId = $(event.currentTarget).data("id");
-  window.location.href = route("nfc.export.test", nfcId);
+
+  // Show loading indicator
+  displayToastr('info', 'Generating test images...', 'Please wait');
+
+  // Use fetch to handle potential errors
+  fetch(route("nfc.export.test", nfcId)).then(function (response) {
+    if (!response.ok) {
+      return response.json().then(function (err) {
+        throw new Error(err.error || 'Failed to export test images');
+      });
+    }
+    return response.blob();
+  }).then(function (blob) {
+    // Create download link
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'nfc_test_images_' + nfcId + '.zip';
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    displayToastr('success', 'Test images downloaded successfully!', 'Success');
+  })["catch"](function (error) {
+    displayToastr('error', error.message, 'Error');
+  });
 });
 
 // Edit NFC Type

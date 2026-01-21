@@ -20,278 +20,327 @@ use Illuminate\Support\Facades\File;
 
 class NfcController extends AppBaseController
 {
-    private $NfcRepository;
+  private $NfcRepository;
 
-    public function __construct(NfcRepository $NfcRepository)
-    {
-        $this->NfcRepository = $NfcRepository;
+  public function __construct(NfcRepository $NfcRepository)
+  {
+    $this->NfcRepository = $NfcRepository;
+  }
+
+  public function index(Request $request)
+  {
+    return view('sadmin.nfc.index');
+  }
+
+  public function store(CreateNfcRequest $request)
+  {
+
+    $input = $request->all();
+
+    $nfc = $this->NfcRepository->store($input);
+
+    return $this->sendResponse($nfc, __('messages.nfc.nfc_card_created_success'));
+  }
+
+  public function edit($id)
+  {
+
+    $nfc = Nfc::with('media')->find($id);
+
+    return $this->sendResponse($nfc, 'Nfc Type  successfully retrieved.');
+  }
+
+  public function update(UpdateNfcCardRequest $request, $id)
+  {
+    $input = $request->all();
+
+    $nfc = $this->NfcRepository->update($input, $id);
+
+    return $this->sendResponse($nfc, __('messages.nfc.nfc_card_updated_success'));
+  }
+
+  public function destroy($id)
+  {
+    $nfcOrder = NfcOrders::where('card_type', $id)->exists();
+
+    if ($nfcOrder) {
+      return $this->sendError(__('messages.nfc.card_can_not_deleted'));
     }
 
-    public function index(Request $request)
-    {
-        return view('sadmin.nfc.index');
+    $nfc = Nfc::find($id);
+    $nfc->delete();
+
+    return $this->sendSuccess(__('messages.nfc.nfc_card_deleted_success'));
+  }
+
+  public function getNfcCardTax()
+  {
+    $tax = Setting::where('key', 'nfc_tax_value')->value('value');
+    $status = Setting::where('key', 'nfc_tax_enabled')->value('value');
+
+    return response()->json([
+      'tax' => $tax,
+      'status' => $status == 1 ? true : false,
+    ]);
+  }
+
+  public function nfcCardTax(Request $request)
+  {
+    $input = $request->all();
+
+    $request->validate([
+      'nfc_tax_value' => 'required|numeric',
+    ]);
+
+    $taxSettings = [
+      'nfc_tax_value' => $input['nfc_tax_value'],
+      'nfc_tax_enabled' => isset($input['nfc_tax_enabled']) ? 1 : 0,
+    ];
+
+    foreach ($taxSettings as $key => $value) {
+      Setting::updateOrCreate(['key' => $key], ['value' => $value]);
     }
 
-    public function store(CreateNfcRequest $request)
-    {
+    return response()->json([
+      'success' => true,
+      'message' => __('messages.nfc.nfc_card_tax_saved_successfully'),
+    ]);
+  }
 
-        $input = $request->all();
+  public function exportTestImages($id)
+  {
+    $nfc = Nfc::with('media')->findOrFail($id);
 
-        $nfc = $this->NfcRepository->store($input);
+    $timestamp = time();
+    $tempDirectory = storage_path('app/temp_nfc_test/' . $timestamp);
 
-        return $this->sendResponse($nfc,__('messages.nfc.nfc_card_created_success'));
+    if (!is_dir($tempDirectory)) {
+      mkdir($tempDirectory, 0777, true);
     }
 
-    public function edit($id){
+    // Get QR code settings
+    $customQrCode = QrcodeEdit::withoutGlobalScopes()
+      ->where('tenant_id', getLogInTenantId())
+      ->first();
 
-       $nfc = Nfc::with('media')->find($id);
-
-        return $this->sendResponse($nfc, 'Nfc Type  successfully retrieved.');
+    if (empty($customQrCode)) {
+      $customQrCode = [
+        'qrcode_color' => '#000000',
+        'background_color' => '#ffffff',
+      ];
     }
 
-    public function update(UpdateNfcCardRequest $request,$id){
-        $input = $request->all();
+    $qrcodeColor['qrcodeColor'] = Hex::fromString($customQrCode['qrcode_color'])->toRgb();
+    $qrcodeColor['background_color'] = Hex::fromString($customQrCode['background_color'])->toRgb();
 
-        $nfc = $this->NfcRepository->update($input, $id);
+    // Test URL and data
+    $testUrl = 'https://nfcjo.com/';
+    $testCode = 'XXXXXX';
+    $testSerialNo = '00001';
 
-        return $this->sendResponse($nfc,__('messages.nfc.nfc_card_updated_success'));
+    // Generate both images
+    $generatedImages = $this->generateTestImagesWithQR(
+      $testUrl,
+      $testCode,
+      $testSerialNo,
+      $nfc,
+      $qrcodeColor,
+      $customQrCode,
+      $tempDirectory
+    );
 
+    // Check if any images were generated
+    if (empty($generatedImages)) {
+      $this->deleteDirectory($tempDirectory);
+      return response()->json(['error' => 'No images found. Please upload front and back images for this NFC card.'], 400);
     }
 
-    public function destroy($id)
-    {
-        $nfcOrder = NfcOrders::where('card_type',$id)->exists();
+    // Create ZIP file
+    $zipFileName = 'nfc_test_images_' . $nfc->name . '_' . $timestamp . '.zip';
+    $zipPath = $tempDirectory . '/' . $zipFileName;
 
-        if($nfcOrder){
-            return $this->sendError(__('messages.nfc.card_can_not_deleted'));
+    $zip = new ZipArchive();
+    $zipOpenResult = $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+    if ($zipOpenResult !== TRUE) {
+      $this->deleteDirectory($tempDirectory);
+      return response()->json(['error' => 'Failed to create ZIP file. Error code: ' . $zipOpenResult], 500);
+    }
+
+    $filesAdded = 0;
+    foreach ($generatedImages as $imagePath) {
+      if (file_exists($imagePath)) {
+        $zip->addFile($imagePath, basename($imagePath));
+        $filesAdded++;
+      }
+    }
+    $zip->close();
+
+    if ($filesAdded === 0 || !file_exists($zipPath)) {
+      $this->deleteDirectory($tempDirectory);
+      return response()->json(['error' => 'Failed to add images to ZIP file'], 500);
+    }
+
+    $zipContent = file_get_contents($zipPath);
+    $this->deleteDirectory($tempDirectory);
+
+    return response($zipContent)
+      ->header('Content-Type', 'application/zip')
+      ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
+      ->header('Content-Length', strlen($zipContent));
+  }
+
+  private function generateTestImagesWithQR($testUrl, $testCode, $testSerialNo, $nfc, $qrcodeColor, $customQrCode, $tempDirectory)
+  {
+    $generatedImages = [];
+
+    // Get the front and back images
+    $frontImageUrl = $nfc->getFirstMediaUrl('nfc_front');
+    $backImageUrl = $nfc->getFirstMediaUrl('nfc_back');
+
+    // Check if at least one image exists
+    if (empty($frontImageUrl) && empty($backImageUrl)) {
+      return $generatedImages; // Return empty array if no images
+    }
+
+    // Determine which side gets the QR code
+    $qrSide = $nfc->qr_position_side ?? 'front';
+    $printOnlyQr = false; // For test, always include the base image
+
+    // QR settings
+    $qrX = $nfc->qr_x_position ?? 0;
+    $qrY = $nfc->qr_y_position ?? 0;
+    $qrSize = $nfc->qr_size ?? 100;
+
+    // Generate QR code
+    $qrCode = QrCode::format('png')
+      ->size($qrSize)
+      ->color(
+        $qrcodeColor['qrcodeColor']->red(),
+        $qrcodeColor['qrcodeColor']->green(),
+        $qrcodeColor['qrcodeColor']->blue()
+      )
+      ->backgroundColor(
+        $qrcodeColor['background_color']->red(),
+        $qrcodeColor['background_color']->green(),
+        $qrcodeColor['background_color']->blue()
+      )
+      ->margin(0)
+      ->generate($testUrl);
+
+    // Front image
+    if ($frontImageUrl && !empty($frontImageUrl)) {
+      try {
+        $frontImage = imagecreatefromstring(file_get_contents($frontImageUrl));
+
+        if ($frontImage === false) {
+          // Skip if image creation failed
+        } else {
+          if ($qrSide === 'front') {
+            // Add QR code to front
+            $qrImage = imagecreatefromstring($qrCode);
+            imagecopy($frontImage, $qrImage, $qrX, $qrY, 0, 0, imagesx($qrImage), imagesy($qrImage));
+            imagedestroy($qrImage);
+
+            // Add text overlays
+            $this->addTestTextOverlays($frontImage, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc);
+          }
+
+          $frontPath = $tempDirectory . '/nfc_front_test.png';
+          imagepng($frontImage, $frontPath);
+          imagedestroy($frontImage);
+          $generatedImages[] = $frontPath;
         }
-
-        $nfc = Nfc::find($id);
-        $nfc->delete();
-
-        return $this->sendSuccess(__('messages.nfc.nfc_card_deleted_success'));
+      } catch (\Exception $e) {
+        // Skip if error occurred
+      }
     }
 
-    public function getNfcCardTax()
-    {
-        $tax = Setting::where('key', 'nfc_tax_value')->value('value');
-        $status = Setting::where('key', 'nfc_tax_enabled')->value('value');
+    // Back image
+    if ($backImageUrl && !empty($backImageUrl)) {
+      try {
+        $backImage = imagecreatefromstring(file_get_contents($backImageUrl));
 
-        return response()->json([
-            'tax' => $tax,
-            'status' => $status == 1 ? true : false,
-        ]);
+        if ($backImage === false) {
+          // Skip if image creation failed
+        } else {
+          if ($qrSide === 'back') {
+            // Add QR code to back
+            $qrImage = imagecreatefromstring($qrCode);
+            imagecopy($backImage, $qrImage, $qrX, $qrY, 0, 0, imagesx($qrImage), imagesy($qrImage));
+            imagedestroy($qrImage);
+
+            // Add text overlays
+            $this->addTestTextOverlays($backImage, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc);
+          }
+
+          $backPath = $tempDirectory . '/nfc_back_test.png';
+          imagepng($backImage, $backPath);
+          imagedestroy($backImage);
+          $generatedImages[] = $backPath;
+        }
+      } catch (\Exception $e) {
+        // Skip if error occurred
+      }
+
+      if ($qrSide === 'back') {
+        // Add QR code to back
+        $qrImage = imagecreatefromstring($qrCode);
+        imagecopy($backImage, $qrImage, $qrX, $qrY, 0, 0, imagesx($qrImage), imagesy($qrImage));
+        imagedestroy($qrImage);
+
+        // Add text overlays
+        $this->addTestTextOverlays($backImage, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc);
+      }
+
+      $backPath = $tempDirectory . '/nfc_back_test.png';
+      imagepng($backImage, $backPath);
+      imagedestroy($backImage);
+      $generatedImages[] = $backPath;
     }
 
-    public function nfcCardTax(Request $request)
-    {
-        $input = $request->all();
+    return $generatedImages;
+  }
 
-        $request->validate([
-            'nfc_tax_value' => 'required|numeric',
-        ]);
+  private function addTestTextOverlays($image, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc)
+  {
+    // Get font size from NFC settings
+    $fontSize = $nfc->text_font_size ?? 14;
 
-        $taxSettings = [
-            'nfc_tax_value' => $input['nfc_tax_value'],
-            'nfc_tax_enabled' => isset($input['nfc_tax_enabled']) ? 1 : 0,
-        ];
+    // Convert font size to GD font size (approximate)
+    $gdFontSize = max(1, min(5, round($fontSize / 3)));
 
-        foreach ($taxSettings as $key => $value) {
-            Setting::updateOrCreate(['key' => $key], ['value' => $value]);
-        }
+    // Text color (black)
+    $textColor = imagecolorallocate($image, 0, 0, 0);
 
-        return response()->json([
-            'success' => true,
-            'message' => __('messages.nfc.nfc_card_tax_saved_successfully'),
-        ]);
+    // Starting Y position (below QR code)
+    $textY = $qrY + $qrSize + 10;
 
+    // Add "Code: XXXXXX"
+    imagestring($image, $gdFontSize, $qrX, $textY, "Code: " . $testCode, $textColor);
+
+    // Add "Serial No: 00001"
+    $textY += $fontSize + 5;
+    imagestring($image, $gdFontSize, $qrX, $textY, "Serial No: " . $testSerialNo, $textColor);
+  }
+
+  private function deleteDirectory($dir)
+  {
+    if (!is_dir($dir)) {
+      return false;
     }
 
-    public function exportTestImages($id)
-    {
-        $nfc = Nfc::with('media')->findOrFail($id);
+    $items = array_diff(scandir($dir), ['.', '..']);
 
-        $timestamp = time();
-        $tempDirectory = storage_path('app/temp_nfc_test/' . $timestamp);
-
-        if (!is_dir($tempDirectory)) {
-            mkdir($tempDirectory, 0777, true);
-        }
-
-        // Get QR code settings
-        $customQrCode = QrcodeEdit::withoutGlobalScopes()
-            ->where('tenant_id', getLogInTenantId())
-            ->first();
-
-        if (empty($customQrCode)) {
-            $customQrCode = [
-                'qrcode_color' => '#000000',
-                'background_color' => '#ffffff',
-            ];
-        }
-
-        $qrcodeColor['qrcodeColor'] = Hex::fromString($customQrCode['qrcode_color'])->toRgb();
-        $qrcodeColor['background_color'] = Hex::fromString($customQrCode['background_color'])->toRgb();
-
-        // Test URL and data
-        $testUrl = 'https://nfcjo.com/';
-        $testCode = 'XXXXXX';
-        $testSerialNo = '00001';
-
-        // Generate both images
-        $generatedImages = $this->generateTestImagesWithQR(
-            $testUrl,
-            $testCode,
-            $testSerialNo,
-            $nfc,
-            $qrcodeColor,
-            $customQrCode,
-            $tempDirectory
-        );
-
-        // Create ZIP file
-        $zipFileName = 'nfc_test_images_' . $nfc->name . '_' . $timestamp . '.zip';
-        $zipPath = $tempDirectory . '/' . $zipFileName;
-
-        $zip = new ZipArchive();
-        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
-            foreach ($generatedImages as $imagePath) {
-                if (file_exists($imagePath)) {
-                    $zip->addFile($imagePath, basename($imagePath));
-                }
-            }
-            $zip->close();
-        }
-
-        if (!file_exists($zipPath)) {
-            $this->deleteDirectory($tempDirectory);
-            return response()->json(['error' => 'Failed to create ZIP file'], 500);
-        }
-
-        $zipContent = file_get_contents($zipPath);
-        $this->deleteDirectory($tempDirectory);
-
-        return response($zipContent)
-            ->header('Content-Type', 'application/zip')
-            ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
-            ->header('Content-Length', strlen($zipContent));
+    foreach ($items as $item) {
+      $path = $dir . DIRECTORY_SEPARATOR . $item;
+      if (is_dir($path)) {
+        $this->deleteDirectory($path);
+      } else {
+        unlink($path);
+      }
     }
 
-    private function generateTestImagesWithQR($testUrl, $testCode, $testSerialNo, $nfc, $qrcodeColor, $customQrCode, $tempDirectory)
-    {
-        $generatedImages = [];
-
-        // Get the front and back images
-        $frontImageUrl = $nfc->getFirstMediaUrl('nfc_front');
-        $backImageUrl = $nfc->getFirstMediaUrl('nfc_back');
-
-        // Determine which side gets the QR code
-        $qrSide = $nfc->qr_position_side ?? 'front';
-        $printOnlyQr = false; // For test, always include the base image
-
-        // QR settings
-        $qrX = $nfc->qr_x_position ?? 0;
-        $qrY = $nfc->qr_y_position ?? 0;
-        $qrSize = $nfc->qr_size ?? 100;
-
-        // Generate QR code
-        $qrCode = QrCode::format('png')
-            ->size($qrSize)
-            ->color(
-                $qrcodeColor['qrcodeColor']->red(),
-                $qrcodeColor['qrcodeColor']->green(),
-                $qrcodeColor['qrcodeColor']->blue()
-            )
-            ->backgroundColor(
-                $qrcodeColor['background_color']->red(),
-                $qrcodeColor['background_color']->green(),
-                $qrcodeColor['background_color']->blue()
-            )
-            ->margin(0)
-            ->generate($testUrl);
-
-        // Front image
-        if ($frontImageUrl) {
-            $frontImage = imagecreatefromstring(file_get_contents($frontImageUrl));
-
-            if ($qrSide === 'front') {
-                // Add QR code to front
-                $qrImage = imagecreatefromstring($qrCode);
-                imagecopy($frontImage, $qrImage, $qrX, $qrY, 0, 0, imagesx($qrImage), imagesy($qrImage));
-                imagedestroy($qrImage);
-
-                // Add text overlays
-                $this->addTestTextOverlays($frontImage, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc);
-            }
-
-            $frontPath = $tempDirectory . '/nfc_front_test.png';
-            imagepng($frontImage, $frontPath);
-            imagedestroy($frontImage);
-            $generatedImages[] = $frontPath;
-        }
-
-        // Back image
-        if ($backImageUrl) {
-            $backImage = imagecreatefromstring(file_get_contents($backImageUrl));
-
-            if ($qrSide === 'back') {
-                // Add QR code to back
-                $qrImage = imagecreatefromstring($qrCode);
-                imagecopy($backImage, $qrImage, $qrX, $qrY, 0, 0, imagesx($qrImage), imagesy($qrImage));
-                imagedestroy($qrImage);
-
-                // Add text overlays
-                $this->addTestTextOverlays($backImage, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc);
-            }
-
-            $backPath = $tempDirectory . '/nfc_back_test.png';
-            imagepng($backImage, $backPath);
-            imagedestroy($backImage);
-            $generatedImages[] = $backPath;
-        }
-
-        return $generatedImages;
-    }
-
-    private function addTestTextOverlays($image, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc)
-    {
-        // Get font size from NFC settings
-        $fontSize = $nfc->text_font_size ?? 14;
-
-        // Convert font size to GD font size (approximate)
-        $gdFontSize = max(1, min(5, round($fontSize / 3)));
-
-        // Text color (black)
-        $textColor = imagecolorallocate($image, 0, 0, 0);
-
-        // Starting Y position (below QR code)
-        $textY = $qrY + $qrSize + 10;
-
-        // Add "Code: XXXXXX"
-        imagestring($image, $gdFontSize, $qrX, $textY, "Code: " . $testCode, $textColor);
-
-        // Add "Serial No: 00001"
-        $textY += $fontSize + 5;
-        imagestring($image, $gdFontSize, $qrX, $textY, "Serial No: " . $testSerialNo, $textColor);
-    }
-
-    private function deleteDirectory($dir)
-    {
-        if (!is_dir($dir)) {
-            return false;
-        }
-
-        $items = array_diff(scandir($dir), ['.', '..']);
-
-        foreach ($items as $item) {
-            $path = $dir . DIRECTORY_SEPARATOR . $item;
-            if (is_dir($path)) {
-                $this->deleteDirectory($path);
-            } else {
-                unlink($path);
-            }
-        }
-
-        return rmdir($dir);
-    }
+    return rmdir($dir);
+  }
 }

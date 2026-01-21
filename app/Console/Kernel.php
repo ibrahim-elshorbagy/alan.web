@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
    */
   protected function schedule(Schedule $schedule): void
   {
-    Log::info('Scheduler running at ' . now());
+    // Log::info('Scheduler running at ' . now());
     $schedule->command('sitemap:generate')->daily();
     $schedule->command(PlanExpirationMailCommand::class)->daily();
     $schedule->command(PlanExpirationMailCommand::class)->daily();
