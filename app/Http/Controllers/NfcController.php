@@ -157,8 +157,18 @@ class NfcController extends AppBaseController
 
     // Check if any images were generated
     if (empty($generatedImages)) {
+      $debug = [
+        'nfc_id' => $id,
+        'media_count' => $nfc->media->count(),
+        'front_media_exists' => $nfc->getFirstMedia('nfc_front') ? true : false,
+        'back_media_exists' => $nfc->getFirstMedia('nfc_back') ? true : false,
+        'front_media_path' => $nfc->getFirstMedia('nfc_front') ? $nfc->getFirstMedia('nfc_front')->getPath() : null,
+        'back_media_path' => $nfc->getFirstMedia('nfc_back') ? $nfc->getFirstMedia('nfc_back')->getPath() : null,
+        'front_file_exists' => $nfc->getFirstMedia('nfc_front') && file_exists($nfc->getFirstMedia('nfc_front')->getPath()),
+        'back_file_exists' => $nfc->getFirstMedia('nfc_back') && file_exists($nfc->getFirstMedia('nfc_back')->getPath()),
+      ];
       $this->deleteDirectory($tempDirectory);
-      return response()->json(['error' => 'No images could be processed. Please check that your NFC card has valid front/back images.'], 400);
+      return response()->json(['error' => 'No images could be processed. Please check that your NFC card has valid front/back images.', 'debug' => $debug], 400);
     }
 
     $zipFileName = 'nfc_test_images_' . $nfc->name . '_' . $timestamp . '.zip';
