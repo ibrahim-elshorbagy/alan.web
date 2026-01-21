@@ -114,8 +114,8 @@ class NfcController extends AppBaseController
 
     Log::info("Exporting test images for NFC ID: {$id}");
     Log::info("NFC media count: " . $nfc->media->count());
-    Log::info("Front media: " . ($nfc->getFirstMedia('nfc_front') ? 'exists' : 'not found'));
-    Log::info("Back media: " . ($nfc->getFirstMedia('nfc_back') ? 'exists' : 'not found'));
+    Log::info("Front media: " . ($nfc->getFirstMedia('nfc_image') ? 'exists' : 'not found'));
+    Log::info("Back media: " . ($nfc->getFirstMedia('nfc_back_image') ? 'exists' : 'not found'));
 
     $timestamp = time();
     $tempDirectory = storage_path('app/temp_nfc_test/' . $timestamp);
@@ -160,12 +160,12 @@ class NfcController extends AppBaseController
       $debug = [
         'nfc_id' => $id,
         'media_count' => $nfc->media->count(),
-        'front_media_exists' => $nfc->getFirstMedia('nfc_front') ? true : false,
-        'back_media_exists' => $nfc->getFirstMedia('nfc_back') ? true : false,
-        'front_media_path' => $nfc->getFirstMedia('nfc_front') ? $nfc->getFirstMedia('nfc_front')->getPath() : null,
-        'back_media_path' => $nfc->getFirstMedia('nfc_back') ? $nfc->getFirstMedia('nfc_back')->getPath() : null,
-        'front_file_exists' => $nfc->getFirstMedia('nfc_front') && file_exists($nfc->getFirstMedia('nfc_front')->getPath()),
-        'back_file_exists' => $nfc->getFirstMedia('nfc_back') && file_exists($nfc->getFirstMedia('nfc_back')->getPath()),
+        'front_media_exists' => $nfc->getFirstMedia('nfc_image') ? true : false,
+        'back_media_exists' => $nfc->getFirstMedia('nfc_back_image') ? true : false,
+        'front_media_path' => $nfc->getFirstMedia('nfc_image') ? $nfc->getFirstMedia('nfc_image')->getPath() : null,
+        'back_media_path' => $nfc->getFirstMedia('nfc_back_image') ? $nfc->getFirstMedia('nfc_back_image')->getPath() : null,
+        'front_file_exists' => $nfc->getFirstMedia('nfc_image') && file_exists($nfc->getFirstMedia('nfc_image')->getPath()),
+        'back_file_exists' => $nfc->getFirstMedia('nfc_back_image') && file_exists($nfc->getFirstMedia('nfc_back_image')->getPath()),
       ];
       $this->deleteDirectory($tempDirectory);
       return response()->json(['error' => 'No images could be processed. Please check that your NFC card has valid front/back images.', 'debug' => $debug], 400);
@@ -245,8 +245,8 @@ class NfcController extends AppBaseController
     $yPos = $nfc->qr_y_position ?? 0;
 
     // Get the front and back images
-    $frontMedia = $nfc->getFirstMedia('nfc_front');
-    $backMedia = $nfc->getFirstMedia('nfc_back');
+    $frontMedia = $nfc->getFirstMedia('nfc_image');
+    $backMedia = $nfc->getFirstMedia('nfc_back_image');
 
     Log::info("Front media object: " . ($frontMedia ? 'exists' : 'null'));
     Log::info("Back media object: " . ($backMedia ? 'exists' : 'null'));
