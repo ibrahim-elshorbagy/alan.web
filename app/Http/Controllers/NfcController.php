@@ -112,10 +112,6 @@ class NfcController extends AppBaseController
   {
     $nfc = Nfc::with('media')->findOrFail($id);
 
-    Log::info("Exporting test images for NFC ID: {$id}");
-    Log::info("NFC media count: " . $nfc->media->count());
-    Log::info("Front media: " . ($nfc->getFirstMedia('nfc_image') ? 'exists' : 'not found'));
-    Log::info("Back media: " . ($nfc->getFirstMedia('nfc_back_image') ? 'exists' : 'not found'));
 
     $timestamp = time();
     $tempDirectory = storage_path('app/temp_nfc_test/' . $timestamp);
@@ -209,7 +205,6 @@ class NfcController extends AppBaseController
   {
     $generatedImages = [];
 
-    Log::info("Generating test images for NFC: {$nfc->id}");
 
     // Determine which side gets the QR code
     $qrSide = $nfc->qr_position_side ?? 'front';
@@ -248,16 +243,11 @@ class NfcController extends AppBaseController
     $frontMedia = $nfc->getFirstMedia('nfc_image');
     $backMedia = $nfc->getFirstMedia('nfc_back_image');
 
-    Log::info("Front media object: " . ($frontMedia ? 'exists' : 'null'));
-    Log::info("Back media object: " . ($backMedia ? 'exists' : 'null'));
 
     if ($frontMedia) {
       try {
         $frontImagePath = $frontMedia->getPath();
-        Log::info("Front image path: {$frontImagePath}");
-        Log::info("Front image file exists: " . (file_exists($frontImagePath) ? 'yes' : 'no'));
         $frontImage = imagecreatefromstring(file_get_contents($frontImagePath));
-        Log::info("Front image created: " . ($frontImage !== false ? 'success' : 'failed'));
         if ($frontImage !== false) {
           if ($qrSide === 'front') {
             imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
@@ -267,7 +257,6 @@ class NfcController extends AppBaseController
           imagepng($frontImage, $frontPath);
           imagedestroy($frontImage);
           $generatedImages[] = $frontPath;
-          Log::info("Front image processed successfully");
         }
       } catch (\Exception $e) {
         Log::error("Error processing front image: " . $e->getMessage());
@@ -278,10 +267,7 @@ class NfcController extends AppBaseController
     if ($backMedia) {
       try {
         $backImagePath = $backMedia->getPath();
-        Log::info("Back image path: {$backImagePath}");
-        Log::info("Back image file exists: " . (file_exists($backImagePath) ? 'yes' : 'no'));
         $backImage = imagecreatefromstring(file_get_contents($backImagePath));
-        Log::info("Back image created: " . ($backImage !== false ? 'success' : 'failed'));
         if ($backImage !== false) {
           if ($qrSide === 'back') {
             imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
@@ -291,7 +277,6 @@ class NfcController extends AppBaseController
           imagepng($backImage, $backPath);
           imagedestroy($backImage);
           $generatedImages[] = $backPath;
-          Log::info("Back image processed successfully");
         }
       } catch (\Exception $e) {
         Log::error("Error processing back image: " . $e->getMessage());
@@ -299,7 +284,6 @@ class NfcController extends AppBaseController
       }
     }
 
-    Log::info("Generated images count: " . count($generatedImages));
 
     imagedestroy($qrImageGd);
     return $generatedImages;
