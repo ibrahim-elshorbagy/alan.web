@@ -17,6 +17,7 @@ use App\Models\QrcodeEdit;
 use Spatie\Color\Hex;
 use ZipArchive;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class NfcController extends AppBaseController
 {
@@ -111,6 +112,11 @@ class NfcController extends AppBaseController
   {
     $nfc = Nfc::with('media')->findOrFail($id);
 
+    Log::info("Exporting test images for NFC ID: {$id}");
+    Log::info("NFC media count: " . $nfc->media->count());
+    Log::info("Front media: " . ($nfc->getFirstMedia('nfc_front') ? 'exists' : 'not found'));
+    Log::info("Back media: " . ($nfc->getFirstMedia('nfc_back') ? 'exists' : 'not found'));
+
     $timestamp = time();
     $tempDirectory = storage_path('app/temp_nfc_test/' . $timestamp);
 
@@ -153,44 +159,47 @@ class NfcController extends AppBaseController
     if (empty($generatedImages)) {
       $this->deleteDirectory($tempDirectory);
       return response()->json(['error' => 'No images could be processed. Please check that your NFC card has valid front/back images.'], 400);
-      $zipFileName = 'nfc_test_images_' . $nfc->name . '_' . $timestamp . '.zip';
-      $zipPath = $tempDirectory . '/' . $zipFileName;
-
-      $zip = new ZipArchive();
-      $zipOpenResult = $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-
-      if ($zipOpenResult !== TRUE) {
-        $this->deleteDirectory($tempDirectory);
-        return response()->json(['error' => 'Failed to create ZIP file. Error code: ' . $zipOpenResult], 500);
-      }
-
-      $filesAdded = 0;
-      foreach ($generatedImages as $imagePath) {
-        if (file_exists($imagePath)) {
-          $zip->addFile($imagePath, basename($imagePath));
-          $filesAdded++;
-        }
-      }
-      $zip->close();
-
-      if ($filesAdded === 0 || !file_exists($zipPath)) {
-        $this->deleteDirectory($tempDirectory);
-        return response()->json(['error' => 'Failed to add images to ZIP file'], 500);
-      }
-
-      $zipContent = file_get_contents($zipPath);
-      $this->deleteDirectory($tempDirectory);
-
-      return response($zipContent)
-        ->header('Content-Type', 'application/zip')
-        ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
-        ->header('Content-Length', strlen($zipContent));
     }
+
+    $zipFileName = 'nfc_test_images_' . $nfc->name . '_' . $timestamp . '.zip';
+    $zipPath = $tempDirectory . '/' . $zipFileName;
+
+    $zip = new ZipArchive();
+    $zipOpenResult = $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+    if ($zipOpenResult !== TRUE) {
+      $this->deleteDirectory($tempDirectory);
+      return response()->json(['error' => 'Failed to create ZIP file. Error code: ' . $zipOpenResult], 500);
+    }
+
+    $filesAdded = 0;
+    foreach ($generatedImages as $imagePath) {
+      if (file_exists($imagePath)) {
+        $zip->addFile($imagePath, basename($imagePath));
+        $filesAdded++;
+      }
+    }
+    $zip->close();
+
+    if ($filesAdded === 0 || !file_exists($zipPath)) {
+      $this->deleteDirectory($tempDirectory);
+      return response()->json(['error' => 'Failed to add images to ZIP file'], 500);
+    }
+
+    $zipContent = file_get_contents($zipPath);
+    $this->deleteDirectory($tempDirectory);
+
+    return response($zipContent)
+      ->header('Content-Type', 'application/zip')
+      ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
+      ->header('Content-Length', strlen($zipContent));
   }
 
   private function generateTestImagesWithQR($testUrl, $testCode, $testSerialNo, $nfc, $qrcodeColor, $customQrCode, $tempDirectory)
   {
     $generatedImages = [];
+
+    Log::info("Generating test images for NFC: {$nfc->id}");
 
     // Determine which side gets the QR code
     $qrSide = $nfc->qr_position_side ?? 'front';
@@ -229,10 +238,16 @@ class NfcController extends AppBaseController
     $frontMedia = $nfc->getFirstMedia('nfc_front');
     $backMedia = $nfc->getFirstMedia('nfc_back');
 
+    Log::info("Front media object: " . ($frontMedia ? 'exists' : 'null'));
+    Log::info("Back media object: " . ($backMedia ? 'exists' : 'null'));
+
     if ($frontMedia) {
       try {
         $frontImagePath = $frontMedia->getPath();
+        Log::info("Front image path: {$frontImagePath}");
+        Log::info("Front image file exists: " . (file_exists($frontImagePath) ? 'yes' : 'no'));
         $frontImage = imagecreatefromstring(file_get_contents($frontImagePath));
+        Log::info("Front image created: " . ($frontImage !== false ? 'success' : 'failed'));
         if ($frontImage !== false) {
           if ($qrSide === 'front') {
             imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
@@ -242,8 +257,10 @@ class NfcController extends AppBaseController
           imagepng($frontImage, $frontPath);
           imagedestroy($frontImage);
           $generatedImages[] = $frontPath;
+          Log::info("Front image processed successfully");
         }
       } catch (\Exception $e) {
+        Log::error("Error processing front image: " . $e->getMessage());
         // Skip if error
       }
     }
@@ -251,7 +268,10 @@ class NfcController extends AppBaseController
     if ($backMedia) {
       try {
         $backImagePath = $backMedia->getPath();
+        Log::info("Back image path: {$backImagePath}");
+        Log::info("Back image file exists: " . (file_exists($backImagePath) ? 'yes' : 'no'));
         $backImage = imagecreatefromstring(file_get_contents($backImagePath));
+        Log::info("Back image created: " . ($backImage !== false ? 'success' : 'failed'));
         if ($backImage !== false) {
           if ($qrSide === 'back') {
             imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
@@ -261,11 +281,15 @@ class NfcController extends AppBaseController
           imagepng($backImage, $backPath);
           imagedestroy($backImage);
           $generatedImages[] = $backPath;
+          Log::info("Back image processed successfully");
         }
       } catch (\Exception $e) {
+        Log::error("Error processing back image: " . $e->getMessage());
         // Skip if error
       }
     }
+
+    Log::info("Generated images count: " . count($generatedImages));
 
     imagedestroy($qrImageGd);
     return $generatedImages;
