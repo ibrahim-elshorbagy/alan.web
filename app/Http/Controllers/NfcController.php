@@ -152,68 +152,52 @@ class NfcController extends AppBaseController
     // Check if any images were generated
     if (empty($generatedImages)) {
       $this->deleteDirectory($tempDirectory);
-      return response()->json(['error' => 'No images found. Please upload front and back images for this NFC card.'], 400);
-    }
+      return response()->json(['error' => 'No images could be processed. Please check that your NFC card has valid front/back images.'], 400);
+      $zipFileName = 'nfc_test_images_' . $nfc->name . '_' . $timestamp . '.zip';
+      $zipPath = $tempDirectory . '/' . $zipFileName;
 
-    // Create ZIP file
-    $zipFileName = 'nfc_test_images_' . $nfc->name . '_' . $timestamp . '.zip';
-    $zipPath = $tempDirectory . '/' . $zipFileName;
+      $zip = new ZipArchive();
+      $zipOpenResult = $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-    $zip = new ZipArchive();
-    $zipOpenResult = $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-
-    if ($zipOpenResult !== TRUE) {
-      $this->deleteDirectory($tempDirectory);
-      return response()->json(['error' => 'Failed to create ZIP file. Error code: ' . $zipOpenResult], 500);
-    }
-
-    $filesAdded = 0;
-    foreach ($generatedImages as $imagePath) {
-      if (file_exists($imagePath)) {
-        $zip->addFile($imagePath, basename($imagePath));
-        $filesAdded++;
+      if ($zipOpenResult !== TRUE) {
+        $this->deleteDirectory($tempDirectory);
+        return response()->json(['error' => 'Failed to create ZIP file. Error code: ' . $zipOpenResult], 500);
       }
-    }
-    $zip->close();
 
-    if ($filesAdded === 0 || !file_exists($zipPath)) {
+      $filesAdded = 0;
+      foreach ($generatedImages as $imagePath) {
+        if (file_exists($imagePath)) {
+          $zip->addFile($imagePath, basename($imagePath));
+          $filesAdded++;
+        }
+      }
+      $zip->close();
+
+      if ($filesAdded === 0 || !file_exists($zipPath)) {
+        $this->deleteDirectory($tempDirectory);
+        return response()->json(['error' => 'Failed to add images to ZIP file'], 500);
+      }
+
+      $zipContent = file_get_contents($zipPath);
       $this->deleteDirectory($tempDirectory);
-      return response()->json(['error' => 'Failed to add images to ZIP file'], 500);
+
+      return response($zipContent)
+        ->header('Content-Type', 'application/zip')
+        ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
+        ->header('Content-Length', strlen($zipContent));
     }
-
-    $zipContent = file_get_contents($zipPath);
-    $this->deleteDirectory($tempDirectory);
-
-    return response($zipContent)
-      ->header('Content-Type', 'application/zip')
-      ->header('Content-Disposition', 'attachment; filename="' . $zipFileName . '"')
-      ->header('Content-Length', strlen($zipContent));
   }
 
   private function generateTestImagesWithQR($testUrl, $testCode, $testSerialNo, $nfc, $qrcodeColor, $customQrCode, $tempDirectory)
   {
     $generatedImages = [];
 
-    // Get the front and back images
-    $frontImageUrl = $nfc->getFirstMediaUrl('nfc_front');
-    $backImageUrl = $nfc->getFirstMediaUrl('nfc_back');
-
-    // Check if at least one image exists
-    if (empty($frontImageUrl) && empty($backImageUrl)) {
-      return $generatedImages; // Return empty array if no images
-    }
-
     // Determine which side gets the QR code
     $qrSide = $nfc->qr_position_side ?? 'front';
-    $printOnlyQr = false; // For test, always include the base image
 
-    // QR settings
-    $qrX = $nfc->qr_x_position ?? 0;
-    $qrY = $nfc->qr_y_position ?? 0;
+    // Generate QR code image
     $qrSize = $nfc->qr_size ?? 100;
-
-    // Generate QR code
-    $qrCode = QrCode::format('png')
+    $qrImage = QrCode::format('png')
       ->size($qrSize)
       ->color(
         $qrcodeColor['qrcodeColor']->red(),
@@ -228,77 +212,60 @@ class NfcController extends AppBaseController
       ->margin(0)
       ->generate($testUrl);
 
-    // Front image
-    if ($frontImageUrl && !empty($frontImageUrl)) {
+    // Save QR code temporarily
+    $qrPath = $tempDirectory . '/test_qr.png';
+    file_put_contents($qrPath, $qrImage);
+    $qrImageGd = imagecreatefrompng($qrPath);
+
+    // Get QR dimensions
+    $qrWidth = imagesx($qrImageGd);
+    $qrHeight = imagesy($qrImageGd);
+
+    // Get positions from NFC settings
+    $xPos = $nfc->qr_x_position ?? 0;
+    $yPos = $nfc->qr_y_position ?? 0;
+
+    // Get the front and back images
+    $frontImageUrl = $nfc->getFirstMediaUrl('nfc_front');
+    $backImageUrl = $nfc->getFirstMediaUrl('nfc_back');
+
+    if ($frontImageUrl) {
       try {
         $frontImage = imagecreatefromstring(file_get_contents($frontImageUrl));
-
-        if ($frontImage === false) {
-          // Skip if image creation failed
-        } else {
+        if ($frontImage !== false) {
           if ($qrSide === 'front') {
-            // Add QR code to front
-            $qrImage = imagecreatefromstring($qrCode);
-            imagecopy($frontImage, $qrImage, $qrX, $qrY, 0, 0, imagesx($qrImage), imagesy($qrImage));
-            imagedestroy($qrImage);
-
-            // Add text overlays
-            $this->addTestTextOverlays($frontImage, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc);
+            imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+            $this->addTestTextOverlays($frontImage, $testCode, $testSerialNo, $xPos, $yPos, $qrSize, $nfc);
           }
-
           $frontPath = $tempDirectory . '/nfc_front_test.png';
           imagepng($frontImage, $frontPath);
           imagedestroy($frontImage);
           $generatedImages[] = $frontPath;
         }
       } catch (\Exception $e) {
-        // Skip if error occurred
+        // Skip if error
       }
     }
 
-    // Back image
-    if ($backImageUrl && !empty($backImageUrl)) {
+    if ($backImageUrl) {
       try {
         $backImage = imagecreatefromstring(file_get_contents($backImageUrl));
-
-        if ($backImage === false) {
-          // Skip if image creation failed
-        } else {
+        if ($backImage !== false) {
           if ($qrSide === 'back') {
-            // Add QR code to back
-            $qrImage = imagecreatefromstring($qrCode);
-            imagecopy($backImage, $qrImage, $qrX, $qrY, 0, 0, imagesx($qrImage), imagesy($qrImage));
-            imagedestroy($qrImage);
-
-            // Add text overlays
-            $this->addTestTextOverlays($backImage, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc);
+            imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+            $this->addTestTextOverlays($backImage, $testCode, $testSerialNo, $xPos, $yPos, $qrSize, $nfc);
           }
-
           $backPath = $tempDirectory . '/nfc_back_test.png';
           imagepng($backImage, $backPath);
           imagedestroy($backImage);
           $generatedImages[] = $backPath;
         }
       } catch (\Exception $e) {
-        // Skip if error occurred
+        // Skip if error
       }
-
-      if ($qrSide === 'back') {
-        // Add QR code to back
-        $qrImage = imagecreatefromstring($qrCode);
-        imagecopy($backImage, $qrImage, $qrX, $qrY, 0, 0, imagesx($qrImage), imagesy($qrImage));
-        imagedestroy($qrImage);
-
-        // Add text overlays
-        $this->addTestTextOverlays($backImage, $testCode, $testSerialNo, $qrX, $qrY, $qrSize, $nfc);
-      }
-
-      $backPath = $tempDirectory . '/nfc_back_test.png';
-      imagepng($backImage, $backPath);
-      imagedestroy($backImage);
-      $generatedImages[] = $backPath;
     }
 
+    imagedestroy($qrImageGd);
     return $generatedImages;
   }
 
