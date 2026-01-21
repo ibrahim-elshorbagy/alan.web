@@ -109,7 +109,7 @@
             href="{{ route('send.mail.index') }}">{{ __('messages.send_mail.send_mail') }}</a>
     </li>
 
-    <li class="nav-item position-relative mx-xl-3 mb-3 mb-xl-0 {{ !Request::is('sadmin/email*') ? 'd-none' : '' }}">
+    <li class="nav-item position-relative mx-xl-3 mb-3 mb-xl-0 {{ !Request::is('sadmin/email-templates*') ? 'd-none' : '' }}">
         <a class="nav-link p-0 {{ Request::is('sadmin/email*') ? 'active' : '' }}"
             href="{{ route('email.templates.index') }}">{{ __('messages.email_templates.email_templates') }}</a>
     </li>

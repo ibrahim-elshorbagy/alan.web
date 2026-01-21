@@ -203,7 +203,7 @@
     </a>
   </li>
 
-  <li class="nav-item {{ Request::is('sadmin/email*') ? 'active' : '' }}">
+  <li class="nav-item {{ Request::is('sadmin/email-templates*') ? 'active' : '' }}">
     <a class="nav-link d-flex align-items-center py-3" aria-current="page"
       href="{{ route('email.templates.index') }}">
       <span class="aside-menu-icon pe-3"><i class="fa-solid fa-file icon-color-bs-blue"></i></span>

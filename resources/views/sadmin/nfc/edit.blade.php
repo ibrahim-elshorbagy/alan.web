@@ -26,14 +26,15 @@
             {{ Form::text('name', null, ['class' => 'form-control', 'id' => 'editNfcTitle', 'required', 'placeholder' => __('messages.form.enter_name'), 'maxlength' => '50']) }}
           </div>
 
-          <div class="col-sm-12 mb-3">
-            {{ Form::label('price', __('messages.common.price') . ':', ['class' => 'form-label required']) }}
-            {{ Form::number('price', null, ['class' => 'form-control', 'id' => 'editNfcPrice', 'required', 'step' => '0.01', 'min' => '0', 'placeholder' => __('messages.form.price')]) }}
-          </div>
-
-          <div class="col-sm-12 mb-3">
-            {{ Form::label('sales_price', __('messages.common.sales_price') . ':', ['class' => 'form-label']) }}
-            {{ Form::number('sales_price', null, ['class' => 'form-control', 'id' => 'editNfcSalesPrice', 'step' => '0.01', 'min' => '0', 'placeholder' => __('messages.common.sales_price')]) }}
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{ Form::label('price', __('messages.common.price') . ':', ['class' => 'form-label required']) }}
+              {{ Form::number('price', null, ['class' => 'form-control', 'id' => 'editNfcPrice', 'required', 'step' => '0.01', 'min' => '0', 'placeholder' => __('messages.form.price')]) }}
+            </div>
+            <div class="col-md-6 mb-3">
+              {{ Form::label('sales_price', __('messages.common.sales_price') . ':', ['class' => 'form-label']) }}
+              {{ Form::number('sales_price', null, ['class' => 'form-control', 'id' => 'editNfcSalesPrice', 'step' => '0.01', 'min' => '0', 'placeholder' => __('messages.common.sales_price')]) }}
+            </div>
           </div>
 
           <div class="col-sm-12 mb-3">
@@ -72,11 +73,26 @@
               </div>
             </div>
 
+            <div class="row" id="editDimensionFields">
+              <div class="col-md-4 mb-3">
+                {{ Form::label('image_width', 'Image Width (mm):', ['class' => 'form-label']) }}
+                {{ Form::number('image_width', null, ['class' => 'form-control', 'placeholder' => 'Width in mm', 'id' => 'editImageWidth', 'step' => '0.01']) }}
+              </div>
+              <div class="col-md-4 mb-3">
+                {{ Form::label('image_height', 'Image Height (mm):', ['class' => 'form-label']) }}
+                {{ Form::number('image_height', null, ['class' => 'form-control', 'placeholder' => 'Height in mm', 'id' => 'editImageHeight', 'step' => '0.01']) }}
+              </div>
+              <div class="col-md-4 mb-3">
+                {{ Form::label('text_font_size', 'Text Font Size:', ['class' => 'form-label']) }}
+                {{ Form::number('text_font_size', null, ['class' => 'form-control', 'id' => 'editTextFontSize', 'min' => '8', 'max' => '72']) }}
+              </div>
+            </div>
+
             <div class="row">
               <div class="col-12">
                 <label class="form-label">Live Preview:</label>
                 <div class="qr-preview-container"
-                  style="border: 2px solid #ddd; border-radius: 8px; padding: 10px; background: #f8f9fa; position: relative; overflow: auto;">
+                  style="border: 2px solid #ddd; border-radius: 8px; padding: 10px; background: #f8f9fa; position: relative; overflow: auto;max-height: 600px;">
                   <canvas id="editQrPreviewCanvas" style="max-width: 100%; display: block; margin: 0 auto;"></canvas>
                   <div id="editQrPreviewPlaceholder" style="text-align: center; padding: 50px; color: #999;">
                     <i class="fas fa-image fa-3x mb-3"></i>
@@ -87,28 +103,15 @@
             </div>
           </div>
 
-          <div class="row" id="editDimensionFields">
-            <div class="col-md-6 mb-3">
-              {{ Form::label('image_width', 'Image Width (mm):', ['class' => 'form-label']) }}
-              {{ Form::number('image_width', null, ['class' => 'form-control', 'placeholder' => 'Width in mm', 'id' => 'editImageWidth', 'step' => '0.01']) }}
-            </div>
-            <div class="col-md-6 mb-3">
-              {{ Form::label('image_height', 'Image Height (mm):', ['class' => 'form-label']) }}
-              {{ Form::number('image_height', null, ['class' => 'form-control', 'placeholder' => 'Height in mm', 'id' => 'editImageHeight', 'step' => '0.01']) }}
-            </div>
-          </div>
+
 
           <div class="mb-3">
             <h5 class="mb-3">Print Settings</h5>
 
             <div class="row mb-3">
-              <div class="col-md-6">
+              <div class="col-md-12">
                 {{ Form::label('print_format', 'Print Format:', ['class' => 'form-label']) }}
                 {{ Form::select('print_format', ['fixed' => 'Fixed Width/Height', 'a5' => 'A5 Format'], null, ['class' => 'form-select', 'id' => 'editPrintFormat']) }}
-              </div>
-              <div class="col-md-6">
-                {{ Form::label('text_font_size', 'Text Font Size:', ['class' => 'form-label']) }}
-                {{ Form::number('text_font_size', null, ['class' => 'form-control', 'id' => 'editTextFontSize', 'min' => '8', 'max' => '72']) }}
               </div>
             </div>
 

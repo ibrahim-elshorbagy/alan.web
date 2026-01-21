@@ -7,6 +7,7 @@ use App\Models\Vcard;
 use App\Models\VcardBlog;
 use App\Models\CustomPage;
 use App\Models\WhatsappStore;
+use App\Models\RedirectLink;
 use Illuminate\Console\Command;
 use Spatie\Sitemap\Sitemap;
 use Spatie\Sitemap\Tags\Url;
@@ -26,7 +27,7 @@ class GenerateSiteMap extends Command
    *
    * @var string
    */
-  protected $description = 'Generate a comprehensive sitemap for the website including vcards, blogs, whatsapp stores, and custom pages';
+  protected $description = 'Generate a comprehensive sitemap for the website including vcards, blogs, whatsapp stores, custom pages, redirect links, and policy pages';
 
   /**
    * Execute the console command.
@@ -54,6 +55,24 @@ Disallow:';
           ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
           ->setPriority(1.0)
       );
+
+      // Add policy pages
+      $policyPages = [
+        'terms.conditions',
+        'privacy.policy',
+        'refund.cancellation.policy',
+        'shipping.delivery.policy',
+        'imprint.policy',
+      ];
+
+      foreach ($policyPages as $routeName) {
+        $sitemap->add(
+          Url::create(route($routeName))
+            ->setLastModificationDate(now())
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+            ->setPriority(0.6)
+        );
+      }
 
       // Add active VCards
       $activeVcards = Vcard::where('status', true)
@@ -130,6 +149,21 @@ Disallow:';
         );
       }
 
+      // Add active Redirect Links (redeemed with user_id)
+      $activeRedirectLinks = RedirectLink::whereNotNull('user_id')
+        ->where('status', 1) // redeemed
+        ->select('uri', 'updated_at')
+        ->get();
+
+      foreach ($activeRedirectLinks as $link) {
+        $sitemap->add(
+          Url::create(route('redirect.link', ['uri' => $link->uri]))
+            ->setLastModificationDate($link->updated_at ?? now())
+            ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+            ->setPriority(0.6)
+        );
+      }
+
       // Write sitemap to file
       $sitemap->writeToFile(public_path('sitemap.xml'));
 
@@ -137,7 +171,7 @@ Disallow:';
       $this->updateSitemapGeneratedAt();
 
       $this->info('Sitemap generated successfully!');
-      $this->info('Total URLs: ' . $this->countUrls($activeVcards, $vcardBlogs, $whatsappStores, $blogs, $customPages));
+      $this->info('Total URLs: ' . $this->countUrls($activeVcards, $vcardBlogs, $whatsappStores, $blogs, $customPages, $activeRedirectLinks));
     } catch (\Exception $e) {
       Log::error('Sitemap generation failed: ' . $e->getMessage());
       $this->error('Sitemap generation failed: ' . $e->getMessage());
@@ -158,8 +192,8 @@ Disallow:';
   /**
    * Count total URLs in sitemap
    */
-  private function countUrls($vcards, $vcardBlogs, $stores, $blogs, $pages): int
+  private function countUrls($vcards, $vcardBlogs, $stores, $blogs, $pages, $redirectLinks): int
   {
-    return 1 + $vcards->count() + $vcardBlogs->count() + $stores->count() + $blogs->count() + $pages->count();
+    return 6 + $vcards->count() + $vcardBlogs->count() + $stores->count() + $blogs->count() + $pages->count() + $redirectLinks->count();
   }
 }
