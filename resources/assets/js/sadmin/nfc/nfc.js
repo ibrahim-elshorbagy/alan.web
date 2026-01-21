@@ -91,35 +91,7 @@ listenClick(".nfc-delete-btn", function (event) {
 
 listenClick(".nfc-export-test-btn", function (event) {
     let nfcId = $(event.currentTarget).data("id");
-
-    // Show loading indicator
-    displayToastr('info', 'Generating test images...', 'Please wait');
-
-    // Use fetch to handle potential errors
-    fetch(route("nfc.export.test", nfcId))
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(err => {
-                    throw new Error(err.error || 'Failed to export test images');
-                });
-            }
-            return response.blob();
-        })
-        .then(blob => {
-            // Create download link
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'nfc_test_images_' + nfcId + '.zip';
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-            displayToastr('success', 'Test images downloaded successfully!', 'Success');
-        })
-        .catch(error => {
-            displayToastr('error', error.message, 'Error');
-        });
+    window.location.href = route("nfc.export.test", nfcId);
 });
 
 // Edit NFC Type
