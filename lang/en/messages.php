@@ -452,6 +452,8 @@ return [
     'download' => 'Download',
     'from' => 'From',
     'to' => 'To',
+    'date_from' => 'Date From',
+    'date_to' => 'Date To',
     'apply' => 'Apply',
     'this_week' => 'The Week',
     'are_you_sure' => 'Are you sure want to delete this',

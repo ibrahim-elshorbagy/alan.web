@@ -1,7 +1,7 @@
 <div class="d-flex flex-column gap-3">
   {{-- Filters Row --}}
   <div class="d-flex flex-wrap gap-2 align-items-end">
-    
+
     {{-- Assigned To Filter (only for non-sales users) --}}
     @if (!auth()->user()->hasRole('sales'))
       <div class="filter-item">
@@ -48,7 +48,17 @@
       </select>
     </div>
 
+    {{-- Date From Filter --}}
+    <div class="filter-item flex-fill">
+      <label class="form-label small mb-1">{{ __('messages.common.date_from') }}</label>
+      <input type="date" class="form-control" wire:model.live="dateFromFilter">
+    </div>
 
+    {{-- Date To Filter --}}
+    <div class="filter-item flex-fill">
+      <label class="form-label small mb-1">{{ __('messages.common.date_to') }}</label>
+      <input type="date" class="form-control" wire:model.live="dateToFilter">
+    </div>
   </div>
 
   {{-- Buttons Row --}}

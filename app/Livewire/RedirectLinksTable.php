@@ -21,6 +21,8 @@ class RedirectLinksTable extends LivewireTableComponent
   public $redirectTypeFilter = '';
   public $cardTypeFilter = '';
   public $assignedFilter = '';
+  public $dateFromFilter = '';
+  public $dateToFilter = '';
 
   public $selectedRecordId;
 
@@ -41,6 +43,16 @@ class RedirectLinksTable extends LivewireTableComponent
   }
 
   public function updatedAssignedFilter()
+  {
+    $this->setBuilder($this->builder());
+  }
+
+  public function updatedDateFromFilter()
+  {
+    $this->setBuilder($this->builder());
+  }
+
+  public function updatedDateToFilter()
   {
     $this->setBuilder($this->builder());
   }
@@ -176,6 +188,27 @@ class RedirectLinksTable extends LivewireTableComponent
 
     if ($this->assignedFilter !== '' && !auth()->user()->hasRole('sales')) {
       $query->where('assigned_id', $this->assignedFilter);
+    }
+
+    // Apply date range filters on both created_at and updated_at
+    if ($this->dateFromFilter !== '' || $this->dateToFilter !== '') {
+      $query->where(function ($q) {
+        $q->where(function ($dateQ) {
+          if ($this->dateFromFilter !== '') {
+            $dateQ->where('redirect_links.created_at', '>=', $this->dateFromFilter . ' 00:00:00');
+          }
+          if ($this->dateToFilter !== '') {
+            $dateQ->where('redirect_links.created_at', '<=', $this->dateToFilter . ' 23:59:59');
+          }
+        })->orWhere(function ($dateQ) {
+          if ($this->dateFromFilter !== '') {
+            $dateQ->where('redirect_links.updated_at', '>=', $this->dateFromFilter . ' 00:00:00');
+          }
+          if ($this->dateToFilter !== '') {
+            $dateQ->where('redirect_links.updated_at', '<=', $this->dateToFilter . ' 23:59:59');
+          }
+        });
+      });
     }
 
     return $query;
