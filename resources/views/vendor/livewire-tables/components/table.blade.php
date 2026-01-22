@@ -40,7 +40,7 @@
         </table>
     </div>
 @elseif ($component->isBootstrap())
-    <div class="d-lg-flex justify-content-between align-items-center mb-sm-7 mb-4">
+    <div class="d-lg-flex justify-content-between align-items-center mb-sm-7 mb-4 gap-6">
         @if ($component->searchIsEnabled() && $component->searchVisibilityIsEnabled())
             <x-livewire-tables::tools.toolbar.items.search-field />
         @endif
