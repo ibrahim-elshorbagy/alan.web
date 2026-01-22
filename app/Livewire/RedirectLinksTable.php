@@ -147,11 +147,11 @@ class RedirectLinksTable extends LivewireTableComponent
         ->view('admin.redirect_links.columns.combined_status'),
       Column::make(__('messages.admin_price'), 'price')
         ->view('admin.redirect_links.columns.price')
-        ->footer(fn() => currencyFormat($this->getPurchasePriceSum(), 0))
+        ->footer(fn() => currencyFormat($this->getPurchasePriceSum(), 2))
         ->hideIf(auth()->user()->hasRole('sales')),
       Column::make(auth()->user()->hasRole('sales') ? __('messages.admin_price') : __('messages.sales_representative_price'), 'sales_price')
         ->view('admin.redirect_links.columns.sales_price')
-        ->footer(fn() => currencyFormat($this->getSalesPriceSum(), 0)),
+        ->footer(fn() => currencyFormat($this->getSalesPriceSum(), 2)),
       Column::make(__('messages.redirect_links.assigned_to'), 'assigned_id')
         ->view('admin.redirect_links.columns.assigned_to')
         ->hideIf(auth()->user()->hasRole('sales')),

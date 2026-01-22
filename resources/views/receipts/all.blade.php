@@ -31,43 +31,6 @@
                 </a>
               </div>
 
-              <h5 class="mb-3 text-muted">{{ __('messages.common.price') }}</h5>
-              <div class="row">
-                <div class="col-md-3">
-                  <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('messages.receipts.total_required') }}:</label>
-                    <p class="fs-4 text-info">{{ number_format($totalRequiredPrice, 2) }}</p>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('messages.receipts.total_paid') }}:</label>
-                    <p class="fs-4 text-success">{{ number_format($totalPaid, 2) }}</p>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('messages.receipts.total_after_paid') }}:</label>
-                    <p class="fs-4 text-warning">{{ number_format($totalAfterPaidPrice, 2) }}</p>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('messages.receipts.total_remaining') }}:</label>
-                    <p class="fs-4 {{ $totalRemainingPrice >= 0 ? 'text-danger' : 'text-success' }}">
-                      {{ number_format($totalRemainingPrice, 2) }}
-                      @if ($totalRemainingPrice >= 0)
-                        {{ __('messages.receipts.debtor') }}
-                      @else
-                        {{ __('messages.receipts.creditor') }}
-                      @endif
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <hr>
-
               <h5 class="mb-3 text-muted">{{ __('messages.common.sales_price') }}</h5>
               <div class="row">
                 <div class="col-md-3">

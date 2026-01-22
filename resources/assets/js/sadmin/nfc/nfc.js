@@ -47,9 +47,9 @@ function toggleCoordinateFields(checkboxId, fieldsId) {
 
 function toggleDimensionFields(selectId, fieldsId) {
     if ($(selectId).val() === "a5") {
-        $(fieldsId).hide();
+        $(fieldsId + ' .size-fields').hide();
     } else {
-        $(fieldsId).show();
+        $(fieldsId + ' .size-fields').show();
     }
 }
 
@@ -375,7 +375,7 @@ function updateQrPreview() {
     ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    let textY = qrY + qrSize + 13;
+    let textY = qrY + qrSize + 16;
 
     // Draw "Code: Test123" - positioned at QR box X coordinate
     ctx.fillText('Code: Test123', qrX, textY);
@@ -552,7 +552,7 @@ function updateQrPreviewEdit() {
     ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    let textY = qrY + qrSize + 13;
+    let textY = qrY + qrSize + 16;
 
     // Draw "Code: Test123" - positioned at QR box X coordinate
     ctx.fillText('Code: Test123', qrX, textY);

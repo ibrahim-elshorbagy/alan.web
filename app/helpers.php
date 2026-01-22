@@ -351,7 +351,7 @@ if (!function_exists('currencyFormat')) {
       } catch (Exception $e) {
         $amount = new Gerardojbaez\Money\Money($number, 'USD');
       }
-      $formattedAmount = number_format(settype($amount->format(), 'float'), 2);
+      $formattedAmount = getSuperAdminSettingValue('currency_after_amount') ? number_format($number, $precision) . $currency->getSymbol() : $currency->getSymbol() . number_format($number, $precision);
     } catch (Exception $e) {
       $currencyCode = $currencyCode ?? getSuperAdminSettingValue('default_currency');
       $currency = Currency::whereCurrencyCode($currencyCode)->first();

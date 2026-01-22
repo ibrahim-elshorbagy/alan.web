@@ -205,7 +205,6 @@ class NfcController extends AppBaseController
   {
     $generatedImages = [];
 
-
     // Determine which side gets the QR code
     $qrSide = $nfc->qr_position_side ?? 'front';
 
@@ -239,51 +238,64 @@ class NfcController extends AppBaseController
     $xPos = $nfc->qr_x_position ?? 0;
     $yPos = $nfc->qr_y_position ?? 0;
 
-    // Get the front and back images
-    $frontMedia = $nfc->getFirstMedia('nfc_image');
-    $backMedia = $nfc->getFirstMedia('nfc_back_image');
-
-
-    if ($frontMedia) {
-      try {
-        $frontImagePath = $frontMedia->getPath();
-        $frontImage = imagecreatefromstring(file_get_contents($frontImagePath));
-        if ($frontImage !== false) {
-          if ($qrSide === 'front') {
-            imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
-            $this->addTestTextOverlays($frontImage, $testCode, $testSerialNo, $xPos, $yPos, $qrSize, $nfc);
+    if ($nfc->print_only_qr) {
+      // Only export QR code
+      $generatedImages[] = $qrPath;
+    } else {
+      // Process Front Image
+      if ($nfc->print_front_image) {
+        $frontMedia = $nfc->getFirstMedia('nfc_image');
+        if ($frontMedia) {
+          try {
+            $frontImagePath = $frontMedia->getPath();
+            $frontImage = imagecreatefromstring(file_get_contents($frontImagePath));
+            if ($frontImage !== false) {
+              if ($qrSide === 'front') {
+                imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+                // Add text overlays to front if QR is on front and coordinates applied
+                if ($nfc->apply_coordinates) {
+                  $this->addTestTextOverlays($frontImage, $testCode, $testSerialNo, $xPos, $yPos, $qrSize, $nfc);
+                }
+              }
+              $frontPath = $tempDirectory . '/nfc_front_test.png';
+              imagepng($frontImage, $frontPath);
+              imagedestroy($frontImage);
+              $generatedImages[] = $frontPath;
+            }
+          } catch (\Exception $e) {
+            Log::error("Error processing front image: " . $e->getMessage());
+            // Skip if error
           }
-          $frontPath = $tempDirectory . '/nfc_front_test.png';
-          imagepng($frontImage, $frontPath);
-          imagedestroy($frontImage);
-          $generatedImages[] = $frontPath;
         }
-      } catch (\Exception $e) {
-        Log::error("Error processing front image: " . $e->getMessage());
-        // Skip if error
+      }
+
+      // Process Back Image
+      if ($nfc->print_back_image) {
+        $backMedia = $nfc->getFirstMedia('nfc_back_image');
+        if ($backMedia) {
+          try {
+            $backImagePath = $backMedia->getPath();
+            $backImage = imagecreatefromstring(file_get_contents($backImagePath));
+            if ($backImage !== false) {
+              if ($qrSide === 'back') {
+                imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
+                // Add text overlays to back if QR is on back and coordinates applied
+                if ($nfc->apply_coordinates) {
+                  $this->addTestTextOverlays($backImage, $testCode, $testSerialNo, $xPos, $yPos, $qrSize, $nfc);
+                }
+              }
+              $backPath = $tempDirectory . '/nfc_back_test.png';
+              imagepng($backImage, $backPath);
+              imagedestroy($backImage);
+              $generatedImages[] = $backPath;
+            }
+          } catch (\Exception $e) {
+            Log::error("Error processing back image: " . $e->getMessage());
+            // Skip if error
+          }
+        }
       }
     }
-
-    if ($backMedia) {
-      try {
-        $backImagePath = $backMedia->getPath();
-        $backImage = imagecreatefromstring(file_get_contents($backImagePath));
-        if ($backImage !== false) {
-          if ($qrSide === 'back') {
-            imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
-            $this->addTestTextOverlays($backImage, $testCode, $testSerialNo, $xPos, $yPos, $qrSize, $nfc);
-          }
-          $backPath = $tempDirectory . '/nfc_back_test.png';
-          imagepng($backImage, $backPath);
-          imagedestroy($backImage);
-          $generatedImages[] = $backPath;
-        }
-      } catch (\Exception $e) {
-        Log::error("Error processing back image: " . $e->getMessage());
-        // Skip if error
-      }
-    }
-
 
     imagedestroy($qrImageGd);
     return $generatedImages;
@@ -310,17 +322,17 @@ class NfcController extends AppBaseController
     $serialText = 'Serial No : ' . str_pad($testSerialNo, 4, '0', STR_PAD_LEFT);
 
     // Position directly below QR code
-    $textY = $qrY + $qrSize + 23;
+    $textY = $qrY + $qrSize + 26;
     $fontSize = $nfc->text_font_size ?? 14; // Get font size from NFC settings
 
     if ($fontPath) {
       // Normal text without outline
       imagettftext($image, $fontSize, 0, $qrX, $textY, $black, $fontPath, $urlText);
-      imagettftext($image, $fontSize, 0, $qrX, $textY + 25, $black, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, $qrX, $textY + 28, $black, $fontPath, $serialText);
     } else {
       // Fallback to default font
       imagestring($image, 2, $qrX, $textY, $urlText, $black);
-      imagestring($image, 2, $qrX, $textY + 25, $serialText, $black);
+      imagestring($image, 2, $qrX, $textY + 28, $serialText, $black);
     }
   }
 

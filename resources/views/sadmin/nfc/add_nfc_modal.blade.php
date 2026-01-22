@@ -77,17 +77,22 @@
           </div>
 
           <div class="row" id="dimensionFields">
-            <div class="col-md-4 mb-3">
-              {{ Form::label('image_width', 'Image Width (mm):', ['class' => 'form-label']) }}
-              {{ Form::number('image_width', null, ['class' => 'form-control', 'placeholder' => 'Width in mm', 'id' => 'imageWidth', 'step' => '0.01']) }}
+            <div class="row size-fields">
+              <div class="col-md-6 mb-3">
+                {{ Form::label('image_width', 'Image Width (mm):', ['class' => 'form-label']) }}
+                {{ Form::number('image_width', null, ['class' => 'form-control', 'placeholder' => 'Width in mm', 'id' => 'imageWidth', 'step' => '0.01']) }}
+              </div>
+              <div class="col-md-6 mb-3">
+                {{ Form::label('image_height', 'Image Height (mm):', ['class' => 'form-label']) }}
+                {{ Form::number('image_height', null, ['class' => 'form-control', 'placeholder' => 'Height in mm', 'id' => 'imageHeight', 'step' => '0.01']) }}
+              </div>
             </div>
-            <div class="col-md-4 mb-3">
-              {{ Form::label('image_height', 'Image Height (mm):', ['class' => 'form-label']) }}
-              {{ Form::number('image_height', null, ['class' => 'form-control', 'placeholder' => 'Height in mm', 'id' => 'imageHeight', 'step' => '0.01']) }}
-            </div>
-            <div class="col-md-4 mb-3">
-              {{ Form::label('text_font_size', 'Text Font Size:', ['class' => 'form-label']) }}
-              {{ Form::number('text_font_size', 14, ['class' => 'form-control', 'id' => 'textFontSize', 'min' => '8', 'max' => '72']) }}
+
+            <div class="row">
+              <div class="col-md-12 mb-3">
+                {{ Form::label('text_font_size', 'Text Font Size:', ['class' => 'form-label']) }}
+                {{ Form::number('text_font_size', 14, ['class' => 'form-control', 'id' => 'textFontSize', 'min' => '8', 'max' => '72']) }}
+              </div>
             </div>
           </div>
 
