@@ -695,7 +695,7 @@ class RedirectLinkController extends Controller
     $serialText = 'Serial No : ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
 
     // Position directly below QR code
-    $textY = $qrY + $qrSize + 20;
+    $textY = $qrY + $qrSize + 23;
     $fontSize = $nfc->text_font_size ?? 14; // Get font size from NFC settings
 
     if ($fontPath) {
@@ -803,6 +803,14 @@ class RedirectLinkController extends Controller
       ]);
     }
 
+    // Add price fields validation for super admin only
+    if (auth()->user()->hasRole('super_admin')) {
+      $rules = array_merge($rules, [
+        'price' => 'nullable|numeric|min:0',
+        'sales_price' => 'nullable|numeric|min:0',
+      ]);
+    }
+
     $validator = Validator::make($request->all(), $rules);
 
     if ($validator->fails()) {
@@ -814,6 +822,12 @@ class RedirectLinkController extends Controller
     if (auth()->user()->hasRole('sales')) {
       // For sales, only allow updating redirect_link and status
       $updateData = array_intersect_key($updateData, array_flip(['redirect_link', 'status']));
+    } else if (auth()->user()->hasRole('super_admin')) {
+      // For super admin, allow all fields including price and sales_price
+      $updateData = array_intersect_key($updateData, array_flip(['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status', 'price', 'sales_price']));
+    } else {
+      // For other admins, allow all except price fields
+      $updateData = array_intersect_key($updateData, array_flip(['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status']));
     }
 
     $redirectLink->update($updateData);

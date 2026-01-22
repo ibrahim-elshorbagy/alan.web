@@ -111,8 +111,9 @@ return [
   'wait_for_apporove_of_cash_payment_by_admin' => 'Your Manual Transaction Request Is Pending.',
   'paid_amount_can\'t_deleted' => 'Paid Appointment Can\'t be delete',
   'virtual_backgrounds' => 'Virtual Backgrounds',
-  'admin_price' => ' Price',
+  'admin_price' => 'The Price',
   'selling_price' => 'Selling Price',
+  'sales_representative_price' => 'Sales Representative Price',
   'select payment gateway' => 'Select Payment Gateway',
   'make_appointment' => 'Make Appointment',
   'enquiry' => 'Inquiries',
@@ -2346,6 +2347,7 @@ return [
     'uri' => 'URI',
     'redirect_link' => 'Redirect Link',
     'redirect_link_type' => 'Type',
+    'redirect_type' => 'Redirect Type',
     'status' => 'Status',
     'nfc' => 'NFC',
     'nfc_price' => 'NFC Price',
@@ -2464,6 +2466,8 @@ return [
     'total_remaining' => 'Total Remaining',
     'debtor' => 'Debtor',
     'creditor' => 'Creditor',
+    'total_regular_selling_price' => 'Total Regular Selling Price',
+    'total_selling_price_for_representative' => 'Total Selling Price for Representative',
 
   ],
   'verify_phone' => [

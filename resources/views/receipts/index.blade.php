@@ -28,13 +28,14 @@
                 </div>
                 <div class="col-md-2">
                   <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('messages.common.price') }}:</label>
+                    <label class="form-label fw-bold">{{ __('messages.receipts.total_regular_selling_price') }}:</label>
                     <p class="fs-4 text-purple">{{ number_format($soldAmountPrice, 2) }}</p>
                   </div>
                 </div>
                 <div class="col-md-2">
                   <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('messages.common.sales_price') }}:</label>
+                    <label
+                      class="form-label fw-bold">{{ __('messages.receipts.total_selling_price_for_representative') }}:</label>
                     <p class="fs-4 text-success">{{ number_format($soldAmountSalesPrice, 2) }}</p>
                   </div>
                 </div>
@@ -44,24 +45,10 @@
                     <p class="fs-4 text-info">{{ number_format($totalReceived, 2) }}</p>
                   </div>
                 </div>
+
                 <div class="col-md-2">
                   <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('messages.receipts.balance') }}
-                      ({{ __('messages.common.price') }}):</label>
-                    <p class="fs-4 {{ $balancePrice >= 0 ? 'text-danger' : 'text-success' }}">
-                      {{ number_format($balancePrice, 2) }}
-                      @if ($balancePrice >= 0)
-                        {{ __('messages.receipts.debtor') }}
-                      @else
-                        {{ __('messages.receipts.creditor') }}
-                      @endif
-                    </p>
-                  </div>
-                </div>
-                <div class="col-md-2">
-                  <div class="mb-3">
-                    <label class="form-label fw-bold">{{ __('messages.receipts.balance') }}
-                      ({{ __('messages.common.sales_price') }}):</label>
+                    <label class="form-label fw-bold">{{ __('messages.receipts.balance') }}</label>
                     <p class="fs-4 {{ $balanceSalesPrice >= 0 ? 'text-danger' : 'text-success' }}">
                       {{ number_format($balanceSalesPrice, 2) }}
                       @if ($balanceSalesPrice >= 0)

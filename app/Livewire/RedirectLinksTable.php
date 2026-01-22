@@ -4,10 +4,10 @@ namespace App\Livewire;
 
 use App\Models\RedirectLink;
 use App\Models\User;
+use App\Models\Nfc;
+use App\Enums\RedirectLinkTypeEnum;
 use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
-use Rappasoft\LaravelLivewireTables\Views\Filters\SelectFilter;
-use Rappasoft\LaravelLivewireTables\Views\Filters\DateRangeFilter;
 
 class RedirectLinksTable extends LivewireTableComponent
 {
@@ -16,7 +16,34 @@ class RedirectLinksTable extends LivewireTableComponent
   public string $buttonComponent = 'livewire.redirect_links.add-button';
   protected $listeners = ['refresh' => '$refresh', 'changeFilter', 'resetPageTable'];
 
+  // Custom filter properties
+  public $statusFilter = '';
+  public $redirectTypeFilter = '';
+  public $cardTypeFilter = '';
+  public $assignedFilter = '';
+
   public $selectedRecordId;
+
+  // Filter update methods to force table refresh
+  public function updatedStatusFilter()
+  {
+    $this->setBuilder($this->builder());
+  }
+
+  public function updatedRedirectTypeFilter()
+  {
+    $this->setBuilder($this->builder());
+  }
+
+  public function updatedCardTypeFilter()
+  {
+    $this->setBuilder($this->builder());
+  }
+
+  public function updatedAssignedFilter()
+  {
+    $this->setBuilder($this->builder());
+  }
 
   public function configure(): void
   {
@@ -38,9 +65,10 @@ class RedirectLinksTable extends LivewireTableComponent
 
     $this->setEagerLoadAllRelationsEnabled();
 
-    $this->setAdditionalSelects(['redirect_links.user_id', 'redirect_links.nfcs_id', 'redirect_links.created_at', 'redirect_links.updated_at', 'redirect_links.received_status']);
+    $this->setAdditionalSelects(['redirect_links.user_id', 'redirect_links.nfcs_id', 'redirect_links.created_at', 'redirect_links.updated_at', 'redirect_links.received_status', 'redirect_links.redirect_link_type']);
 
-    $this->setFiltersEnabled();
+    // Disable built-in filters - we use custom filter UI
+    $this->setFiltersDisabled();
 
     $this->setPerPageAccepted([10, 25, 50, 100, 200]);
 
@@ -52,49 +80,6 @@ class RedirectLinksTable extends LivewireTableComponent
   }
 
 
-
-  public function filters(): array
-  {
-    $filters = [
-      SelectFilter::make(__('messages.redirect_links.status'), 'status')
-        ->setFilterPillTitle(__('messages.redirect_links.status'))
-        ->options([
-          '' => __('messages.common.all'),
-          0 => __('messages.redirect_links.not_redeemed'),
-          1 => __('messages.redirect_links.redeemed'),
-          2 => __('messages.redirect_links.rejected'),
-        ])
-        ->filter(function (Builder $builder, string $value) {
-          if ($value !== '') {
-            $builder->where('status', $value);
-          }
-        }),
-      DateRangeFilter::make(__('messages.common.dates'))
-        ->setFilterPillTitle(__('messages.common.dates'))
-        ->filter(function (Builder $builder, array $dateRange) {
-          if (!empty($dateRange['minDate']) && !empty($dateRange['maxDate'])) {
-            $builder->where(function ($q) use ($dateRange) {
-              $q->whereBetween('redirect_links.created_at', [$dateRange['minDate'], $dateRange['maxDate']])
-                ->orWhereBetween('redirect_links.updated_at', [$dateRange['minDate'], $dateRange['maxDate']]);
-            });
-          }
-        }),
-    ];
-
-    if (!auth()->user()->hasRole('sales')) {
-      $assignedOptions = ['' => __('messages.common.all')] + User::role('sales')->get()->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray();
-      $filters[] = SelectFilter::make(__('messages.redirect_links.assigned_to'), 'assigned_id')
-        ->setFilterPillTitle(__('messages.redirect_links.assigned_to'))
-        ->options($assignedOptions)
-        ->filter(function (Builder $builder, string $value) {
-          if ($value !== '') {
-            $builder->where('assigned_id', $value);
-          }
-        });
-    }
-
-    return $filters;
-  }
 
   public function bulkActions(): array
   {
@@ -140,7 +125,8 @@ class RedirectLinksTable extends LivewireTableComponent
           $query->whereHas('user', function ($q) use ($direction) {
             $q->whereRaw("TRIM(CONCAT(first_name,' ',last_name,' ')) like '%{$direction}%'");
           });
-        })->view('admin.redirect_links.columns.user'),
+        })->view('admin.redirect_links.columns.user')
+        ->footer(auth()->user()->hasRole('sales') ? null : fn() => __('messages.common.total')),
       Column::make(__('messages.redirect_links.redeem_code'), 'uri')->sortable()->searchable()
         ->view('admin.redirect_links.columns.uri'),
       Column::make(__('messages.redirect_links.redirect_link_type'), 'redirect_link_type')
@@ -149,11 +135,11 @@ class RedirectLinksTable extends LivewireTableComponent
         ->view('admin.redirect_links.columns.combined_status'),
       Column::make(__('messages.admin_price'), 'price')
         ->view('admin.redirect_links.columns.price')
-        ->footer(fn() => __('messages.common.total') . ': ' . currencyFormat($this->getPurchasePriceSum(), 0))
+        ->footer(fn() => currencyFormat($this->getPurchasePriceSum(), 0))
         ->hideIf(auth()->user()->hasRole('sales')),
-      Column::make(__('messages.selling_price'), 'sales_price')
+      Column::make(auth()->user()->hasRole('sales') ? __('messages.admin_price') : __('messages.sales_representative_price'), 'sales_price')
         ->view('admin.redirect_links.columns.sales_price')
-        ->footer(fn() => __('messages.common.total') . ': ' . currencyFormat($this->getSalesPriceSum(), 0)),
+        ->footer(fn() => currencyFormat($this->getSalesPriceSum(), 0)),
       Column::make(__('messages.redirect_links.assigned_to'), 'assigned_id')
         ->view('admin.redirect_links.columns.assigned_to')
         ->hideIf(auth()->user()->hasRole('sales')),
@@ -173,6 +159,23 @@ class RedirectLinksTable extends LivewireTableComponent
 
     if (auth()->user()->hasRole('sales')) {
       $query->where('assigned_id', auth()->id());
+    }
+
+    // Apply custom filters
+    if ($this->statusFilter !== '') {
+      $query->where('status', $this->statusFilter);
+    }
+
+    if ($this->redirectTypeFilter !== '') {
+      $query->where('redirect_link_type', $this->redirectTypeFilter);
+    }
+
+    if ($this->cardTypeFilter !== '') {
+      $query->where('nfcs_id', $this->cardTypeFilter);
+    }
+
+    if ($this->assignedFilter !== '' && !auth()->user()->hasRole('sales')) {
+      $query->where('assigned_id', $this->assignedFilter);
     }
 
     return $query;

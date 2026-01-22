@@ -1,7 +1,58 @@
-<div class="d-flex flex-column gap-2">
+<div class="d-flex flex-column gap-3">
+  {{-- Filters Row --}}
+  <div class="d-flex flex-wrap gap-2 align-items-end">
+    
+    {{-- Assigned To Filter (only for non-sales users) --}}
+    @if (!auth()->user()->hasRole('sales'))
+      <div class="filter-item">
+        <label class="form-label small mb-1">{{ __('messages.redirect_links.assigned_to') }}</label>
+        <select class="form-control form-select" wire:model.live="assignedFilter">
+          <option value="">{{ __('messages.common.all') }}</option>
+          @foreach (\App\Models\User::role('sales')->get() as $salesUser)
+            <option value="{{ $salesUser->id }}">{{ $salesUser->first_name }} {{ $salesUser->last_name }}</option>
+          @endforeach
+        </select>
+      </div>
+    @endif
+
+    {{-- Status Filter --}}
+    <div class="filter-item">
+      <label class="form-label small mb-1">{{ __('messages.redirect_links.status') }}</label>
+      <select class="form-control form-select" wire:model.live="statusFilter">
+        <option value="">{{ __('messages.common.all') }}</option>
+        <option value="0">{{ __('messages.redirect_links.not_redeemed') }}</option>
+        <option value="1">{{ __('messages.redirect_links.redeemed') }}</option>
+        <option value="2">{{ __('messages.redirect_links.rejected') }}</option>
+      </select>
+    </div>
+
+    {{-- Redirect Type Filter --}}
+    <div class="filter-item">
+      <label class="form-label small mb-1">{{ __('messages.redirect_links.redirect_type') }}</label>
+      <select class="form-control form-select" wire:model.live="redirectTypeFilter">
+        <option value="">{{ __('messages.common.all') }}</option>
+        @foreach (\App\Enums\RedirectLinkTypeEnum::cases() as $type)
+          <option value="{{ $type->value }}">{{ $type->label() }}</option>
+        @endforeach
+      </select>
+    </div>
+
+    {{-- Card Type Filter --}}
+    <div class="filter-item">
+      <label class="form-label small mb-1">{{ __('messages.redirect_links.card_type') }}</label>
+      <select class="form-control form-select" wire:model.live="cardTypeFilter">
+        <option value="">{{ __('messages.common.all') }}</option>
+        @foreach (\App\Models\Nfc::all() as $nfc)
+          <option value="{{ $nfc->id }}">{{ $nfc->name }}</option>
+        @endforeach
+      </select>
+    </div>
 
 
-  <div class="d-flex gap-2">
+  </div>
+
+  {{-- Buttons Row --}}
+  <div class="d-flex flex-wrap gap-2">
     @if ($this->hasSelected())
       <a type="button" class="btn btn-warning" wire:click="exportSelected">
         <i class="fas fa-file-export"></i> {{ __('messages.common.export_selected') }}
@@ -38,5 +89,4 @@
       </a>
     @endif
   </div>
-
 </div>

@@ -47,14 +47,28 @@
       @endif
     </div>
   </div>
-  @if (!auth()->user()->hasRole('sales'))
-  <div class="col-lg-6">
-    <div class="mb-5">
-      {{ Form::label('assigned_id', __('messages.redirect_links.assigned_to') . ':', ['class' => 'form-label']) }}
-      {{ Form::select('assigned_id', ['' => __('messages.common.select_sales')] + $salesUsers->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray(), isset($redirectLink) ? $redirectLink->assigned_id : null, ['class' => 'form-control', 'disabled' => $isDisabled]) }}
+  @if (auth()->user()->hasRole('super_admin'))
+    <div class="col-lg-6">
+      <div class="mb-5">
+        {{ Form::label('price', __('messages.admin_price') . ':', ['class' => 'form-label']) }}
+        {{ Form::number('price', isset($redirectLink) ? $redirectLink->price : null, ['class' => 'form-control', 'placeholder' => __('messages.admin_price'), 'step' => '0.01', 'min' => '0', 'disabled' => $isDisabled]) }}
+      </div>
     </div>
-  </div>
-@endif
+    <div class="col-lg-6">
+      <div class="mb-5">
+        {{ Form::label('sales_price', __('messages.selling_price') . ':', ['class' => 'form-label']) }}
+        {{ Form::number('sales_price', isset($redirectLink) ? $redirectLink->sales_price : null, ['class' => 'form-control', 'placeholder' => __('messages.selling_price'), 'step' => '0.01', 'min' => '0', 'disabled' => $isDisabled]) }}
+      </div>
+    </div>
+  @endif
+  @if (!auth()->user()->hasRole('sales'))
+    <div class="col-lg-6">
+      <div class="mb-5">
+        {{ Form::label('assigned_id', __('messages.redirect_links.assigned_to') . ':', ['class' => 'form-label']) }}
+        {{ Form::select('assigned_id', ['' => __('messages.common.select_sales')] + $salesUsers->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray(), isset($redirectLink) ? $redirectLink->assigned_id : null, ['class' => 'form-control', 'disabled' => $isDisabled]) }}
+      </div>
+    </div>
+  @endif
   <div class="col-lg-6">
     <div class="mb-5">
       {{ Form::label('received_status', __('messages.redirect_links.received_status') . ':', ['class' => 'form-label']) }}

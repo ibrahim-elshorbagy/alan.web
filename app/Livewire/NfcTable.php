@@ -43,6 +43,8 @@ class NfcTable extends LivewireTableComponent
                 ->view('sadmin.nfc.columns.count'),
            Column::make(__('messages.common.price'), "price")
                 ->sortable()->view('sadmin.nfc.columns.price'),
+           Column::make(__('messages.common.sales_price'), "sales_price")
+                ->sortable()->view('sadmin.nfc.columns.sales_price'),
             Column::make(__('messages.common.action'), "created_at")->view('sadmin.nfc.columns.action'),
         ];
     }

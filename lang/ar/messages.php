@@ -111,8 +111,9 @@ return [
   'wait_for_apporove_of_cash_payment_by_admin' => 'طلب الدفع اليدوي الخاص بك قيد الانتظار.',
   'paid_amount_can\'t_deleted' => 'لا يمكن حذف الموعد المدفوع',
   'virtual_backgrounds' => 'صمم بطاقتك بنفسك',
-  'admin_price' => 'سعر ',
+  'admin_price' => 'السعر',
   'selling_price' => 'سعر البيع',
+  'sales_representative_price' => 'سعر المندوب',
   'select payment gateway' => 'اختر بوابة الدفع',
   'make_appointment' => 'حجز موعد',
   'enquiry' => 'استفسار',
@@ -2343,6 +2344,7 @@ return [
     'uri' => 'URI',
     'redirect_link' => 'رابط إعادة التوجيه',
     'redirect_link_type' => 'النوع',
+    'redirect_type' => 'نوع إعادة التوجيه',
     'status' => 'الحالة',
     'nfc' => 'NFC',
     'nfc_price' => 'سعر NFC',
@@ -2462,6 +2464,8 @@ return [
     'total_remaining' => 'إجمالي المتبقي',
     'debtor' => 'مدين',
     'creditor' => 'دائن',
+    'total_regular_selling_price' => 'اجمالي سعر البيع الاعتيادي',
+    'total_selling_price_for_representative' => 'اجمالي سعر البيع للمندوب',
   ],
 
   'verify_phone' => [
