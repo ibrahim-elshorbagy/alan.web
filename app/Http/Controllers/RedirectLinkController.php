@@ -701,11 +701,11 @@ class RedirectLinkController extends Controller
     if ($fontPath) {
       // Normal text without outline
       imagettftext($image, $fontSize, 0, $qrX, $textY, $black, $fontPath, $urlText);
-      imagettftext($image, $fontSize, 0, $qrX, $textY + 28, $black, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, $qrX, $textY + 34, $black, $fontPath, $serialText);
     } else {
       // Fallback to default font
       imagestring($image, 2, $qrX, $textY, $urlText, $black);
-      imagestring($image, 2, $qrX, $textY + 28, $serialText, $black);
+      imagestring($image, 2, $qrX, $textY + 34, $serialText, $black);
     }
   }
 

@@ -48531,14 +48531,14 @@ function updateQrPreview() {
   ctx.fillStyle = '#000000';
   ctx.font = "".concat(fontSize, "px Arial");
   ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
+  ctx.textBaseline = 'alphabetic';
   var textY = qrY + qrSize + 38;
 
   // Draw "Code: Test123" - positioned at QR box X coordinate
   ctx.fillText('Code: Test123', qrX, textY);
 
   // Draw "Serial No: 00001" on next line
-  textY += 28;
+  textY += 34;
   ctx.fillText('Serial No: 00001', qrX, textY);
 }
 
@@ -48701,14 +48701,14 @@ function updateQrPreviewEdit() {
   ctx.fillStyle = '#000000';
   ctx.font = "".concat(fontSize, "px Arial");
   ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
+  ctx.textBaseline = 'alphabetic';
   var textY = qrY + qrSize + 38;
 
   // Draw "Code: Test123" - positioned at QR box X coordinate
   ctx.fillText('Code: Test123', qrX, textY);
 
   // Draw "Serial No: 00001" on next line
-  textY += 28;
+  textY += 34;
   ctx.fillText('Serial No: 00001', qrX, textY);
 }
 })();
