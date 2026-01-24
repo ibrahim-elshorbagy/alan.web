@@ -375,7 +375,7 @@ function updateQrPreview() {
     ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    let textY = qrY + qrSize + 22;
+    let textY = qrY + qrSize + 28;
 
     // Draw "Code: Test123" - positioned at QR box X coordinate
     ctx.fillText('Code: Test123', qrX, textY);
@@ -552,7 +552,7 @@ function updateQrPreviewEdit() {
     ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    let textY = qrY + qrSize + 22;
+    let textY = qrY + qrSize + 28;
 
     // Draw "Code: Test123" - positioned at QR box X coordinate
     ctx.fillText('Code: Test123', qrX, textY);

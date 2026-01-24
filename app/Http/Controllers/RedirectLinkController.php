@@ -695,7 +695,7 @@ class RedirectLinkController extends Controller
     $serialText = 'Serial No : ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
 
     // Position directly below QR code
-    $textY = $qrY + $qrSize + 32;
+    $textY = $qrY + $qrSize + 38;
     $fontSize = $nfc->text_font_size ?? 14; // Get font size from NFC settings
 
     if ($fontPath) {
