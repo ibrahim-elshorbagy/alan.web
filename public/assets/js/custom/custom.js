@@ -3734,7 +3734,7 @@ listenChange(".file-validation", function () {
     displayErrorMessage(Lang.get("js.allowed_file_types"));
     $(this).val("");
   }
-  if (file.size > 1048576) {
+  if (file.size > 3145728) {
     displayErrorMessage(Lang.get("js.image_too_large"));
     $(this).val("");
   }

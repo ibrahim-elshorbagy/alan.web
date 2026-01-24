@@ -24,8 +24,8 @@ class UpdateNfcCardRequest extends FormRequest
   {
 
     $rules = Nfc::$rules;
-    $rules['nfc_img'] = 'nullable|mimes:jpg,jpeg,png|max:2048';
-    $rules['nfc_back_img'] = 'nullable|mimes:jpg,jpeg,png|max:2048';
+    $rules['nfc_img'] = 'nullable|mimes:jpg,jpeg,png|max:3072';
+    $rules['nfc_back_img'] = 'nullable|mimes:jpg,jpeg,png|max:3072';
 
     return $rules;
   }
