@@ -473,9 +473,10 @@ class RedirectLinkController extends Controller
               $pdf->Image($images['back'], $x, $y, $imageWidthMm, $imageHeightMm, 'PNG');
             }
           } else {
-            // Use default behavior - generate QR code PNG
+            // Use default behavior - generate QR code with text overlays
+            $qrSize = 400;
             $qrImage = QrCode::format('png')
-              ->size(400)
+              ->size($qrSize)
               ->color(
                 $qrcodeColor['qrcodeColor']->red(),
                 $qrcodeColor['qrcodeColor']->green(),
@@ -491,8 +492,49 @@ class RedirectLinkController extends Controller
               ->errorCorrection('H')
               ->generate($fullUrl);
 
+            // Save QR code temporarily
+            $qrPath = $tempDirectory . '/' . $link->uri . '_qr_temp.png';
+            file_put_contents($qrPath, $qrImage);
+            $qrImageGd = imagecreatefrompng($qrPath);
+
+            // Get QR dimensions
+            $qrWidth = imagesx($qrImageGd);
+            $qrHeight = imagesy($qrImageGd);
+
+            // Create a larger canvas to accommodate QR code and text
+            $canvasWidth = max($qrWidth, 400);
+            $canvasHeight = $qrHeight + 120; // Extra space for text
+
+            $canvas = imagecreatetruecolor($canvasWidth, $canvasHeight);
+            $white = imagecolorallocate($canvas, 255, 255, 255);
+            imagefill($canvas, 0, 0, $white);
+
+            // Copy QR code to canvas (centered)
+            $qrXPos = ($canvasWidth - $qrWidth) / 2;
+            imagecopy($canvas, $qrImageGd, $qrXPos, 0, 0, 0, $qrWidth, $qrHeight);
+
+            // Add text overlays
+            $black = imagecolorallocate($canvas, 0, 0, 0);
+            $fontPath = public_path('fonts/Zain-Regular.ttf');
+            $fontSize = 14;
+
+            $urlText = 'Code : ' . $link->uri;
+            $serialText = 'Serial No : ' . str_pad($link->id, 4, '0', STR_PAD_LEFT);
+            $textY = $qrHeight + 30;
+
+            if (file_exists($fontPath)) {
+              imagettftext($canvas, $fontSize, 0, $qrXPos, $textY, $black, $fontPath, $urlText);
+              imagettftext($canvas, $fontSize, 0, $qrXPos, $textY + 34, $black, $fontPath, $serialText);
+            } else {
+              imagestring($canvas, 2, $qrXPos, $textY, $urlText, $black);
+              imagestring($canvas, 2, $qrXPos, $textY + 34, $serialText, $black);
+            }
+
+            // Save the combined image
             $pngPath = $tempDirectory . '/' . $link->uri . '.png';
-            file_put_contents($pngPath, $qrImage);
+            imagepng($canvas, $pngPath);
+            imagedestroy($canvas);
+            imagedestroy($qrImageGd);
 
             $excelData[] = [
               'id' => $link->id,
@@ -503,13 +545,12 @@ class RedirectLinkController extends Controller
             // Add page to PDF
             $pdf->AddPage();
 
-            // Add QR image (centered)
-            $pdf->Image($pngPath, 55, 50, 100, 100, 'PNG');
-
-            // Add URI text below image
-            $pdf->SetFont('helvetica', 'B', $textFontSize);
-            $pdf->SetXY(0, 170);
-            $pdf->Cell(210, 10, $link->uri, 0, 0, 'C');
+            // Add combined QR+text image (centered)
+            $imageWidthMm = 100;
+            $imageHeightMm = ($canvasHeight / $canvasWidth) * $imageWidthMm;
+            $x = (210 - $imageWidthMm) / 2;
+            $y = (297 - $imageHeightMm) / 2;
+            $pdf->Image($pngPath, $x, $y, $imageWidthMm, $imageHeightMm, 'PNG');
           }
         }
       }
