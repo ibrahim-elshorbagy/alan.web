@@ -47,6 +47,7 @@
 
         <div class="mb-3">
           <div class="form-check">
+            {{ Form::hidden('apply_coordinates', 0) }}
             {{ Form::checkbox('apply_coordinates', 1, false, ['class' => 'form-check-input', 'id' => 'applyCoordinates']) }}
             {{ Form::label('applyCoordinates', __('messages.redirect_links.apply_coordinates'), ['class' => 'form-check-label']) }}
             <span data-bs-toggle="tooltip" data-placement="top"
