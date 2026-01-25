@@ -651,8 +651,8 @@ class RedirectLinkController extends Controller
           imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
         }
 
-        // Add text overlays to front if QR is on front and coordinates applied
-        if ($qrSide === 'front' && $nfc->apply_coordinates) {
+        // Add text overlays to front if QR is on front
+        if ($qrSide === 'front') {
           $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
         }
 
@@ -674,8 +674,8 @@ class RedirectLinkController extends Controller
           imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
         }
 
-        // Add text overlays to back if QR is on back and coordinates applied
-        if ($qrSide === 'back' && $nfc->apply_coordinates) {
+        // Add text overlays to back if QR is on back
+        if ($qrSide === 'back') {
           $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
         }
 
