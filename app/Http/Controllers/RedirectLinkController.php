@@ -621,23 +621,23 @@ class RedirectLinkController extends Controller
       // Create a larger canvas to accommodate QR code and text
       $canvasWidth = max($qrWidth, 300);
       $canvasHeight = $qrHeight + 100; // Extra space for text
-      
+
       $canvas = imagecreatetruecolor($canvasWidth, $canvasHeight);
       $white = imagecolorallocate($canvas, 255, 255, 255);
       imagefill($canvas, 0, 0, $white);
-      
+
       // Copy QR code to canvas
       $qrXPos = ($canvasWidth - $qrWidth) / 2; // Center horizontally
       imagecopy($canvas, $qrImageGd, $qrXPos, 0, 0, 0, $qrWidth, $qrHeight);
-      
+
       // Add text overlays
       $this->addTextOverlays($canvas, $link->uri, $link->id, $qrXPos, 0, $qrSize, $nfc);
-      
+
       // Save the combined image
       $qrWithTextPath = $tempDirectory . '/' . $link->uri . '_qr_with_text.png';
       imagepng($canvas, $qrWithTextPath);
       imagedestroy($canvas);
-      
+
       $generatedImages['qr'] = $qrWithTextPath;
     } else {
       // Process Front Image
@@ -651,10 +651,8 @@ class RedirectLinkController extends Controller
           imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
         }
 
-        // Add text overlays to front if QR is on front
-        if ($qrSide === 'front') {
-          $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
-        }
+        // Always add text overlays to front
+        $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
 
         // Save front image
         $frontPath = $tempDirectory . '/' . $link->uri . '_front.png';
@@ -674,10 +672,8 @@ class RedirectLinkController extends Controller
           imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
         }
 
-        // Add text overlays to back if QR is on back
-        if ($qrSide === 'back') {
-          $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
-        }
+        // Always add text overlays to back
+        $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
 
         // Save back image
         $backPath = $tempDirectory . '/' . $link->uri . '_back.png';
