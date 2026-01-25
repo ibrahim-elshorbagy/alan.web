@@ -516,7 +516,7 @@ class RedirectLinkController extends Controller
             // Add text overlays
             $black = imagecolorallocate($canvas, 0, 0, 0);
             $fontPath = public_path('fonts/Zain-Regular.ttf');
-            $fontSize = 14;
+            $fontSize = 20;
 
             $urlText = 'Code : ' . $link->uri;
             $serialText = 'Serial No : ' . str_pad($link->id, 4, '0', STR_PAD_LEFT);
