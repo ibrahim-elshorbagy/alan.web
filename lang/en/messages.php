@@ -1762,6 +1762,9 @@ return [
     'role' => 'Role',
     'super_admin' => 'Super Admin',
     'sales' => 'Sales',
+    'cannot_delete_user_with_receipts' => 'Cannot delete user with existing receipts.',
+    'cannot_delete_user_with_active_cards' => 'Cannot delete user with assigned active cards.',
+    'not_allowed_to_access' => 'Not allowed to access.',
   ],
   'vcard_11' => [
     'read_more' => 'Read More',

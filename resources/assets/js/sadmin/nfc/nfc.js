@@ -11,6 +11,7 @@ listenClick("#newNfc", function () {
     $("#addNfcModal").modal("show");
     resetModalForm("#addNfcForm");
     toggleCoordinateFields("#applyCoordinates", "#coordinatesFields");
+    togglePrintSettings("#applyCoordinates", "#printSettings");
     toggleDimensionFields("#printFormat", "#dimensionFields");
     initQrPreview(); // Initialize QR preview for create modal
 });
@@ -22,10 +23,12 @@ listenHiddenBsModal("#addNfcModal", function () {
 // Toggle coordinate fields when checkbox is clicked
 listen("change", "#applyCoordinates", function () {
     toggleCoordinateFields("#applyCoordinates", "#coordinatesFields");
+    togglePrintSettings("#applyCoordinates", "#printSettings");
 });
 
 listen("change", "#editApplyCoordinates", function () {
     toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");
+    togglePrintSettings("#editApplyCoordinates", "#editPrintSettings");
 });
 
 // Toggle dimension fields when print format is changed
@@ -38,6 +41,14 @@ listen("change", "#editPrintFormat", function () {
 });
 
 function toggleCoordinateFields(checkboxId, fieldsId) {
+    if ($(checkboxId).is(":checked")) {
+        $(fieldsId).show();
+    } else {
+        $(fieldsId).hide();
+    }
+}
+
+function togglePrintSettings(checkboxId, fieldsId) {
     if ($(checkboxId).is(":checked")) {
         $(fieldsId).show();
     } else {
@@ -134,6 +145,9 @@ function nfcRenderDataShow(id) {
 
                 // Toggle coordinate fields visibility
                 toggleCoordinateFields("#editApplyCoordinates", "#editCoordinatesFields");
+
+                // Toggle print settings visibility
+                togglePrintSettings("#editApplyCoordinates", "#editPrintSettings");
 
                 // Toggle dimension fields visibility
                 toggleDimensionFields("#editPrintFormat", "#editDimensionFields");

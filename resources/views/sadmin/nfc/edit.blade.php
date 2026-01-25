@@ -110,7 +110,7 @@
 
 
 
-          <div class="mb-3">
+          <div class="mb-3" id="editPrintSettings">
             <h5 class="mb-3">Print Settings</h5>
 
             <div class="row mb-3">

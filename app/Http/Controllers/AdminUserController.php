@@ -8,6 +8,8 @@ use App\Models\MultiTenant;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Vcard;
+use App\Models\Receipt;
+use App\Models\RedirectLink;
 use App\Repositories\UserRepository;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -115,6 +117,17 @@ class AdminUserController extends AppBaseController
     if ($loggedInAdminDate > $adminDate) {
       return $this->sendError(__('messages.admin.not_allowed_to_access'));
     }
+
+    // Check if user has receipts
+    if (Receipt::where('user_id', $admin->id)->exists()) {
+      return $this->sendError(__('messages.admin.cannot_delete_user_with_receipts'));
+    }
+
+    // Check if user has assigned redirect links (active cards)
+    if (RedirectLink::where('assigned_id', $admin->id)->exists()) {
+      return $this->sendError(__('messages.admin.cannot_delete_user_with_active_cards'));
+    }
+
     Vcard::where('tenant_id', $admin->tenant_id)->delete();
     MultiTenant::where('id', $admin->tenant_id)->delete();
     $admin->delete();

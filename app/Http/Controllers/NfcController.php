@@ -239,8 +239,27 @@ class NfcController extends AppBaseController
     $yPos = $nfc->qr_y_position ?? 0;
 
     if ($nfc->print_only_qr) {
-      // Only export QR code
-      $generatedImages[] = $qrPath;
+      // Create a larger canvas to accommodate QR code and text
+      $canvasWidth = max($qrWidth, 300);
+      $canvasHeight = $qrHeight + 100; // Extra space for text
+      
+      $canvas = imagecreatetruecolor($canvasWidth, $canvasHeight);
+      $white = imagecolorallocate($canvas, 255, 255, 255);
+      imagefill($canvas, 0, 0, $white);
+      
+      // Copy QR code to canvas
+      $qrXPos = ($canvasWidth - $qrWidth) / 2; // Center horizontally
+      imagecopy($canvas, $qrImageGd, $qrXPos, 0, 0, 0, $qrWidth, $qrHeight);
+      
+      // Add text overlays
+      $this->addTestTextOverlays($canvas, $testCode, $testSerialNo, $qrXPos, 0, $qrSize, $nfc);
+      
+      // Save the combined image
+      $qrWithTextPath = $tempDirectory . '/nfc_qr_with_text_test.png';
+      imagepng($canvas, $qrWithTextPath);
+      imagedestroy($canvas);
+      
+      $generatedImages[] = $qrWithTextPath;
     } else {
       // Process Front Image
       if ($nfc->print_front_image) {

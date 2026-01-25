@@ -1760,6 +1760,9 @@ return [
     'role' => 'الدور - الصلاحيات',
     'super_admin' => 'المدير العام سوبر أدمن',
     'sales' => 'مندوب مبيعات',
+    'cannot_delete_user_with_receipts' => 'لا يمكن حذف المستخدم لديه إيصالات موجودة.',
+    'cannot_delete_user_with_active_cards' => 'لا يمكن حذف المستخدم لديه بطاقات نشطة مخصصة.',
+    'not_allowed_to_access' => 'غير مسموح بالوصول.',
 
   ],
   'vcard_11' => [

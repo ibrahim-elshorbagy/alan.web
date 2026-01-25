@@ -618,8 +618,27 @@ class RedirectLinkController extends Controller
     $yPos = $nfc->qr_y_position ?? 0;
 
     if ($printOnlyQr) {
-      // Only export QR code
-      $generatedImages['qr'] = $qrPath;
+      // Create a larger canvas to accommodate QR code and text
+      $canvasWidth = max($qrWidth, 300);
+      $canvasHeight = $qrHeight + 100; // Extra space for text
+      
+      $canvas = imagecreatetruecolor($canvasWidth, $canvasHeight);
+      $white = imagecolorallocate($canvas, 255, 255, 255);
+      imagefill($canvas, 0, 0, $white);
+      
+      // Copy QR code to canvas
+      $qrXPos = ($canvasWidth - $qrWidth) / 2; // Center horizontally
+      imagecopy($canvas, $qrImageGd, $qrXPos, 0, 0, 0, $qrWidth, $qrHeight);
+      
+      // Add text overlays
+      $this->addTextOverlays($canvas, $link->uri, $link->id, $qrXPos, 0, $qrSize, $nfc);
+      
+      // Save the combined image
+      $qrWithTextPath = $tempDirectory . '/' . $link->uri . '_qr_with_text.png';
+      imagepng($canvas, $qrWithTextPath);
+      imagedestroy($canvas);
+      
+      $generatedImages['qr'] = $qrWithTextPath;
     } else {
       // Process Front Image
       if ($printFrontImage) {
