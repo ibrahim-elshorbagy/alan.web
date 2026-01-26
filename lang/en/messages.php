@@ -106,6 +106,8 @@ return [
   'Reporter' => 'Reporter vCard',
   'showing' => 'Showing',
   'of' => 'Of',
+  'previous' => 'Previous',
+  'next' => 'Next',
   'no_vcards_available' => 'vCard not available',
   'no_vcards_found' => 'vCard not found',
   'wait_for_apporove_of_cash_payment_by_admin' => 'Your Manual Transaction Request Is Pending.',
@@ -429,9 +431,10 @@ return [
     'attachment' => 'Attachment',
   ],
   'common' => [
+    'search' => 'Search...',
     'print' => 'Print',
     'select_sales' => "Select - No one",
-
+    'per_page' => 'Per Page',
     'reset_password' => 'Reset Password',
     'remember_password' => 'Remembered your password',
     'new_password' => 'New Password',
@@ -447,6 +450,7 @@ return [
     'yes' => 'Yes',
     'no' => 'No',
     'duplicate' => 'Duplicate !',
+    'items' => 'Items',
     'add_virtual_background' => 'Add Virtual Background',
     'custom' => 'Custom',
     'download' => 'Download',
@@ -605,6 +609,7 @@ return [
     'to_date' => 'To Date',
     'all' => "all",
     'sales_price' => 'Sales Representative Price',
+    'items' => 'Items',
   ],
   'user' => [
     'registered' => 'New User Registered',
@@ -2396,7 +2401,8 @@ return [
     'no_items_selected' => 'No items selected',
     'restore_selected' => 'Restore',
     'restored_successfully' => 'Redirect links restored successfully',
-    'no_items_to_restore' => 'No items to restore (all selected items are already connected to users)',
+    'no_links_restored' => 'No links were restored',
+    'no_items_to_restore' => 'No items to restore (all selected items are not connected to users or already restored)',
     'restore_confirmation' => 'Are you sure you want to restore selected redirect links? Only links not connected to users will be restored.',
     'no_items_found' => 'No items found',
     'my_redirect_links' => 'My Redirect Links',
@@ -2445,6 +2451,11 @@ return [
     'mark_selected_as_received' => 'Mark Selected as Received',
     'marked_as_received' => 'Marked as received',
     'no_items_to_mark' => 'No items to mark',
+    'group_by' => 'Group By',
+    'no_grouping' => 'No Grouping',
+    'not_assigned' => 'Not Assigned',
+    'expand_all' => 'Expand All',
+    'collapse_all' => 'Collapse All',
 
   ],
   'receipts' => [

@@ -106,6 +106,8 @@ return [
   'Reporter' => 'المراسلين الصحفيين والمدونين',
   'showing' => 'عرض',
   'of' => 'من',
+  'previous' => 'السابق',
+  'next' => 'التالي',
   'no_vcards_available' => 'لا توجد بطاقات vCard متاحة',
   'no_vcards_found' => 'لم يتم العثور على بطاقات vCard',
   'wait_for_apporove_of_cash_payment_by_admin' => 'طلب الدفع اليدوي الخاص بك قيد الانتظار.',
@@ -429,8 +431,11 @@ return [
     'attachment' => 'مرفق',
   ],
   'common' => [
+    'search' => 'بحث...',
     'print' => 'طباعة',
     'total' => "الإجمالي",
+    'per_page' => 'لكل صفحة',
+
     'select_sales' => "اختر - لا احد",
     'use_email' => 'ايميل: يستقبل رابط تفعيل',
     'use_phone' => 'موبايل: رقم اردني يستقبل كود تفعيل',
@@ -449,6 +454,7 @@ return [
     'yes' => 'نعم',
     'no' => 'لا',
     'duplicate' => 'مكرر!',
+    'items' => 'عناصر',
     'add_virtual_background' => 'إضافة تصميم مخصص ',
     'custom' => 'مخصص',
     'download' => 'تحميل',
@@ -604,6 +610,7 @@ return [
     'to_date' => 'إلى تاريخ',
     'all' => "الكل",
     'sales_price' => 'سعر المندوب',
+    'items' => 'عنصر',
 
   ],
   'user' => [
@@ -2394,7 +2401,8 @@ return [
     'no_items_found' => 'لم يتم العثور على عناصر',
     'restore_selected' => 'استعادة',
     'restored_successfully' => 'تم استعادة روابط إعادة التوجيه بنجاح',
-    'no_items_to_restore' => 'لا توجد عناصر لاستعادتها (جميع العناصر المحددة متصلة بمستخدمين)',
+    'no_links_restored' => 'لم يتم استعادة أي روابط',
+    'no_items_to_restore' => 'لا توجد عناصر لاستعادتها (جميع العناصر المحددة غير متصلة بمستخدمين أو تم استعادتها بالفعل)',
     'restore_confirmation' => 'هل أنت متأكد من أنك تريد استعادة روابط إعادة التوجيه المحددة؟ سيتم استعادة الروابط غير المتصلة بمستخدمين فقط.',
     'my_redirect_links' => 'روابط إعادة التوجيه الخاصة بي',
     'redeem' => 'تفعيل',
@@ -2443,6 +2451,11 @@ return [
     'mark_selected_as_received' => 'وضع علامة كمستلم على المحدد',
     'marked_as_received' => 'تم وضع علامة كمستلم',
     'no_items_to_mark' => 'لا توجد عناصر للوضع علامة عليها',
+    'group_by' => 'تجميع حسب',
+    'no_grouping' => 'بدون تجميع',
+    'not_assigned' => 'غير مخصص',
+    'expand_all' => 'توسيع الكل',
+    'collapse_all' => 'طي الكل',
 
   ],
   'receipts' => [

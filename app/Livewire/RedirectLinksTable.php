@@ -23,6 +23,7 @@ class RedirectLinksTable extends LivewireTableComponent
   public $assignedFilter = '';
   public $dateFromFilter = '';
   public $dateToFilter = '';
+  public $groupByFilter = ''; // For super admin to group results
 
   public $selectedRecordId;
 
@@ -53,6 +54,11 @@ class RedirectLinksTable extends LivewireTableComponent
   }
 
   public function updatedDateToFilter()
+  {
+    $this->setBuilder($this->builder());
+  }
+
+  public function updatedGroupByFilter()
   {
     $this->setBuilder($this->builder());
   }
@@ -236,6 +242,21 @@ class RedirectLinksTable extends LivewireTableComponent
       });
     }
 
+    // Apply GroupBy for super admin
+    if ($this->groupByFilter !== '' && auth()->user()->hasRole('super_admin')) {
+      switch ($this->groupByFilter) {
+        case 'redirect_type':
+          $query->orderBy('redirect_link_type');
+          break;
+        case 'nfc_card':
+          $query->orderBy('nfcs_id');
+          break;
+        case 'sales_rep':
+          $query->orderBy('assigned_id');
+          break;
+      }
+    }
+
     return $query;
   }
 
@@ -247,6 +268,66 @@ class RedirectLinksTable extends LivewireTableComponent
       $redirectLink->update(['received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED]);
       $this->dispatchSelf('refresh');
     }
+  }
+
+  public function getGroupedData()
+  {
+    if ($this->groupByFilter === '' || !auth()->user()->hasRole('super_admin')) {
+      return null;
+    }
+
+    $rows = $this->getRows();
+    $grouped = [];
+
+    switch ($this->groupByFilter) {
+      case 'redirect_type':
+        $grouped = $rows->groupBy(function ($item) {
+          return $item->redirect_link_type;
+        });
+        break;
+      case 'nfc_card':
+        $grouped = $rows->groupBy(function ($item) {
+          return $item->nfcs_id;
+        });
+        break;
+      case 'sales_rep':
+        $grouped = $rows->groupBy(function ($item) {
+          return $item->assigned_id;
+        });
+        break;
+    }
+
+    return $grouped;
+  }
+
+  public function getGroupName($groupKey)
+  {
+    switch ($this->groupByFilter) {
+      case 'redirect_type':
+        return \App\Enums\RedirectLinkTypeEnum::from($groupKey)->label();
+      case 'nfc_card':
+        $nfc = \App\Models\Nfc::find($groupKey);
+        return $nfc ? $nfc->name : 'N/A';
+      case 'sales_rep':
+        $user = \App\Models\User::find($groupKey);
+        return $user ? $user->first_name . ' ' . $user->last_name : __('messages.redirect_links.not_assigned');
+      default:
+        return 'Unknown';
+    }
+  }
+
+  public function getGroupPurchasePrice($items)
+  {
+    return $items->sum(function ($row) {
+      return $row->price ?? 0;
+    });
+  }
+
+  public function getGroupSalesPrice($items)
+  {
+    return $items->sum(function ($row) {
+      return $row->sales_price ?? 0;
+    });
   }
 
   public function getPurchasePriceSum()
@@ -266,5 +347,59 @@ class RedirectLinksTable extends LivewireTableComponent
   public function placeholder()
   {
     return view('lazy_loading.without-filter-skelecton');
+  }
+
+  public function syncAndRestore()
+  {
+    if (!auth()->user()->hasRole('super_admin')) {
+      session()->flash('error', __('messages.common.unauthorized'));
+      return;
+    }
+
+    $selectedIds = $this->getSelected();
+
+    if (empty($selectedIds)) {
+      session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    // Check how many selected links exist and are eligible for restore
+    $eligibleCount = RedirectLink::whereIn('id', $selectedIds)->whereNotNull('user_id')->count();
+
+    if ($eligibleCount == 0) {
+      session()->flash('error', __('messages.redirect_links.no_items_to_restore') . ' (' . count($selectedIds) . ' selected)');
+      return;
+    }
+
+    // Perform the restore logic directly
+    $updated = RedirectLink::whereIn('id', $selectedIds)
+      ->whereNotNull('user_id')
+      ->update(['user_id' => null, 'assigned_id' => null]);
+
+    if ($updated > 0) {
+      session()->flash('success', __('messages.redirect_links.restored_successfully') . ' (' . $updated . ' links)');
+    } else {
+      session()->flash('error', __('messages.redirect_links.no_links_restored'));
+    }
+
+    $this->resetSelected();
+    $this->resetPage('redirect-links-table');
+  }
+
+  public function render(): \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+  {
+    $groupedData = $this->getGroupedData();
+
+    if ($groupedData && count($groupedData) > 0 && auth()->user()->hasRole('super_admin')) {
+      // Return custom grouped view with component context
+      return view('admin.redirect_links.grouped-table')
+        ->with([
+          'groupedData' => $groupedData,
+          'component' => $this,
+        ]);
+    }
+
+    // Return default table view
+    return parent::render();
   }
 }

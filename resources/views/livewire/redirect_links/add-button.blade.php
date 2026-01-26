@@ -59,6 +59,19 @@
       <label class="form-label small mb-1">{{ __('messages.common.date_to') }}</label>
       <input type="date" class="form-control" wire:model.live="dateToFilter">
     </div>
+
+    {{-- Group By Filter (only for super admin) --}}
+    @hasrole('super_admin')
+      <div class="filter-item">
+        <label class="form-label small mb-1">{{ __('messages.redirect_links.group_by') }}</label>
+        <select class="form-control form-select" wire:model.live="groupByFilter">
+          <option value="">{{ __('messages.redirect_links.no_grouping') }}</option>
+          <option value="redirect_type">{{ __('messages.redirect_links.redirect_type') }}</option>
+          <option value="nfc_card">{{ __('messages.redirect_links.card_type') }}</option>
+          <option value="sales_rep">{{ __('messages.redirect_links.assigned_to') }}</option>
+        </select>
+      </div>
+    @endhasrole
   </div>
 
   {{-- Buttons Row --}}
@@ -73,14 +86,10 @@
       </a>
 
       @hasrole('super_admin')
-        <form action="{{ route('redirect-links.restore-selected') }}" method="POST" style="display: inline;"
-          onsubmit="return confirm('{{ __('messages.redirect_links.restore_confirmation') }}')">
-          @csrf
-          <input type="hidden" name="ids" value="{{ implode(',', $this->getSelected()) }}">
-          <button type="submit" class="btn btn-info">
-            <i class="fas fa-undo"></i> {{ __('messages.redirect_links.restore_selected') }}
-          </button>
-        </form>
+        <button type="button" class="btn btn-info" @click="$wire.call('syncAndRestore')"
+          onclick="return confirm('{{ __('messages.redirect_links.restore_confirmation') }}')">
+          <i class="fas fa-undo"></i> {{ __('messages.redirect_links.restore_selected') }}
+        </button>
       @endhasrole
     @endif
 
