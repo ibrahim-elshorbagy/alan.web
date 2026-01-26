@@ -563,9 +563,11 @@
         </tbody>
         <tfoot class="table-dark">
           <tr>
-            <td colspan="5" class="text-start px-3 fw-bold">
-              {{ __('messages.common.total') }}
-            </td>
+            <td class="text-start px-3 fw-bold">{{ __('messages.common.total') }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
             @if (!auth()->user()->hasRole('sales'))
               <td class="text-center fw-bold">
                 {{ currencyFormat($totalPurchasePrice, 2) }}
@@ -574,7 +576,11 @@
             <td class="text-center fw-bold">
               {{ currencyFormat($totalSalesPrice, 2) }}
             </td>
-            <td colspan="{{ auth()->user()->hasRole('sales') ? 3 : 4 }}"></td>
+            @if (!auth()->user()->hasRole('sales'))
+              <td></td>
+            @endif
+            <td></td>
+            <td></td>
           </tr>
         </tfoot>
       </table>
