@@ -345,13 +345,12 @@ if (!function_exists('currencyFormat')) {
       $currency->setThousandSeparator(',');
       $currency->setDecimalSeparator('.');
       $currency->setSymbolPlacement(getSuperAdminSettingValue('currency_after_amount') ? 'after' : 'before');
-
       try {
         $amount = new Gerardojbaez\Money\Money($number, $currency);
       } catch (Exception $e) {
         $amount = new Gerardojbaez\Money\Money($number, 'USD');
       }
-      $formattedAmount = getSuperAdminSettingValue('currency_after_amount') ? number_format($number, $precision) . $currency->getSymbol() : $currency->getSymbol() . number_format($number, $precision);
+      $formattedAmount = number_format(settype($amount->format(), 'float'), decimals: 2);
     } catch (Exception $e) {
       $currencyCode = $currencyCode ?? getSuperAdminSettingValue('default_currency');
       $currency = Currency::whereCurrencyCode($currencyCode)->first();
@@ -361,10 +360,10 @@ if (!function_exists('currencyFormat')) {
         $formattedAmount = ($currency->currency_icon === '$') ? $currency->currency_icon . number_format($number, 2) : getCurrencyAmount(number_format($number, 2), $currency->currency_icon);
       }
     }
-
     return $formattedAmount;
   }
 }
+
 
 /**
  * @return mixed
