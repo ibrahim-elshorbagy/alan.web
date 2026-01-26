@@ -74,6 +74,16 @@ class NfcController extends AppBaseController
     return $this->sendSuccess(__('messages.nfc.nfc_card_deleted_success'));
   }
 
+  public function copy($id)
+  {
+    try {
+      $newNfc = $this->NfcRepository->copy($id);
+      return $this->sendResponse($newNfc, __('messages.nfc.nfc_card_copied_success'));
+    } catch (\Exception $e) {
+      return $this->sendError($e->getMessage());
+    }
+  }
+
   public function getNfcCardTax()
   {
     $tax = Setting::where('key', 'nfc_tax_value')->value('value');
@@ -242,23 +252,23 @@ class NfcController extends AppBaseController
       // Create a larger canvas to accommodate QR code and text
       $canvasWidth = max($qrWidth, 300);
       $canvasHeight = $qrHeight + 100; // Extra space for text
-      
+
       $canvas = imagecreatetruecolor($canvasWidth, $canvasHeight);
       $white = imagecolorallocate($canvas, 255, 255, 255);
       imagefill($canvas, 0, 0, $white);
-      
+
       // Copy QR code to canvas
       $qrXPos = ($canvasWidth - $qrWidth) / 2; // Center horizontally
       imagecopy($canvas, $qrImageGd, $qrXPos, 0, 0, 0, $qrWidth, $qrHeight);
-      
+
       // Add text overlays
       $this->addTestTextOverlays($canvas, $testCode, $testSerialNo, $qrXPos, 0, $qrSize, $nfc);
-      
+
       // Save the combined image
       $qrWithTextPath = $tempDirectory . '/nfc_qr_with_text_test.png';
       imagepng($canvas, $qrWithTextPath);
       imagedestroy($canvas);
-      
+
       $generatedImages[] = $qrWithTextPath;
     } else {
       // Process Front Image

@@ -1910,6 +1910,7 @@ return [
     'nfc_card_created_success' => 'NFC card Created Successfully',
     'nfc_card_updated_success' => 'NFC card Updated Successfully',
     'nfc_card_deleted_success' => 'NFC card Deleted Successfully',
+    'nfc_card_copied_success' => 'NFC card Copied Successfully',
     'card_type' => 'Card Type',
     'designation' => 'Designation',
     'order_nfc' => 'Order NFC',

@@ -8,6 +8,10 @@
       data-id="{{ $row->id }}">
       <i class="fa-solid fa-download"></i>
     </a>
+    <a href="javascript:void(0)" title="Copy NFC Card" class="btn px-1 text-info fs-3 nfc-copy-btn"
+      data-id="{{ $row->id }}">
+      <i class="fa-solid fa-copy"></i>
+    </a>
     <a href="javascript:void(0)" data-id="{{ $row->id }}" title="{{ __('messages.common.delete') }}"
       class="btn px-1 text-danger fs-3 nfc-delete-btn" data-turbolinks="false">
       <i class="fa-solid fa-trash-can"></i>

@@ -1909,6 +1909,7 @@ return [
     'nfc_card_created_success' => 'تم إنشاء بطاقة NFC بنجاح',
     'nfc_card_updated_success' => 'تم تحديث بطاقة NFC بنجاح',
     'nfc_card_deleted_success' => 'تم حذف بطاقة NFC بنجاح',
+    'nfc_card_copied_success' => 'تم نسخ بطاقة NFC بنجاح',
     'card_type' => 'نوع البطاقة',
     'designation' => 'المنصب',
     'order_nfc' => 'طلب NFC',

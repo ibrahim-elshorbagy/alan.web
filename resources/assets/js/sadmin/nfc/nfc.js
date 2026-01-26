@@ -113,6 +113,29 @@ listenClick(".nfc-view-btn", function (event) {
     nfcRenderDataShow(nfcId);
 });
 
+listenClick(".nfc-copy-btn", function (event) {
+  let nfcId = $(event.currentTarget).data("id");
+
+  if (confirm('Are you sure you want to copy this NFC card?')) {
+      $.ajax({
+          url: route("nfc.copy", nfcId),
+          type: "POST",
+          data: {
+              _token: $('meta[name="csrf-token"]').attr('content')
+          },
+          success: function (result) {
+              if (result.success) {
+                  displaySuccessMessage(result.message);
+                  Livewire.dispatch("refresh");
+              }
+          },
+          error: function (result) {
+              displayErrorMessage(result.responseJSON.message);
+          }
+      });
+  }
+});
+
 function nfcRenderDataShow(id) {
     $.ajax({
         url: route("nfc.edit", { id: id }),
