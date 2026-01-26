@@ -2442,6 +2442,9 @@ return [
     'received_status' => 'Received Status',
     'received_all' => 'Received All',
     'rejected_note' => 'This redirect link has been rejected.',
+    'mark_selected_as_received' => 'Mark Selected as Received',
+    'marked_as_received' => 'Marked as received',
+    'no_items_to_mark' => 'No items to mark',
 
   ],
   'receipts' => [

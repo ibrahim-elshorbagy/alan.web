@@ -97,6 +97,7 @@ class RedirectLinksTable extends LivewireTableComponent
   {
     return [
       'exportSelected' => __('messages.redirect_links.export_selected'),
+      'markSelectedAsReceived' => __('messages.redirect_links.mark_selected_as_received'),
     ];
   }
 
@@ -127,6 +128,30 @@ class RedirectLinksTable extends LivewireTableComponent
 
     // Redirect to controller method with selected IDs
     return redirect()->route('redirect-links.export-selected', ['ids' => implode(',', $selectedIds)]);
+  }
+
+  public function markSelectedAsReceived()
+  {
+    $selectedIds = $this->getSelected();
+
+    if (empty($selectedIds)) {
+      return redirect()->back()->with('error', __('messages.redirect_links.no_items_selected'));
+    }
+
+    // For sales, ensure they can only mark their assigned links as received
+    if (auth()->user()->hasRole('sales')) {
+      $selectedIds = RedirectLink::whereIn('id', $selectedIds)
+        ->where('assigned_id', auth()->id())
+        ->pluck('id')
+        ->toArray();
+
+      if (empty($selectedIds)) {
+        return redirect()->back()->with('error', __('messages.redirect_links.no_items_selected'));
+      }
+    }
+
+    // Redirect to controller method with selected IDs
+    return redirect()->route('redirect-links.mark-selected-received', ['ids' => implode(',', $selectedIds)]);
   }
 
   public function columns(): array

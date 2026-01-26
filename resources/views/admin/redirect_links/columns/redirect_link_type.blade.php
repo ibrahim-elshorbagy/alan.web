@@ -37,3 +37,4 @@
 @endphp
 
 <i class="{{ $icon }}" data-bs-toggle="tooltip" title="{{ $tooltip }}"></i>
+<i class="bi bi-cpu fs-5 me-1" title="{{ $row->nfc->name ?? 'N/A' }}" data-bs-toggle="tooltip"></i>

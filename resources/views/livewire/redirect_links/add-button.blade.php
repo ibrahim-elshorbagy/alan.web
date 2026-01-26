@@ -68,6 +68,10 @@
         <i class="fas fa-file-export"></i> {{ __('messages.common.export_selected') }}
       </a>
 
+      <a type="button" class="btn btn-success" wire:click="markSelectedAsReceived">
+        <i class="fas fa-check"></i> {{ __('messages.redirect_links.mark_selected_as_received') }}
+      </a>
+
       @hasrole('super_admin')
         <form action="{{ route('redirect-links.restore-selected') }}" method="POST" style="display: inline;"
           onsubmit="return confirm('{{ __('messages.redirect_links.restore_confirmation') }}')">

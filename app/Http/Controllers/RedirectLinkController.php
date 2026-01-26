@@ -137,6 +137,35 @@ class RedirectLinkController extends Controller
     return redirect()->back();
   }
 
+  public function markSelectedAsReceived(Request $request)
+  {
+    $ids = $request->input('ids');
+
+    if (!$ids) {
+      return redirect()->back()->with('error', __('messages.redirect_links.no_items_selected'));
+    }
+
+    $idsArray = explode(',', $ids);
+
+    $query = RedirectLink::whereIn('id', $idsArray)
+      ->where('received_status', RedirectLink::RECEIVED_STATUS_NOT_RECEIVED);
+
+    // For sales, filter to only their assigned links
+    if (auth()->user()->hasRole('sales')) {
+      $query->where('assigned_id', auth()->id());
+    }
+
+    $updated = $query->update(['received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED]);
+
+    if ($updated > 0) {
+      session()->flash('success', __('messages.redirect_links.marked_as_received') . ' (' . $updated . ' links)');
+    } else {
+      session()->flash('info', __('messages.redirect_links.no_items_to_mark'));
+    }
+
+    return redirect()->back();
+  }
+
   public function restoreSelected(Request $request)
   {
     // Only super admin can restore

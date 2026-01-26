@@ -2440,6 +2440,9 @@ return [
     'received_status' => 'حالة الاستلام',
     'received_all' => 'استلمت الكل',
     'rejected_note' => 'تم رفض رابط إعادة التوجيه هذا.',
+    'mark_selected_as_received' => 'وضع علامة كمستلم على المحدد',
+    'marked_as_received' => 'تم وضع علامة كمستلم',
+    'no_items_to_mark' => 'لا توجد عناصر للوضع علامة عليها',
 
   ],
   'receipts' => [
