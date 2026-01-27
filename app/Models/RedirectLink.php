@@ -20,6 +20,11 @@ class RedirectLink extends Model
   const RECEIVED_STATUS_NOT_RECEIVED = 0;
   const RECEIVED_STATUS_RECEIVED = 1;
 
+  protected $casts = [
+    'status_changed_at' => 'datetime',
+    'received_status_changed_at' => 'datetime',
+  ];
+
   public function user(): BelongsTo
   {
     return $this->belongsTo(User::class);
@@ -33,5 +38,15 @@ class RedirectLink extends Model
   public function nfc(): BelongsTo
   {
     return $this->belongsTo(Nfc::class, 'nfcs_id');
+  }
+
+  public function statusChangedBy(): BelongsTo
+  {
+    return $this->belongsTo(User::class, 'status_changed_by');
+  }
+
+  public function receivedStatusChangedBy(): BelongsTo
+  {
+    return $this->belongsTo(User::class, 'received_status_changed_by');
   }
 }

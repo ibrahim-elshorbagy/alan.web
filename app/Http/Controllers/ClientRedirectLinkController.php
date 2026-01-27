@@ -222,17 +222,24 @@ class ClientRedirectLinkController extends Controller
         $redeemedStatus = RedirectLink::STATUS_REDEEMED;
       }
 
+      // Get the actual user who is making this change (considering impersonation)
+      $actualUserId = auth()->user()->isImpersonated()
+        ? app('impersonate')->getImpersonatorId()
+        : auth()->id();
+
       // Assign redirect link to user and mark as redeemed
       $redirectLink->update([
         'user_id' => $user->id,
         'status' => $redeemedStatus,
+        'status_changed_by' => $actualUserId,
+        'status_changed_at' => now(),
         'nfc_order_id' => $nfcOrder->id,
       ]);
 
       // Send email to admin
-      Mail::to(getSuperAdminSettingValue('email'))->send(
-        new AdminRedirectLinkRedeemMail($redirectLink, $user, $nfcCard, $redirectType)
-      );
+      // Mail::to(getSuperAdminSettingValue('email'))->send(
+      //   new AdminRedirectLinkRedeemMail($redirectLink, $user, $nfcCard, $redirectType)
+      // );
 
       DB::commit();
 
@@ -249,7 +256,7 @@ class ClientRedirectLinkController extends Controller
   public function redirectLink(RedirectLink $uri)
   {
     // If assigned to sales and not received, don't allow access
-    if ($uri->assigned_id && $uri->received_status != RedirectLink::RECEIVED_STATUS_RECEIVED || $uri->status == RedirectLink::STATUS_NOT_REDEEMED ) {
+    if ($uri->assigned_id && $uri->received_status != RedirectLink::RECEIVED_STATUS_RECEIVED || $uri->status == RedirectLink::STATUS_NOT_REDEEMED) {
       abort(404);
     }
 

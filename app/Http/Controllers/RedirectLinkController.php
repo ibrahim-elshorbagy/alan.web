@@ -124,9 +124,18 @@ class RedirectLinkController extends Controller
       return redirect()->back()->with('error', 'Unauthorized');
     }
 
+    // Get the actual user ID (considering impersonation)
+    $actualUserId = auth()->user()->isImpersonated()
+      ? app('impersonate')->getImpersonatorId()
+      : auth()->id();
+
     $updated = RedirectLink::where('assigned_id', auth()->id())
       ->where('received_status', RedirectLink::RECEIVED_STATUS_NOT_RECEIVED)
-      ->update(['received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED]);
+      ->update([
+        'received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED,
+        'received_status_changed_by' => $actualUserId,
+        'received_status_changed_at' => now(),
+      ]);
 
     if ($updated > 0) {
       session()->flash('success', __('messages.redirect_links.received_all') . ' (' . $updated . ' links)');
@@ -155,7 +164,16 @@ class RedirectLinkController extends Controller
       $query->where('assigned_id', auth()->id());
     }
 
-    $updated = $query->update(['received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED]);
+    // Get the actual user ID (considering impersonation)
+    $actualUserId = auth()->user()->isImpersonated()
+      ? app('impersonate')->getImpersonatorId()
+      : auth()->id();
+
+    $updated = $query->update([
+      'received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED,
+      'received_status_changed_by' => $actualUserId,
+      'received_status_changed_at' => now(),
+    ]);
 
     if ($updated > 0) {
       session()->flash('success', __('messages.redirect_links.marked_as_received') . ' (' . $updated . ' links)');
@@ -723,7 +741,7 @@ class RedirectLinkController extends Controller
 
         // Always add text overlays to front
         if ($qrSide === 'front' && $nfc->apply_coordinates) {
-        $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
+          $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
         }
 
         // Save front image
@@ -745,8 +763,8 @@ class RedirectLinkController extends Controller
         }
 
         if ($qrSide === 'back' && $nfc->apply_coordinates) {
-        // Always add text overlays to back
-        $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
+          // Always add text overlays to back
+          $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
         }
 
         // Save back image
@@ -847,7 +865,7 @@ class RedirectLinkController extends Controller
 
   public function edit($id)
   {
-    $redirectLink = RedirectLink::findOrFail($id);
+    $redirectLink = RedirectLink::with(['statusChangedBy', 'receivedStatusChangedBy'])->findOrFail($id);
 
     if (auth()->user()->hasRole('sales') && $redirectLink->assigned_id != auth()->id()) {
       abort(403, 'Unauthorized');
@@ -908,15 +926,35 @@ class RedirectLinkController extends Controller
 
     $updateData = $request->all();
 
+    // Get the actual user ID (considering impersonation)
+    $actualUserId = auth()->user()->isImpersonated()
+      ? app('impersonate')->getImpersonatorId()
+      : auth()->id();
+
+    // Track status changes
+    if (isset($updateData['status']) && $redirectLink->status != $updateData['status']) {
+      $updateData['status_changed_by'] = $actualUserId;
+      $updateData['status_changed_at'] = now();
+    }
+
+    // Track received_status changes
+    if (isset($updateData['received_status']) && $redirectLink->received_status != $updateData['received_status']) {
+      $updateData['received_status_changed_by'] = $actualUserId;
+      $updateData['received_status_changed_at'] = now();
+    }
+
     if (auth()->user()->hasRole('sales')) {
       // For sales, only allow updating redirect_link and status
-      $updateData = array_intersect_key($updateData, array_flip(['redirect_link', 'status']));
+      $allowedFields = ['redirect_link', 'status', 'status_changed_by', 'status_changed_at'];
+      $updateData = array_intersect_key($updateData, array_flip($allowedFields));
     } else if (auth()->user()->hasRole('super_admin')) {
       // For super admin, allow all fields including price and sales_price
-      $updateData = array_intersect_key($updateData, array_flip(['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status', 'price', 'sales_price']));
+      $allowedFields = ['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status', 'price', 'sales_price', 'status_changed_by', 'status_changed_at', 'received_status_changed_by', 'received_status_changed_at'];
+      $updateData = array_intersect_key($updateData, array_flip($allowedFields));
     } else {
       // For other admins, allow all except price fields
-      $updateData = array_intersect_key($updateData, array_flip(['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status']));
+      $allowedFields = ['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status', 'status_changed_by', 'status_changed_at', 'received_status_changed_by', 'received_status_changed_at'];
+      $updateData = array_intersect_key($updateData, array_flip($allowedFields));
     }
 
     $redirectLink->update($updateData);

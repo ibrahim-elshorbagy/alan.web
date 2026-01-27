@@ -311,7 +311,16 @@ class RedirectLinksCustomTable extends Component
     $redirectLink = RedirectLink::findOrFail($id);
 
     if (auth()->user()->hasRole('sales') && $redirectLink->assigned_id == auth()->id() && $redirectLink->received_status == RedirectLink::RECEIVED_STATUS_NOT_RECEIVED) {
-      $redirectLink->update(['received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED]);
+      // Get the actual user ID (considering impersonation)
+      $actualUserId = auth()->user()->isImpersonated()
+        ? app('impersonate')->getImpersonatorId()
+        : auth()->id();
+
+      $redirectLink->update([
+        'received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED,
+        'received_status_changed_by' => $actualUserId,
+        'received_status_changed_at' => now(),
+      ]);
       $this->dispatch('refresh');
     }
   }

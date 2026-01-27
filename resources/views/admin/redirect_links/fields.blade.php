@@ -45,6 +45,13 @@
       @else
         {{ Form::select('status', [0 => __('messages.redirect_links.not_redeemed'), 1 => __('messages.redirect_links.redeemed'), 2 => __('messages.redirect_links.rejected')], isset($redirectLink) ? $redirectLink->status : 0, ['class' => 'form-control', 'required', 'disabled' => $isDisabled]) }}
       @endif
+      @if (isset($redirectLink) && $redirectLink->statusChangedBy)
+        <small class="text-muted d-block mt-2">
+          <i class="fas fa-user"></i> بواسطة: <strong>{{ $redirectLink->statusChangedBy->first_name }} {{ $redirectLink->statusChangedBy->last_name }}</strong>
+          <br>
+          <i class="fas fa-clock"></i> {{ __('messages.date') }}: <strong>{{$redirectLink->status_changed_at?->translatedFormat('Y-m-d h:i a') }}</strong>
+        </small>
+      @endif
     </div>
   </div>
   @if (auth()->user()->hasRole('super_admin'))
@@ -77,8 +84,17 @@
       @else
         {{ Form::select('received_status', [0 => __('messages.redirect_links.not_received'), 1 => __('messages.redirect_links.received')], isset($redirectLink) ? $redirectLink->received_status : 0, ['class' => 'form-control']) }}
       @endif
+      @if (isset($redirectLink) && $redirectLink->receivedStatusChangedBy)
+        <small class="text-muted d-block mt-2">
+          <i class="fas fa-user"></i> بواسطة: <strong>{{ $redirectLink->receivedStatusChangedBy->first_name }} {{ $redirectLink->receivedStatusChangedBy->last_name }}</strong>
+          <br>
+          <i class="fas fa-clock"></i> {{ __('messages.date') }}: <strong>{{ $redirectLink->received_status_changed_at?->translatedFormat('Y-m-d h:i a') }}</strong>
+        </small>
+      @endif
     </div>
   </div>
+
+
   <div>
     @if (!$isDisabled)
       {{ Form::submit(__('messages.common.save'), ['class' => 'btn btn-primary me-3']) }}

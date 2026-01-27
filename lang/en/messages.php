@@ -2351,6 +2351,7 @@ return [
   ],
 
   'redirect_links' => [
+    'mark_all_tooltip' => 'Mark all as received',
     'title' => 'Redirect Links',
     'id' => 'ID',
     'user' => 'User',
