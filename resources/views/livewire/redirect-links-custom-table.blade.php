@@ -298,21 +298,27 @@
   {{-- Summary Card --}}
   <div class="summary-card">
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-{{ auth()->user()->hasRole('sales') ? '4' : '3' }}">
         <div class="stat">
           <div class="stat-value">{{ $totalCount }}</div>
           <div class="stat-label">{{ __('messages.common.total') }} {{ __('messages.common.items') }}</div>
         </div>
       </div>
+      <div class="col-md-{{ auth()->user()->hasRole('sales') ? '4' : '3' }}">
+        <div class="stat">
+          <div class="stat-value" x-text="localSelected ? localSelected.length : 0"></div>
+          <div class="stat-label">{{ __('messages.common.selected') }}</div>
+        </div>
+      </div>
       @if (!auth()->user()->hasRole('sales'))
-        <div class="col-md-4">
+        <div class="col-md-3">
           <div class="stat">
             <div class="stat-value">{{ currencyFormat($totalPurchasePrice, 2) }}</div>
             <div class="stat-label">{{ __('messages.admin_price') }}</div>
           </div>
         </div>
       @endif
-      <div class="col-md-4">
+      <div class="col-md-{{ auth()->user()->hasRole('sales') ? '4' : '3' }}">
         <div class="stat">
           <div class="stat-value">{{ currencyFormat($totalSalesPrice, 2) }}</div>
           <div class="stat-label">
