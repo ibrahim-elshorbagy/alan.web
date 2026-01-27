@@ -1424,7 +1424,7 @@ return [
     'facebook_app_id' => 'معرف تطبيق فيسبوك',
     'facebook_app_secret' => 'سر تطبيق فيسبوك',
     'facebook_redirect_url' => 'رابط إعادة التوجيه لـ فيسبوك',
-    'social_settings' => 'إعدادات التواصل الاجتماعي',
+    'social_settings' => 'إعدادات تسجيل الاشتراك',
     'share_your_details' => 'شارك تفاصيلك',
     'add_to_conact_model_decs' => 'لتنزيل جهة الاتصال، تحتاج أيضاً إلى مشاركة تفاصيل الاتصال الخاصة بك.',
     'mercado_pago' => 'Mercado Pago',
