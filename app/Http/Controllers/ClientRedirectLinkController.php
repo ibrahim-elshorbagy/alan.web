@@ -215,10 +215,17 @@ class ClientRedirectLinkController extends Controller
         'status' => \App\Models\NfcOrders::SUCCESS, // Already paid
       ]);
 
+      // if from sales don't active[full redeem from sales] it until sales mark as redeem
+      if ($redirectLink->assigned_id) {
+        $redeemedStatus = RedirectLink::STATUS_NOT_REDEEMED;
+      } else {
+        $redeemedStatus = RedirectLink::STATUS_REDEEMED;
+      }
+
       // Assign redirect link to user and mark as redeemed
       $redirectLink->update([
         'user_id' => $user->id,
-        'status' => RedirectLink::STATUS_REDEEMED,
+        'status' => $redeemedStatus,
         'nfc_order_id' => $nfcOrder->id,
       ]);
 
@@ -242,7 +249,7 @@ class ClientRedirectLinkController extends Controller
   public function redirectLink(RedirectLink $uri)
   {
     // If assigned to sales and not received, don't allow access
-    if ($uri->assigned_id && $uri->received_status != RedirectLink::RECEIVED_STATUS_RECEIVED) {
+    if ($uri->assigned_id && $uri->received_status != RedirectLink::RECEIVED_STATUS_RECEIVED || $uri->status == RedirectLink::STATUS_NOT_REDEEMED ) {
       abort(404);
     }
 
