@@ -2,7 +2,6 @@
   var steps = {{ getLogInUser()->steps }};
   var hasActiveSub = {{ json_encode(hasActiveSubscription()) }};
 
-
   if (steps == 0 && hasActiveSub == true) {
     if (performance.navigation.type === 1) {
       window.location.href = '/admin/dashboard';
@@ -17,6 +16,7 @@
     });
 
     let currentPath = window.location.pathname;
+
     // Step 1: Navigate from subscription management to dashboard
     if (currentPath === '/admin/manage-subscription') {
       if (window.innerWidth < 1200) {
@@ -27,7 +27,7 @@
         id: 'step-1',
         text: Lang.get("js.click_to_go_dashboard"),
         attachTo: {
-          element: '.user-dashboard ',
+          element: '.user-dashboard',
           on: 'bottom'
         },
         beforeShowPromise: function() {
@@ -58,7 +58,7 @@
           {
             text: Lang.get("js.next"),
             action: function() {
-              localStorage.setItem('startFromStep3', 'true');
+              localStorage.setItem('startFromStep2', 'true');
               window.location.href = '/admin/dashboard';
             }
           }
@@ -66,371 +66,425 @@
       });
     }
 
-    // Step 3: Show Vcard on the side menu (only on dashboard)
-    if (currentPath.includes('dashboard')) {
-      tour.addStep({
-        id: 'step-3',
-        text: Lang.get("js.show_vcard_sidebar"),
-        attachTo: {
-          element: '.vcard-option',
-          on: 'right'
+    // Step 2: Open sidebar on mobile (only on dashboard)
+    tour.addStep({
+      id: 'step-2',
+      text: Lang.get("js.click_open_sidebar"),
+      attachTo: {
+        element: '.sidemenu-btn',
+        on: 'bottom'
+      },
+      classes: 'shepherd shepherd-open shepherd-theme-arrows shepherd-transparent-text',
+      buttons: [{
+          text: Lang.get("js.skip"),
+          classes: 'shepherd-button-secondary',
+          action: function() {
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
+          }
         },
-        beforeShowPromise: function() {
-          return new Promise(function(resolve) {
-            if ($(window).width() < 1200) {
+        {
+          text: Lang.get("js.next"),
+          classes: 'shepherd-button-example-primary',
+          action: function() {
+            $("#sidebar").addClass("collapsed-menu");
+            $("body").addClass("collapsed-menu");
+            tour.next();
+          }
+        }
+      ]
+    });
+
+    // Step 3: Show Vcard on the side menu
+    tour.addStep({
+      id: 'step-3',
+      text: Lang.get("js.show_vcard_sidebar"),
+      attachTo: {
+        element: '.vcard-option',
+        on: 'bottom'
+      },
+      beforeShowPromise: function() {
+        return new Promise(function(resolve) {
+          if ($(window).width() < 1200) {
+            $('html, body').animate({
+              scrollTop: $('.vcard-option').offset().top - 100
+            }, 500, function() {
               resolve();
+            });
+          } else {
+            resolve();
+          }
+        });
+      },
+      classes: 'shepherd shepherd-open shepherd-theme-arrows shepherd-transparent-text',
+      buttons: [{
+          text: Lang.get("js.skip"),
+          classes: 'shepherd-button-secondary',
+          action: function() {
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
+          }
+        },
+        {
+          text: Lang.get("js.next"),
+          classes: 'shepherd-button-example-primary',
+          action: function() {
+            tour.next();
+          }
+        }
+      ]
+    });
+
+    // Step 4: Show RedirectLinks on the side menu
+    tour.addStep({
+      id: 'step-4',
+      text: Lang.get("js.show_redirect_links_sidebar"),
+      attachTo: {
+        element: '.redirect-links-option',
+        on: 'bottom'
+      },
+      beforeShowPromise: function() {
+        return new Promise(function(resolve) {
+          if ($(window).width() < 1200) {
+            $('html, body').animate({
+              scrollTop: $('.redirect-links-option').offset().top - 100
+            }, 500, function() {
+              resolve();
+            });
+          } else {
+            resolve();
+          }
+        });
+      },
+      classes: 'shepherd shepherd-open shepherd-theme-arrows shepherd-transparent-text',
+      buttons: [{
+          text: Lang.get("js.skip"),
+          classes: 'shepherd-button-secondary',
+          action: function() {
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
+          }
+        },
+        {
+          text: Lang.get("js.next"),
+          classes: 'shepherd-button-example-primary',
+          action: function() {
+            localStorage.setItem('startFromStep5', 'true');
+            window.location.href = '{{ route('client.redirect-links.index') }}';
+          }
+        }
+      ]
+    });
+
+    // Step 5: Show how to use redirect link code
+    tour.addStep({
+      id: 'step-5',
+      text: Lang.get("js.open_redeem_modal"),
+      attachTo: {
+        element: '[data-bs-target="#redeemModal"]',
+        on: 'bottom'
+      },
+      classes: 'shepherd example-step-extra-class',
+      buttons: [{
+          text: Lang.get("js.skip"),
+          classes: 'shepherd-button-secondary',
+          action: function() {
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
+          }
+        },
+        {
+          text: Lang.get("js.next"),
+          action: function() {
+            $('#redeemModal').modal('show');
+            setTimeout(() => tour.next(), 500);
+          }
+        }
+      ]
+    });
+
+    // Step 6: Enter the redirect code
+    tour.addStep({
+      id: 'step-6',
+      text: Lang.get("js.enter_redirect_code"),
+      attachTo: {
+        element: '#uri',
+        on: 'bottom'
+      },
+      classes: 'shepherd example-step-extra-class',
+      buttons: [{
+          text: Lang.get("js.skip"),
+          classes: 'shepherd-button-secondary',
+          action: function() {
+            $('#redeemModal').modal('hide');
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
+          }
+        },
+        {
+          text: Lang.get("js.next"),
+          action: function() {
+            tour.next();
+          }
+        }
+      ]
+    });
+
+    // Step 7: Save button
+    tour.addStep({
+      id: 'step-7',
+      text: Lang.get("js.save_redirect_code"),
+      attachTo: {
+        element: '#redeemModal .btn-success',
+        on: 'bottom'
+      },
+      classes: 'shepherd example-step-extra-class',
+      buttons: [{
+          text: Lang.get("js.skip"),
+          classes: 'shepherd-button-secondary',
+          action: function() {
+            $('#redeemModal').modal('hide');
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
+          }
+        },
+        {
+          text: Lang.get("js.next"),
+          action: function() {
+            tour.next();
+          }
+        }
+      ]
+    });
+
+    // Step 8: Close modal if no code
+    tour.addStep({
+      id: 'step-8',
+      text: Lang.get("js.close_if_no_code"),
+      attachTo: {
+        element: '#redeemModal .btn-secondary',
+        on: 'top'
+      },
+      classes: 'shepherd example-step-extra-class',
+      buttons: [{
+          text: Lang.get("js.skip"),
+          classes: 'shepherd-button-secondary',
+          action: function() {
+            $('#redeemModal').modal('hide');
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
+          }
+        },
+        {
+          text: Lang.get("js.next"),
+          action: function() {
+            $('#redeemModal').modal('hide');
+            if (window.innerWidth < 1200) {
+              tour.next();
             } else {
-              resolve();
-            }
-          });
-        },
-        classes: 'shepherd shepherd-open shepherd-theme-arrows shepherd-transparent-text',
-        buttons: [{
-            text: Lang.get("js.skip"),
-            classes: 'shepherd-button-secondary',
-            action: function() {
-              $.ajax({
-                url: route("update-steps", {
-                  steps: 1
-                }),
-                type: "GET",
-                success: function() {
-                  tour.complete();
-                }
-              });
-            }
-          },
-          {
-            text: Lang.get("js.next"),
-            classes: 'shepherd-button-example-primary',
-            action: function() {
-              tour.show('step-4');
-            }
-          }
-        ]
-      });
-    }
-
-    // Step 4: Show RedirectLinks on the side menu (only on dashboard)
-    if (currentPath.includes('dashboard')) {
-      tour.addStep({
-        id: 'step-4',
-        text: Lang.get("js.show_redirect_links_sidebar"),
-        attachTo: {
-          element: '.redirect-links-option',
-          on: 'right'
-        },
-        classes: 'shepherd shepherd-open shepherd-theme-arrows shepherd-transparent-text',
-        buttons: [{
-            text: Lang.get("js.skip"),
-            classes: 'shepherd-button-secondary',
-            action: function() {
-              $.ajax({
-                url: route("update-steps", {
-                  steps: 1
-                }),
-                type: "GET",
-                success: function() {
-                  tour.complete();
-                }
-              });
-            }
-          },
-          {
-            text: Lang.get("js.next"),
-            classes: 'shepherd-button-example-primary',
-            action: function() {
-              // Navigate to redirect links page to show the modal
-              localStorage.setItem('startFromStep6', 'true');
-              window.location.href = '{{ route('client.redirect-links.index') }}';
-            }
-          }
-        ]
-      });
-    }
-
-    // Step 6: Show how to use redirect link code by opening #redeemModal
-    if (window.location.pathname.includes('redirect-links')) {
-      tour.addStep({
-        id: 'step-6',
-        text: Lang.get("js.open_redeem_modal"),
-        attachTo: {
-          element: '[data-bs-target="#redeemModal"]',
-          on: 'bottom'
-        },
-        classes: 'shepherd example-step-extra-class',
-        buttons: [{
-            text: Lang.get("js.skip"),
-            classes: 'shepherd-button-secondary',
-            action: function() {
-              $.ajax({
-                url: route("update-steps", {
-                  steps: 1
-                }),
-                type: "GET",
-                success: function() {
-                  tour.complete();
-                }
-              });
-            }
-          },
-          {
-            text: Lang.get("js.next"),
-            action: function() {
-              // Open redeem modal
-              $('#redeemModal').modal('show');
-              setTimeout(() => tour.show('step-7'), 500);
-            }
-          }
-        ]
-      });
-
-      // Step 7: Tell him to enter the redirect code
-      tour.addStep({
-        id: 'step-7',
-        text: Lang.get("js.enter_redirect_code"),
-        attachTo: {
-          element: '#uri',
-          on: 'bottom'
-        },
-        classes: 'shepherd example-step-extra-class',
-        buttons: [{
-            text: Lang.get("js.skip"),
-            classes: 'shepherd-button-secondary',
-            action: function() {
-              $('#redeemModal').modal('hide');
-              $.ajax({
-                url: route("update-steps", {
-                  steps: 1
-                }),
-                type: "GET",
-                success: function() {
-                  tour.complete();
-                }
-              });
-            }
-          },
-          {
-            text: Lang.get("js.next"),
-            action: function() {
-              tour.show('step-8');
-            }
-          }
-        ]
-      });
-
-      // Step 8: And save button
-      tour.addStep({
-        id: 'step-8',
-        text: Lang.get("js.save_redirect_code"),
-        attachTo: {
-          element: '#redeemModal .btn-success',
-          on: 'bottom'
-        },
-        classes: 'shepherd example-step-extra-class',
-        buttons: [{
-            text: Lang.get("js.skip"),
-            classes: 'shepherd-button-secondary',
-            action: function() {
-              $('#redeemModal').modal('hide');
-              $.ajax({
-                url: route("update-steps", {
-                  steps: 1
-                }),
-                type: "GET",
-                success: function() {
-                  tour.complete();
-                }
-              });
-            }
-          },
-          {
-            text: Lang.get("js.next"),
-            action: function() {
-              tour.show('step-9');
-            }
-          }
-        ]
-      });
-
-      // Step 9: If he did not have code he can close it
-      tour.addStep({
-        id: 'step-9',
-        text: Lang.get("js.close_if_no_code"),
-        attachTo: {
-          element: '#redeemModal .btn-secondary',
-          on: 'top'
-        },
-        classes: 'shepherd example-step-extra-class',
-        buttons: [{
-            text: Lang.get("js.skip"),
-            classes: 'shepherd-button-secondary',
-            action: function() {
-              $('#redeemModal').modal('hide');
-              $.ajax({
-                url: route("update-steps", {
-                  steps: 1
-                }),
-                type: "GET",
-                success: function() {
-                  tour.complete();
-                }
-              });
-            }
-          },
-          {
-            text: Lang.get("js.next"),
-            action: function() {
-              $('#redeemModal').modal('hide');
               tour.show('step-10');
             }
           }
-        ]
-      });
+        }
+      ]
+    });
 
-      // Step 10: Explain vCard and navigate
-      tour.addStep({
-        id: 'step-10',
-        text: Lang.get("js.redeem_vcard_code") +
-          " ",
-        attachTo: {
-          element: '.vcard-option',
-          on: 'right'
-        },
-        classes: 'shepherd shepherd-open shepherd-theme-arrows shepherd-transparent-text',
-        buttons: [{
-            text: Lang.get("js.skip"),
-            classes: 'shepherd-button-secondary',
-            action: function() {
-              $('#redeemModal').modal('hide');
-              $.ajax({
-                url: route("update-steps", {
-                  steps: 1
-                }),
-                type: "GET",
-                success: function() {
-                  tour.complete();
-                }
-              });
-            }
-          },
-          {
-            text: Lang.get("js.next"),
-            action: function() {
-              $('#redeemModal').modal('hide');
-              // Navigate to vCard page
-              localStorage.setItem('startFromStep11', 'true');
-              window.location.href = '{{ route('vcards.index') }}';
-            }
+    // Step 9: Open sidebar again
+    tour.addStep({
+      id: 'step-9',
+      text: Lang.get("js.click_open_sidebar"),
+      attachTo: {
+        element: '.sidemenu-btn',
+        on: 'bottom'
+      },
+      classes: 'shepherd shepherd-open shepherd-theme-arrows shepherd-transparent-text',
+      buttons: [{
+          text: Lang.get("js.skip"),
+          classes: 'shepherd-button-secondary',
+          action: function() {
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
           }
-        ]
-      });
-    }
-
-    // vCard creation steps
-    if (window.location.pathname === '/admin/vcards') {
-      // Step 11: Click to make new vCards
-      tour.addStep({
-        id: 'step-11',
-        text: Lang.get("js.click_to_make_vcards"),
-        attachTo: {
-          element: '.create-vcard-btn',
-          on: 'bottom'
         },
-        classes: 'shepherd example-step-extra-class',
-        buttons: [{
-            text: Lang.get("js.skip"),
-            classes: 'shepherd-button-secondary',
-            action: function() {
-              $.ajax({
-                url: route("update-steps", {
-                  steps: 1
-                }),
-                type: "GET",
-                success: function() {
-                  tour.complete();
-                }
-              });
-            }
-          },
-          {
-            text: Lang.get("js.finish"),
-            action: function() {
-              $.ajax({
-                url: route("update-steps", {
-                  steps: 1
-                }),
-                type: "GET",
-                success: function() {
-                  tour.complete();
-                }
-              });
-            }
+        {
+          text: Lang.get("js.next"),
+          classes: 'shepherd-button-example-primary',
+          action: function() {
+            $("#sidebar").addClass("collapsed-menu");
+            $("body").addClass("collapsed-menu");
+            tour.next();
           }
-        ]
-      });
+        }
+      ]
+    });
 
-      // Step 12: Click to create your vCard
-      tour.addStep({
-        id: 'step-12',
-        text: Lang.get("js.click_to_create_vcards"),
-        attachTo: {
-          element: '.create-vcard-btn',
-          on: 'bottom'
+    // Step 10: Show vCard option and navigate
+    tour.addStep({
+      id: 'step-10',
+      text: Lang.get("js.redeem_vcard_code"),
+      attachTo: {
+        element: '.vcard-option',
+        on: 'bottom'
+      },
+      beforeShowPromise: function() {
+        return new Promise(function(resolve) {
+          if ($(window).width() < 1200) {
+            $('html, body').animate({
+              scrollTop: $('.vcard-option').offset().top - 100
+            }, 500, function() {
+              resolve();
+            });
+          } else {
+            resolve();
+          }
+        });
+      },
+      classes: 'shepherd shepherd-open shepherd-theme-arrows shepherd-transparent-text',
+      buttons: [{
+          text: Lang.get("js.skip"),
+          classes: 'shepherd-button-secondary',
+          action: function() {
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
+          }
         },
-        classes: 'shepherd example-step-extra-class',
-        buttons: [{
-            text: Lang.get("js.skip"),
-            classes: 'shepherd-button-secondary',
-            action: function() {
-              $.ajax({
-                url: route("update-steps", {
-                  steps: 1
-                }),
-                type: "GET",
-                success: function() {
-                  tour.complete();
-                }
-              });
-            }
-          },
-          {
-            text: Lang.get("js.next"),
-            action: function() {
-              // Simulate clicking create button or navigate to create page
-              localStorage.setItem('startFromStep13', 'true');
-              window.location.href = '{{ route('vcards.create') }}';
-            }
+        {
+          text: Lang.get("js.next"),
+          action: function() {
+            localStorage.setItem('startFromStep11', 'true');
+            window.location.href = '{{ route('vcards.index') }}';
           }
-        ]
-      });
-    }
+        }
+      ]
+    });
 
-    let hasSpecificStart = localStorage.getItem('startFromStep3') || localStorage.getItem('startFromStep6') ||
-      localStorage.getItem('startFromStep11');
-    if (!hasSpecificStart) {
-      tour.start();
-    }
+    // Step 11: Create vCard button
+    tour.addStep({
+      id: 'step-11',
+      text: Lang.get("js.click_to_create_vcards"),
+      attachTo: {
+        element: '.create-vcard-btn',
+        on: 'bottom'
+      },
+      classes: 'shepherd example-step-extra-class',
+      buttons: [{
+          text: Lang.get("js.skip"),
+          classes: 'shepherd-button-secondary',
+          action: function() {
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
+          }
+        },
+        {
+          text: Lang.get("js.finish"),
+          action: function() {
+            $.ajax({
+              url: route("update-steps", {
+                steps: 1
+              }),
+              type: "GET",
+              success: function() {
+                tour.complete();
+              }
+            });
+          }
+        }
+      ]
+    });
+
+    tour.start();
     if (steps === 0 && hasActiveSub === true) {
-      const startFromStep3 = localStorage.getItem('startFromStep3');
-      if (startFromStep3 === 'true') {
-        tour.start('step-3');
-        localStorage.removeItem('startFromStep3');
+      const startFromStep2 = localStorage.getItem('startFromStep2');
+      if (startFromStep2 === 'true') {
+        if (window.innerWidth < 1200) {
+          tour.show('step-2');
+        } else {
+          tour.show('step-3');
+        }
+        localStorage.removeItem('startFromStep2');
       }
 
-      const startFromStep6 = localStorage.getItem('startFromStep6');
-      if (startFromStep6 === 'true') {
-        tour.start('step-6');
-        localStorage.removeItem('startFromStep6');
+      const startFromStep5 = localStorage.getItem('startFromStep5');
+      if (startFromStep5 === 'true') {
+        tour.show('step-5');
+        localStorage.removeItem('startFromStep5');
       }
 
       const startFromStep11 = localStorage.getItem('startFromStep11');
       if (startFromStep11 === 'true') {
-        tour.start('step-11');
+        tour.show('step-11');
         localStorage.removeItem('startFromStep11');
       }
     }
   }
-</script>
-
 </script>
