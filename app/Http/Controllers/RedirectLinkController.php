@@ -716,13 +716,15 @@ class RedirectLinkController extends Controller
         $frontImageContent = file_get_contents($frontImageUrl);
         $frontImage = imagecreatefromstring($frontImageContent);
 
-        if ($qrSide === 'front') {
+        if ($qrSide === 'front' && $nfc->apply_coordinates) {
           // Add QR code to front
           imagecopy($frontImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
         }
 
         // Always add text overlays to front
+        if ($qrSide === 'front' && $nfc->apply_coordinates) {
         $this->addTextOverlays($frontImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
+        }
 
         // Save front image
         $frontPath = $tempDirectory . '/' . $link->uri . '_front.png';
@@ -737,13 +739,15 @@ class RedirectLinkController extends Controller
         $backImageContent = file_get_contents($backImageUrl);
         $backImage = imagecreatefromstring($backImageContent);
 
-        if ($qrSide === 'back') {
+        if ($qrSide === 'back' && $nfc->apply_coordinates) {
           // Add QR code to back
           imagecopy($backImage, $qrImageGd, $xPos, $yPos, 0, 0, $qrWidth, $qrHeight);
         }
 
+        if ($qrSide === 'back' && $nfc->apply_coordinates) {
         // Always add text overlays to back
         $this->addTextOverlays($backImage, $link->uri, $link->id, $xPos, $yPos, $qrSize, $nfc);
+        }
 
         // Save back image
         $backPath = $tempDirectory . '/' . $link->uri . '_back.png';
