@@ -238,9 +238,9 @@ class ClientRedirectLinkController extends Controller
       ]);
 
       // Send email to admin
-      // Mail::to(getSuperAdminSettingValue('email'))->send(
-      //   new AdminRedirectLinkRedeemMail($redirectLink, $user, $nfcCard, $redirectType)
-      // );
+      Mail::to(getSuperAdminSettingValue('email'))->send(
+        new AdminRedirectLinkRedeemMail($redirectLink, $user, $nfcCard, $redirectType)
+      );
 
       DB::commit();
 
