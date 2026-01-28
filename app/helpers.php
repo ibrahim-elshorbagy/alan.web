@@ -1995,7 +1995,7 @@ if (!function_exists('retriveH1Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(5 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2081,7 +2081,7 @@ if (!function_exists('retriveH2Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(400 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2162,7 +2162,7 @@ if (!function_exists('retriveH3Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(400 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2249,7 +2249,7 @@ if (!function_exists('retriveH4Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(300 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2347,7 +2347,7 @@ if (!function_exists('retriveH5Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(400 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2439,7 +2439,7 @@ if (!function_exists('retriveH6Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(400 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2528,7 +2528,7 @@ if (!function_exists('retriveH7Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(300 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2620,7 +2620,7 @@ if (!function_exists('retriveH8Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(300 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2729,7 +2729,7 @@ if (!function_exists('retriveH9Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(300 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2832,7 +2832,7 @@ if (!function_exists('retriveH10Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(500 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2931,7 +2931,7 @@ if (!function_exists('retriveH11Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(400 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -3027,7 +3027,7 @@ if (!function_exists('retriveH12Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(400 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -3117,7 +3117,7 @@ if (!function_exists('retriveH13Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(400 * 100)
+        ->size(200)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
