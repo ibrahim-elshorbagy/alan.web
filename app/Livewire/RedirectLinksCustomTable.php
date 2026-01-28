@@ -121,6 +121,10 @@ class RedirectLinksCustomTable extends Component
       $this->sortField = $field;
       $this->sortDirection = 'asc';
     }
+    // When sorting, reset per-group pagination and selections so grouped view stays consistent
+    $this->groupPages = [];
+    $this->reset(['selected', 'selectAll']);
+    $this->resetPage();
   }
 
   public function toggleSelectAll()
@@ -461,7 +465,8 @@ class RedirectLinksCustomTable extends Component
     if ($this->searchQuery !== '') {
       $searchTerm = $this->searchQuery;
       $query->where(function ($q) use ($searchTerm) {
-        $q->where('uri', 'like', "{$searchTerm}%") // Changed from %term% to term% for better index usage
+        $q->where('uri', 'like', "{$searchTerm}%") // Search by redeem code
+          ->orWhere('id', 'like', "{$searchTerm}%") // Search by serial number (ID)
           ->orWhereHas('user', function ($userQ) use ($searchTerm) {
             $userQ->where('first_name', 'like', "{$searchTerm}%")
               ->orWhere('last_name', 'like', "{$searchTerm}%");

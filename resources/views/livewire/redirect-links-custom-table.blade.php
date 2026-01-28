@@ -392,20 +392,43 @@
                         wire:click="toggleGroupSelectAll('{{ $groupKey }}', {{ $items->toJson() }})"
                         @checked($allGroupSelected)>
                     </th>
+                    <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('id')">
+                      {{ __('messages.redirect_links.serial_number') }}
+                      <i class="fas fa-sort sort-icon {{ $sortField === 'id' ? 'active' : '' }}"></i>
+                    </th>
                     <th class="text-center">{{ __('messages.redirect_links.user') }}</th>
-                    <th class="text-center">{{ __('messages.redirect_links.redeem_code') }}</th>
-                    <th class="text-center">{{ __('messages.redirect_links.redirect_link_type') }}</th>
-                    <th class="text-center">{{ __('messages.redirect_links.status') }}</th>
-                    @if (!auth()->user()->hasRole('sales'))
-                      <th class="text-center">{{ __('messages.admin_price') }}</th>
-                    @endif
-                    <th class="text-center">
-                      {{ auth()->user()->hasRole('sales') ? __('messages.admin_price') : __('messages.sales_representative_price') }}
+                    <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('uri')">
+                      {{ __('messages.redirect_links.redeem_code') }}
+                      <i class="fas fa-sort sort-icon {{ $sortField === 'uri' ? 'active' : '' }}"></i>
+                    </th>
+                    <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('redirect_link_type')">
+                      {{ __('messages.redirect_links.redirect_link_type') }}
+                      <i class="fas fa-sort sort-icon {{ $sortField === 'redirect_link_type' ? 'active' : '' }}"></i>
+                    </th>
+                    <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('status')">
+                      {{ __('messages.redirect_links.status') }}
+                      <i class="fas fa-sort sort-icon {{ $sortField === 'status' ? 'active' : '' }}"></i>
                     </th>
                     @if (!auth()->user()->hasRole('sales'))
-                      <th class="text-center">{{ __('messages.redirect_links.assigned_to') }}</th>
+                      <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('price')">
+                        {{ __('messages.admin_price') }}
+                        <i class="fas fa-sort sort-icon {{ $sortField === 'price' ? 'active' : '' }}"></i>
+                      </th>
                     @endif
-                    <th class="text-center">{{ __('messages.common.dates') }}</th>
+                    <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('sales_price')">
+                      {{ auth()->user()->hasRole('sales') ? __('messages.admin_price') : __('messages.sales_representative_price') }}
+                      <i class="fas fa-sort sort-icon {{ $sortField === 'sales_price' ? 'active' : '' }}"></i>
+                    </th>
+                    @if (!auth()->user()->hasRole('sales'))
+                      <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('assigned_id')">
+                        {{ __('messages.redirect_links.assigned_to') }}
+                        <i class="fas fa-sort sort-icon {{ $sortField === 'assigned_id' ? 'active' : '' }}"></i>
+                      </th>
+                    @endif
+                    <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('updated_at')">
+                      {{ __('messages.common.dates') }}
+                      <i class="fas fa-sort sort-icon {{ $sortField === 'updated_at' ? 'active' : '' }}"></i>
+                    </th>
                     <th class="text-center">{{ __('messages.common.action') }}</th>
                   </tr>
                 </thead>
@@ -414,6 +437,9 @@
                     <tr>
                       <td class="text-center">
                         <input type="checkbox" wire:model.defer="selected" value="{{ $row->id }}">
+                      </td>
+                      <td class="text-center">
+                        @include('admin.redirect_links.columns.serial_number', ['row' => $row])
                       </td>
                       <td class="text-center">
                         @include('admin.redirect_links.columns.user', ['row' => $row])
@@ -495,6 +521,10 @@
             <th class="text-center" style="width: 40px;">
               <input type="checkbox" wire:model.live="selectAll">
             </th>
+            <th class="text-center" style="cursor: pointer;" wire:click="sortBy('id')">
+              {{ __('messages.redirect_links.serial_number') }}
+              <i class="fas fa-sort sort-icon {{ $sortField === 'id' ? 'active' : '' }}"></i>
+            </th>
             <th class="text-center">{{ __('messages.redirect_links.user') }}</th>
             <th class="text-center" style="cursor: pointer;" wire:click="sortBy('uri')">
               {{ __('messages.redirect_links.redeem_code') }}
@@ -532,6 +562,9 @@
                 <input type="checkbox" wire:model.defer="selected" value="{{ $row->id }}">
               </td>
               <td class="text-center">
+                @include('admin.redirect_links.columns.serial_number', ['row' => $row])
+              </td>
+              <td class="text-center">
                 @include('admin.redirect_links.columns.user', ['row' => $row])
               </td>
               <td class="text-center">
@@ -565,7 +598,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="10" class="text-center py-4">
+              <td colspan="11" class="text-center py-4">
                 <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
                 <p class="text-muted">{{ __('messages.no_data') }}</p>
               </td>
@@ -575,6 +608,7 @@
         <tfoot class="table-dark">
           <tr>
             <td class="text-start px-3 fw-bold">{{ __('messages.common.total') }}</td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
