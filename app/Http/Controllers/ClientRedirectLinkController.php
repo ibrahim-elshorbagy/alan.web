@@ -11,6 +11,7 @@ use App\Mail\AdminRedirectLinkRedeemMail;
 use Laracasts\Flash\Flash;
 use App\Enums\RedirectLinkTypeEnum;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Setting;
 
 class ClientRedirectLinkController extends Controller
 {
@@ -255,36 +256,67 @@ class ClientRedirectLinkController extends Controller
 
   public function redirectLink(RedirectLink $uri)
   {
-    // If assigned to sales and not received, don't allow access
-    if ($uri->assigned_id && $uri->received_status != RedirectLink::RECEIVED_STATUS_RECEIVED || $uri->status == RedirectLink::STATUS_NOT_REDEEMED) {
-      abort(404);
+    $setting = Setting::whereIn('key', ['email', 'phone', 'prefix_code'])->pluck('value', 'key')->toArray();
+
+    // STEP 1: Check if card has been received by sales
+    // If not received yet, the card is not ready for use
+    if ($uri->received_status != RedirectLink::RECEIVED_STATUS_RECEIVED) {
+      return view('client.redirect_links.not_received', compact('uri', 'setting'))
+        ->with('info', __('messages.redirect_links.card_not_received_description'));
     }
 
-    // If not redeemed yet, redirect to redeem flow
-    if ($uri->status == RedirectLink::STATUS_NOT_REDEEMED) {
-      // Store redeem code in session for auto-fill
-      session(['pending_redeem_uri' => $uri->uri]);
+    // STEP 2: Check if the link has been rejected
+    // Rejected links should not be accessible
+    if ($uri->status == RedirectLink::STATUS_REJECTED) {
+      return view('client.redirect_links.rejected', compact('uri', 'setting'))
+        ->with('info', __('messages.redirect_links.link_rejected_description'));
+    }
 
-      // If user is not logged in, redirect to login with intended URL
-      if (!Auth::check()) {
-        return redirect()->route('register')
-          ->with('info', __('messages.redirect_links.please_login_to_redeem'));
+    // STEP 3: Check redemption status
+    if ($uri->status == RedirectLink::STATUS_REDEEMED) {
+      // STEP 3a: Check if redirect link URL has been set
+      // User needs to configure their redirect destination
+      if (empty($uri->redirect_link)) {
+        return view('client.redirect_links.add_link', compact('uri', 'setting'))
+          ->with('info', __('messages.redirect_links.please_add_redirect_link'));
       }
 
-      // If logged in, redirect to redeem page with modal trigger
-      return redirect()->route('client.redirect-links.index');
+      // STEP 3b: Validate and redirect to destination
+      if (!filter_var($uri->redirect_link, FILTER_VALIDATE_URL)) {
+        abort(404);
+      }
+
+      return redirect()->away($uri->redirect_link);
     }
 
-    // If rejected, show 404
-    if ($uri->status == RedirectLink::STATUS_REJECTED) {
-      abort(404);
+    // STEP 4: Handle not redeemed status
+    if ($uri->status == RedirectLink::STATUS_NOT_REDEEMED) {
+      // STEP 4a: If no user assigned yet, redirect to register/login
+      if ($uri->user_id === null) {
+        // Store session for auto-fill
+        session(['pending_redeem_uri' => $uri->uri]);
+
+        if (!Auth::check()) {
+          return redirect()->route('register')
+            ->with('info', __('messages.redirect_links.please_login_to_redeem'));
+        }
+
+        // User is logged in, redirect to redeem page
+        return redirect()->route('client.redirect-links.index')
+          ->with('info', __('messages.redirect_links.please_redeem_code'));
+      }
+
+      // STEP 4b: User has redeemed but waiting for sales approval
+      if ($uri->user_id == Auth::id()) {
+        return view('client.redirect_links.waiting_approval', compact('uri', 'setting'))
+          ->with('info', __('messages.redirect_links.waiting_for_approval'));
+      }
+
+      // STEP 4c: Access denied if not the owner
+      abort(403, 'Access denied');
     }
 
-    // If redeemed, validate and redirect to the actual link
-    if (!filter_var($uri->redirect_link, FILTER_VALIDATE_URL)) {
-      abort(404);
-    }
-
-    return redirect()->away($uri->redirect_link);
+    // Fallback: Should not reach here
+    abort(404);
   }
 }

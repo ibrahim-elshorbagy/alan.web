@@ -1199,7 +1199,7 @@ Route::middleware(['freshInstall'])->group(function () {
 
   Route::get('/getCookie', [VcardController::class, 'getCookie'])->name('getCookie');
 
-  Route::get('auto-{uri:uri}', [ClientRedirectLinkController::class, 'redirectLink'])->name('redirect.link');
+  Route::get('auto-{uri:uri}', [ClientRedirectLinkController::class, 'redirectLink'])->name('redirect.link')->middleware('setLanguage');
 
   Route::get('{alias}', [VcardController::class, 'show'])->name('vcard.show')->middleware([
     'analytics',

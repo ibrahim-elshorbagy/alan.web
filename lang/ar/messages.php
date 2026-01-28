@@ -611,7 +611,7 @@ return [
     'all' => "الكل",
     'sales_price' => 'سعر المندوب',
     'items' => 'عنصر',
-
+    'contact_support' => 'اتصل بالدعم',
   ],
   'user' => [
     'registered' => 'مستخدم جديد مسجل',
@@ -2389,6 +2389,20 @@ return [
       'google_business' => 'جوجل بيزنس',
       'vcard' => 'بطاقة اعمال ذكية vCard',
     ],
+    'add_redirect_link' => 'إضافة رابط إعادة توجيه',
+    'please_add_redirect_link' => 'يرجى إضافة رابط إعادة توجيه لتفعيل بطاقة NFC الخاصة بك.',
+    'please_add_redirect_link_description' => 'تحتاج إلى إضافة رابط إعادة توجيه URL لتفعيل بطاقة NFC الخاصة بك. انقر على الزر أدناه لاضافة رابط .',
+    'redirect_code' => 'رمز إعادة التوجيه',
+    'waiting_for_approval' => 'في انتظار الموافقة',
+    'waiting_for_approval_description' => 'تم ادخال رابط إعادة التوجيه الخاص بك ولكنه ينتظر موافقة المبيعات للتفعيل.',
+    'contact_sales_to_enable' => 'يرجى الاتصال بمندوب المبيعات الخاص بك لتفعيل هذا الرابط.',
+    'back_to_dashboard' => 'العودة إلى لوحة التحكم',
+    'please_login_to_redeem' => 'يرجى تسجيل الدخول أو التسجيل لاستبدال هذا الرمز.',
+    'please_redeem_code' => 'يرجى استبدال هذا الرمز لتفعيل رابط إعادة التوجيه الخاص بك.',
+    'card_not_received' => 'البطاقة لم تستلم بعد',
+    'card_not_received_description' => 'لم يتم استلام بطاقة NFC هذه من قبل المبيعات بعد. يرجى الاتصال بمندوب المبيعات الخاص بك.',
+    'link_rejected' => 'تم رفض الرابط',
+    'link_rejected_description' => 'تم رفض رابط إعادة التوجيه هذا ولا يمكن استخدامه.',
     'search' => 'بحث',
     'edit' => 'تحرير رابط إعادة التوجيه',
     'create' => 'إنشاء رابط إعادة التوجيه',
@@ -2440,6 +2454,7 @@ return [
     'invalid_snapchat_url' => 'يجب أن يكون رابط إعادة التوجيه رابط سناب شات صالح.',
     'invalid_google_business_url' => 'يجب أن يكون رابط إعادة التوجيه رابط جوجل بيزنس صالح.',
     'invalid_vcard_url' => 'رابط vCard غير صالح. يجب أن يكون بالتنسيق https://nfcjo.com/slug',
+    'no_redirect_link' => 'لا يوجد رابط إعادة توجيه',
     'no_redirect_link_message' => 'لم يتم تحديد رابط إعادة التوجيه بعد. يرجى تحديث هذا الحقل برابط موقعك الإلكتروني.',
     'valid_url_examples' => 'أمثلة على روابط صالحة:',
 
@@ -2457,7 +2472,6 @@ return [
     'not_assigned' => 'غير مخصص',
     'expand_all' => 'توسيع الكل',
     'collapse_all' => 'طي الكل',
-
   ],
   'receipts' => [
     'receipts' => 'المقبوضات',

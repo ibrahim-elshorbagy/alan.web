@@ -610,6 +610,7 @@ return [
     'all' => "all",
     'sales_price' => 'Sales Representative Price',
     'items' => 'Items',
+    'contact_support' => 'Contact Support',
   ],
   'user' => [
     'registered' => 'New User Registered',
@@ -2351,6 +2352,19 @@ return [
   ],
 
   'redirect_links' => [
+    'please_add_redirect_link' => 'Please add a redirect link to activate your NFC card.',
+    'please_add_redirect_link_description' => 'You need to add a redirect link URL to activate your NFC card. Click the button below to configure your destination link.',
+    'redirect_code' => 'Redirect Code',
+    'waiting_for_approval' => 'Waiting for Approval',
+    'waiting_for_approval_description' => 'Your redirect link has been redeemed but is waiting for sales approval to be activated.',
+    'contact_sales_to_enable' => 'Please contact your sales representative to enable this link.',
+    'back_to_dashboard' => 'Back to Dashboard',
+    'please_login_to_redeem' => 'Please login or register to redeem this code.',
+    'please_redeem_code' => 'Please redeem this code to activate your redirect link.',
+    'card_not_received' => 'Card Not Received Yet',
+    'card_not_received_description' => 'This NFC card has not been received by sales yet. Please contact your sales representative.',
+    'link_rejected' => 'Link Rejected',
+    'link_rejected_description' => 'This redirect link has been rejected and cannot be used.',
     'mark_all_tooltip' => 'Mark all as received',
     'title' => 'Redirect Links',
     'id' => 'ID',
@@ -2441,6 +2455,7 @@ return [
     'invalid_snapchat_url' => 'The redirect link must be a valid Snapchat URL.',
     'invalid_google_business_url' => 'The redirect link must be a valid Google Business URL.',
     'invalid_vcard_url' => 'Invalid vCard URL. Must be in the format https://nfcjo.com/slug',
+    'no_redirect_link' => 'No Redirect Link',
     'no_redirect_link_message' => 'No redirect link specified yet. Please update this field with your website link.',
     'valid_url_examples' => 'Valid URL examples:',
     'received' => 'Received',
@@ -2457,7 +2472,7 @@ return [
     'not_assigned' => 'Not Assigned',
     'expand_all' => 'Expand All',
     'collapse_all' => 'Collapse All',
-
+    'add_redirect_link' => 'Add Redirect Link',
   ],
   'receipts' => [
     'receipts' => 'Receipts',
