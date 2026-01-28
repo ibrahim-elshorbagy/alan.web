@@ -53,7 +53,7 @@
         </div>
     </div>
     <div wire:key="{{ $tableName }}-twrap"
-        {{ $attributes->merge($customAttributes['wrapper'])->class(['table-responsive overflow-hidden' => $customAttributes['wrapper']['default'] ?? true])->except('default') }}>
+        {{ $attributes->merge($customAttributes['wrapper'])->class(['table-responsive ' => $customAttributes['wrapper']['default'] ?? true])->except('default') }}>
         <table wire:key="{{ $tableName }}-table"
             {{ $attributes->merge($customAttributes['table'])->class(['table dashboard-table vcards-table table-striped livewire-table' => $customAttributes['table']['default'] ?? true])->except('default') }}>
             <thead wire:key="{{ $tableName }}-thead"

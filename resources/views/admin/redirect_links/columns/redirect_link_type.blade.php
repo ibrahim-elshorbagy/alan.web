@@ -14,7 +14,7 @@
       8, \App\Enums\RedirectLinkTypeEnum::WHATSAPP->value => 'fab fa-whatsapp',
       9, \App\Enums\RedirectLinkTypeEnum::SNAPCHAT->value => 'fab fa-snapchat',
       10, \App\Enums\RedirectLinkTypeEnum::GOOGLE_BUSINESS->value => 'fas fa-business-time',
-      11, \App\Enums\RedirectLinkTypeEnum::VCARD->value => 'fas fa-id-card',
+    11 => 'fas fa-globe',
       default => 'fas fa-question',
   };
 
@@ -31,7 +31,7 @@
       10, \App\Enums\RedirectLinkTypeEnum::GOOGLE_BUSINESS->value => __(
           'messages.redirect_links.types.google_business',
       ),
-      11, \App\Enums\RedirectLinkTypeEnum::VCARD->value => __('messages.redirect_links.types.vcard'),
+    11 => __('messages.redirect_links.types.website'),
       default => 'Unknown',
   };
 @endphp

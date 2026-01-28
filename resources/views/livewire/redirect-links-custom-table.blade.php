@@ -252,6 +252,11 @@
           <i class="fas fa-check"></i> {{ __('messages.redirect_links.mark_selected_as_received') }}
         </button>
 
+        <button type="button" class="btn btn-danger"
+          @click="if(confirm('{{ __('messages.common.delete_confirm') }}')) { $wire.deleteSelected() }"">
+          <i class="fas fa-trash"></i> {{ __('messages.common.delete_selected') }}
+        </button>
+
         @if (auth()->user()->hasRole('super_admin'))
           <button type="button" class="btn btn-info" wire:click="syncAndRestore"
             wire:confirm="{{ __('messages.redirect_links.restore_confirmation') }}">
@@ -261,9 +266,9 @@
       </div>
     </template>
 
-    <a type="button" class="btn btn-success" href="{{ route('redirect-links.extract-all') }}">
+    {{-- <a type="button" class="btn btn-success" href="{{ route('redirect-links.extract-all') }}">
       <i class="fas fa-download"></i> {{ __('messages.common.extract_all') }}
-    </a>
+    </a> --}}
 
     @if (auth()->user()->hasRole('sales'))
       <form action="{{ route('redirect-links.mark-all-as-received') }}" method="POST" style="display: inline;">

@@ -56,6 +56,27 @@ class RedirectLinksCustomTable extends Component
     $this->resetPage();
   }
 
+  public function updatedPerPage()
+  {
+    // After `perPage` changes, apply it to grouped tables as well
+    $this->itemsPerGroup = $this->perPage;
+    // Reset group pagination to start (so pages don't point to invalid offsets)
+    $this->groupPages = [];
+    $this->reset(['selected', 'selectAll']);
+    $this->resetPage();
+  }
+
+  public function mount()
+  {
+    // Ensure itemsPerGroup follows initial perPage value
+    $this->itemsPerGroup = $this->perPage;
+
+    // Auto-set grouping by card type for super admin
+    if (auth()->user()->hasRole('super_admin')) {
+      $this->groupByFilter = 'nfc_card';
+    }
+  }
+
   public function updatingSearchQuery()
   {
     $this->reset(['selected', 'selectAll']);
@@ -107,7 +128,7 @@ class RedirectLinksCustomTable extends Component
     if ($this->selectAll) {
       // Only select items on current page, not all items
       $currentPageItems = $this->getQuery()->paginate($this->perPage);
-      $this->selected = $currentPageItems->pluck('id')->map(fn($id) => (string) $id)->toArray();
+      $this->selected = collect($currentPageItems->items())->pluck('id')->map(fn($id) => (string) $id)->toArray();
     } else {
       $this->selected = [];
     }
@@ -148,7 +169,7 @@ class RedirectLinksCustomTable extends Component
       } else {
         // In normal view, select current page items
         $currentPageItems = $this->getQuery()->paginate($this->perPage);
-        $this->selected = $currentPageItems->pluck('id')->map(fn($id) => (string) $id)->toArray();
+        $this->selected = collect($currentPageItems->items())->pluck('id')->map(fn($id) => (string) $id)->toArray();
       }
     } else {
       // User unchecked the box - clear all selections
@@ -325,6 +346,74 @@ class RedirectLinksCustomTable extends Component
     }
   }
 
+  public function delete($id)
+  {
+    try {
+      $redirectLink = RedirectLink::findOrFail($id);
+
+      // Check permissions
+      if (auth()->user()->hasRole('sales')) {
+        // Sales can only delete their assigned links
+        if ($redirectLink->assigned_id != auth()->id()) {
+          session()->flash('error', __('messages.common.unauthorized'));
+          return;
+        }
+      }
+
+      $redirectLink->delete();
+
+      // Remove from selected if it was selected
+      $this->selected = array_values(array_filter($this->selected, fn($selectedId) => $selectedId != $id));
+
+      session()->flash('success', __('messages.redirect_links.deleted_successfully'));
+
+      // Refresh without page reload
+      $this->dispatch('refresh');
+    } catch (\Exception $e) {
+      session()->flash('error', __('messages.common.something_went_wrong'));
+    }
+  }
+
+  public function deleteSelected()
+  {
+    try {
+      $selectedIds = $this->selected;
+
+      if (empty($selectedIds)) {
+        session()->flash('error', __('messages.common.no_records_selected'));
+        return;
+      }
+
+      // Build query based on user role
+      $query = RedirectLink::whereIn('id', $selectedIds);
+
+      // For sales, ensure they can only delete their assigned links
+      if (auth()->user()->hasRole('sales')) {
+        $query->where('assigned_id', auth()->id());
+      }
+
+      $count = $query->count();
+      $query->delete();
+
+      // Clear selections
+      $this->selected = [];
+      $this->selectAll = false;
+
+      session()->flash('success', __('messages.redirect_links.deleted_count', ['count' => $count]));
+
+      // Refresh without page reload
+      $this->dispatch('refresh');
+    } catch (\Exception $e) {
+      session()->flash('error', __('messages.common.something_went_wrong'));
+    }
+  }
+
+  public function bulkDelete()
+  {
+    // Alias for deleteSelected for consistency
+    $this->deleteSelected();
+  }
+
   public function resetFilters()
   {
     $this->statusFilter = '';
@@ -433,16 +522,26 @@ class RedirectLinksCustomTable extends Component
     // Limit to 500 items for better performance
     $rows = $this->getQuery()->limit(500)->get();
 
+    $grouped = null;
+
     switch ($this->groupByFilter) {
       case 'redirect_type':
-        return $rows->groupBy('redirect_link_type');
+        $grouped = $rows->groupBy('redirect_link_type');
+        break;
       case 'nfc_card':
-        return $rows->groupBy('nfcs_id');
+        $grouped = $rows->groupBy('nfcs_id');
+        break;
       case 'sales_rep':
-        return $rows->groupBy('assigned_id');
+        $grouped = $rows->groupBy('assigned_id');
+        break;
       default:
         return null;
     }
+
+    // Sort groups by name in ascending order
+    return $grouped->sortBy(function ($group, $key) {
+      return $this->getGroupName($key);
+    });
   }
 
   public function getGroupName($groupKey)

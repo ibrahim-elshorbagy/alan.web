@@ -121,7 +121,7 @@ class ClientRedirectLinkController extends Controller
                   $fail(__('messages.redirect_links.invalid_google_business_url'));
                 }
                 break;
-              case RedirectLinkTypeEnum::VCARD->value:
+              case 11:
                 if (!preg_match('/^https?:\/\/nfcjo\.com\/.+$/', $value)) {
                   $fail(__('messages.redirect_links.invalid_vcard_url'));
                 }

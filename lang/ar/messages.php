@@ -1,6 +1,7 @@
 <?php
 
 return [
+  'reset_password' => 'إعادة تعيين كلمة المرور',
   'free' => "مجاني",
   'paid' => "مدفوع",
   'select_image' => 'اختر صورة',
@@ -511,6 +512,11 @@ return [
     'add' => 'إضافة',
     'extract_all' => 'تصدير الكل',
     "export_selected" => "تصدير المحدد",
+    'delete_selected' => 'حذف المحدد',
+    'delete_confirm' => 'هل أنت متأكد من حذف العناصر المحددة؟',
+    'no_records_selected' => 'لم يتم تحديد سجلات للحذف',
+    'unauthorized' => 'إجراء غير مصرح به',
+    'something_went_wrong' => 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
     'add_social_link' => 'إضافة رابط تواصل اجتماعي',
     'edit' => 'تعديل',
     'subject' => 'الموضوع',
@@ -2377,7 +2383,7 @@ return [
     'qr_front' => 'الواجهة',
     'qr_back' => 'الخلفية',
     'types' => [
-      'website' => 'موقع إلكتروني',
+      'website' => 'موقع إلكتروني او بطاقة أعمال vCard',
       'facebook' => 'فيسبوك',
       'instagram' => 'إنستغرام',
       'tiktok' => 'تيك توك',
@@ -2472,6 +2478,9 @@ return [
     'not_assigned' => 'غير مخصص',
     'expand_all' => 'توسيع الكل',
     'collapse_all' => 'طي الكل',
+    'add_redirect_link' => 'إضافة رابط إعادة توجيه',
+    'deleted_successfully' => 'تم حذف رابط إعادة التوجيه بنجاح',
+    'deleted_count' => 'تم حذف :count رابط (روابط) إعادة توجيه بنجاح',
   ],
   'receipts' => [
     'receipts' => 'المقبوضات',
@@ -2536,6 +2545,7 @@ return [
     'reset_password_subtitle' => 'أدخل رمز التحقق وكلمة المرور الجديدة.',
     'reset_password_button' => 'إعادة تعيين كلمة المرور',
     'resetting' => 'جارٍ إعادة التعيين...',
+    'cannot_delete_user_with_active_vcard_or_redirect_link' => 'لا يمكن حذف مستخدم لديه بطاقة مفعلة أو رابط إعادة توجيه',
 
   ],
 ];

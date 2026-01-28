@@ -36,7 +36,7 @@ use App\Models\PaymentGateway;
 use App\Models\ProductCategory;
 use Intervention\Image\Gd\Font;
 use App\Models\VcardSubscribers;
-use LaravelQRCode\Facades\QRCode;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Role as CustomRole;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\App;
@@ -1981,7 +1981,7 @@ if (!function_exists('processArabicText')) {
 }
 
 if (!function_exists('retriveH1Card')) {
-  function retriveH1Card($input)
+  function retriveH1Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
 
@@ -1991,7 +1991,30 @@ if (!function_exists('retriveH1Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(5)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(5 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(5)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2044,7 +2067,7 @@ if (!function_exists('retriveH1Card')) {
 }
 
 if (!function_exists('retriveH2Card')) {
-  function retriveH2Card($input)
+  function retriveH2Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2054,7 +2077,30 @@ if (!function_exists('retriveH2Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(4)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(400 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(4)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $imageH1Front = asset('assets/img/ecards/H-Vcard/H-2/BG/Front.png');
     $imageH1QrCode = asset('assets/img/ecards/qr_code.png');
@@ -2104,7 +2150,7 @@ if (!function_exists('retriveH2Card')) {
 }
 
 if (!function_exists('retriveH3Card')) {
-  function retriveH3Card($input)
+  function retriveH3Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2112,7 +2158,30 @@ if (!function_exists('retriveH3Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(4)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(400 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(4)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2167,7 +2236,7 @@ if (!function_exists('retriveH3Card')) {
 }
 
 if (!function_exists('retriveH4Card')) {
-  function retriveH4Card($input)
+  function retriveH4Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2176,7 +2245,30 @@ if (!function_exists('retriveH4Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(3)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(300 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(3)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2242,7 +2334,7 @@ if (!function_exists('retriveH4Card')) {
 }
 
 if (!function_exists('retriveH5Card')) {
-  function retriveH5Card($input)
+  function retriveH5Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2251,7 +2343,30 @@ if (!function_exists('retriveH5Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(4)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(400 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(4)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2312,7 +2427,7 @@ if (!function_exists('retriveH5Card')) {
 }
 
 if (!function_exists('retriveH6Card')) {
-  function retriveH6Card($input)
+  function retriveH6Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2320,7 +2435,30 @@ if (!function_exists('retriveH6Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(4)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(400 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(4)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2377,7 +2515,7 @@ if (!function_exists('retriveH6Card')) {
 }
 
 if (!function_exists('retriveH7Card')) {
-  function retriveH7Card($input)
+  function retriveH7Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2386,7 +2524,30 @@ if (!function_exists('retriveH7Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(3)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(300 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(3)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2446,7 +2607,7 @@ if (!function_exists('retriveH7Card')) {
 }
 
 if (!function_exists('retriveH8Card')) {
-  function retriveH8Card($input)
+  function retriveH8Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2455,7 +2616,30 @@ if (!function_exists('retriveH8Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(3)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(300 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(3)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2532,7 +2716,7 @@ if (!function_exists('retriveH8Card')) {
 }
 
 if (!function_exists('retriveH9Card')) {
-  function retriveH9Card($input)
+  function retriveH9Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2541,7 +2725,30 @@ if (!function_exists('retriveH9Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(3)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(300 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(3)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2612,7 +2819,7 @@ if (!function_exists('retriveH9Card')) {
 }
 
 if (!function_exists('retriveH10Card')) {
-  function retriveH10Card($input)
+  function retriveH10Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2621,7 +2828,30 @@ if (!function_exists('retriveH10Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(5)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(500 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(5)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2688,7 +2918,7 @@ if (!function_exists('retriveH10Card')) {
 }
 
 if (!function_exists('retriveH11Card')) {
-  function retriveH11Card($input)
+  function retriveH11Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2697,7 +2927,30 @@ if (!function_exists('retriveH11Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(4)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(400 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(4)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2762,7 +3015,7 @@ if (!function_exists('retriveH11Card')) {
 }
 
 if (!function_exists('retriveH12Card')) {
-  function retriveH12Card($input)
+  function retriveH12Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2770,7 +3023,30 @@ if (!function_exists('retriveH12Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(4)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(400 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(4)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
@@ -2829,7 +3105,7 @@ if (!function_exists('retriveH12Card')) {
 }
 
 if (!function_exists('retriveH13Card')) {
-  function retriveH13Card($input)
+  function retriveH13Card($input, $customQrCode = [], $qrcodeColor = [])
   {
     $vcard = Vcard::whereId($input['vcard_id'])->first();
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
@@ -2837,7 +3113,30 @@ if (!function_exists('retriveH13Card')) {
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
     $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
     $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
-    QRCode::url($vcardUrl)->setSize(4)->setOutfile($QRCodePath)->png();
+
+    // Generate QR code with custom settings
+    if (!empty($customQrCode) && !empty($qrcodeColor)) {
+      $qrImage = QrCode::format('png')
+        ->size(400 * 100)
+        ->color(
+          $qrcodeColor['qrcodeColor']->red(),
+          $qrcodeColor['qrcodeColor']->green(),
+          $qrcodeColor['qrcodeColor']->blue()
+        )
+        ->backgroundColor(
+          $qrcodeColor['background_color']->red(),
+          $qrcodeColor['background_color']->green(),
+          $qrcodeColor['background_color']->blue()
+        )
+        ->style($customQrCode['style'])
+        ->eye($customQrCode['eye_style'])
+        ->errorCorrection('H')
+        ->generate($vcardUrl);
+      file_put_contents($QRCodePath, $qrImage);
+    } else {
+      $qrImage = QrCode::url($vcardUrl)->setSize(4)->png();
+      file_put_contents($QRCodePath, $qrImage);
+    }
 
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');

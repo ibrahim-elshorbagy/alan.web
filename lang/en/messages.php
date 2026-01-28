@@ -1,6 +1,7 @@
 <?php
 
 return [
+  'reset_password' => 'Reset Password',
   'free' => "Free",
   'paid' => "Paid",
   'select_image' => 'Select Image',
@@ -508,6 +509,11 @@ return [
     'add' => 'Add',
     'extract_all' => 'Extract All',
     "export_selected" => "Export Selected",
+    'delete_selected' => 'Delete Selected',
+    'delete_confirm' => 'Are you sure you want to delete the selected items?',
+    'no_records_selected' => 'No records selected for deletion',
+    'unauthorized' => 'Unauthorized action',
+    'something_went_wrong' => 'Something went wrong. Please try again.',
     'add_social_link' => 'Add Social Link',
     'edit' => 'Edit',
     'subject' => 'Subject',
@@ -2392,7 +2398,7 @@ return [
     'qr_front' => 'Front',
     'qr_back' => 'Back',
     'types' => [
-      'website' => 'Website',
+      'website' => 'Website or Smart Business Card vCard',
       'facebook' => 'Facebook',
       'instagram' => 'Instagram',
       'tiktok' => 'TikTok',
@@ -2473,6 +2479,8 @@ return [
     'expand_all' => 'Expand All',
     'collapse_all' => 'Collapse All',
     'add_redirect_link' => 'Add Redirect Link',
+    'deleted_successfully' => 'Redirect link deleted successfully',
+    'deleted_count' => ':count redirect link(s) deleted successfully',
   ],
   'receipts' => [
     'receipts' => 'Receipts',
@@ -2537,6 +2545,7 @@ return [
     'reset_password_subtitle' => 'Enter the verification code and your new password.',
     'reset_password_button' => 'Reset Password',
     'resetting' => 'Resetting...',
+    'cannot_delete_user_with_active_vcard_or_redirect_link' => 'Cannot delete user with active vCard or redirect link',
 
   ],
 ];

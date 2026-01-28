@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Models\QrcodeEdit;
+use Spatie\Color\Hex;
 
 class ECardsController extends Controller
 {
@@ -74,44 +76,90 @@ class ECardsController extends Controller
       File::delete($zipFile);
     }
 
+    // Get Global QR Code settings for the current tenant
+    $tenantId = getLogInTenantId();
+    $isSuperAdmin = auth()->user()->hasRole('super_admin');
+
+    if ($isSuperAdmin) {
+      // For super admin, get global settings
+      $customQrCode = QrcodeEdit::withoutGlobalScopes()->where('is_global', true)
+        ->whereNull('vcard_id')
+        ->whereNull('whatsapp_store_id')
+        ->whereNull('tenant_id')
+        ->pluck('value', 'key')
+        ->toArray();
+    } else {
+      // For normal admin, get tenant-specific global settings
+      $customQrCode = QrcodeEdit::whereTenantId($tenantId)
+        ->where('is_global', true)
+        ->whereNull('vcard_id')
+        ->whereNull('whatsapp_store_id')
+        ->pluck('value', 'key')
+        ->toArray();
+      // If no tenant global, get super admin global
+      if (empty($customQrCode)) {
+        $customQrCode = QrcodeEdit::withoutGlobalScopes()->whereNull('tenant_id')
+          ->where('is_global', true)
+          ->whereNull('vcard_id')
+          ->whereNull('whatsapp_store_id')
+          ->pluck('value', 'key')
+          ->toArray();
+      }
+    }
+
+    // Set default values if no global settings exist
+    if (empty($customQrCode)) {
+      $customQrCode['qrcode_color'] = '#000000';
+      $customQrCode['background_color'] = '#ffffff';
+      $customQrCode['style'] = 'square';
+      $customQrCode['eye_style'] = 'square';
+      $customQrCode['applySetting'] = '1';
+    }
+
+    // Convert hex colors to RGB for QR code generation
+    $qrcodeColor = [
+      'qrcodeColor' => Hex::fromString($customQrCode['qrcode_color'])->toRgb(),
+      'background_color' => Hex::fromString($customQrCode['background_color'])->toRgb(),
+    ];
+
     if ($input['e-card-id'] == 1) {
-      $data = retriveH1Card($input);
+      $data = retriveH1Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 2) {
-      $data = retriveH2Card($input);
+      $data = retriveH2Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 3) {
-      $data = retriveH3Card($input);
+      $data = retriveH3Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 4) {
-      $data = retriveH4Card($input);
+      $data = retriveH4Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 5) {
-      $data = retriveH5Card($input);
+      $data = retriveH5Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 6) {
-      $data = retriveH6Card($input);
+      $data = retriveH6Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 7) {
-      $data = retriveH7Card($input);
+      $data = retriveH7Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 8) {
-      $data = retriveH8Card($input);
+      $data = retriveH8Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 9) {
-      $data = retriveH9Card($input);
+      $data = retriveH9Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 10) {
-      $data = retriveH10Card($input);
+      $data = retriveH10Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 11) {
-      $data = retriveH11Card($input);
+      $data = retriveH11Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 12) {
-      $data = retriveH12Card($input);
+      $data = retriveH12Card($input, $customQrCode, $qrcodeColor);
     }
     if ($input['e-card-id'] == 13) {
-      $data = retriveH13Card($input);
+      $data = retriveH13Card($input, $customQrCode, $qrcodeColor);
     }
 
     // delete images after generate zip file

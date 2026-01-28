@@ -47,7 +47,7 @@ class NfcOrdersController extends AppBaseController
     public function create()
     {
         $vcards = Vcard::whereTenantId(getLogInTenantId())->where('status', Vcard::ACTIVE)->pluck('name', 'id')->toArray();
-        $nfcCards  = Nfc::all();
+        $nfcCards = Nfc::all()->sortBy('name');
         $paymentTypes = getPaymentGateway();
         $currency = getCurrencyIcon(getSuperAdminSettingValue('default_currency'));
 

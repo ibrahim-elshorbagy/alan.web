@@ -158,6 +158,12 @@ class UserController extends AppBaseController
   public function destroy(User $user): JsonResponse
   {
     if ($user->getRoleNames()[0] == 'admin') {
+      $hasActiveVcard = Vcard::where('tenant_id', $user->tenant_id)->where('status', Vcard::ACTIVE)->exists();
+      $hasRedirectLink = DB::table('redirect_links')->where('user_id', $user->id)->exists();
+
+      if ($hasActiveVcard || $hasRedirectLink) {
+        return $this->sendError('Cannot delete user with an active vcard or redirect link.');
+      }
       $affiliateUsers = AffiliateUser::whereUserId($user->id)->orWhere('affiliated_by', $user->id)->get();
       $withdrawals = Withdrawal::whereUserId($user->id)->get();
       foreach ($withdrawals as $withdrawal) {
