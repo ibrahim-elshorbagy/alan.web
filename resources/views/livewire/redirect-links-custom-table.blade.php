@@ -259,7 +259,9 @@
 
         @if (auth()->user()->hasRole('super_admin'))
           <button type="button" class="btn btn-info" wire:click="syncAndRestore"
-            wire:confirm="{{ __('messages.redirect_links.restore_confirmation') }}">
+            wire:confirm="{{ __('messages.redirect_links.restore_confirmation') }}"
+            data-bs-toggle="tooltip" data-bs-placement="top"
+            title="{{ __('messages.redirect_links.restore_selected_tooltip') }}">
             <i class="fas fa-undo"></i> {{ __('messages.redirect_links.restore_selected') }}
           </button>
         @endif
