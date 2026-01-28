@@ -2620,7 +2620,7 @@ if (!function_exists('retriveH8Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(100)
+        ->size(150)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2729,7 +2729,7 @@ if (!function_exists('retriveH9Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(100)
+        ->size(150)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2832,7 +2832,7 @@ if (!function_exists('retriveH10Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(100)
+        ->size(150)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -2931,7 +2931,7 @@ if (!function_exists('retriveH11Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(100)
+        ->size(150)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -3027,7 +3027,7 @@ if (!function_exists('retriveH12Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(100)
+        ->size(150)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
@@ -3117,7 +3117,7 @@ if (!function_exists('retriveH13Card')) {
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
       $qrImage = QrCode::format('png')
-        ->size(100)
+        ->size(150)
         ->color(
           $qrcodeColor['qrcodeColor']->red(),
           $qrcodeColor['qrcodeColor']->green(),
