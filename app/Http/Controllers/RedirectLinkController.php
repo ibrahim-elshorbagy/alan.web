@@ -27,7 +27,10 @@ class RedirectLinkController extends Controller
   public function create()
   {
     $nfcs = Nfc::all();
-    $salesUsers = User::role('sales')->get();
+    // Include both sales and super_admin roles as assignable users
+    $salesUsers = User::whereHas('roles', function ($q) {
+      $q->whereIn('name', ['sales', 'super_admin']);
+    })->get();
 
     return view('admin.redirect_links.create', compact('nfcs', 'salesUsers'));
   }
@@ -875,7 +878,10 @@ class RedirectLinkController extends Controller
       $q->where('name', 'super_admin');
     })->get();
     $nfcs = Nfc::all();
-    $salesUsers = User::role('sales')->get();
+    // Include both sales and super_admin roles as assignable users
+    $salesUsers = User::whereHas('roles', function ($q) {
+      $q->whereIn('name', ['sales', 'super_admin']);
+    })->get();
 
     return view('admin.redirect_links.edit', compact('redirectLink', 'users', 'nfcs', 'salesUsers'));
   }

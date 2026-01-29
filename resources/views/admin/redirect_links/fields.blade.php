@@ -47,9 +47,11 @@
       @endif
       @if (isset($redirectLink) && $redirectLink->statusChangedBy)
         <small class="text-muted d-block mt-2">
-          <i class="fas fa-user"></i> بواسطة: <strong>{{ $redirectLink->statusChangedBy->first_name }} {{ $redirectLink->statusChangedBy->last_name }}</strong>
+          <i class="fas fa-user"></i> بواسطة: <strong>{{ $redirectLink->statusChangedBy->first_name }}
+            {{ $redirectLink->statusChangedBy->last_name }}</strong>
           <br>
-          <i class="fas fa-clock"></i> {{ __('messages.date') }}: <strong>{{$redirectLink->status_changed_at?->translatedFormat('Y-m-d h:i a') }}</strong>
+          <i class="fas fa-clock"></i> {{ __('messages.date') }}:
+          <strong>{{ $redirectLink->status_changed_at?->translatedFormat('Y-m-d h:i a') }}</strong>
         </small>
       @endif
     </div>
@@ -72,7 +74,7 @@
     <div class="col-lg-6">
       <div class="mb-5">
         {{ Form::label('assigned_id', __('messages.redirect_links.assigned_to') . ':', ['class' => 'form-label']) }}
-        {{ Form::select('assigned_id', ['' => __('messages.common.select_sales')] + $salesUsers->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray(), isset($redirectLink) ? $redirectLink->assigned_id : null, ['class' => 'form-control', 'disabled' => $isDisabled]) }}
+        {{ Form::select('assigned_id', $salesUsers->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray(), isset($redirectLink) ? $redirectLink->assigned_id : null, ['class' => 'form-control', 'disabled' => $isDisabled]) }}
       </div>
     </div>
   @endif
@@ -86,9 +88,11 @@
       @endif
       @if (isset($redirectLink) && $redirectLink->receivedStatusChangedBy)
         <small class="text-muted d-block mt-2">
-          <i class="fas fa-user"></i> بواسطة: <strong>{{ $redirectLink->receivedStatusChangedBy->first_name }} {{ $redirectLink->receivedStatusChangedBy->last_name }}</strong>
+          <i class="fas fa-user"></i> بواسطة: <strong>{{ $redirectLink->receivedStatusChangedBy->first_name }}
+            {{ $redirectLink->receivedStatusChangedBy->last_name }}</strong>
           <br>
-          <i class="fas fa-clock"></i> {{ __('messages.date') }}: <strong>{{ $redirectLink->received_status_changed_at?->translatedFormat('Y-m-d h:i a') }}</strong>
+          <i class="fas fa-clock"></i> {{ __('messages.date') }}:
+          <strong>{{ $redirectLink->received_status_changed_at?->translatedFormat('Y-m-d h:i a') }}</strong>
         </small>
       @endif
     </div>

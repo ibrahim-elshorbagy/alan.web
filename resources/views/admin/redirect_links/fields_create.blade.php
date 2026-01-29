@@ -26,7 +26,7 @@
   <div class="col-lg-6">
     <div class="mb-5">
       {{ Form::label('assigned_id', __('messages.redirect_links.assigned_to') . ':', ['class' => 'form-label']) }}
-      {{ Form::select('assigned_id', ['' => __('messages.common.select_sales')] + $salesUsers->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray(), null, ['class' => 'form-control']) }}
+      {{ Form::select('assigned_id', $salesUsers->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray(), null, ['class' => 'form-control']) }}
     </div>
   </div>
   <div>

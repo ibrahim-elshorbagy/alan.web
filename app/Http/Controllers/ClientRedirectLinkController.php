@@ -216,7 +216,7 @@ class ClientRedirectLinkController extends Controller
         'status' => \App\Models\NfcOrders::SUCCESS, // Already paid
       ]);
 
-      // if from sales don't active[full redeem from sales] it until sales mark as redeem
+      // if from sales or super admin don't active[full redeem from sales] it until sales mark as redeem
       if ($redirectLink->assigned_id) {
         $redeemedStatus = RedirectLink::STATUS_NOT_REDEEMED;
       } else {
