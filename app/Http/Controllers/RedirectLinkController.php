@@ -563,21 +563,29 @@ class RedirectLinkController extends Controller
             $qrXPos = ($canvasWidth - $qrWidth) / 2;
             imagecopy($canvas, $qrImageGd, $qrXPos, 0, 0, 0, $qrWidth, $qrHeight);
 
-            // Add text overlays
+            // Add text overlays with dynamic spacing
             $black = imagecolorallocate($canvas, 0, 0, 0);
             $fontPath = public_path('fonts/Zain-Regular.ttf');
-            $fontSize = 22;
+            $fontSize = intval($nfc->text_font_size ?? 22);
 
             $urlText = 'Code : ' . $link->uri;
             $serialText = 'Serial No : ' . str_pad($link->id, 4, '0', STR_PAD_LEFT);
-            $textY = $qrHeight + 30;
+
+            // Dynamic spacing based on font size and QR height
+            $baseGap = intval(round($fontSize * 0.8));
+            $extra = intval(round($qrHeight * 0.02));
+            $firstLineY = $qrHeight + $baseGap + $extra;
+            $lineSpacing = intval(round($fontSize * 1.2));
+            $secondLineY = $firstLineY + $lineSpacing;
 
             if (file_exists($fontPath)) {
-              imagettftext($canvas, $fontSize, 0, $qrXPos, $textY, $black, $fontPath, $urlText);
-              imagettftext($canvas, $fontSize, 0, $qrXPos, $textY + 34, $black, $fontPath, $serialText);
+              imagettftext($canvas, $fontSize, 0, $qrXPos, $firstLineY, $black, $fontPath, $urlText);
+              imagettftext($canvas, $fontSize, 0, $qrXPos, $secondLineY, $black, $fontPath, $serialText);
             } else {
-              imagestring($canvas, 2, $qrXPos, $textY, $urlText, $black);
-              imagestring($canvas, 2, $qrXPos, $textY + 34, $serialText, $black);
+              $fallbackFont = 3;
+              $adjust = intval(round($fontSize * 0.35));
+              imagestring($canvas, $fallbackFont, $qrXPos, max(0, $firstLineY - $adjust), $urlText, $black);
+              imagestring($canvas, $fallbackFont, $qrXPos, max(0, $secondLineY - $adjust), $serialText, $black);
             }
 
             // Save the combined image
@@ -804,18 +812,25 @@ class RedirectLinkController extends Controller
     $urlText = 'Code : ' . $uri;
     $serialText = 'Serial No : ' . str_pad($linkId, 4, '0', STR_PAD_LEFT);
 
-    // Position directly below QR code
-    $textY = $qrY + $qrSize + 38;
-    $fontSize = $nfc->text_font_size ?? 14; // Get font size from NFC settings
+    // Calculate dynamic spacing based on font size and QR size to avoid collisions.
+    $fontSize = intval($nfc->text_font_size ?? 14);
+    $baseGap = intval(round($fontSize * 0.8)); // 14->11, 16->13
+    $extra = intval(round($qrSize * 0.02)); // small adjustment relative to QR size
+    $firstLineY = $qrY + $qrSize + $baseGap + $extra;
+    $lineSpacing = intval(round($fontSize * 1.2)); // 14->17, 16->19
+    $secondLineY = $firstLineY + $lineSpacing;
 
     if ($fontPath) {
-      // Normal text without outline
-      imagettftext($image, $fontSize, 0, $qrX, $textY, $black, $fontPath, $urlText);
-      imagettftext($image, $fontSize, 0, $qrX, $textY + 34, $black, $fontPath, $serialText);
+      // Use TrueType rendering; imagettftext expects the y coordinate as baseline
+      imagettftext($image, $fontSize, 0, $qrX, $firstLineY, $black, $fontPath, $urlText);
+      imagettftext($image, $fontSize, 0, $qrX, $secondLineY, $black, $fontPath, $serialText);
     } else {
-      // Fallback to default font
-      imagestring($image, 2, $qrX, $textY, $urlText, $black);
-      imagestring($image, 2, $qrX, $textY + 34, $serialText, $black);
+      // Fallback to built-in font. imagestring uses pixel coordinates for y as top of text,
+      // so adjust slightly to align visually with the TrueType baseline.
+      $fallbackFont = 3; // medium built-in font
+      $adjust = intval(round($fontSize * 0.35));
+      imagestring($image, $fallbackFont, $qrX, max(0, $firstLineY - $adjust), $urlText, $black);
+      imagestring($image, $fallbackFont, $qrX, max(0, $secondLineY - $adjust), $serialText, $black);
     }
   }
 

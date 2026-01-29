@@ -322,8 +322,8 @@ function initQrPreview() {
         }
     });
 
-    // Listen to QR position inputs
-    $('.qr-position-input').off('input change').on('input change', function() {
+    // Listen to QR position inputs AND font size
+    $('.qr-position-input, #textFontSize').off('input change').on('input change', function() {
         updateQrPreview();
     });
 }
@@ -412,14 +412,22 @@ function updateQrPreview() {
     ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
-    let textY = qrY + qrSize + 38;
 
-    // Draw "Code: Test123" - positioned at QR box X coordinate
-    ctx.fillText('Code: Test123', qrX, textY);
+    // Dynamic spacing calculation to avoid overlap when font changes.
+    // baseGap: more space after QR (14 -> ~28px, 16 -> ~32px)
+    // lineSpacing: tighter spacing between lines (14 -> ~25px, 16 -> ~29px)
+    function computeTextPositions(qrY, qrSize, fontSize) {
+        const baseGap = Math.round(fontSize * 0.8); // 14->28, 16->32
+        const extra = Math.round(qrSize * 0.02); // small adjustment relative to QR size
+        const firstLineY = qrY + qrSize + baseGap + extra;
+        const lineSpacing = Math.round(fontSize * 1.2); // 14->25, 16->29
+        const secondLineY = firstLineY + lineSpacing;
+        return { firstLineY, secondLineY };
+    }
 
-    // Draw "Serial No: 00001" on next line
-    textY += 34;
-    ctx.fillText('Serial No: 00001', qrX, textY);
+    const positions = computeTextPositions(qrY, qrSize, fontSize);
+    ctx.fillText('Code: Test123', qrX, positions.firstLineY);
+    ctx.fillText('Serial No: 00001', qrX, positions.secondLineY);
 }
 
 // Initialize QR preview for EDIT modal
@@ -478,8 +486,8 @@ function initQrPreviewEdit() {
         }
     });
 
-    // Listen to QR position inputs
-    $('.qr-position-input-edit').off('input change').on('input change', function() {
+    // Listen to QR position inputs AND font size
+    $('.qr-position-input-edit, #editTextFontSize').off('input change').on('input change', function() {
         updateQrPreviewEdit();
     });
 
@@ -589,12 +597,18 @@ function updateQrPreviewEdit() {
     ctx.font = `${fontSize}px Arial`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'alphabetic';
-    let textY = qrY + qrSize + 38;
 
-    // Draw "Code: Test123" - positioned at QR box X coordinate
-    ctx.fillText('Code: Test123', qrX, textY);
+    // Dynamic spacing calculation to avoid overlap when font changes.
+    function computeTextPositions(qrY, qrSize, fontSize) {
+        const baseGap = Math.round(fontSize * 0.8); // 14->28, 16->32
+        const extra = Math.round(qrSize * 0.02);
+        const firstLineY = qrY + qrSize + baseGap + extra;
+        const lineSpacing = Math.round(fontSize * 1.2); // 14->25, 16->29
+        const secondLineY = firstLineY + lineSpacing;
+        return { firstLineY, secondLineY };
+    }
 
-    // Draw "Serial No: 00001" on next line
-    textY += 34;
-    ctx.fillText('Serial No: 00001', qrX, textY);
+    const positions = computeTextPositions(qrY, qrSize, fontSize);
+    ctx.fillText('Code: Test123', qrX, positions.firstLineY);
+    ctx.fillText('Serial No: 00001', qrX, positions.secondLineY);
 }

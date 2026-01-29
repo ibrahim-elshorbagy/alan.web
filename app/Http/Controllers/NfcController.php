@@ -350,18 +350,22 @@ class NfcController extends AppBaseController
     $urlText = 'Code : ' . $testCode;
     $serialText = 'Serial No : ' . str_pad($testSerialNo, 4, '0', STR_PAD_LEFT);
 
-    // Position directly below QR code
-    $textY = $qrY + $qrSize + 38;
-    $fontSize = $nfc->text_font_size ?? 14; // Get font size from NFC settings
+    // Calculate dynamic spacing based on font size and QR size to avoid collisions.
+    $fontSize = intval($nfc->text_font_size ?? 14);
+    $baseGap = intval(round($fontSize * 0.8));
+    $extra = intval(round($qrSize * 0.02));
+    $firstLineY = $qrY + $qrSize + $baseGap + $extra;
+    $lineSpacing = intval(round($fontSize * 1.2));
+    $secondLineY = $firstLineY + $lineSpacing;
 
     if ($fontPath) {
-      // Normal text without outline
-      imagettftext($image, $fontSize, 0, $qrX, $textY, $black, $fontPath, $urlText);
-      imagettftext($image, $fontSize, 0, $qrX, $textY + 34, $black, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, $qrX, $firstLineY, $black, $fontPath, $urlText);
+      imagettftext($image, $fontSize, 0, $qrX, $secondLineY, $black, $fontPath, $serialText);
     } else {
-      // Fallback to default font
-      imagestring($image, 2, $qrX, $textY, $urlText, $black);
-      imagestring($image, 2, $qrX, $textY + 34, $serialText, $black);
+      $fallbackFont = 3;
+      $adjust = intval(round($fontSize * 0.35));
+      imagestring($image, $fallbackFont, $qrX, max(0, $firstLineY - $adjust), $urlText, $black);
+      imagestring($image, $fallbackFont, $qrX, max(0, $secondLineY - $adjust), $serialText, $black);
     }
   }
 
