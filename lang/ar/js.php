@@ -132,7 +132,7 @@ return [
   'passwords' => 'حقل كلمة المرور مطلوب.',
   'password_character' => 'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.',
   'password_must_match' => 'يجب أن تتطابق كلمة المرور مع تأكيد كلمة المرور.',
-  'description' => 'أدخل وصف بطاقتك الشخصية',
+  'description' => 'أدخل وصف او نبذة تعريفية',
   'the_term_conditions' => 'الشروط والأحكام مطلوبة.',
   'unavailable' => 'غير متاح',
   'duplicate' => 'مكرر',
