@@ -10,7 +10,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Mail\ChangePasswordMail;
 use App\Models\AffiliateUser;
 use App\Models\EmailVerification;
-use App\Models\MultiTenant;
+use App\Models\RedirectLink;
 use App\Models\Subscription;
 use App\Models\User;
 use App\Models\Vcard;
@@ -317,6 +317,15 @@ class UserController extends AppBaseController
 
   public function userDelete(User $user)
   {
+    // Check if user has active items that prevent deletion
+    $hasRedirectLinks = \App\Models\RedirectLink::where('user_id', $user->id)->exists();
+    $hasVcards = \App\Models\Vcard::where('tenant_id', $user->tenant_id)->exists();
+
+    if ($hasRedirectLinks  || $hasVcards) {
+      Flash::error(__('messages.cannot_delete_user_with_active_vcard_or_redirect_link'));
+      return redirect()->back();
+    }
+
     $result = $this->userRepo->userDataDelete($user);
 
     if ($result) {

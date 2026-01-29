@@ -49,6 +49,8 @@
             </button>
           </div>
         </div>
+        <small>{{ __('messages.tooltip.the_main_url') }}</small>
+
         <div id="error-url-alias-msg" class="text-danger ms-2 fs-6 d-none fw-light">
           {{ __('messages.vcard.already_alias_url') }}
         </div>

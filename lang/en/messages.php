@@ -1,6 +1,8 @@
 <?php
 
 return [
+  'cannot_delete_user_with_active_vcard_or_redirect_link' => 'Cannot delete user with active vCard, redirect link, or NFC card order',
+
   'reset_password' => 'Reset Password',
   'free' => "Free",
   'paid' => "Paid",
@@ -2412,6 +2414,8 @@ return [
       'google_business' => 'Google Business',
       'vcard' => 'Smart Business Card vCard',
     ],
+    'website_redirect_note' => 'If you want to redirect your card to your website, enter your website link in the adjacent "Redirect Link" field,
+If you want to redirect your card to the smart business card, you must first go to the "vCard" screen to create your card and get its dedicated link, then return to this screen and add it in the adjacent field.',
     'search' => 'Search',
     'edit' => 'Edit Redirect Link',
     'create' => 'Create Redirect Link',
@@ -2548,7 +2552,6 @@ return [
     'reset_password_subtitle' => 'Enter the verification code and your new password.',
     'reset_password_button' => 'Reset Password',
     'resetting' => 'Resetting...',
-    'cannot_delete_user_with_active_vcard_or_redirect_link' => 'Cannot delete user with active vCard or redirect link',
 
   ],
 ];

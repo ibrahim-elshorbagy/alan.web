@@ -93,7 +93,7 @@
                               <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="card h-100">
                                   <div class="card-body text-center">
-                                    <h6 class="mb-3">{{ $vcard->name }}</h6>
+                                    <h6 class="mb-3">vCard: {{ $vcard->name }}</h6>
                                     <div class="qr-code-image p-3 mb-3 d-flex justify-content-center align-items-center"
                                       style="background: {{ $customQrCode['background_color'] ?? '#ffffff' }}; min-height: 200px;">
                                       @php
@@ -133,6 +133,7 @@
                               <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="card h-100">
                                   <div class="card-body text-center">
+                                    <h6 class="mb-3">WhatsApp Store: {{ $store->store_name }}</h6>
                                     <div class="qr-code-image p-3 mb-3 d-flex justify-content-center align-items-center"
                                       style="background: {{ $customQrCode['background_color'] ?? '#ffffff' }}; min-height: 200px;">
                                       @if (isset($customQrCode['applySetting']) && $customQrCode['applySetting'] == 1)
@@ -167,6 +168,7 @@
                               <div class="col-md-6 col-lg-4 mb-4">
                                 <div class="card h-100">
                                   <div class="card-body text-center">
+                                    <h6 class="mb-3">Redirect Link: {{ $redirectLink->uri }}</h6>
                                     <div class="qr-code-image p-3 mb-3 d-flex justify-content-center align-items-center"
                                       style="background: {{ $customQrCode['background_color'] ?? '#ffffff' }}; min-height: 200px;">
                                       @if (isset($customQrCode['applySetting']) && $customQrCode['applySetting'] == 1)

@@ -12,13 +12,18 @@
     </div>
   </div>
   <div class="col-lg-6">
-    <div class="mb-5">
+    <div class="">
       <label class="form-label">{{ __('messages.redirect_links.redirect_link_type') }}:</label>
       <p class="form-control-plaintext">
         {{ isset($redirectLink) ? \App\Enums\RedirectLinkTypeEnum::from($redirectLink->redirect_link_type)->label() : '' }}
       </p>
     </div>
   </div>
+  @if (isset($redirectLink) && $redirectLink->redirect_link_type == 1)
+    <div class="col-12 mb-4">
+      <small class="text-muted">{!! nl2br(__('messages.redirect_links.website_redirect_note')) !!}</small>
+    </div>
+  @endif
   <div class="col-lg-6">
     <div class="mb-5">
       {{ Form::label('redirect_link', __('messages.redirect_links.redirect_link') . ':', ['class' => 'form-label']) }}
