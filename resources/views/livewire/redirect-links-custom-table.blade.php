@@ -252,10 +252,12 @@
           <i class="fas fa-check"></i> {{ __('messages.redirect_links.mark_selected_as_received') }}
         </button>
 
-        <button type="button" class="btn btn-danger"
-          @click="if(confirm('{{ __('messages.common.delete_confirm') }}')) { $wire.deleteSelected() }"">
-          <i class="fas fa-trash"></i> {{ __('messages.common.delete_selected') }}
-        </button>
+        @if (!auth()->user()->hasRole('sales'))
+          <button type="button" class="btn btn-danger"
+            @click="if(confirm('{{ __('messages.common.delete_confirm') }}')) { $wire.deleteSelected() }"">
+            <i class="fas fa-trash"></i> {{ __('messages.common.delete_selected') }}
+          </button>
+        @endif
 
         @if (auth()->user()->hasRole('super_admin'))
           <button type="button" class="btn btn-info" wire:click="syncAndRestore"

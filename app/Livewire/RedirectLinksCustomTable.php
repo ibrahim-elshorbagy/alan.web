@@ -357,11 +357,15 @@ class RedirectLinksCustomTable extends Component
 
       // Check permissions
       if (auth()->user()->hasRole('sales')) {
-        // Sales can only delete their assigned links
-        if ($redirectLink->assigned_id != auth()->id()) {
-          session()->flash('error', __('messages.common.unauthorized'));
-          return;
-        }
+        // Sales cannot delete at all
+        session()->flash('error', __('messages.common.unauthorized'));
+        return;
+      }
+
+      // Super admin cannot delete links with user_id
+      if (auth()->user()->hasRole('super_admin') && $redirectLink->user_id !== null) {
+        session()->flash('error', __('messages.redirect_links.cannot_delete_assigned_link'));
+        return;
       }
 
       $redirectLink->delete();
@@ -388,15 +392,28 @@ class RedirectLinksCustomTable extends Component
         return;
       }
 
+      // Check permissions
+      if (auth()->user()->hasRole('sales')) {
+        // Sales cannot delete at all
+        session()->flash('error', __('messages.common.unauthorized'));
+        return;
+      }
+
       // Build query based on user role
       $query = RedirectLink::whereIn('id', $selectedIds);
 
-      // For sales, ensure they can only delete their assigned links
-      if (auth()->user()->hasRole('sales')) {
-        $query->where('assigned_id', auth()->id());
+      // For super admin, exclude links with user_id
+      if (auth()->user()->hasRole('super_admin')) {
+        $query->whereNull('user_id');
       }
 
       $count = $query->count();
+      
+      if ($count === 0) {
+        session()->flash('error', __('messages.redirect_links.no_eligible_links_to_delete'));
+        return;
+      }
+      
       $query->delete();
 
       // Clear selections
