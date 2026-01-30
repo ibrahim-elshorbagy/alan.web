@@ -128,6 +128,16 @@
                 {{ __('messages.user.account_setting') }}
               </a>
             </li>
+            @impersonating
+              <li class="px-4">
+                <a class="dropdown-item  dashboard-dropdown" href="{{ route('impersonate.leave') }}">
+                  <span class="dropdown-icon me-2">
+                    <i class="fas fa-user-check icon-color-gray"></i>
+                  </span>
+                  {{ __('messages.user.return_to_admin') }}
+                </a>
+              </li>
+            @endImpersonating
             @role(\App\Models\Role::ROLE_ADMIN)
               <li class="px-4">
                 <a class="dropdown-item  dashboard-dropdown" href="{{ route('subscription.index') }}">

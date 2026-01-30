@@ -158,6 +158,18 @@
               {{ Form::text('youtube_link', isset($vcard) ? $vcard->youtube_link : null, ['class' => 'form-control', 'placeholder' => 'https://www.youtube.com/watch?v=hAGbufevHM4', 'id' => '']) }}
             </div>
 
+            <div class="col-lg-12 mb-7 mt-3">
+              <div class="form-group">
+                {{ Form::label('cover_image_type', __('messages.cover_image_type.cover_image_type') . ':', ['class' => 'form-label']) }}
+                @php
+                  $coverImageType = collect(App\Models\Vcard::COVER_IMAGE_TYPE)->map(function ($value) {
+                      return trans('messages.cover_image_type.' . $value);
+                  });
+                @endphp
+                {{ Form::select('cover_image_type', $coverImageType, isset($vcard) ? $vcard->cover_image_type : null, ['class' => 'form-select', 'id' => 'cover_image_type', 'data-control' => 'select2']) }}
+              </div>
+            </div>
+
           </div>
           <div class="col-lg-6 col-sm-4 mb-7">
             <div class="mb-3 ms-5" io-image-input="true">
@@ -328,11 +340,11 @@
               @if (checkFeature('advanced')->hide_branding)
                 <div class="col-lg-6 mb-7">
                   {{ Form::label('made_by', __('messages.made_by') . ':', ['class' => 'form-label']) }}
-                  {{ Form::text('made_by', isset($vcard) ? $vcard->made_by : null, ['class' => 'form-control', 'placeholder' => __('messages.made_by')]) }}
+                  {{ Form::text('made_by', isset($vcard) ? $vcard->made_by : null, ['class' => 'form-control', 'placeholder' => __('messages.made_by'), 'disabled' => 'disabled']) }}
                 </div>
                 <div class="col-lg-6 mb-7">
                   {{ Form::label('made_by_url', __('messages.made_by_url') . ':', ['class' => 'form-label']) }}
-                  {{ Form::text('made_by_url', isset($vcard) ? $vcard->made_by_url : null, ['class' => 'form-control', 'placeholder' => __('messages.made_by_url')]) }}
+                  {{ Form::text('made_by_url', isset($vcard) ? $vcard->made_by_url : null, ['class' => 'form-control', 'placeholder' => __('messages.made_by_url'), 'disabled' => 'disabled']) }}
                 </div>
               @endif
             @endif
@@ -346,17 +358,6 @@
               </div>
               <div class="form-group">
                 {{ Form::select('default_language', getAllLanguage(), isset($vcard) ? (isset($vcard->default_language) ? $vcard->default_language : getCurrentLanguageName()) : null, ['class' => 'form-control', 'data-control' => 'select2']) }}
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group mb-7">
-                {{ Form::label('cover_image_type', __('messages.cover_image_type.cover_image_type') . ':', ['class' => 'form-label']) }}
-                @php
-                  $coverImageType = collect(App\Models\Vcard::COVER_IMAGE_TYPE)->map(function ($value) {
-                      return trans('messages.cover_image_type.' . $value);
-                  });
-                @endphp
-                {{ Form::select('cover_image_type', $coverImageType, isset($vcard) ? $vcard->cover_image_type : null, ['class' => 'form-select', 'id' => 'cover_image_type', 'data-control' => 'select2']) }}
               </div>
             </div>
           </div>
@@ -1126,7 +1127,7 @@
       @if (checkFeature('advanced')->hide_branding)
         <div class="col-lg-6 mb-7">
           <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="branding" name="branding"
+            <input class="form-check-input" type="checkbox" id="branding" name="branding" disabled="disabled"
               {{ $vcard->branding ? 'checked' : '' }}>
             <label class="form-check-label" for="branding">
               {{ __('messages.vcard.remove_branding') }}

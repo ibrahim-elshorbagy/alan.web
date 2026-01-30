@@ -2,6 +2,8 @@
 
 return [
   'cannot_delete_user_with_active_vcard_or_redirect_link' => 'Cannot delete user with active vCard, redirect link, or NFC card order',
+  'total_redirect_links' => 'Total Redirect Links',
+  'add_redirect_link' => 'Add Redirect Link',
 
   'reset_password' => 'Reset Password',
   'free' => "Free",

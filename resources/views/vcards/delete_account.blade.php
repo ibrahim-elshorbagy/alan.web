@@ -6,7 +6,7 @@
   @php
     $hasRedirectLinks = \App\Models\RedirectLink::where('user_id', auth()->id())->exists();
     $hasVcards = \App\Models\Vcard::where('tenant_id', getLogInTenantId())->exists();
-    $hasActiveItems = $hasRedirectLinks || $hasNfcOrders || $hasVcards;
+    $hasActiveItems = $hasRedirectLinks || $hasVcards;
   @endphp
   <div class="container-fluid">
     <div class="col-12">

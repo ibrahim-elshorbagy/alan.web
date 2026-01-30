@@ -126,9 +126,9 @@
                                                                         {{ __('messages.feature.' . $feature) }}
                                                                     </p>
                                                                     @if ($value)
-                                                                        <i class="fa-solid fa-circle-check fs-2"></i>
+                                                                        <span class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 2rem; height: 2rem;"><i class="fa-solid fa-check text-white"></i></span>
                                                                     @else
-                                                                        <i class="fa-solid fa-circle-xmark fs-2"></i>
+                                                                        <span class="bg-danger rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 2rem; height: 2rem;"><i class="fa-solid fa-xmark text-white"></i></span>
                                                                     @endif
                                                                 </div>
                                                             @endforeach
@@ -291,9 +291,9 @@
                                                                         {{ __('messages.feature.' . $feature) }}
                                                                     </p>
                                                                     @if ($value)
-                                                                        <i class="fa-solid fa-circle-check fs-2"></i>
+                                                                        <span class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 2rem; height: 2rem;"><i class="fa-solid fa-check text-white"></i></span>
                                                                     @else
-                                                                        <i class="fa-solid fa-circle-xmark fs-2"></i>
+                                                                        <span class="bg-danger rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 2rem; height: 2rem;"><i class="fa-solid fa-xmark text-white"></i></span>
                                                                     @endif
                                                                 </div>
                                                             @endforeach
@@ -456,9 +456,9 @@
                                                                     <p class="fw-normal">
                                                                         {{ __('messages.feature.' . $feature) }}</p>
                                                                     @if ($value)
-                                                                        <i class="fa-solid fa-circle-check fs-2"></i>
+                                                                        <span class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 2rem; height: 2rem;"><i class="fa-solid fa-check text-white"></i></span>
                                                                     @else
-                                                                        <i class="fa-solid fa-circle-xmark fs-2"></i>
+                                                                        <span class="bg-danger rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 2rem; height: 2rem;"><i class="fa-solid fa-xmark text-white"></i></span>
                                                                     @endif
                                                                 </div>
                                                             @endforeach

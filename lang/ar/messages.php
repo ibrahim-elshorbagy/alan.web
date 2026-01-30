@@ -2,6 +2,8 @@
 
 return [
   'cannot_delete_user_with_active_vcard_or_redirect_link' => 'لا يمكن حذف الحساب الذي لديه بطاقة vCard  نشطة أو رابط إعادة توجيه  ',
+  'total_redirect_links' => 'إجمالي روابط اعادة التوجيه',
+  'add_redirect_link' => 'إضافة رابط اعادة توجيه',
   'reset_password' => 'إعادة تعيين كلمة المرور',
   'free' => "مجاني",
   'paid' => "مدفوع",

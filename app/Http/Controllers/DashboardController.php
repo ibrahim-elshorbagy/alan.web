@@ -52,13 +52,13 @@ class DashboardController extends AppBaseController
         }
 
         $activeVcard = Vcard::whereTenantId(auth()->user()->tenant_id)->whereStatus(1)->count();
-        $deActiveVcard = Vcard::whereTenantId(auth()->user()->tenant_id)->whereStatus(0)->count();
+        $totalRedirectLinks = \App\Models\RedirectLink::where('user_id', auth()->id())->count();
         $totalWpTemplate = WhatsappStore::all()->count();
         $storeIds = WhatsappStore::whereTenantId(auth()->user()->tenant_id)->pluck('id');
         $totalOrder = WpOrder::whereIn('wp_store_id', $storeIds)->count();
         $totalPendingOrder = WpOrder::whereIn('wp_store_id', $storeIds)->where('status', WpOrder::PENDING)->count();
 
-        return view('dashboard.index', compact('enquiry', 'appointment', 'activeVcard', 'deActiveVcard', 'totalWpTemplate', 'totalOrder', 'totalPendingOrder'));
+        return view('dashboard.index', compact('enquiry', 'appointment', 'activeVcard', 'totalRedirectLinks', 'totalWpTemplate', 'totalOrder', 'totalPendingOrder'));
     }
 
     public function getUsersList(Request $request): JsonResponse
