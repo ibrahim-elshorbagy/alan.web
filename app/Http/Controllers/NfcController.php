@@ -359,8 +359,8 @@ class NfcController extends AppBaseController
     $secondLineY = $firstLineY + $lineSpacing;
 
     if ($fontPath) {
-      imagettftext($image, $fontSize, 0, $qrX, $firstLineY, $black, $fontPath, $urlText);
-      imagettftext($image, $fontSize, 0, $qrX, $secondLineY, $black, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, $qrX, $firstLineY + 2, $black, $fontPath, $urlText);
+      imagettftext($image, $fontSize, 0, $qrX, $secondLineY + 2, $black, $fontPath, $serialText);
     } else {
       $fallbackFont = 3;
       $adjust = intval(round($fontSize * 0.35));

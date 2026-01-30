@@ -48571,10 +48571,10 @@ function updateQrPreview() {
   // baseGap: more space after QR (14 -> ~28px, 16 -> ~32px)
   // lineSpacing: tighter spacing between lines (14 -> ~25px, 16 -> ~29px)
   function computeTextPositions(qrY, qrSize, fontSize) {
-    var baseGap = Math.round(fontSize * 0.8); // 14->28, 16->32
+    var baseGap = Math.round(fontSize * 0.8);
     var extra = Math.round(qrSize * 0.02); // small adjustment relative to QR size
     var firstLineY = qrY + qrSize + baseGap + extra;
-    var lineSpacing = Math.round(fontSize * 1.2); // 14->25, 16->29
+    var lineSpacing = Math.round(fontSize * 1.2);
     var secondLineY = firstLineY + lineSpacing;
     return {
       firstLineY: firstLineY,
@@ -48582,8 +48582,8 @@ function updateQrPreview() {
     };
   }
   var positions = computeTextPositions(qrY, qrSize, fontSize);
-  ctx.fillText('Code: Test123', qrX, positions.firstLineY);
-  ctx.fillText('Serial No: 00001', qrX, positions.secondLineY);
+  ctx.fillText('Code: Test123', qrX, positions.firstLineY + 2);
+  ctx.fillText('Serial No: 00001', qrX, positions.secondLineY + 2);
 }
 
 // Initialize QR preview for EDIT modal
@@ -48749,10 +48749,10 @@ function updateQrPreviewEdit() {
 
   // Dynamic spacing calculation to avoid overlap when font changes.
   function computeTextPositions(qrY, qrSize, fontSize) {
-    var baseGap = Math.round(fontSize * 0.8); // 14->28, 16->32
+    var baseGap = Math.round(fontSize * 0.8);
     var extra = Math.round(qrSize * 0.02);
     var firstLineY = qrY + qrSize + baseGap + extra;
-    var lineSpacing = Math.round(fontSize * 1.2); // 14->25, 16->29
+    var lineSpacing = Math.round(fontSize * 1.2);
     var secondLineY = firstLineY + lineSpacing;
     return {
       firstLineY: firstLineY,
@@ -48760,8 +48760,8 @@ function updateQrPreviewEdit() {
     };
   }
   var positions = computeTextPositions(qrY, qrSize, fontSize);
-  ctx.fillText('Code: Test123', qrX, positions.firstLineY);
-  ctx.fillText('Serial No: 00001', qrX, positions.secondLineY);
+  ctx.fillText('Code: Test123', qrX, positions.firstLineY + 2);
+  ctx.fillText('Serial No: 00001', qrX, positions.secondLineY + 2);
 }
 })();
 

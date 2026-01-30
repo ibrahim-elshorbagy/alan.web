@@ -551,6 +551,10 @@ class RedirectLinkController extends Controller
             $qrWidth = imagesx($qrImageGd);
             $qrHeight = imagesy($qrImageGd);
 
+            // Set QR position variables for consistency
+            $qrY = 0;
+            $qrSize = $qrHeight;
+
             // Create a larger canvas to accommodate QR code and text
             $canvasWidth = max($qrWidth, 400);
             $canvasHeight = $qrHeight + 120; // Extra space for text
@@ -566,21 +570,22 @@ class RedirectLinkController extends Controller
             // Add text overlays with dynamic spacing
             $black = imagecolorallocate($canvas, 0, 0, 0);
             $fontPath = public_path('fonts/Zain-Regular.ttf');
-            $fontSize = intval($nfc->text_font_size ?? 22);
+            $fontSize = intval($nfc->text_font_size ?? 14);
 
+            // Text content
             $urlText = 'Code : ' . $link->uri;
             $serialText = 'Serial No : ' . str_pad($link->id, 4, '0', STR_PAD_LEFT);
 
-            // Dynamic spacing based on font size and QR height
-            $baseGap = intval(round($fontSize * 0.8));
-            $extra = intval(round($qrHeight * 0.02));
-            $firstLineY = $qrHeight + $baseGap + $extra;
-            $lineSpacing = intval(round($fontSize * 1.2));
+            // Calculate dynamic spacing based on font size and QR size to avoid collisions.
+            $baseGap = intval(round($fontSize * 0.8)); // 14->11, 16->13
+            $extra = intval(round($qrSize * 0.02)); // small adjustment relative to QR size
+            $firstLineY = $qrY + $qrSize + $baseGap + $extra;
+            $lineSpacing = intval(round($fontSize * 1.2)); // 14->17, 16->19
             $secondLineY = $firstLineY + $lineSpacing;
 
             if (file_exists($fontPath)) {
-              imagettftext($canvas, $fontSize, 0, $qrXPos, $firstLineY, $black, $fontPath, $urlText);
-              imagettftext($canvas, $fontSize, 0, $qrXPos, $secondLineY, $black, $fontPath, $serialText);
+              imagettftext($canvas, $fontSize, 0, $qrXPos, $firstLineY + 2, $black, $fontPath, $urlText);
+              imagettftext($canvas, $fontSize, 0, $qrXPos, $secondLineY + 2, $black, $fontPath, $serialText);
             } else {
               $fallbackFont = 3;
               $adjust = intval(round($fontSize * 0.35));
@@ -822,8 +827,8 @@ class RedirectLinkController extends Controller
 
     if ($fontPath) {
       // Use TrueType rendering; imagettftext expects the y coordinate as baseline
-      imagettftext($image, $fontSize, 0, $qrX, $firstLineY, $black, $fontPath, $urlText);
-      imagettftext($image, $fontSize, 0, $qrX, $secondLineY, $black, $fontPath, $serialText);
+      imagettftext($image, $fontSize, 0, $qrX, $firstLineY + 2, $black, $fontPath, $urlText);
+      imagettftext($image, $fontSize, 0, $qrX, $secondLineY + 2, $black, $fontPath, $serialText);
     } else {
       // Fallback to built-in font. imagestring uses pixel coordinates for y as top of text,
       // so adjust slightly to align visually with the TrueType baseline.

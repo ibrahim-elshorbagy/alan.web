@@ -45,6 +45,13 @@
           </div>
         </div>
 
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            {{ Form::label('text_font_size', 'Text Font Size:', ['class' => 'form-label']) }}
+            {{ Form::number('text_font_size', 14, ['class' => 'form-control', 'id' => 'textFontSize', 'min' => '8', 'max' => '72']) }}
+          </div>
+        </div>
+
         <div class="mb-3">
           <div class="form-check">
             {{ Form::hidden('apply_coordinates', 0) }}
@@ -86,13 +93,6 @@
               <div class="col-md-6 mb-3">
                 {{ Form::label('image_height', 'Image Height (mm):', ['class' => 'form-label']) }}
                 {{ Form::number('image_height', null, ['class' => 'form-control', 'placeholder' => 'Height in mm', 'id' => 'imageHeight', 'step' => '0.01']) }}
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-12 mb-3">
-                {{ Form::label('text_font_size', 'Text Font Size:', ['class' => 'form-label']) }}
-                {{ Form::number('text_font_size', 14, ['class' => 'form-control', 'id' => 'textFontSize', 'min' => '8', 'max' => '72']) }}
               </div>
             </div>
           </div>
