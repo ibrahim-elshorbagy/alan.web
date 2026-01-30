@@ -41,7 +41,7 @@
             {{ Form::label('description', __('messages.common.description') . ':', ['class' => 'form-label required']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control', 'id' => 'editNfcDescription', 'placeholder' => __('messages.form.short_description'), 'rows' => '5', 'required']) }}
           </div>
-          
+
           <div class="row">
             <div class="col-md-12 mb-3">
               {{ Form::label('text_font_size', 'Text Font Size:', ['class' => 'form-label']) }}
@@ -139,13 +139,13 @@
                   {{ Form::label('editPrintBackImage', 'Print Back Image', ['class' => 'form-check-label']) }}
                 </div>
               </div>
-              <div class="col-md-4 mb-3">
+              {{-- <div class="col-md-4 mb-3">
                 <div class="form-check">
                   {{ Form::hidden('print_only_qr', 0) }}
                   {{ Form::checkbox('print_only_qr', 1, null, ['class' => 'form-check-input', 'id' => 'editPrintOnlyQr']) }}
                   {{ Form::label('editPrintOnlyQr', 'Print Only QR Code', ['class' => 'form-check-label']) }}
                 </div>
-              </div>
+              </div> --}}
             </div>
           </div>
 

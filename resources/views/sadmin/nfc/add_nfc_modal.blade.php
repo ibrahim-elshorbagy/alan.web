@@ -140,13 +140,13 @@
                 {{ Form::label('printBackImage', 'Print Back Image', ['class' => 'form-check-label']) }}
               </div>
             </div>
-            <div class="col-md-4 mb-3">
+            {{-- <div class="col-md-4 mb-3">
               <div class="form-check">
                 {{ Form::hidden('print_only_qr', 0) }}
                 {{ Form::checkbox('print_only_qr', 1, false, ['class' => 'form-check-input', 'id' => 'printOnlyQr']) }}
                 {{ Form::label('printOnlyQr', 'Print Only QR Code', ['class' => 'form-check-label']) }}
               </div>
-            </div>
+            </div> --}}
           </div>
         </div>
 
