@@ -41,9 +41,9 @@
             {{ Form::label('description', __('messages.common.description') . ':', ['class' => 'form-label required']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control', 'id' => 'editNfcDescription', 'placeholder' => __('messages.form.short_description'), 'rows' => '5', 'required']) }}
           </div>
-
+          
           <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
               {{ Form::label('text_font_size', 'Text Font Size:', ['class' => 'form-label']) }}
               {{ Form::number('text_font_size', null, ['class' => 'form-control', 'id' => 'editTextFontSize', 'min' => '8', 'max' => '72']) }}
             </div>
@@ -60,6 +60,7 @@
               </span>
             </div>
           </div>
+
 
           <div id="editCoordinatesFields" style="display: none;">
             <div class="row mb-3">
@@ -92,6 +93,9 @@
                   {{ Form::number('image_height', null, ['class' => 'form-control', 'placeholder' => 'Height in mm', 'id' => 'editImageHeight', 'step' => '0.01']) }}
                 </div>
               </div>
+
+
+            </div>
 
             <div class="row">
               <div class="col-12">
