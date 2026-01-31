@@ -144,7 +144,7 @@ return [
   'allowed_cover_types' => 'أنواع الملفات المسموح بها: png، jpg، jpeg، mp4.',
   'allowed_img_types' => 'أنواع الملفات المسموح بها: png، jpg، jpeg.',
   'allowed_video_types' => 'أنواع الملفات المسموح بها: mp4.',
-  'made_by' => 'بدعم: ',
+  'made_by' => 'بدعم',
   'appointments' => 'المواعيد',
   'date' => 'التاريخ',
   'from_time' => 'من الوقت',
