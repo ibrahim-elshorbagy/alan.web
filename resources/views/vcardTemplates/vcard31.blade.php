@@ -83,17 +83,17 @@
           blockquote,
           strong,
           b,
-          em { 
-          font-family: {{ $vcard->font_family }} !important;
-        }
+          em {
+            font-family: {{ $vcard->font_family }} !important;
+          }
 
-      @endif
-      @if ($vcard->font_size)
-        div>h4 {
-          font-size: {{ $vcard->font_size }}px !important;
-        }
+        @endif
+        @if ($vcard->font_size)
+          div>h4 {
+            font-size: {{ $vcard->font_size }}px !important;
+          }
 
-      @endif
+        @endif
       @endif
       @if (isset(checkFeature('advanced')->custom_css))
         {!! $vcard->custom_css !!}
@@ -580,7 +580,7 @@
                         <div class="position-relative">
                           {{ Form::text('date', null, [
                               'class' => 'date appoint-input form-control
-                                                                                                                                                                                                                                                                                      appointment-input text-start',
+                                                                                                                                                                                                                                                                                                                appointment-input text-start',
                               'placeholder' => __('messages.form.pick_date'),
                               'id' => 'pickUpDate',
                           ]) }}
@@ -1347,31 +1347,20 @@
       @endif
       {{-- made by --}}
       <div class="d-flex justify-content-evenly pt-4 pb-2">
-        @if (checkFeature('advanced'))
-          @if (checkFeature('advanced')->hide_branding && $vcard->branding == 0)
-            @if ($vcard->made_by)
-              <a @if (!is_null($vcard->made_by_url)) href="{{ $vcard->made_by_url }}" @endif
-                class="text-center text-decoration-none text-primary fw-5 fs-14" target="_blank">
-                {{ __('messages.made_by') }} {{ $vcard->made_by }}
-              </a>
-            @else
-              <div class="text-center">
-                <small class="text-primary fw-5 fs-14">{{ __('messages.made_by') }}
-                  {{ $setting['app_name'] }}</small>
-              </div>
-            @endif
-          @endif
-        @else
+        @if (!checkFeature('advanced') || !checkFeature('advanced')->hide_branding)
+          <a href="{{ url('/') }}" class="text-center text-decoration-none text-primary" target="_blank">
+            <small>{{ __('messages.made_by') }} {{ $setting['app_name'] }}</small>
+          </a>
+        @elseif ($vcard->branding == 0)
           @if ($vcard->made_by)
             <a @if (!is_null($vcard->made_by_url)) href="{{ $vcard->made_by_url }}" @endif
-              class="text-center text-decoration-none text-primary fw-5 fs-14" target="_blank">
-              {{ __('messages.made_by') }} {{ $vcard->made_by }}
+              class="text-center text-decoration-none text-primary" target="_blank">
+              <small>{{ __('messages.made_by') }} {{ $vcard->made_by }}</small>
             </a>
           @else
-            <div class="text-center">
-              <small class="text-primary fw-5 fs-14">{{ __('messages.made_by') }}
-                {{ $setting['app_name'] }}</small>
-            </div>
+            <a href="{{ url('/') }}" class="text-center text-decoration-none text-primary" target="_blank">
+              <small>{{ __('messages.made_by') }} {{ $setting['app_name'] }}</small>
+            </a>
           @endif
         @endif
         @if (!empty($vcard->privacy_policy) || !empty($vcard->term_condition))
@@ -1898,4 +1887,3 @@
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer></script>
 
 </html>
-

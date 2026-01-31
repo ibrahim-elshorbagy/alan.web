@@ -85,23 +85,23 @@
           blockquote,
           strong,
           b,
-          em { 
-          font-family: {{ $vcard->font_family }} !important;
-        }
-
-      @endif
-      @if ($vcard->font_size)
-        div>h4 {
-          font-size: {
-              {
-              $vcard->font_size
-            }
+          em {
+            font-family: {{ $vcard->font_family }} !important;
           }
 
-          px !important;
-        }
+        @endif
+        @if ($vcard->font_size)
+          div>h4 {
+            font-size: {
+                {
+                $vcard->font_size
+              }
+            }
 
-      @endif
+            px !important;
+          }
+
+        @endif
       @endif
       @if (isset(checkFeature('advanced')->custom_css))
           {
@@ -1390,31 +1390,20 @@
 
         </div>
         <div class="d-flex justify-content-evenly main-section pt-3 pb-3 flex-wrap flex-sm-nowrap">
-          @if (checkFeature('advanced'))
-            @if (checkFeature('advanced')->hide_branding && $vcard->branding == 0)
-              @if ($vcard->made_by)
-                <a @if (!is_null($vcard->made_by_url)) href="{{ $vcard->made_by_url }}" @endif
-                  class="text-center text-decoration-none text-gradient fw-5" target="_blank">
-                  <span class="fs-14">{{ __('messages.made_by') }} {{ $vcard->made_by }}</span>
-                </a>
-              @else
-                <div class="text-center">
-                  <span class="text-gradient fw-5 fs-14">{{ __('messages.made_by') }}
-                    {{ $setting['app_name'] }}</span>
-                </div>
-              @endif
-            @endif
-          @else
+          @if (!checkFeature('advanced') || !checkFeature('advanced')->hide_branding)
+            <a href="{{ url('/') }}" class="text-center text-decoration-none text-gradient" target="_blank">
+              <small>{{ __('messages.made_by') }} {{ $setting['app_name'] }}</small>
+            </a>
+          @elseif ($vcard->branding == 0)
             @if ($vcard->made_by)
               <a @if (!is_null($vcard->made_by_url)) href="{{ $vcard->made_by_url }}" @endif
-                class="text-center text-decoration-none text-gradient fw-5" target="_blank">
-                <span class="fs-14">{{ __('messages.made_by') }} {{ $vcard->made_by }}</span>
+                class="text-center text-decoration-none text-gradient" target="_blank">
+                <small>{{ __('messages.made_by') }} {{ $vcard->made_by }}</small>
               </a>
             @else
-              <div class="text-center">
-                <span class="text-gradient fw-5 fs-14">{{ __('messages.made_by') }}
-                  {{ $setting['app_name'] }}</span>
-              </div>
+              <a href="{{ url('/') }}" class="text-center text-decoration-none text-gradient" target="_blank">
+                <small>{{ __('messages.made_by') }} {{ $setting['app_name'] }}</small>
+              </a>
             @endif
           @endif
           @if (!empty($vcard->privacy_policy) || !empty($vcard->term_condition))
@@ -1899,4 +1888,3 @@
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer></script>
 
 </html>
-

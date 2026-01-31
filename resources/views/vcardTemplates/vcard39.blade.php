@@ -82,16 +82,16 @@
           blockquote,
           strong,
           b,
-          em { 
-          font-family: {{ $vcard->font_family }} !important;
-        }
-      @endif
-      @if ($vcard->font_size)
-        div>h4 {
-          font-size: {{ $vcard->font_size }}px !important;
-        }
+          em {
+            font-family: {{ $vcard->font_family }} !important;
+          }
+        @endif
+        @if ($vcard->font_size)
+          div>h4 {
+            font-size: {{ $vcard->font_size }}px !important;
+          }
 
-      @endif
+        @endif
       @endif
       @if (isset(checkFeature('advanced')->custom_css))
         {!! $vcard->custom_css !!}
@@ -1469,31 +1469,20 @@
 
     {{-- made by --}}
     <div class="d-flex justify-content-evenly w-100 py-2">
-      @if (checkFeature('advanced'))
-        @if (checkFeature('advanced')->hide_branding && $vcard->branding == 0)
-          @if ($vcard->made_by)
-            <a @if (!is_null($vcard->made_by_url)) href="{{ $vcard->made_by_url }}" @endif
-              class="text-center text-decoration-none text-white fw-5" target="_blank">
-              <small>{{ __('messages.made_by') }} {{ $vcard->made_by }}</small>
-            </a>
-          @else
-            <div class="text-center">
-              <small class="text-white fw-5">{{ __('messages.made_by') }}
-                {{ $setting['app_name'] }}</small>
-            </div>
-          @endif
-        @endif
-      @else
+      @if (!checkFeature('advanced') || !checkFeature('advanced')->hide_branding)
+        <a href="{{ url('/') }}" class="text-center text-decoration-none text-white" target="_blank">
+          <small>{{ __('messages.made_by') }} {{ $setting['app_name'] }}</small>
+        </a>
+      @elseif ($vcard->branding == 0)
         @if ($vcard->made_by)
           <a @if (!is_null($vcard->made_by_url)) href="{{ $vcard->made_by_url }}" @endif
-            class="text-center text-decoration-none text-white fw-5" target="_blank">
+            class="text-center text-decoration-none text-white" target="_blank">
             <small>{{ __('messages.made_by') }} {{ $vcard->made_by }}</small>
           </a>
         @else
-          <div class="text-center">
-            <small class="text-white fw-5">{{ __('messages.made_by') }}
-              {{ $setting['app_name'] }}</small>
-          </div>
+          <a href="{{ url('/') }}" class="text-center text-decoration-none text-white" target="_blank">
+            <small>{{ __('messages.made_by') }} {{ $setting['app_name'] }}</small>
+          </a>
         @endif
       @endif
       @if (!empty($vcard->privacy_policy) || !empty($vcard->term_condition))
@@ -1726,4 +1715,3 @@
 </body>
 
 </html>
-

@@ -173,7 +173,11 @@ class VcardRepository extends BaseRepository
             if (isset($input['part']) && $input['part'] == 'advanced') {
                 $input['password'] = isset($input['password']) ? Crypt::encrypt($input['password']) : '';
                 unset($input['password']);
-                $input['branding'] = isset($input['branding']);
+                if (!checkFeature('advanced')->hide_branding) {
+                    $input['branding'] = 0;
+                } else {
+                    $input['branding'] = isset($input['branding']);
+                }
             }
             if (isset($input['part']) && $input['part'] == 'basics') {
                 $input['cover_image_type'] = $input['cover_image_type'] ?? null;

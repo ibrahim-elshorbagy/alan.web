@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+you <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -86,7 +86,7 @@
           blockquote,
           strong,
           b,
-          em { 
+          em {
           font-family: {{ $vcard->font_family }} !important;
         }
       @endif

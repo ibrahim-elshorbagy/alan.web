@@ -336,18 +336,6 @@
               {{ Form::label('company', __('messages.vcard.company') . ':', ['class' => 'form-label']) }}
               {{ Form::text('company', isset($vcard) ? $vcard->company : null, ['class' => 'form-control', 'placeholder' => __('messages.form.company')]) }}
             </div>
-            @if (checkFeature('advanced'))
-              @if (checkFeature('advanced')->hide_branding)
-                <div class="col-lg-6 mb-7">
-                  {{ Form::label('made_by', __('messages.made_by') . ':', ['class' => 'form-label']) }}
-                  {{ Form::text('made_by', isset($vcard) ? $vcard->made_by : null, ['class' => 'form-control', 'placeholder' => __('messages.made_by'), 'disabled' => 'disabled']) }}
-                </div>
-                <div class="col-lg-6 mb-7">
-                  {{ Form::label('made_by_url', __('messages.made_by_url') . ':', ['class' => 'form-label']) }}
-                  {{ Form::text('made_by_url', isset($vcard) ? $vcard->made_by_url : null, ['class' => 'form-control', 'placeholder' => __('messages.made_by_url'), 'disabled' => 'disabled']) }}
-                </div>
-              @endif
-            @endif
             <div class="col-lg-6 mb-7">
               {{ Form::label('job_title', __('messages.vcard.job_title') . ':', ['class' => 'form-label']) }}
               {{ Form::text('job_title', isset($vcard) ? $vcard->job_title : null, ['class' => 'form-control', 'placeholder' => __('messages.form.job')]) }}
@@ -1126,8 +1114,16 @@
 
       @if (checkFeature('advanced')->hide_branding)
         <div class="col-lg-6 mb-7">
+          {{ Form::label('made_by', __('messages.made_by') . ':', ['class' => 'form-label']) }}
+          {{ Form::text('made_by', isset($vcard) ? $vcard->made_by : null, ['class' => 'form-control', 'placeholder' => __('messages.made_by')]) }}
+        </div>
+        <div class="col-lg-6 mb-7">
+          {{ Form::label('made_by_url', __('messages.made_by_url') . ':', ['class' => 'form-label']) }}
+          {{ Form::text('made_by_url', isset($vcard) ? $vcard->made_by_url : null, ['class' => 'form-control', 'placeholder' => __('messages.made_by_url')]) }}
+        </div>
+        <div class="col-lg-6 mb-7">
           <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="branding" name="branding" disabled="disabled"
+            <input class="form-check-input" type="checkbox" id="branding" name="branding"
               {{ $vcard->branding ? 'checked' : '' }}>
             <label class="form-check-label" for="branding">
               {{ __('messages.vcard.remove_branding') }}
