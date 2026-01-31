@@ -2490,6 +2490,13 @@ If you want to redirect your card to the smart business card, you must first go 
     'add_redirect_link' => 'Add Redirect Link',
     'deleted_successfully' => 'Redirect link deleted successfully',
     'deleted_count' => ':count redirect link(s) deleted successfully',
+    'assign_selected' => 'Assign Selected',
+    'please_select_user' => 'Please select a user to assign',
+    'assigned_successfully' => 'Redirect links assigned successfully',
+    'no_links_assigned' => 'No links were assigned',
+    'you_have_selected' => 'You have selected',
+    'items' => 'items',
+    'assign' => 'Assign',
   ],
   'receipts' => [
     'receipts' => 'Receipts',

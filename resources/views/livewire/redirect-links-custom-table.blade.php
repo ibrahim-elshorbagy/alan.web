@@ -316,7 +316,11 @@
           <i class="fas fa-check"></i> {{ __('messages.redirect_links.mark_selected_as_received') }}
         </button>
 
-        @if (!auth()->user()->hasRole('sales'))
+        @if (auth()->user()->hasRole('super_admin'))
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignModal">
+            <i class="fas fa-user-plus"></i> {{ __('messages.redirect_links.assign_selected') }}
+          </button>
+
           <button type="button" class="btn btn-danger"
             @click="if(confirm('{{ __('messages.common.delete_confirm') }}')) { syncAndCall('deleteSelected') }">
             <i class="fas fa-trash"></i> {{ __('messages.common.delete_selected') }}
@@ -715,4 +719,40 @@
       </div>
     @endif
   @endif
-</div>
+
+  {{-- Assignment Modal --}}
+  <div class="modal fade" id="assignModal" tabindex="-1" aria-labelledby="assignModalLabel" aria-hidden="true"
+    wire:ignore.self>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="assignModalLabel">{{ __('messages.redirect_links.assign_selected') }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">{{ __('messages.redirect_links.assigned_to') }}:</label>
+            <select class="form-control form-select" wire:model="assignedUserId">
+              <option value="">{{ __('messages.redirect_links.select_user') }}</option>
+              @foreach ($salesUsers as $salesUser)
+                <option value="{{ $salesUser->id }}">{{ $salesUser->first_name }} {{ $salesUser->last_name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <span
+              x-text="'{{ __('messages.redirect_links.you_have_selected') }} ' + selected.length + ' {{ __('messages.redirect_links.items') }}'"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary"
+            data-bs-dismiss="modal">{{ __('messages.common.cancel') }}</button>
+          <button type="button" class="btn btn-primary" @click="syncAndCall('bulkAssign')" data-bs-dismiss="modal">
+            {{ __('messages.redirect_links.assign') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

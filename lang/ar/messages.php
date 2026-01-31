@@ -2487,6 +2487,13 @@ return [
     'add_redirect_link' => 'إضافة رابط إعادة توجيه',
     'deleted_successfully' => 'تم حذف رابط إعادة التوجيه بنجاح',
     'deleted_count' => 'تم حذف :count رابط (روابط) إعادة توجيه بنجاح',
+    'assign_selected' => 'تعيين المحدد',
+    'please_select_user' => 'يرجى اختيار مستخدم للتعيين',
+    'assigned_successfully' => 'تم تعيين روابط إعادة التوجيه بنجاح',
+    'no_links_assigned' => 'لم يتم تعيين أي روابط',
+    'you_have_selected' => 'لقد قمت بتحديد',
+    'items' => 'عناصر',
+    'assign'=>'تعيين',
   ],
   'receipts' => [
     'receipts' => 'المقبوضات',

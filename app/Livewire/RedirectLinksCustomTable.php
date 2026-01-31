@@ -31,6 +31,9 @@ class RedirectLinksCustomTable extends Component
   // Selected items for bulk actions
   public $selected = [];
 
+  // For bulk assignment
+  public $assignedUserId = '';
+
   // Accordion state - which groups are expanded
   public $expandedGroups = [];
 
@@ -246,6 +249,43 @@ class RedirectLinksCustomTable extends Component
     }
 
     return redirect()->route('redirect-links.mark-selected-received', ['ids' => implode(',', $selectedIds)]);
+  }
+
+  public function bulkAssign()
+  {
+    if (!auth()->user()->hasRole('super_admin')) {
+      session()->flash('error', __('messages.common.unauthorized'));
+      return;
+    }
+
+    $selectedIds = $this->selected;
+    $assignedUserId = $this->assignedUserId;
+
+    if (empty($selectedIds)) {
+      session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    if (empty($assignedUserId)) {
+      session()->flash('error', __('messages.redirect_links.please_select_user'));
+      return;
+    }
+
+    // Update the assigned_id for selected redirect links
+    $updated = RedirectLink::whereIn('id', $selectedIds)->update([
+      'assigned_id' => $assignedUserId,
+    ]);
+
+    if ($updated > 0) {
+      session()->flash('success', __('messages.redirect_links.assigned_successfully') . ' (' . $updated . ' links)');
+    } else {
+      session()->flash('error', __('messages.redirect_links.no_links_assigned'));
+    }
+
+    // Reset selections and assigned user
+    $this->selected = [];
+    $this->assignedUserId = '';
+    $this->resetPage();
   }
 
   public function syncAndRestore()
@@ -726,7 +766,7 @@ class RedirectLinksCustomTable extends Component
 
   public function getSalesUsers()
   {
-    return User::role('sales')->get();
+    return User::role(['sales','super_admin'])->get();
   }
 
   public function getNfcCards()
