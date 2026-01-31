@@ -316,7 +316,7 @@ class ClientRedirectLinkController extends Controller
       }
 
       // STEP 4c: Access denied if not the owner
-      abort(403, 'Access denied');
+      return redirect()->route('login');
     }
 
     // Fallback: Should not reach here

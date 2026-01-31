@@ -126,7 +126,7 @@
               </div>
 
               {{-- Postal Code --}}
-              <div class="row mb-6">
+              {{-- <div class="row mb-6">
                 <label class="col-lg-4 form-label ">{{ __('messages.user.postal_code') . ':' }}</label>
                 <div class="col-lg-8 fv-row fv-plugins-icon-container">
                   {{ Form::text('postal_code', isset($user) && isset($user->address) ? $user->address->postal_code : null, [
@@ -137,10 +137,10 @@
                   ]) }}
                   <div class="fv-plugins-message-container invalid-feedback"></div>
                 </div>
-              </div>
+              </div> --}}
 
               {{-- Identification Number --}}
-              <div class="row mb-6">
+              {{-- <div class="row mb-6">
                 <label class="col-lg-4 form-label ">{{ __('messages.user.identification_number') . ':' }}</label>
                 <div class="col-lg-8 fv-row fv-plugins-icon-container">
                   {{ Form::text(
@@ -155,7 +155,7 @@
                   ) }}
                   <div class="fv-plugins-message-container invalid-feedback"></div>
                 </div>
-              </div>
+              </div> --}}
 
             </div>
             <div class="card-footer d-flex">
