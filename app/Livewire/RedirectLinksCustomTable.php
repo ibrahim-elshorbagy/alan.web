@@ -30,7 +30,6 @@ class RedirectLinksCustomTable extends Component
 
   // Selected items for bulk actions
   public $selected = [];
-  public $selectAll = false;
 
   // Accordion state - which groups are expanded
   public $expandedGroups = [];
@@ -46,13 +45,13 @@ class RedirectLinksCustomTable extends Component
   public function updatingPage()
   {
     // Clear selections when changing pages
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
   }
 
   public function updatingPerPage()
   {
     // Clear selections when changing items per page
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
     $this->resetPage();
   }
 
@@ -62,7 +61,7 @@ class RedirectLinksCustomTable extends Component
     $this->itemsPerGroup = $this->perPage;
     // Reset group pagination to start (so pages don't point to invalid offsets)
     $this->groupPages = [];
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
     $this->resetPage();
   }
 
@@ -79,37 +78,37 @@ class RedirectLinksCustomTable extends Component
 
   public function updatingSearchQuery()
   {
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
     $this->resetPage();
   }
 
   public function updatingStatusFilter()
   {
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
     $this->resetPage();
   }
 
   public function updatingRedirectTypeFilter()
   {
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
     $this->resetPage();
   }
 
   public function updatingCardTypeFilter()
   {
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
     $this->resetPage();
   }
 
   public function updatingAssignedFilter()
   {
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
     $this->resetPage();
   }
 
   public function updatingGroupByFilter()
   {
-    $this->reset(['selected', 'selectAll', 'expandedGroups', 'groupPages']);
+    $this->reset(['selected', 'expandedGroups', 'groupPages']);
     $this->resetPage();
   }
 
@@ -123,62 +122,8 @@ class RedirectLinksCustomTable extends Component
     }
     // When sorting, reset per-group pagination and selections so grouped view stays consistent
     $this->groupPages = [];
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
     $this->resetPage();
-  }
-
-  public function toggleSelectAll()
-  {
-    if ($this->selectAll) {
-      // Only select items on current page, not all items
-      $currentPageItems = $this->getQuery()->paginate($this->perPage);
-      $this->selected = collect($currentPageItems->items())->pluck('id')->map(fn($id) => (string) $id)->toArray();
-    } else {
-      $this->selected = [];
-    }
-  }
-
-  public function toggleGroupSelectAll($groupKey, $items)
-  {
-    // Convert to collection if it's a string (JSON), array, or already a collection
-    if (is_string($items)) {
-      $items = collect(json_decode($items, true));
-    } elseif (is_array($items)) {
-      $items = collect($items);
-    }
-
-    // Get IDs from current page of this group
-    $itemIds = $items->pluck('id')->map(fn($id) => (string) $id)->toArray();
-
-    // Check if all items in this group page are already selected
-    $allSelected = !empty($itemIds) && count(array_intersect($itemIds, $this->selected)) === count($itemIds);
-
-    if ($allSelected) {
-      // Deselect all items from this group page
-      $this->selected = array_values(array_diff($this->selected, $itemIds));
-    } else {
-      // Select all items from this group page
-      $this->selected = array_unique(array_merge($this->selected, $itemIds));
-    }
-  }
-
-  public function updatedSelectAll()
-  {
-    // When selectAll checkbox is toggled, handle the selection
-    if ($this->selectAll) {
-      // User checked the box - select all items on current page
-      if ($this->groupByFilter) {
-        // In grouped view, don't auto-select, let user click specific group checkboxes
-        $this->selectAll = false;
-      } else {
-        // In normal view, select current page items
-        $currentPageItems = $this->getQuery()->paginate($this->perPage);
-        $this->selected = collect($currentPageItems->items())->pluck('id')->map(fn($id) => (string) $id)->toArray();
-      }
-    } else {
-      // User unchecked the box - clear all selections
-      $this->selected = [];
-    }
   }
 
   public function toggleGroup($groupKey)
@@ -193,7 +138,7 @@ class RedirectLinksCustomTable extends Component
       }
     }
     // Clear selections when toggling groups
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
   }
 
   public function nextGroupPage($groupKey)
@@ -203,7 +148,7 @@ class RedirectLinksCustomTable extends Component
     }
     $this->groupPages[$groupKey]++;
     // Clear selections when changing group pages
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
   }
 
   public function prevGroupPage($groupKey)
@@ -215,7 +160,7 @@ class RedirectLinksCustomTable extends Component
       $this->groupPages[$groupKey]--;
     }
     // Clear selections when changing group pages
-    $this->reset(['selected', 'selectAll']);
+    $this->reset(['selected']);
   }
 
   public function getGroupItems($groupKey, $allItems)
@@ -408,17 +353,16 @@ class RedirectLinksCustomTable extends Component
       }
 
       $count = $query->count();
-      
+
       if ($count === 0) {
         session()->flash('error', __('messages.redirect_links.no_eligible_links_to_delete'));
         return;
       }
-      
+
       $query->delete();
 
       // Clear selections
       $this->selected = [];
-      $this->selectAll = false;
 
       session()->flash('success', __('messages.redirect_links.deleted_count', ['count' => $count]));
 

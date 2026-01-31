@@ -1,6 +1,70 @@
 <div x-data="{
-    localSelected: @entangle('selected'),
-    get hasSelected() { return this.localSelected && this.localSelected.length > 0; }
+    selected: [],
+
+    // Check if an item is selected
+    isSelected(id) {
+        return this.selected.includes(String(id));
+    },
+
+    // Toggle a single item selection
+    toggleItem(id) {
+        const strId = String(id);
+        if (this.isSelected(strId)) {
+            this.selected = this.selected.filter(i => i !== strId);
+        } else {
+            this.selected = [...this.selected, strId];
+        }
+    },
+
+    // Select all items from a given array of IDs
+    selectAllItems(ids) {
+        const strIds = ids.map(id => String(id));
+        const allSelected = strIds.every(id => this.selected.includes(id));
+
+        if (allSelected) {
+            // Deselect all these items
+            this.selected = this.selected.filter(id => !strIds.includes(id));
+        } else {
+            // Select all these items (merge with existing)
+            const newSelected = [...new Set([...this.selected, ...strIds])];
+            this.selected = newSelected;
+        }
+    },
+
+    // Check if all items from array are selected
+    allItemsSelected(ids) {
+        if (!ids || ids.length === 0) return false;
+        const strIds = ids.map(id => String(id));
+        return strIds.every(id => this.selected.includes(id));
+    },
+
+    // Check if some (but not all) items are selected
+    someItemsSelected(ids) {
+        if (!ids || ids.length === 0) return false;
+        const strIds = ids.map(id => String(id));
+        const selectedCount = strIds.filter(id => this.selected.includes(id)).length;
+        return selectedCount > 0 && selectedCount < strIds.length;
+    },
+
+    // Clear all selections
+    clearAll() {
+        this.selected = [];
+    },
+
+    // Sync selections to server before action
+    syncAndCall(method) {
+        $wire.set('selected', this.selected).then(() => {
+            $wire.call(method).then(() => {
+                // Clear selections after action completes
+                this.selected = [];
+            });
+        });
+    },
+
+    // Getter for hasSelected
+    get hasSelected() {
+        return this.selected && this.selected.length > 0;
+    }
 }">
   {{-- Loading Indicator --}}
   <div wire:loading.delay class="position-fixed top-50 start-50 translate-middle" style="z-index: 9999;">
@@ -244,24 +308,24 @@
   <div class="d-flex flex-wrap gap-2 mb-3">
     <template x-if="hasSelected">
       <div class="d-flex flex-wrap gap-2">
-        <button type="button" class="btn btn-warning" @click="$wire.exportSelected()">
+        <button type="button" class="btn btn-warning" @click="syncAndCall('exportSelected')">
           <i class="fas fa-file-export"></i> {{ __('messages.common.export_selected') }}
         </button>
 
-        <button type="button" class="btn btn-success" @click="$wire.markSelectedAsReceived()">
+        <button type="button" class="btn btn-success" @click="syncAndCall('markSelectedAsReceived')">
           <i class="fas fa-check"></i> {{ __('messages.redirect_links.mark_selected_as_received') }}
         </button>
 
         @if (!auth()->user()->hasRole('sales'))
           <button type="button" class="btn btn-danger"
-            @click="if(confirm('{{ __('messages.common.delete_confirm') }}')) { $wire.deleteSelected() }"">
+            @click="if(confirm('{{ __('messages.common.delete_confirm') }}')) { syncAndCall('deleteSelected') }">
             <i class="fas fa-trash"></i> {{ __('messages.common.delete_selected') }}
           </button>
         @endif
 
         @if (auth()->user()->hasRole('super_admin'))
-          <button type="button" class="btn btn-info" wire:click="syncAndRestore"
-            wire:confirm="{{ __('messages.redirect_links.restore_confirmation') }}"
+          <button type="button" class="btn btn-info"
+            @click="if(confirm('{{ __('messages.redirect_links.restore_confirmation') }}')) { syncAndCall('syncAndRestore') }"
             data-bs-toggle="tooltip" data-bs-placement="top"
             title="{{ __('messages.redirect_links.restore_selected_tooltip') }}">
             <i class="fas fa-undo"></i> {{ __('messages.redirect_links.restore_selected') }}
@@ -315,7 +379,7 @@
       </div>
       <div class="col-md-{{ auth()->user()->hasRole('sales') ? '4' : '3' }}">
         <div class="stat">
-          <div class="stat-value" x-text="localSelected ? localSelected.length : 0"></div>
+          <div class="stat-value" x-text="selected ? selected.length : 0"></div>
           <div class="stat-label">{{ __('messages.common.selected') }}</div>
         </div>
       </div>
@@ -382,19 +446,15 @@
           <div class="group-accordion-body {{ $isExpanded ? 'show' : '' }}">
             <div class="table-responsive">
               <table class="table table-custom table-striped table-hover mb-0">
-                <thead wire:key="group-header-{{ $groupKey }}-{{ count($selected) }}">
+                <thead>
                   <tr>
                     <th class="text-center" style="width: 40px;">
                       @php
-                        $groupItemIds = $items->pluck('id')->map(fn($id) => (string) $id)->toArray();
-                        $allGroupSelected =
-                            !empty($groupItemIds) &&
-                            !empty($selected) &&
-                            count(array_intersect($groupItemIds, $selected)) === count($groupItemIds);
+                        $groupItemIds = $items->pluck('id')->toArray();
                       @endphp
-                      <input type="checkbox"
-                        wire:click="toggleGroupSelectAll('{{ $groupKey }}', {{ $items->toJson() }})"
-                        @checked($allGroupSelected)>
+                      <input type="checkbox" x-bind:checked="allItemsSelected({{ json_encode($groupItemIds) }})"
+                        x-bind:indeterminate="someItemsSelected({{ json_encode($groupItemIds) }})"
+                        @click="selectAllItems({{ json_encode($groupItemIds) }})">
                     </th>
                     <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('id')">
                       {{ __('messages.redirect_links.serial_number') }}
@@ -440,7 +500,8 @@
                   @foreach ($items as $row)
                     <tr>
                       <td class="text-center">
-                        <input type="checkbox" wire:model.defer="selected" value="{{ $row->id }}">
+                        <input type="checkbox" x-bind:checked="isSelected({{ $row->id }})"
+                          @click="toggleItem({{ $row->id }})">
                       </td>
                       <td class="text-center">
                         @include('admin.redirect_links.columns.serial_number', ['row' => $row])
@@ -523,7 +584,12 @@
         <thead>
           <tr>
             <th class="text-center" style="width: 40px;">
-              <input type="checkbox" wire:model.live="selectAll">
+              @php
+                $pageItemIds = $redirectLinks->pluck('id')->toArray();
+              @endphp
+              <input type="checkbox" x-bind:checked="allItemsSelected({{ json_encode($pageItemIds) }})"
+                x-bind:indeterminate="someItemsSelected({{ json_encode($pageItemIds) }})"
+                @click="selectAllItems({{ json_encode($pageItemIds) }})">
             </th>
             <th class="text-center" style="cursor: pointer;" wire:click="sortBy('id')">
               {{ __('messages.redirect_links.serial_number') }}
@@ -563,7 +629,8 @@
           @forelse ($redirectLinks as $row)
             <tr>
               <td class="text-center">
-                <input type="checkbox" wire:model.defer="selected" value="{{ $row->id }}">
+                <input type="checkbox" x-bind:checked="isSelected({{ $row->id }})"
+                  @click="toggleItem({{ $row->id }})">
               </td>
               <td class="text-center">
                 @include('admin.redirect_links.columns.serial_number', ['row' => $row])
