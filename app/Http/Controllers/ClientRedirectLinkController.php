@@ -258,17 +258,20 @@ class ClientRedirectLinkController extends Controller
   {
     $setting = Setting::whereIn('key', ['email', 'phone', 'prefix_code'])->pluck('value', 'key')->toArray();
 
+    // Whether a visitor is authenticated — views use this to change CTA behaviour
+    $isAuth = Auth::check();
+
     // STEP 1: Check if card has been received by sales
     // If not received yet, the card is not ready for use
     if ($uri->received_status != RedirectLink::RECEIVED_STATUS_RECEIVED) {
-      return view('client.redirect_links.not_received', compact('uri', 'setting'))
+      return view('client.redirect_links.not_received', compact('uri', 'setting', 'isAuth'))
         ->with('info', __('messages.redirect_links.card_not_received_description'));
     }
 
     // STEP 2: Check if the link has been rejected
     // Rejected links should not be accessible
     if ($uri->status == RedirectLink::STATUS_REJECTED) {
-      return view('client.redirect_links.rejected', compact('uri', 'setting'))
+      return view('client.redirect_links.rejected', compact('uri', 'setting', 'isAuth'))
         ->with('info', __('messages.redirect_links.link_rejected_description'));
     }
 
@@ -277,7 +280,7 @@ class ClientRedirectLinkController extends Controller
       // STEP 3a: Check if redirect link URL has been set
       // User needs to configure their redirect destination
       if (empty($uri->redirect_link)) {
-        return view('client.redirect_links.add_link', compact('uri', 'setting'))
+        return view('client.redirect_links.add_link', compact('uri', 'setting', 'isAuth'))
           ->with('info', __('messages.redirect_links.please_add_redirect_link'));
       }
 
@@ -308,7 +311,7 @@ class ClientRedirectLinkController extends Controller
 
       // STEP 4b: User has redeemed but waiting for sales approval
       if ($uri->user_id == Auth::id()) {
-        return view('client.redirect_links.waiting_approval', compact('uri', 'setting'))
+        return view('client.redirect_links.waiting_approval', compact('uri', 'setting', 'isAuth'))
           ->with('info', __('messages.redirect_links.waiting_for_approval'));
       }
 

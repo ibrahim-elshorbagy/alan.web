@@ -2374,7 +2374,7 @@ return [
     'assigned_to' => 'مخصص ل',
     'created_at' => 'تاريخ الإنشاء',
     'updated_at' => 'تاريخ التحديث',
-    'not_redeemed' => 'غير مستخدم',
+    'not_redeemed' => 'بانتظار الموافقة',
     'redeemed' => 'مفعل',
     'rejected' => 'مرفوض',
     'apply_coordinates' => 'تطبيق موضع QR مخصص',

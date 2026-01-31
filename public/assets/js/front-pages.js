@@ -20775,10 +20775,14 @@ listenSubmit("#userProfileEditForm", function () {
     return false;
   }
   if (!isEmailEditProfile($("#isEmailEditProfile").val())) {
-    displayErrorMessage(Lang.get("js.enter_valid_email"));
-    return false;
+    var _emailVal = $.trim($("#isEmailEditProfile").val());
+    if (_emailVal !== '' && !isEmailEditProfile(_emailVal)) {
+      displayErrorMessage(Lang.get("js.enter_valid_email"));
+      return false;
+    }
   }
-  if (!$("#userProfileEditForm").find("#error-msg").hasClass("d-none")) {
+  var $errorMsg = $("#userProfileEditForm").find("#error-msg");
+  if ($errorMsg.length > 0 && !$errorMsg.hasClass("d-none")) {
     return false;
   }
 });

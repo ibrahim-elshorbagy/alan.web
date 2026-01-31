@@ -23,13 +23,19 @@
             <strong>{{ __('messages.redirect_links.redirect_code') }}:</strong> {{ $uri->uri }}
           </div>
           <div class="d-flex justify-content-center gap-3">
-            <a href="mailto:{{ $setting['email'] }}" class="btn btn-primary btn-lg">
-              <i class="fas fa-envelope"></i>
-            </a>
-            <a href="https://wa.me/{{ $setting['prefix_code'] }}{{ $setting['phone'] }}" class="btn btn-success btn-lg"
-              target="_blank">
-              <i class="fab fa-whatsapp"></i>
-            </a>
+            @if (!empty($isAuth) && $isAuth)
+              <a href="mailto:{{ $setting['email'] }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-envelope"></i>
+              </a>
+              <a href="https://wa.me/{{ $setting['prefix_code'] }}{{ $setting['phone'] }}" class="btn btn-success btn-lg"
+                target="_blank">
+                <i class="fab fa-whatsapp"></i>
+              </a>
+            @else
+              <a href="{{ route('login') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-sign-in-alt"></i> {{ __('messages.common.login') }}
+              </a>
+            @endif
           </div>
         </div>
       </div>

@@ -875,7 +875,7 @@ class RedirectLinkController extends Controller
 
   private function generateRandomUri()
   {
-    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters = 'abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ';
     $length = 10;
     $uri = '';
 

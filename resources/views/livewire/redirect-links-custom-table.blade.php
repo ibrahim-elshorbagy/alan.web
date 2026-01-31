@@ -274,7 +274,7 @@
       <i class="fas fa-download"></i> {{ __('messages.common.extract_all') }}
     </a> --}}
 
-    @if (auth()->user()->hasRole('sales'))
+    {{-- @if (auth()->user()->hasRole('sales'))
       <form action="{{ route('redirect-links.mark-all-as-received') }}" method="POST" style="display: inline;">
         @csrf
         <button type="submit" class="btn btn-success" data-bs-toggle="tooltip"
@@ -283,7 +283,7 @@
           {{ __('messages.redirect_links.received_all') }}
         </button>
       </form>
-    @endif
+    @endif --}}
 
     @if (!auth()->user()->hasRole('sales'))
       <a type="button" class="btn btn-primary" href="{{ route('redirect-links.create') }}">
