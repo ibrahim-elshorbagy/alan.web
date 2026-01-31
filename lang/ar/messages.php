@@ -1992,7 +1992,7 @@ return [
   'cover_image_type' => [
     'cover' => 'تغطية',
     'contain' => 'احتواء',
-    'cover_image_type' => 'نوع صورة الغلاف',
+    'cover_image_type' => 'طريقة عرض صورة الغلاق',
   ],
 
   'week_format_type' => [
@@ -2005,7 +2005,7 @@ return [
     'image' => 'صورة',
     'video' => 'فيديو',
     'youtube_link' => 'رابط يوتيوب',
-    'cover_type' => 'نوع الغلاف',
+    'cover_type' => 'نوع ملف تصميم الغلاف',
   ],
 
   'addon' => [
