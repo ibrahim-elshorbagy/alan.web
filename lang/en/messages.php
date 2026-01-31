@@ -2563,4 +2563,32 @@ If you want to redirect your card to the smart business card, you must first go 
     'resetting' => 'Resetting...',
 
   ],
+
+  // Template Editor
+  'template_editor' => [
+    'title' => 'Template Editor',
+    'files' => 'Files',
+    'select_file' => 'Select a file to edit',
+    'no_file' => 'No file selected',
+    'open' => 'Open',
+    'duplicate' => 'Duplicate',
+    'new_file' => 'New File',
+    'new_name' => 'New Name',
+    'directory' => 'Directory',
+    'filename' => 'Filename',
+    'backups' => 'Backups',
+    'file_backups' => 'File Backups',
+    'no_backups' => 'No backups available for this file',
+    'date' => 'Date',
+    'actions' => 'Actions',
+    'restore' => 'Restore',
+    'restore_confirm' => 'Are you sure you want to restore this backup? Your current changes will be backed up first.',
+    'unsaved_changes' => 'You have unsaved changes. Are you sure you want to close this file?',
+    'load_error' => 'Failed to load. Please try again.',
+    'save_error' => 'Failed to save file. Please try again.',
+    'duplicate_error' => 'Failed to duplicate. Please try again.',
+    'file_saved' => 'File saved successfully',
+    'file_created' => 'File created successfully',
+    'backup_restored' => 'Backup restored successfully',
+  ],
 ];

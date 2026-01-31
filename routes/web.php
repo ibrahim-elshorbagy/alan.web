@@ -86,6 +86,7 @@ use App\Http\Controllers\GlobalQrCodeController;
 use App\Http\Controllers\TwofactorAuthenticationController;
 use App\Http\Controllers\WhatsappStoreProductTransactionController;
 use App\Http\Controllers\RedirectLinkController;
+use App\Http\Controllers\TemplateEditorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -573,7 +574,6 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('/download-logo/{id}', [NfcCardOrderController::class, 'downloadLogo'])->name('nfc.download.logo');
       Route::post('nfc-card-tax', [NfcController::class, 'nfcCardTax'])->name('nfc.tax');
       Route::get('nfc-card-tax', [NfcController::class, 'getNfcCardTax'])->name('nfc.tax.get');
-
     });
 
     // Redirect Links Create
@@ -666,6 +666,19 @@ Route::middleware(['freshInstall'])->group(function () {
       )->name('sadmin.change-withdrawal-status');
       //vcards templates
       Route::get('/templates', [VcardController::class, 'template'])->name('sadmin.templates.index');
+
+      // Template Editor (Super Admin Only)
+      Route::prefix('template-editor')->middleware('role:super_admin')->group(function () {
+        Route::get('/', [TemplateEditorController::class, 'index'])->name('template-editor.index');
+        Route::post('/directory-tree', [TemplateEditorController::class, 'getDirectoryTree'])->name('template-editor.directory-tree');
+        Route::post('/file-content', [TemplateEditorController::class, 'getFileContent'])->name('template-editor.file-content');
+        Route::post('/save', [TemplateEditorController::class, 'saveFile'])->name('template-editor.save');
+        Route::post('/duplicate', [TemplateEditorController::class, 'duplicate'])->name('template-editor.duplicate');
+        Route::post('/create-file', [TemplateEditorController::class, 'createFile'])->name('template-editor.create-file');
+        Route::post('/backups', [TemplateEditorController::class, 'getBackups'])->name('template-editor.backups');
+        Route::post('/restore', [TemplateEditorController::class, 'restoreBackup'])->name('template-editor.restore');
+      });
+
       //analytics
       Route::get('/vcard/{vcard}/analytics', [VcardController::class, 'analytics'])->name('sadmin.vcard.analytics');
       //Whatsapp store analytics

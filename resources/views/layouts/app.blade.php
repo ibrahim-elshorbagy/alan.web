@@ -75,6 +75,9 @@
       <link rel="stylesheet" type="text/css" href="{{ mix('assets/css/theme.css') }}">
       <link rel="stylesheet" type="text/css" href="{{ mix('assets/css/lazy-loading.css') }}">
 
+      {{-- Allow pages to push additional CSS --}}
+      @stack('css')
+
       @livewireScripts
       <script src="{{ asset('vendor/rappasoft/livewire-tables/js/laravel-livewire-tables.min.js') }}"></script>
       <script src="{{ asset('vendor/rappasoft/livewire-tables/js/laravel-livewire-tables-thirdparty.min.js') }}"></script>

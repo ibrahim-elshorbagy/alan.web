@@ -75,6 +75,14 @@
     </a>
   </li>
 
+  <li class="nav-item {{ Request::is('sadmin/template-editor*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('template-editor.index') }}">
+      <span class="aside-menu-icon"><i class="fa fa-code icon-color-bs-cyan"></i></span>
+      <span class="aside-menu-title">{{ __('messages.template_editor.title') }}</span>
+    </a>
+  </li>
+
   <li class="nav-item {{ Request::is('sadmin/planSubscription*') ? 'active' : '' }}">
     <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('subscription.cash') }}">
       <span class="aside-menu-icon"><i class="fa fa-money-bill icon-color-bs-green"></i></span>
@@ -109,7 +117,8 @@
   </li>
 
   <li class="nav-item {{ Request::is('sadmin/custom-page*') ? 'active' : '' }}">
-    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('custom.page.index') }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('custom.page.index') }}">
       <span class="aside-menu-icon"><i class="fa-solid fa-file icon-color-bs-teal"></i></span>
       <span class="aside-menu-title">{{ __('messages.custom_page.custom_page') }}</span>
     </a>
