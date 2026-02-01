@@ -256,7 +256,20 @@ class RedirectLinksCustomTable extends Component
       }
     }
 
-    return redirect()->route('redirect-links.mark-selected-received', ['ids' => implode(',', $selectedIds)]);
+    // Update the received status
+    $updated = RedirectLink::whereIn('id', $selectedIds)->update([
+      'received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED,
+      'received_status_changed_by' => auth()->id(),
+      'received_status_changed_at' => now(),
+    ]);
+
+    if ($updated > 0) {
+      session()->flash('success', __('messages.redirect_links.marked_as_received') . ' (' . $updated . ' links)');
+    } else {
+      session()->flash('error', __('messages.redirect_links.no_links_marked'));
+    }
+
+    $this->dispatch('refresh');
   }
 
   public function bulkAssign()
@@ -290,10 +303,12 @@ class RedirectLinksCustomTable extends Component
       session()->flash('error', __('messages.redirect_links.no_links_assigned'));
     }
 
-    // Reset selections and assigned user after successful assignment
-    $this->selected = [];
+    // Reset assigned user after successful assignment
+    // $this->selected = [];
+
     $this->assignedUserId = '';
     $this->resetPage();
+    $this->dispatch('refresh');
   }
 
   public function syncAndRestore()
@@ -319,10 +334,10 @@ class RedirectLinksCustomTable extends Component
     } else {
       session()->flash('error', __('messages.redirect_links.no_links_restored'));
     }
-
     // Clear selections after restore
-    $this->selected = [];
+    // $this->selected = [];
     $this->resetPage();
+    $this->dispatch('refresh');
   }
 
   public function markAsReceived($id)
@@ -778,7 +793,7 @@ class RedirectLinksCustomTable extends Component
 
   public function getSalesUsers()
   {
-    return User::role(['sales','super_admin'])->get();
+    return User::role(['sales', 'super_admin'])->get();
   }
 
   public function getNfcCards()

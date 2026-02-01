@@ -55,8 +55,10 @@
     syncAndCall(method) {
         $wire.set('selected', this.selected).then(() => {
             $wire.call(method).then(() => {
-                // Clear selections after action completes
-                this.selected = [];
+                // Clear selections only after delete action
+                if (method === 'deleteSelected') {
+                    this.selected = [];
+                }
             });
         });
     },
