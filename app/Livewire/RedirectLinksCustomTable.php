@@ -47,14 +47,14 @@ class RedirectLinksCustomTable extends Component
 
   public function updatingPage()
   {
-    // Clear selections when changing pages
-    $this->reset(['selected']);
+    // Keep selections when changing pages - don't clear them
+    // This allows users to select items across multiple pages
   }
 
   public function updatingPerPage()
   {
-    // Clear selections when changing items per page
-    $this->reset(['selected']);
+    // Keep selections when changing items per page
+    // $this->reset(['selected']);
     $this->resetPage();
   }
 
@@ -64,7 +64,8 @@ class RedirectLinksCustomTable extends Component
     $this->itemsPerGroup = $this->perPage;
     // Reset group pagination to start (so pages don't point to invalid offsets)
     $this->groupPages = [];
-    $this->reset(['selected']);
+    // Keep selections
+    // $this->reset(['selected']);
     $this->resetPage();
   }
 
@@ -81,37 +82,44 @@ class RedirectLinksCustomTable extends Component
 
   public function updatingSearchQuery()
   {
-    $this->reset(['selected']);
+    // Keep selections when searching
+    // $this->reset(['selected']);
     $this->resetPage();
   }
 
   public function updatingStatusFilter()
   {
-    $this->reset(['selected']);
+    // Keep selections when filtering
+    // $this->reset(['selected']);
     $this->resetPage();
   }
 
   public function updatingRedirectTypeFilter()
   {
-    $this->reset(['selected']);
+    // Keep selections when filtering
+    // $this->reset(['selected']);
     $this->resetPage();
   }
 
   public function updatingCardTypeFilter()
   {
-    $this->reset(['selected']);
+    // Keep selections when filtering
+    // $this->reset(['selected']);
     $this->resetPage();
   }
 
   public function updatingAssignedFilter()
   {
-    $this->reset(['selected']);
+    // Keep selections when filtering
+    // $this->reset(['selected']);
     $this->resetPage();
   }
 
   public function updatingGroupByFilter()
   {
-    $this->reset(['selected', 'expandedGroups', 'groupPages']);
+    // Keep selections when changing grouping
+    // Only reset expanded groups and group pages
+    $this->reset(['expandedGroups', 'groupPages']);
     $this->resetPage();
   }
 
@@ -123,9 +131,9 @@ class RedirectLinksCustomTable extends Component
       $this->sortField = $field;
       $this->sortDirection = 'asc';
     }
-    // When sorting, reset per-group pagination and selections so grouped view stays consistent
+    // When sorting, reset per-group pagination but keep selections
     $this->groupPages = [];
-    $this->reset(['selected']);
+    // $this->reset(['selected']);
     $this->resetPage();
   }
 
@@ -140,8 +148,8 @@ class RedirectLinksCustomTable extends Component
         $this->groupPages[$groupKey] = 1;
       }
     }
-    // Clear selections when toggling groups
-    $this->reset(['selected']);
+    // Keep selections when toggling groups
+    // $this->reset(['selected']);
   }
 
   public function nextGroupPage($groupKey)
@@ -150,8 +158,8 @@ class RedirectLinksCustomTable extends Component
       $this->groupPages[$groupKey] = 1;
     }
     $this->groupPages[$groupKey]++;
-    // Clear selections when changing group pages
-    $this->reset(['selected']);
+    // Keep selections when changing group pages
+    // $this->reset(['selected']);
   }
 
   public function prevGroupPage($groupKey)
@@ -162,8 +170,8 @@ class RedirectLinksCustomTable extends Component
     if ($this->groupPages[$groupKey] > 1) {
       $this->groupPages[$groupKey]--;
     }
-    // Clear selections when changing group pages
-    $this->reset(['selected']);
+    // Keep selections when changing group pages
+    // $this->reset(['selected']);
   }
 
   public function getGroupItems($groupKey, $allItems)
@@ -282,7 +290,7 @@ class RedirectLinksCustomTable extends Component
       session()->flash('error', __('messages.redirect_links.no_links_assigned'));
     }
 
-    // Reset selections and assigned user
+    // Reset selections and assigned user after successful assignment
     $this->selected = [];
     $this->assignedUserId = '';
     $this->resetPage();
@@ -312,6 +320,7 @@ class RedirectLinksCustomTable extends Component
       session()->flash('error', __('messages.redirect_links.no_links_restored'));
     }
 
+    // Clear selections after restore
     $this->selected = [];
     $this->resetPage();
   }
@@ -401,7 +410,7 @@ class RedirectLinksCustomTable extends Component
 
       $query->delete();
 
-      // Clear selections
+      // Clear selections after delete
       $this->selected = [];
 
       session()->flash('success', __('messages.redirect_links.deleted_count', ['count' => $count]));
@@ -430,6 +439,9 @@ class RedirectLinksCustomTable extends Component
     $this->groupByFilter = '';
     $this->searchQuery = '';
     $this->expandedGroups = [];
+    // Keep selections when resetting filters
+    // Users might want to keep their selections even when clearing filters
+    // $this->selected = [];
     $this->resetPage();
   }
 

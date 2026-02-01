@@ -436,6 +436,7 @@ return [
     'attachment' => 'Attachment',
   ],
   'common' => [
+    'clear_selection' => 'Clear Selection',
     'ask_help' => 'Ask for Help',
     'search' => 'Search...',
     'print' => 'Print',

@@ -2360,6 +2360,7 @@ return [
   ],
 
   'redirect_links' => [
+    'clear_selection' => 'مسح التحديد',
     'mark_all_tooltip' => 'وضع علامة على جميع الروابط كمستلم',
     'title' => 'روابط إعادة التوجيه',
     'id' => 'المعرف',
