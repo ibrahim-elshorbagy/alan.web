@@ -8,7 +8,12 @@
       <div class="card shadow-lg">
         <div class="card-body text-center p-5">
           <div class="mb-4">
-            <i class="fas fa-credit-card fa-5x text-primary"></i>
+            @if ($nfc->nfc_image)
+              <img src="{{ $nfc->nfc_image }}" alt="{{ $nfc->name }}" class="img-fluid rounded"
+                style="max-height: 250px;">
+            @else
+              <i class="fas fa-credit-card fa-5x text-primary"></i>
+            @endif
           </div>
           <h2 class="mb-3">{{ $nfc->name }}</h2>
           <p class="text-muted mb-4">
