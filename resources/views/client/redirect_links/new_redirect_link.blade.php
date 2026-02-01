@@ -9,8 +9,7 @@
         <div class="card-body text-center p-5">
           <div class="mb-4">
             @if ($nfc->nfc_image)
-              <img src="{{ $nfc->nfc_image }}" alt="{{ $nfc->name }}" class="img-fluid rounded"
-                style="max-height: 250px;">
+              <img src="{{ $nfc->nfc_image }}" alt="{{ $nfc->name }}" class="img-fluid rounded" style="max-height: 250px;">
             @else
               <i class="fas fa-credit-card fa-5x text-primary"></i>
             @endif
@@ -21,6 +20,7 @@
           </p>
           <div class="p-4 alert-info mb-4">
             <strong>{{ __('messages.redirect_links.redirect_code') }}:</strong> {{ $uri->uri }}
+            <strong>Serial No: </strong>{{ str_pad($uri->uri, 4, '0', STR_PAD_LEFT) }}
           </div>
           <div class="d-flex justify-content-center gap-3">
             <a href="{{ route('register') }}" class="btn btn-primary btn-lg">
