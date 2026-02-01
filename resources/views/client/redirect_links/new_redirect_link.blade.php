@@ -20,6 +20,7 @@
           </p>
           <div class="p-4 alert-info mb-4">
             <strong>{{ __('messages.redirect_links.redirect_code') }}:</strong> {{ $uri->uri }}
+            <br>
             <strong>Serial No: </strong>{{ str_pad($uri->uri, 4, '0', STR_PAD_LEFT) }}
           </div>
           <div class="d-flex justify-content-center gap-3">
