@@ -20,7 +20,6 @@
             {{ __('messages.redirect_links.new_nfc_card_description') }}
           </p>
           <div class="p-4 alert-info mb-4">
-            <i class="fas fa-info-circle"></i>
             <strong>{{ __('messages.redirect_links.redirect_code') }}:</strong> {{ $uri->uri }}
           </div>
           <div class="d-flex justify-content-center gap-3">
