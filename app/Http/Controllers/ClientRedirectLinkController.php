@@ -300,8 +300,8 @@ class ClientRedirectLinkController extends Controller
         session(['pending_redeem_uri' => $uri->uri]);
 
         if (!Auth::check()) {
-          return redirect()->route('register')
-            ->with('info', __('messages.redirect_links.please_login_to_redeem'));
+          $nfc = $uri->nfc;
+          return view('client.redirect_links.new_redirect_link', compact('uri', 'setting', 'isAuth', 'nfc'));
         }
 
         // User is logged in, redirect to redeem page

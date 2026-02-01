@@ -2416,6 +2416,8 @@ return [
     'card_not_received_description' => 'البطاقة غير جاهزة للتفعيل، يرجى الاتصال بفريق الدعم الفني عبر واتس اب او البريد الإلكتروني.',
     'link_rejected' => 'تم رفض الرابط',
     'link_rejected_description' => 'تم رفض رابط إعادة التوجيه هذا ولا يمكن استخدامه.',
+    'new_nfc_card_available' => 'بطاقة NFC جديدة متاحة',
+    'new_nfc_card_description' => 'هذه البطاقة NFC متاحة للاستبدال. سجل أو قم بتسجيل الدخول للحصول عليها.',
     'search' => 'بحث',
     'edit' => 'تحرير رابط إعادة التوجيه',
     'create' => 'إنشاء رابط إعادة التوجيه',
@@ -2495,7 +2497,7 @@ return [
     'no_links_assigned' => 'لم يتم تعيين أي روابط',
     'you_have_selected' => 'لقد قمت بتحديد',
     'items' => 'عناصر',
-    'assign'=>'تعيين',
+    'assign' => 'تعيين',
   ],
   'receipts' => [
     'receipts' => 'المقبوضات',

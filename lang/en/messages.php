@@ -2377,6 +2377,8 @@ return [
     'card_not_received_description' => 'This NFC card has not been received by sales yet. Please contact your sales representative.',
     'link_rejected' => 'Link Rejected',
     'link_rejected_description' => 'This redirect link has been rejected and cannot be used.',
+    'new_nfc_card_available' => 'New NFC Card Available',
+    'new_nfc_card_description' => 'This NFC card is available for redemption. Register or login to claim it.',
     'mark_all_tooltip' => 'Mark all as received',
     'mark_all_confirm' => 'Are you sure you want to mark all assigned cards as received?',
     'title' => 'Redirect Links',
