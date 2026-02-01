@@ -18,8 +18,8 @@
           <p class="text-muted mb-4">
             {{ __('messages.redirect_links.new_nfc_card_description') }}
           </p>
-          <div class="p-4 alert-info mb-4">
-            <strong>{{ __('messages.redirect_links.redirect_code') }}:</strong> {{ $uri->uri }}
+          <div class="p-4 alert-info mb-4" dir="ltr">
+            <strong>Code:</strong> {{ $uri->uri }}
             <br>
             <strong>Serial No: </strong>{{ str_pad($uri->uri, 4, '0', STR_PAD_LEFT) }}
           </div>
