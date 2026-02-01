@@ -64,6 +64,15 @@
         </ul>
       </div>
     </li>
+    @role(\App\Models\Role::ROLE_ADMIN)
+      <li class="px-xxl-3 px-2">
+        <button id="helpWhatsappBtn" type="button" class="btn btn-success d-flex align-items-center"
+          title="{{ __('messages.common.ask_help') }}">
+          <i class="fab fa-whatsapp fs-4 me-2"></i>
+          <span class="d-none d-md-inline">{{ __('messages.common.ask_help') }}</span>
+        </button>
+      </li>
+    @endrole
     @if (getLogInUser()->theme_mode)
       <li class="px-xxl-3 px-2">
         <a data-turbo="false" href="{{ route('mode.theme') }}" class="dashboard-theme-icons"
@@ -212,3 +221,41 @@
   </ul>
 </header>
 <div class="bg-overlay" id="nav-overly"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('helpWhatsappBtn');
+    if (!btn) return;
+
+    btn.addEventListener('click', function() {
+      fetch("{{ route('admin.help.whatsapp') }}", {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (!data.to_phone) {
+            alert('رقم واتس اب الموقع غير مُعد');
+            return;
+          }
+
+          let parts = [];
+          parts.push('اسم المستخدم: ' + (data.first || '') + (data.second ? ' ' + data.second : ''));
+          if (data.vcard_number) parts.push('رقم بطاقة vCard: ' + data.vcard_number);
+          if (data.redirect_card) parts.push('رقم بطاقة اعادة التوجيه: ' + data.redirect_card);
+          if (data.store_link) parts.push('رابط متجر واتس اب: ' + data.store_link);
+
+          const message = parts.join('\n');
+
+          const phone = data.to_phone.replace(/\D+/g, '');
+          const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(message);
+          window.open(url, '_blank');
+        })
+        .catch(err => {
+          console.error(err);
+          alert('حدث خطأ، الرجاء المحاولة لاحقاً');
+        });
+    });
+  });
+</script>

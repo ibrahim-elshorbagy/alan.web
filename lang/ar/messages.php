@@ -435,6 +435,7 @@ return [
     'attachment' => 'مرفق',
   ],
   'common' => [
+    'ask_help' => 'طلب المساعدة',
     'search' => 'بحث...',
     'print' => 'طباعة',
     'total' => "الإجمالي",

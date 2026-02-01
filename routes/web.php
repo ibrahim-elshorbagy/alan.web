@@ -179,6 +179,8 @@ Route::middleware(['freshInstall'])->group(function () {
     Route::prefix('admin')->middleware('role:admin')->group(function () {
 
       Route::middleware('multi_tenant')->group(function () {
+        // WhatsApp help data endpoint for header button
+        Route::get('/help-whatsapp', [\App\Http\Controllers\HelpController::class, 'whatsappHelpData'])->name('admin.help.whatsapp');
 
         //dashboard chart
         Route::get(
@@ -573,7 +575,6 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('/download-logo/{id}', [NfcCardOrderController::class, 'downloadLogo'])->name('nfc.download.logo');
       Route::post('nfc-card-tax', [NfcController::class, 'nfcCardTax'])->name('nfc.tax');
       Route::get('nfc-card-tax', [NfcController::class, 'getNfcCardTax'])->name('nfc.tax.get');
-
     });
 
     // Redirect Links Create
