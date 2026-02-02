@@ -1776,7 +1776,7 @@ return [
     'admin_updated_successfully' => 'تم تحديث المسؤول بنجاح.',
     'role' => 'الدور - الصلاحيات',
     'super_admin' => 'المدير العام سوبر أدمن',
-    'sales' => 'مندوب مبيعات',
+    'sales' => ' التسويق والمبيعات',
     'cannot_delete_user_with_receipts' => 'لا يمكن حذف المستخدم لديه إيصالات موجودة.',
     'cannot_delete_user_with_active_cards' => 'لا يمكن حذف المستخدم لديه بطاقات نشطة مخصصة.',
     'not_allowed_to_access' => 'غير مسموح بالوصول.',
