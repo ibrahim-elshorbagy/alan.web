@@ -36,7 +36,7 @@
           aria-expanded="false">
           <img src="{{ asset(\App\Models\User::FLAG[getCurrentLanguageName()]) }}" class="me-2"
             style="width: 24px; height: 28px;" />
-          {{ getLanguageByKey(getCurrentLanguageName()) }}
+          <span class="d-none d-md-inline">{{ getLanguageByKey(getCurrentLanguageName()) }}</span>
         </a>
         <ul class="dropdown-menu lang-drop-menu p-2" aria-labelledby="dropdownMenuLink">
           @foreach (getAllLanguageWithFullData() as $key => $language)
@@ -65,9 +65,9 @@
       </div>
     </li>
     @role(\App\Models\Role::ROLE_ADMIN)
-      <li class="px-xxl-3 px-2">
+      <li class="px-xxl-3 px-2 d-none d-md-block">
         <button id="helpWhatsappBtn" type="button" class="btn btn-success d-flex align-items-center"
-          title="{{ __('messages.common.ask_help') }}">
+          title="{{ __('messages.common.ask_help') }}" data-help-whatsapp>
           <i class="fab fa-whatsapp fs-4 me-2"></i>
           <span class="d-none d-md-inline">{{ __('messages.common.ask_help') }}</span>
         </button>
@@ -117,7 +117,7 @@
         </div>
         <button class="btn dropdown-toggle ps-2 pe-0" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
           aria-expanded="false" data-bs-auto-close="outside">
-          {!! getLogInUser()->full_name !!}
+          <span class="d-none d-md-inline">{!! getLogInUser()->full_name !!}</span>
         </button>
         <div class="dropdown-menu py-4 my-2" aria-labelledby="dropdownMenuButton1" data-bs-auto-close="outside"
           style="z-index: 999999">
@@ -154,6 +154,16 @@
                     <i class="fa-solid fa-money-bill icon-color-gray"></i>
                   </span>
                   {{ __('messages.subscription.manage_subscription') }}</a>
+              </li>
+            @endrole
+            @role(\App\Models\Role::ROLE_ADMIN)
+              <li class="px-4 d-md-none">
+                <a href="javascript:void(0)" class="dropdown-item  dashboard-dropdown" data-help-whatsapp>
+                  <span class="dropdown-icon me-2">
+                    <i class="fab fa-whatsapp icon-color-gray"></i>
+                  </span>
+                  {{ __('messages.common.ask_help') }}
+                </a>
               </li>
             @endrole
             @if (is_impersonating() === false)
@@ -213,21 +223,17 @@
         </div>
       </div>
     </li>
-    <li>
-      <button type="button" class="btn px-0 d-block d-xl-none header-btn pb-2">
-        <i class="fa-solid fa-bars fs-1"></i>
-      </button>
-    </li>
+    <!-- Duplicate small-screen hamburger removed to avoid confusion/overflow -->
   </ul>
 </header>
 <div class="bg-overlay" id="nav-overly"></div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const btn = document.getElementById('helpWhatsappBtn');
-    if (!btn) return;
+    const helpButtons = document.querySelectorAll('#helpWhatsappBtn, [data-help-whatsapp]');
+    if (!helpButtons || helpButtons.length === 0) return;
 
-    btn.addEventListener('click', function() {
+    const handler = function() {
       fetch("{{ route('admin.help.whatsapp') }}", {
           headers: {
             'X-Requested-With': 'XMLHttpRequest'
@@ -256,6 +262,10 @@
           console.error(err);
           alert('حدث خطأ، الرجاء المحاولة لاحقاً');
         });
+    };
+
+    helpButtons.forEach(function(btn) {
+      btn.addEventListener('click', handler);
     });
   });
 </script>
