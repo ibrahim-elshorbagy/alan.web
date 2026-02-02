@@ -311,7 +311,8 @@ class ClientRedirectLinkController extends Controller
 
       // STEP 4b: User has redeemed but waiting for sales approval
       if ($uri->user_id == Auth::id()) {
-        return view('client.redirect_links.waiting_approval', compact('uri', 'setting', 'isAuth'))
+        $nfc = $uri->nfc;
+        return view('client.redirect_links.waiting_approval', compact('uri', 'setting', 'isAuth', 'nfc'))
           ->with('info', __('messages.redirect_links.waiting_for_approval'));
       }
 
