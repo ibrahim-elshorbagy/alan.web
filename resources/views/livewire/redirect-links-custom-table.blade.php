@@ -18,18 +18,17 @@
 
     // Select all items from a given array of IDs
     selectAllItems(ids) {
-        const strIds = ids.map(id => String(id));
-        const allSelected = strIds.every(id => this.selected.includes(id));
+      const strIds = ids.map(id => String(id));
+      const allSelected = strIds.every(id => this.selected.includes(id));
 
-        if (allSelected) {
-            // Deselect all these items
-            this.selected = this.selected.filter(id => !strIds.includes(id));
-        } else {
-            // Select all these items (merge with existing)
-            const newSelected = [...new Set([...this.selected, ...strIds])];
-            this.selected = newSelected;
-        }
-    },
+      if (allSelected) {
+          // Deselect all items from this table
+          this.selected = this.selected.filter(id => !strIds.includes(id));
+      } else {
+          // Deselect everything first, then select only this table's items
+          this.selected = [...strIds];
+      }
+  },
 
     // Check if all items from array are selected
     allItemsSelected(ids) {
