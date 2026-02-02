@@ -1235,37 +1235,32 @@ function loadPhoneInput() {
   }
   document.addEventListener('DOMContentLoaded', function () {
     var btn = document.getElementById('installPwaBtn');
-    if (!btn) return;
+    var pwaModal = document.getElementById('pwa-modal');
+    if (!btn && !pwaModal) return;
 
-    // helper to hide the PWA modal reliably across Bootstrap versions
+    // helper to hide the entire PWA modal container
     function hidePwaModal() {
-      var installPwaModal = document.getElementById('pwa-modal');
-      if (!installPwaModal) return;
-      // jQuery + Bootstrap 4
-      if (window.jQuery && typeof $(installPwaModal).modal === 'function') {
-        try {
-          $(installPwaModal).modal('hide');
-        } catch (e) {/* ignore */}
-        return;
+      var modal = document.getElementById('pwa-modal');
+      if (!modal) return;
+
+      // Hide the modal itself
+      modal.style.display = 'none';
+      modal.classList.add('d-none');
+
+      // Also hide the parent container if it exists
+      var parentContainer = modal.parentElement;
+      if (parentContainer && parentContainer.classList.contains('mt-0')) {
+        parentContainer.style.display = 'none';
       }
-      // Bootstrap 5
-      if (window.bootstrap && bootstrap.Modal) {
-        try {
-          var inst = bootstrap.Modal.getInstance(installPwaModal) || new bootstrap.Modal(installPwaModal);
-          inst.hide();
-          return;
-        } catch (e) {/* ignore */}
-      }
-      // Fallback: remove classes/backdrop and hide
-      installPwaModal.classList.remove('show');
-      installPwaModal.style.display = 'none';
+
+      // Clean up any Bootstrap modal artifacts
       document.body.classList.remove('modal-open');
       document.querySelectorAll('.modal-backdrop').forEach(function (b) {
         return b.remove();
       });
     }
     if (isAppInstalled()) {
-      btn.style.display = 'none';
+      if (btn) btn.style.display = 'none';
       hidePwaModal();
       return;
     }
@@ -1282,43 +1277,45 @@ function loadPhoneInput() {
       deferredPrompt = e;
       btn.style.display = 'block';
     }, true);
-    btn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var choice;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
-          case 0:
-            if (deferredPrompt) {
-              _context.next = 2;
-              break;
-            }
-            return _context.abrupt("return");
-          case 2:
-            deferredPrompt.prompt();
-            _context.next = 5;
-            return deferredPrompt.userChoice;
-          case 5:
-            choice = _context.sent;
-            if (choice && choice.outcome === 'accepted') {
-              localStorage.setItem('pwa_installed', '1');
-              btn.style.display = 'none';
-              hidePwaModal();
-            }
-            deferredPrompt = null;
-          case 8:
-          case "end":
-            return _context.stop();
-        }
-      }, _callee);
-    })));
+    if (btn) {
+      btn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var choice;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              if (deferredPrompt) {
+                _context.next = 2;
+                break;
+              }
+              return _context.abrupt("return");
+            case 2:
+              deferredPrompt.prompt();
+              _context.next = 5;
+              return deferredPrompt.userChoice;
+            case 5:
+              choice = _context.sent;
+              if (choice && choice.outcome === 'accepted') {
+                localStorage.setItem('pwa_installed', '1');
+                btn.style.display = 'none';
+                hidePwaModal();
+              }
+              deferredPrompt = null;
+            case 8:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      })));
+    }
     window.addEventListener('appinstalled', function () {
       localStorage.setItem('pwa_installed', '1');
       deferredPrompt = null;
-      btn.style.display = 'none';
+      if (btn) btn.style.display = 'none';
       hidePwaModal();
     });
     window.addEventListener('load', function () {
       if (isAppInstalled()) {
-        btn.style.display = 'none';
+        if (btn) btn.style.display = 'none';
         hidePwaModal();
       }
     });

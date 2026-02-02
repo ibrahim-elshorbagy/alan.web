@@ -1330,34 +1330,32 @@ function loadPhoneInput() {
 
     document.addEventListener('DOMContentLoaded', function() {
         const btn = document.getElementById('installPwaBtn');
-        if (!btn) return;
+        const pwaModal = document.getElementById('pwa-modal');
+        
+        if (!btn && !pwaModal) return;
 
-        // helper to hide the PWA modal reliably across Bootstrap versions
+        // helper to hide the entire PWA modal container
         function hidePwaModal() {
-            const installPwaModal = document.getElementById('pwa-modal');
-            if (!installPwaModal) return;
-            // jQuery + Bootstrap 4
-            if (window.jQuery && typeof $(installPwaModal).modal === 'function') {
-                try { $(installPwaModal).modal('hide'); } catch (e) { /* ignore */ }
-                return;
+            const modal = document.getElementById('pwa-modal');
+            if (!modal) return;
+            
+            // Hide the modal itself
+            modal.style.display = 'none';
+            modal.classList.add('d-none');
+            
+            // Also hide the parent container if it exists
+            const parentContainer = modal.parentElement;
+            if (parentContainer && parentContainer.classList.contains('mt-0')) {
+                parentContainer.style.display = 'none';
             }
-            // Bootstrap 5
-            if (window.bootstrap && bootstrap.Modal) {
-                try {
-                    const inst = bootstrap.Modal.getInstance(installPwaModal) || new bootstrap.Modal(installPwaModal);
-                    inst.hide();
-                    return;
-                } catch (e) { /* ignore */ }
-            }
-            // Fallback: remove classes/backdrop and hide
-            installPwaModal.classList.remove('show');
-            installPwaModal.style.display = 'none';
+            
+            // Clean up any Bootstrap modal artifacts
             document.body.classList.remove('modal-open');
             document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
         }
 
         if (isAppInstalled()) {
-            btn.style.display = 'none';
+            if (btn) btn.style.display = 'none';
             hidePwaModal();
             return;
         }
@@ -1376,28 +1374,30 @@ function loadPhoneInput() {
             btn.style.display = 'block';
         }, true);
 
-        btn.addEventListener('click', async function() {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const choice = await deferredPrompt.userChoice;
-            if (choice && choice.outcome === 'accepted') {
-                localStorage.setItem('pwa_installed', '1');
-                btn.style.display = 'none';
-                hidePwaModal();
-            }
-            deferredPrompt = null;
-        });
+        if (btn) {
+            btn.addEventListener('click', async function() {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const choice = await deferredPrompt.userChoice;
+                if (choice && choice.outcome === 'accepted') {
+                    localStorage.setItem('pwa_installed', '1');
+                    btn.style.display = 'none';
+                    hidePwaModal();
+                }
+                deferredPrompt = null;
+            });
+        }
 
         window.addEventListener('appinstalled', function() {
             localStorage.setItem('pwa_installed', '1');
             deferredPrompt = null;
-            btn.style.display = 'none';
+            if (btn) btn.style.display = 'none';
             hidePwaModal();
         });
 
         window.addEventListener('load', function() {
             if (isAppInstalled()) {
-                btn.style.display = 'none';
+                if (btn) btn.style.display = 'none';
                 hidePwaModal();
             }
         });
