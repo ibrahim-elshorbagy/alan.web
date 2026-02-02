@@ -1235,9 +1235,10 @@ function loadPhoneInput() {
   }
   document.addEventListener('DOMContentLoaded', function () {
     var btn = document.getElementById('installPwaBtn');
-    if (!btn) return;
+    var installPwaModal = document.getElementById('pwa-modal');
+    if (!installPwaModal) return;
     if (isAppInstalled()) {
-      btn.style.display = 'none';
+      installPwaModal.style.display = 'none';
       return;
     }
     var deferredPrompt = null;

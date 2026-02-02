@@ -113,9 +113,9 @@
     <div class="main-content mx-auto w-100 overflow-hidden @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') rtl @endif">
       {{-- Pwa support --}}
       @if (isset($enable_pwa) && $enable_pwa == 1 && !isiOSDevice())
-        <div class="pwa-support mt-0">
+        <div id="pwa-modal" class="pwa-support mt-0">
           <div class="card-wrapper">
-            <div class="pwa-support-content d-flex align-items-center justify-content-center"
+            <div id="pwa-modal" class="pwa-support-content d-flex align-items-center justify-content-center"
               @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
               <div>
                 <h1 class="text-primary pwa-heading">{{ __('messages.pwa.add_to_home_screen') }}</h1>

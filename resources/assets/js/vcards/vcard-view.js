@@ -1330,10 +1330,11 @@ function loadPhoneInput() {
 
     document.addEventListener('DOMContentLoaded', function() {
         const btn = document.getElementById('installPwaBtn');
-        if (!btn) return;
+        const installPwaModal = document.getElementById('pwa-modal');
+        if (!installPwaModal) return;
 
         if (isAppInstalled()) {
-            btn.style.display = 'none';
+          installPwaModal.style.display = 'none';
             return;
         }
 

@@ -123,7 +123,7 @@
       {{-- Pwa support --}}
       @if (isset($enable_pwa) && $enable_pwa == 1 && !isiOSDevice())
         <div class="mt-0">
-          <div class="pwa-support d-flex align-items-center justify-content-center">
+          <div id="pwa-modal" class="pwa-support d-flex align-items-center justify-content-center">
             <div>
               <h1 class="text-start pwa-heading">{{ __('messages.pwa.add_to_home_screen') }}</h1>
               <p class="text-start pwa-text text-dark">{{ __('messages.pwa.pwa_description') }} </p>
