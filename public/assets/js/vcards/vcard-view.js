@@ -1235,10 +1235,38 @@ function loadPhoneInput() {
   }
   document.addEventListener('DOMContentLoaded', function () {
     var btn = document.getElementById('installPwaBtn');
-    var installPwaModal = document.getElementById('pwa-modal');
-    if (!installPwaModal) return;
-    if (isAppInstalled()) {
+    if (!btn) return;
+
+    // helper to hide the PWA modal reliably across Bootstrap versions
+    function hidePwaModal() {
+      var installPwaModal = document.getElementById('pwa-modal');
+      if (!installPwaModal) return;
+      // jQuery + Bootstrap 4
+      if (window.jQuery && typeof $(installPwaModal).modal === 'function') {
+        try {
+          $(installPwaModal).modal('hide');
+        } catch (e) {/* ignore */}
+        return;
+      }
+      // Bootstrap 5
+      if (window.bootstrap && bootstrap.Modal) {
+        try {
+          var inst = bootstrap.Modal.getInstance(installPwaModal) || new bootstrap.Modal(installPwaModal);
+          inst.hide();
+          return;
+        } catch (e) {/* ignore */}
+      }
+      // Fallback: remove classes/backdrop and hide
+      installPwaModal.classList.remove('show');
       installPwaModal.style.display = 'none';
+      document.body.classList.remove('modal-open');
+      document.querySelectorAll('.modal-backdrop').forEach(function (b) {
+        return b.remove();
+      });
+    }
+    if (isAppInstalled()) {
+      btn.style.display = 'none';
+      hidePwaModal();
       return;
     }
     var deferredPrompt = null;
@@ -1273,6 +1301,7 @@ function loadPhoneInput() {
             if (choice && choice.outcome === 'accepted') {
               localStorage.setItem('pwa_installed', '1');
               btn.style.display = 'none';
+              hidePwaModal();
             }
             deferredPrompt = null;
           case 8:
@@ -1285,9 +1314,13 @@ function loadPhoneInput() {
       localStorage.setItem('pwa_installed', '1');
       deferredPrompt = null;
       btn.style.display = 'none';
+      hidePwaModal();
     });
     window.addEventListener('load', function () {
-      if (isAppInstalled()) btn.style.display = 'none';
+      if (isAppInstalled()) {
+        btn.style.display = 'none';
+        hidePwaModal();
+      }
     });
   });
 })();

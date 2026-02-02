@@ -1330,11 +1330,35 @@ function loadPhoneInput() {
 
     document.addEventListener('DOMContentLoaded', function() {
         const btn = document.getElementById('installPwaBtn');
-        const installPwaModal = document.getElementById('pwa-modal');
-        if (!installPwaModal) return;
+        if (!btn) return;
+
+        // helper to hide the PWA modal reliably across Bootstrap versions
+        function hidePwaModal() {
+            const installPwaModal = document.getElementById('pwa-modal');
+            if (!installPwaModal) return;
+            // jQuery + Bootstrap 4
+            if (window.jQuery && typeof $(installPwaModal).modal === 'function') {
+                try { $(installPwaModal).modal('hide'); } catch (e) { /* ignore */ }
+                return;
+            }
+            // Bootstrap 5
+            if (window.bootstrap && bootstrap.Modal) {
+                try {
+                    const inst = bootstrap.Modal.getInstance(installPwaModal) || new bootstrap.Modal(installPwaModal);
+                    inst.hide();
+                    return;
+                } catch (e) { /* ignore */ }
+            }
+            // Fallback: remove classes/backdrop and hide
+            installPwaModal.classList.remove('show');
+            installPwaModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+        }
 
         if (isAppInstalled()) {
-          installPwaModal.style.display = 'none';
+            btn.style.display = 'none';
+            hidePwaModal();
             return;
         }
 
@@ -1359,6 +1383,7 @@ function loadPhoneInput() {
             if (choice && choice.outcome === 'accepted') {
                 localStorage.setItem('pwa_installed', '1');
                 btn.style.display = 'none';
+                hidePwaModal();
             }
             deferredPrompt = null;
         });
@@ -1367,10 +1392,14 @@ function loadPhoneInput() {
             localStorage.setItem('pwa_installed', '1');
             deferredPrompt = null;
             btn.style.display = 'none';
+            hidePwaModal();
         });
 
         window.addEventListener('load', function() {
-            if (isAppInstalled()) btn.style.display = 'none';
+            if (isAppInstalled()) {
+                btn.style.display = 'none';
+                hidePwaModal();
+            }
         });
     });
 })();
