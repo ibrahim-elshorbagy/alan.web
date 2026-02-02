@@ -2529,6 +2529,7 @@ return [
     'creditor' => 'دائن',
     'total_regular_selling_price' => 'اجمالي سعر البيع الاعتيادي',
     'total_selling_price_for_representative' => 'اجمالي سعر البيع للمندوب',
+    'cannot_delete_redeemed' => 'لا يمكن حذف رابط إعادة توجيه مفعل',
   ],
 
   'verify_phone' => [

@@ -58,6 +58,22 @@ class ClientRedirectLinksTable extends LivewireTableComponent
     return RedirectLink::query()->where('user_id', auth()->id())->with(['nfc']);
   }
 
+  public function delete($id)
+  {
+    $redirectLink = RedirectLink::where('user_id', auth()->id())->findOrFail($id);
+
+
+    // Set user_id to null to "delete" from user's account, making it available for sales again
+    $redirectLink->update([
+      'user_id' => null,
+      'status' => RedirectLink::STATUS_NOT_REDEEMED,
+      'status_changed_by' => auth()->id(),
+      'status_changed_at' => now(),
+    ]);
+
+    session()->flash('success', __('messages.redirect_links.deleted'));
+    $this->dispatch('refresh');
+  }
   public function resetPageTable($pageName = 'client-redirect-links-table')
   {
     $rowsPropertyData = $this->getRows()->toArray();

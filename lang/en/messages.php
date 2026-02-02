@@ -2532,6 +2532,7 @@ If you want to redirect your card to the smart business card, you must first go 
     'creditor' => 'Creditor',
     'total_regular_selling_price' => 'Total Regular Selling Price',
     'total_selling_price_for_representative' => 'Total Selling Price for Representative',
+    'cannot_delete_redeemed' => 'Cannot delete a redeemed redirect link',
 
   ],
   'verify_phone' => [
