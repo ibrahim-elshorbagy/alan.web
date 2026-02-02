@@ -1042,7 +1042,7 @@
                   <div class="position-relative">
                     {{ Form::text('date', null, [
                         'class' => 'form-control date appointment-input
-                                                                                                                                                                                                                    text-start',
+                                                                                                                                                                                                                                                            text-start',
                         'placeholder' => __('messages.form.pick_date'),
                         'id' => 'pickUpDate',
                     ]) }}
@@ -1876,18 +1876,6 @@
 </script>
 <script>
   let deferredPrompt = null;
-  window.addEventListener("beforeinstallprompt", (event) => {
-    /* event.preventDefault(); */
-    deferredPrompt = event;
-    document.getElementById("installPwaBtn").style.display = "block";
-  });
-  document.getElementById("installPwaBtn").addEventListener("click", async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    }
-  });
 </script>
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer></script>
 

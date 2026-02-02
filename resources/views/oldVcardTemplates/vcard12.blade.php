@@ -76,15 +76,15 @@
           blockquote,
           strong,
           b,
-          em { 
-          font-family: {{ $vcard->font_family }} !important;
-        }
-      @endif
-      @if ($vcard->font_size)
-        div>h4 {
-          font-size: {{ $vcard->font_size }}px !important;
-        }
-      @endif
+          em {
+            font-family: {{ $vcard->font_family }} !important;
+          }
+        @endif
+        @if ($vcard->font_size)
+          div>h4 {
+            font-size: {{ $vcard->font_size }}px !important;
+          }
+        @endif
       @endif
       @if (isset(checkFeature('advanced')->custom_css))
         {!! $vcard->custom_css !!}
@@ -1846,20 +1846,7 @@
 </script>
 <script>
   let deferredPrompt = null;
-  window.addEventListener("beforeinstallprompt", (event) => {
-    /* event.preventDefault(); */
-    deferredPrompt = event;
-    document.getElementById("installPwaBtn").style.display = "block";
-  });
-  document.getElementById("installPwaBtn").addEventListener("click", async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    }
-  });
 </script>
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer></script>
 
 </html>
-

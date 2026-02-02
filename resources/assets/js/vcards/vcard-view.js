@@ -1321,3 +1321,55 @@ function loadPhoneInput() {
         });
     }
 }
+
+// PWA install prompt handling: hide install button when app is installed or running standalone
+(function() {
+    function isAppInstalled() {
+        return window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || localStorage.getItem('pwa_installed') === '1';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('installPwaBtn');
+        if (!btn) return;
+
+        if (isAppInstalled()) {
+            btn.style.display = 'none';
+            return;
+        }
+
+        let deferredPrompt = null;
+        // Use a capturing listener and stopImmediatePropagation to prevent duplicate handlers
+        window.addEventListener('beforeinstallprompt', (e) => {
+            if (isAppInstalled()) return;
+            e.preventDefault();
+            try {
+                e.stopImmediatePropagation();
+            } catch (err) {
+                // ignore
+            }
+            deferredPrompt = e;
+            btn.style.display = 'block';
+        }, true);
+
+        btn.addEventListener('click', async function() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const choice = await deferredPrompt.userChoice;
+            if (choice && choice.outcome === 'accepted') {
+                localStorage.setItem('pwa_installed', '1');
+                btn.style.display = 'none';
+            }
+            deferredPrompt = null;
+        });
+
+        window.addEventListener('appinstalled', function() {
+            localStorage.setItem('pwa_installed', '1');
+            deferredPrompt = null;
+            btn.style.display = 'none';
+        });
+
+        window.addEventListener('load', function() {
+            if (isAppInstalled()) btn.style.display = 'none';
+        });
+    });
+})();

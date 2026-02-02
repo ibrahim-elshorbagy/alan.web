@@ -72,10 +72,10 @@
           blockquote,
           strong,
           b,
-          em { 
-          font-family: {{ $whatsappStore->font_family }} !important;
-        }
-      @endif
+          em {
+            font-family: {{ $whatsappStore->font_family }} !important;
+          }
+        @endif
       @endif
 
       @if ($whatsappStore->font_size)
@@ -1086,18 +1086,6 @@
 </script>
 <script>
   let deferredPrompt = null;
-  window.addEventListener("beforeinstallprompt", (event) => {
-    /* event.preventDefault(); */
-    deferredPrompt = event;
-    document.getElementById("installPwaBtn").style.display = "block";
-  });
-  document.getElementById("installPwaBtn").addEventListener("click", async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    }
-  });
 </script>
 <script>
   let defaultCountryCodeValue = "{{ getSuperAdminSettingValue('default_country_code') }}"
@@ -1109,4 +1097,3 @@
 </script>
 
 </html>
-

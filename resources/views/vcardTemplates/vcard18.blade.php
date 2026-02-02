@@ -1521,8 +1521,8 @@
                   </div>
                 </div>
               </a>
-              <a href="https://wa.me/?text={{ $shareUrl }}" target="_blank" class="text-decoration-none share"
-                title="Whatsapp">
+              <a href="https://wa.me/?text={{ $shareUrl }}" target="_blank"
+                class="text-decoration-none share" title="Whatsapp">
                 <div class="row">
                   <div class="col-2">
                     <i class="fab fa-whatsapp fa-2x" style="color: limegreen"></i>
@@ -1770,18 +1770,6 @@
 </script>
 <script>
   let deferredPrompt = null;
-  window.addEventListener("beforeinstallprompt", (event) => {
-    /* event.preventDefault(); */
-    deferredPrompt = event;
-    document.getElementById("installPwaBtn").style.display = "block";
-  });
-  document.getElementById("installPwaBtn").addEventListener("click", async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    }
-  });
 </script>
 <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>

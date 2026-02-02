@@ -53,51 +53,37 @@
       href="https://fonts.googleapis.com/css2?family={{ urlencode($vcard->font_family) }}:wght@400;500;600;700&display=swap{{ in_array($vcard->font_family, ['Tajawal', 'Cairo', 'Amiri', 'Noto Sans Arabic', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Scheherazade', 'Lateef', 'Harmattan', 'Reem Kufi', 'Jomhuria', 'Mada', 'Lemonada', 'Zain']) ? '&subset=arabic' : '' }}">
   @endif
   @if ($vcard->font_family || $vcard->font_size || $vcard->custom_css)
-    <style>
-      @if (checkFeature('custom-fonts'))
-        @if ($vcard->font_family)
-          body,
-          body *,
-          button,
-          h1,
-          h2,
-          h3,
-          h4,
-          h5,
-          h6,
-          p,
-          div,
-          span,
-          a,
-          input,
-          textarea,
-          select,
-          label,
-          li,
-          ul,
-          ol,
-          table,
-          th,
-          td,
-          blockquote,
-          strong,
-          b,
-          em {
-            font-family: {{ $vcard->font_family }} !important;
-          }
+    <script></script>
+    a,
+    input,
+    textarea,
+    select,
+    label,
+    li,
+    ul,
+    ol,
+    table,
+    th,
+    td,
+    blockquote,
+    strong,
+    b,
+    em {
+    font-family: {{ $vcard->font_family }} !important;
+    }
 
-        @endif
-        @if ($vcard->font_size)
-          div>h4 {
-            font-size: {{ $vcard->font_size }}px !important;
-          }
+  @endif
+  @if ($vcard->font_size)
+    div>h4 {
+    font-size: {{ $vcard->font_size }}px !important;
+    }
 
-        @endif
-      @endif
-      @if (isset(checkFeature('advanced')->custom_css))
-        {!! $vcard->custom_css !!}
-      @endif
-    </style>
+  @endif
+  @endif
+  @if (isset(checkFeature('advanced')->custom_css))
+    {!! $vcard->custom_css !!}
+  @endif
+  </style>
   @endif
 </head>
 
