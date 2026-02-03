@@ -58,7 +58,13 @@ class ClientRedirectLinkController extends Controller
       'background_color' => \Spatie\Color\Hex::fromString($customQrCode['background_color'])->toRgb(),
     ];
 
-    return view('client.redirect_links.edit', compact('redirectLink', 'customQrCode', 'qrcodeColor'));
+    // Get user's vCards for selection (only if redirect type is Website/vCard - type 1)
+    $userVCards = [];
+    if ($redirectLink->redirect_link_type == 1) {
+      $userVCards = \App\Models\Vcard::where('tenant_id', $tenantId)->get();
+    }
+
+    return view('client.redirect_links.edit', compact('redirectLink', 'customQrCode', 'qrcodeColor', 'userVCards'));
   }
 
   public function update(Request $request, $id)

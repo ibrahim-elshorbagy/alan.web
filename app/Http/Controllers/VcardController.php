@@ -192,6 +192,23 @@ class VcardController extends AppBaseController
       }
     }
 
+    // Automatically find the latest redirect link of type 1 (Website/vCard) without redirect_link value
+    $redirectLink = \App\Models\RedirectLink::where('user_id', $user->id)
+      ->where('redirect_link_type', 1)
+      ->where(function ($query) {
+        $query->whereNull('redirect_link')
+          ->orWhere('redirect_link', '');
+      })
+      ->orderBy('created_at', 'desc')
+      ->first();
+
+    if ($redirectLink) {
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+      $redirectLink->update(['redirect_link' => $vcardUrl]);
+      Flash::success(__('messages.redirect_links.vcard_linked_successfully'));
+      return redirect(route('client.redirect-links.edit', $redirectLink->id));
+    }
+
     return redirect(route('vcards.edit', $vcard->id));
   }
 

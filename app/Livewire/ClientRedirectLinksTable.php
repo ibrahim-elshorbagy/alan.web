@@ -55,7 +55,7 @@ class ClientRedirectLinksTable extends LivewireTableComponent
 
   public function builder(): Builder
   {
-    return RedirectLink::query()->where('user_id', auth()->id())->with(['nfc']);
+    return RedirectLink::query()->where('user_id', auth()->id())->with(['nfc'])->select('redirect_links.*');
   }
 
   public function delete($id)

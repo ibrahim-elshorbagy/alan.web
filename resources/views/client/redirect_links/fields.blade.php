@@ -23,11 +23,48 @@
     <div class="col-12 mb-4">
       <small class="text-muted">{!! nl2br(__('messages.redirect_links.website_redirect_note')) !!}</small>
     </div>
+
+    @if (isset($userVCards) && count($userVCards) > 0)
+      <div class="col-12 mb-4">
+        <div class="alert alert-info">
+          <strong>{{ __('messages.redirect_links.vcard_redirect_info') }}</strong>
+          <p class="mb-2 mt-2">{{ __('messages.redirect_links.select_existing_vcard') }}:</p>
+        </div>
+        <div class="list-group">
+          @foreach ($userVCards as $vcard)
+            <a href="#" class="list-group-item list-group-item-action"
+              onclick="event.preventDefault(); document.getElementById('redirect_link').value = '{{ route('vcard.show', ['alias' => $vcard->url_alias]) }}';">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ $vcard->name }}</h5>
+                <small>{{ $vcard->occupation }}</small>
+              </div>
+              <p class="mb-1 text-muted small">{{ route('vcard.show', ['alias' => $vcard->url_alias]) }}</p>
+            </a>
+          @endforeach
+        </div>
+        <div class="mt-3">
+          <a href="{{ route('vcards.create') }}" class="btn btn-success">
+            <i class="fas fa-plus"></i> {{ __('messages.redirect_links.create_new_vcard') }}
+          </a>
+        </div>
+      </div>
+    @else
+      <div class="col-12 mb-4">
+        <div class="alert alert-warning">
+          <strong>{{ __('messages.redirect_links.no_vcards_available') }}</strong>
+          <p class="mb-2 mt-2">{{ __('messages.redirect_links.vcard_redirect_note') }}</p>
+          <a href="{{ route('vcards.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {{ __('messages.redirect_links.create_new_vcard') }}
+          </a>
+        </div>
+      </div>
+    @endif
   @endif
+
   <div class="col-lg-6">
     <div class="mb-5">
       {{ Form::label('redirect_link', __('messages.redirect_links.redirect_link') . ':', ['class' => 'form-label']) }}
-      {{ Form::text('redirect_link', isset($redirectLink) ? $redirectLink->redirect_link : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.redirect_link'), 'disabled' => isset($redirectLink) && $redirectLink->status == 2]) }}
+      {{ Form::text('redirect_link', isset($redirectLink) ? $redirectLink->redirect_link : null, ['class' => 'form-control', 'id' => 'redirect_link', 'placeholder' => __('messages.redirect_links.redirect_link'), 'disabled' => isset($redirectLink) && $redirectLink->status == 2]) }}
       <small class="text-muted">{{ __('messages.redirect_links.valid_url_examples') }}<br>
         https://www.example.com<br>
         http://example.com</small>
