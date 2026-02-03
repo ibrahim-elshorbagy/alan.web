@@ -26,7 +26,7 @@
 
     @if (isset($userVCards) && count($userVCards) > 0)
       <div class="col-12 mb-4">
-        <div class="alert alert-info">
+        <div class="p-4 my-4 rounded alert-info">
           <strong>{{ __('messages.redirect_links.vcard_redirect_info') }}</strong>
           <p class="mb-2 mt-2">{{ __('messages.redirect_links.select_existing_vcard') }}:</p>
         </div>
@@ -42,11 +42,11 @@
             </a>
           @endforeach
         </div>
-        <div class="mt-3">
+        {{-- <div class="mt-3">
           <a href="{{ route('vcards.create') }}" class="btn btn-success">
             <i class="fas fa-plus"></i> {{ __('messages.redirect_links.create_new_vcard') }}
           </a>
-        </div>
+        </div> --}}
       </div>
     @else
       <div class="col-12 mb-4">
