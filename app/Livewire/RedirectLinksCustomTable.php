@@ -74,8 +74,8 @@ class RedirectLinksCustomTable extends Component
     // Ensure itemsPerGroup follows initial perPage value
     $this->itemsPerGroup = $this->perPage;
 
-    // Auto-set grouping by card type for super admin
-    if (auth()->user()->hasRole('super_admin')) {
+    // Auto-set grouping by card type for super admin and sales
+    if (auth()->user()->hasRole(['super_admin', 'sales'])) {
       $this->groupByFilter = 'nfc_card';
     }
   }
@@ -548,7 +548,7 @@ class RedirectLinksCustomTable extends Component
 
   public function getGroupedData()
   {
-    if ($this->groupByFilter === '' || !auth()->user()->hasRole('super_admin')) {
+    if ($this->groupByFilter === '' || !in_array($this->groupByFilter, $this->getAllowedGroupByOptions())) {
       return null;
     }
 
@@ -806,6 +806,15 @@ class RedirectLinksCustomTable extends Component
     return RedirectLinkTypeEnum::cases();
   }
 
+  public function getAllowedGroupByOptions()
+  {
+    $options = ['redirect_type', 'nfc_card'];
+    if (auth()->user()->hasRole('super_admin')) {
+      $options[] = 'sales_rep';
+    }
+    return $options;
+  }
+
   public function render()
   {
     $groupedData = $this->getGroupedData();
@@ -818,6 +827,7 @@ class RedirectLinksCustomTable extends Component
       'salesUsers' => $this->getSalesUsers(),
       'nfcCards' => $this->getNfcCards(),
       'redirectTypes' => $this->getRedirectTypes(),
+      'allowedGroupByOptions' => $this->getAllowedGroupByOptions(),
       'totalPurchasePrice' => $this->getTotalPurchasePrice(),
       'totalSalesPrice' => $this->getTotalSalesPrice(),
       'totalCount' => $this->getTotalCount(),

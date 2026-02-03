@@ -385,15 +385,20 @@
         <input type="date" class="form-control" wire:model.defer="dateToFilter" wire:change="$refresh">
       </div>
 
-      {{-- Group By Filter (only for super admin) --}}
-      @if (auth()->user()->hasRole('super_admin'))
+      {{-- Group By Filter --}}
+      @if (count($allowedGroupByOptions) > 0)
         <div class="col-md-2 col-sm-6 col-12">
           <label class="form-label small mb-1">{{ __('messages.redirect_links.group_by') }}</label>
           <select class="form-control form-select" wire:model.live="groupByFilter">
             <option value="">{{ __('messages.redirect_links.no_grouping') }}</option>
-            <option value="redirect_type">{{ __('messages.redirect_links.redirect_type') }}</option>
-            <option value="nfc_card">{{ __('messages.redirect_links.card_type') }}</option>
-            <option value="sales_rep">{{ __('messages.redirect_links.assigned_to') }}</option>
+            @foreach($allowedGroupByOptions as $option)
+              <option value="{{ $option }}">
+                @if($option == 'redirect_type') {{ __('messages.redirect_links.redirect_type') }}
+                @elseif($option == 'nfc_card') {{ __('messages.redirect_links.card_type') }}
+                @elseif($option == 'sales_rep') {{ __('messages.redirect_links.assigned_to') }}
+                @endif
+              </option>
+            @endforeach
           </select>
         </div>
       @endif
