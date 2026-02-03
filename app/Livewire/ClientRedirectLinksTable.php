@@ -69,6 +69,7 @@ class ClientRedirectLinksTable extends LivewireTableComponent
       'status' => RedirectLink::STATUS_NOT_REDEEMED,
       'status_changed_by' => auth()->id(),
       'status_changed_at' => now(),
+      'redirect_link' => null,
     ]);
 
     session()->flash('success', __('messages.redirect_links.deleted'));
