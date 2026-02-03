@@ -2406,7 +2406,7 @@ return [
     'vcard_redirect_note' => 'يمكنك إنشاء بطاقة vCard جديدة أو الاختيار من بطاقاتك الموجودة للربط بهذا التوجيه.',
     'select_existing_vcard' => 'اختر من بطاقاتك الموجودة',
     'no_vcards_available' => 'ليس لديك أي بطاقات vCard بعد',
-    'create_new_vcard' => 'إنشاء بطاقة vCard جديدة',
+    'create_new_vcard' => 'نشاء وربط بطاقة vCard جديدة',
     'vcard_created_successfully' => 'تم إنشاء بطاقة vCard بنجاح وربطها بالتوجيه',
     'vcard_linked_successfully' => 'تم إنشاء بطاقة vCard وربطها برابط إعادة التوجيه بنجاح',
     'vcard_creation_failed' => 'فشل إنشاء بطاقة vCard',
