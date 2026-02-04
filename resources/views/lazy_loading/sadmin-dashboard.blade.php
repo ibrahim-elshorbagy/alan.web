@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-12 mb-4">
         <div class="row">
-          @for ($i = 0; $i <= 4; $i++)
+          @for ($i = 0; $i < 4; $i++)
             <div class="col-xxl-3 col-xl-3 col-sm-6 widget">
               <div
                 class="skeleton shadow-md rounded-10  px-5 py-10 d-flex align-items-center justify-content-between my-sm-3 my-2">
