@@ -59,6 +59,9 @@ class HelpController extends Controller
       'redirect_card' => $redirectCard,
       'store_link' => $storeLink,
       'to_phone' => $toPhone,
+      'full_name' => $user->full_name,
+      'email' => $user->email,
+      'mobile' => $user->contact,
     ]);
   }
 }

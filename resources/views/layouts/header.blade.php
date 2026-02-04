@@ -246,13 +246,13 @@
             return;
           }
 
-          let parts = [];
-          parts.push('اسم المستخدم: ' + (data.first || '') + (data.second ? ' ' + data.second : ''));
-          if (data.vcard_number) parts.push('رقم بطاقة vCard: ' + data.vcard_number);
-          if (data.redirect_card) parts.push('رقم بطاقة اعادة التوجيه: ' + data.redirect_card);
-          if (data.store_link) parts.push('رابط متجر واتس اب: ' + data.store_link);
+          const message = `مرحبا، اريد المساعدة، وهذه معلومات اشتراكي
 
-          const message = parts.join('\n');
+اسم المستخدم: ${data.full_name || ''}
+
+رقم الموبايل: ${data.mobile || 'المستخدم في التسجيل ان وجد'}
+
+الايميل: ${data.email || 'المستخدم في التسجيل ان وجد'}`;
 
           const phone = data.to_phone.replace(/\D+/g, '');
           const url = 'https://wa.me/' + phone + '?text=' + encodeURIComponent(message);
