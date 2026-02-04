@@ -89,7 +89,7 @@
     </div>
   </div>
 
-  @if (isset($redirectLink) && $redirectLink->histories->isNotEmpty())
+  @if (auth()->user()->hasRole('super_admin') &&  isset($redirectLink) && $redirectLink->histories->isNotEmpty())
     {{-- History Section - Only for Super Admin --}}
     <div class="col-12">
       <div class="mb-5">
