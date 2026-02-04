@@ -45,15 +45,6 @@
       @else
         {{ Form::select('status', [0 => __('messages.redirect_links.not_redeemed'), 1 => __('messages.redirect_links.redeemed'), 2 => __('messages.redirect_links.rejected')], isset($redirectLink) ? $redirectLink->status : 0, ['class' => 'form-control', 'required', 'disabled' => $isDisabled]) }}
       @endif
-      @if (isset($redirectLink) && $redirectLink->statusChangedBy)
-        <small class="text-muted d-block mt-2">
-          <i class="fas fa-user"></i> بواسطة: <strong>{{ $redirectLink->statusChangedBy->first_name }}
-            {{ $redirectLink->statusChangedBy->last_name }}</strong>
-          <br>
-          <i class="fas fa-clock"></i> {{ __('messages.date') }}:
-          <strong>{{ $redirectLink->status_changed_at?->translatedFormat('Y-m-d h:i a') }}</strong>
-        </small>
-      @endif
     </div>
   </div>
   @if (auth()->user()->hasRole('super_admin'))
@@ -70,7 +61,16 @@
       </div>
     </div>
   @endif
-  @if (!auth()->user()->hasRole('sales'))
+  @if (auth()->user()->hasRole('sales'))
+    {{-- Sales can reassign to other sales or super admin --}}
+    <div class="col-lg-6">
+      <div class="mb-5">
+        {{ Form::label('assigned_id', __('messages.redirect_links.assigned_to') . ':', ['class' => 'form-label']) }}
+        {{ Form::select('assigned_id', $salesUsers->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray(), isset($redirectLink) ? $redirectLink->assigned_id : null, ['class' => 'form-control', 'placeholder' => __('messages.redirect_links.select_assignee'), 'disabled' => $isDisabled]) }}
+        <small class="text-muted">{{ __('messages.redirect_links.reassign_resets_received_status') }}</small>
+      </div>
+    </div>
+  @elseif (!auth()->user()->hasRole('sales'))
     <div class="col-lg-6">
       <div class="mb-5">
         {{ Form::label('assigned_id', __('messages.redirect_links.assigned_to') . ':', ['class' => 'form-label']) }}
@@ -86,17 +86,47 @@
       @else
         {{ Form::select('received_status', [0 => __('messages.redirect_links.not_received'), 1 => __('messages.redirect_links.received')], isset($redirectLink) ? $redirectLink->received_status : 0, ['class' => 'form-control']) }}
       @endif
-      @if (isset($redirectLink) && $redirectLink->receivedStatusChangedBy)
-        <small class="text-muted d-block mt-2">
-          <i class="fas fa-user"></i> بواسطة: <strong>{{ $redirectLink->receivedStatusChangedBy->first_name }}
-            {{ $redirectLink->receivedStatusChangedBy->last_name }}</strong>
-          <br>
-          <i class="fas fa-clock"></i> {{ __('messages.date') }}:
-          <strong>{{ $redirectLink->received_status_changed_at?->translatedFormat('Y-m-d h:i a') }}</strong>
-        </small>
-      @endif
     </div>
   </div>
+
+  @if (isset($redirectLink) && $redirectLink->histories->isNotEmpty())
+    {{-- History Section - Only for Super Admin --}}
+    <div class="col-12">
+      <div class="mb-5">
+        <h4>{{ __('messages.redirect_links.history.title') }}</h4>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>{{ __('messages.redirect_links.history.action') }}</th>
+                <th>{{ __('messages.common.description') }}</th>
+                <th>{{ __('messages.redirect_links.history.old_value') }}</th>
+                <th>{{ __('messages.redirect_links.history.new_value') }}</th>
+                <th>{{ __('messages.redirect_links.history.changed_by') }}</th>
+                <th>{{ __('messages.redirect_links.history.changed_at') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($redirectLink->histories as $history)
+                <tr>
+                  <td>
+                    <span class="badge bg-info">
+                      {{ __('messages.redirect_links.history.actions.' . $history->action) }}
+                    </span>
+                  </td>
+                  <td>{{ $history->description ?? '-' }}</td>
+                  <td>{{ $history->old_value ?? '-' }}</td>
+                  <td>{{ $history->new_value ?? '-' }}</td>
+                  <td>{{ $history->getChangedByDisplayName() }}</td>
+                  <td>{{ $history->created_at->translatedFormat('Y-m-d h:i a') }}</td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  @endif
 
 
   <div>

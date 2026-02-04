@@ -256,12 +256,38 @@ class RedirectLinksCustomTable extends Component
       }
     }
 
-    // Update the received status
-    $updated = RedirectLink::whereIn('id', $selectedIds)->update([
-      'received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED,
-      'received_status_changed_by' => auth()->id(),
-      'received_status_changed_at' => now(),
-    ]);
+    // Get the actual user ID (considering impersonation)
+    $actualUserId = auth()->user()->isImpersonated()
+      ? app('impersonate')->getImpersonatorId()
+      : auth()->id();
+
+    $redirectLinks = RedirectLink::whereIn('id', $selectedIds)->get();
+    $updated = 0;
+
+    foreach ($redirectLinks as $redirectLink) {
+      // Skip if already received
+      if ($redirectLink->received_status == RedirectLink::RECEIVED_STATUS_RECEIVED) {
+        continue;
+      }
+
+      $redirectLink->update([
+        'received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED,
+      ]);
+
+      // Log received status change
+      $redirectLink->logHistory(
+        'received_status_changed',
+        __('messages.redirect_links.not_received'),
+        __('messages.redirect_links.received'),
+        $actualUserId,
+        __('messages.redirect_links.history.received_status_changed', [
+          'old' => __('messages.redirect_links.not_received'),
+          'new' => __('messages.redirect_links.received')
+        ])
+      );
+
+      $updated++;
+    }
 
     if ($updated > 0) {
       session()->flash('success', __('messages.redirect_links.marked_as_received') . ' (' . $updated . ' links)');
@@ -269,12 +295,14 @@ class RedirectLinksCustomTable extends Component
       session()->flash('error', __('messages.redirect_links.no_links_marked'));
     }
 
+    $this->selected = [];
     $this->dispatch('refresh');
   }
 
   public function bulkAssign()
   {
-    if (!auth()->user()->hasRole('super_admin')) {
+    // Allow both super_admin and sales to bulk assign
+    if (!auth()->user()->hasRole('super_admin') && !auth()->user()->hasRole('sales')) {
       session()->flash('error', __('messages.common.unauthorized'));
       return;
     }
@@ -292,20 +320,75 @@ class RedirectLinksCustomTable extends Component
       return;
     }
 
-    // Update the assigned_id for selected redirect links
-    $updated = RedirectLink::whereIn('id', $selectedIds)->update([
-      'assigned_id' => $assignedUserId,
-    ]);
+    // Get the actual user ID (considering impersonation)
+    $actualUserId = auth()->user()->isImpersonated()
+      ? app('impersonate')->getImpersonatorId()
+      : auth()->id();
+
+    // For sales, only allow reassigning their own assigned links
+    if (auth()->user()->hasRole('sales')) {
+      $redirectLinks = RedirectLink::whereIn('id', $selectedIds)
+        ->where('assigned_id', auth()->id())
+        ->get();
+    } else {
+      $redirectLinks = RedirectLink::whereIn('id', $selectedIds)->get();
+    }
+
+    if ($redirectLinks->isEmpty()) {
+      session()->flash('error', __('messages.redirect_links.no_links_to_assign'));
+      return;
+    }
+
+    $newAssignedUser = User::find($assignedUserId);
+    $updated = 0;
+
+    foreach ($redirectLinks as $redirectLink) {
+      $oldAssignedId = $redirectLink->assigned_id;
+      $oldAssignedUser = $oldAssignedId ? $redirectLink->assignedUser : null;
+
+      // Update assignment
+      $redirectLink->update([
+        'assigned_id' => $assignedUserId,
+        // If sales is reassigning, reset received status to NOT_RECEIVED
+        'received_status' => RedirectLink::RECEIVED_STATUS_NOT_RECEIVED,
+      ]);
+
+      // Log assignment change history
+      $redirectLink->logHistory(
+        'assigned_id_changed',
+        $oldAssignedUser ? ($oldAssignedUser->first_name . ' ' . $oldAssignedUser->last_name) : __('messages.redirect_links.history.none'),
+        $newAssignedUser->first_name . ' ' . $newAssignedUser->last_name,
+        $actualUserId,
+        __('messages.redirect_links.history.assigned_changed', [
+          'old' => $oldAssignedUser ? ($oldAssignedUser->first_name . ' ' . $oldAssignedUser->last_name) : __('messages.redirect_links.history.none'),
+          'new' => $newAssignedUser->first_name . ' ' . $newAssignedUser->last_name
+        ])
+      );
+
+      // If sales is reassigning, log received status reset
+      if (auth()->user()->hasRole('sales') && $redirectLink->received_status != RedirectLink::RECEIVED_STATUS_NOT_RECEIVED) {
+        $redirectLink->logHistory(
+          'received_status_changed',
+          __('messages.redirect_links.received'),
+          __('messages.redirect_links.not_received'),
+          $actualUserId,
+          __('messages.redirect_links.history.received_status_changed', [
+            'old' => __('messages.redirect_links.received'),
+            'new' => __('messages.redirect_links.not_received')
+          ])
+        );
+      }
+
+      $updated++;
+    }
 
     if ($updated > 0) {
-      session()->flash('success', __('messages.redirect_links.assigned_successfully') . ' (' . $updated . ' links)');
+      session()->flash('success', __('messages.redirect_links.assigned_successfully') . ' (' . $updated . ' ' . __('messages.redirect_links.links') . ')');
     } else {
       session()->flash('error', __('messages.redirect_links.no_links_assigned'));
     }
 
     // Reset assigned user after successful assignment
-    // $this->selected = [];
-
     $this->assignedUserId = '';
     $this->resetPage();
     $this->dispatch('refresh');
@@ -352,9 +435,20 @@ class RedirectLinksCustomTable extends Component
 
       $redirectLink->update([
         'received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED,
-        'received_status_changed_by' => $actualUserId,
-        'received_status_changed_at' => now(),
       ]);
+
+      // Log received status change
+      $redirectLink->logHistory(
+        'received_status_changed',
+        __('messages.redirect_links.not_received'),
+        __('messages.redirect_links.received'),
+        $actualUserId,
+        __('messages.redirect_links.history.received_status_changed', [
+          'old' => __('messages.redirect_links.not_received'),
+          'new' => __('messages.redirect_links.received')
+        ])
+      );
+
       $this->dispatch('refresh');
     }
   }

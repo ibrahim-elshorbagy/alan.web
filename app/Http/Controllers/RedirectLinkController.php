@@ -74,6 +74,27 @@ class RedirectLinkController extends Controller
         'sales_price' => $nfcSalesPrice,
       ]);
 
+      // Log creation history
+      $redirectLink->logHistory(
+        'created',
+        null,
+        'Created',
+        auth()->id(),
+        __('messages.redirect_links.history.created', ['uri' => $uri])
+      );
+
+      // Log assignment if assigned
+      if ($request->assigned_id) {
+        $assignedUser = User::find($request->assigned_id);
+        $redirectLink->logHistory(
+          'assigned_id_changed',
+          null,
+          $assignedUser->first_name . ' ' . $assignedUser->last_name,
+          auth()->id(),
+          __('messages.redirect_links.history.assigned_to', ['name' => $assignedUser->first_name . ' ' . $assignedUser->last_name])
+        );
+      }
+
       $createdLinks[] = $redirectLink;
     }
 
@@ -132,13 +153,30 @@ class RedirectLinkController extends Controller
       ? app('impersonate')->getImpersonatorId()
       : auth()->id();
 
-    $updated = RedirectLink::where('assigned_id', auth()->id())
+    $redirectLinks = RedirectLink::where('assigned_id', auth()->id())
       ->where('received_status', RedirectLink::RECEIVED_STATUS_NOT_RECEIVED)
-      ->update([
+      ->get();
+
+    $updated = 0;
+    foreach ($redirectLinks as $redirectLink) {
+      $redirectLink->update([
         'received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED,
-        'received_status_changed_by' => $actualUserId,
-        'received_status_changed_at' => now(),
       ]);
+
+      // Log received status change
+      $redirectLink->logHistory(
+        'received_status_changed',
+        __('messages.redirect_links.not_received'),
+        __('messages.redirect_links.received'),
+        $actualUserId,
+        __('messages.redirect_links.history.received_status_changed', [
+          'old' => __('messages.redirect_links.not_received'),
+          'new' => __('messages.redirect_links.received')
+        ])
+      );
+
+      $updated++;
+    }
 
     if ($updated > 0) {
       session()->flash('success', __('messages.redirect_links.received_all') . ' (' . $updated . ' links)');
@@ -172,11 +210,28 @@ class RedirectLinkController extends Controller
       ? app('impersonate')->getImpersonatorId()
       : auth()->id();
 
-    $updated = $query->update([
-      'received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED,
-      'received_status_changed_by' => $actualUserId,
-      'received_status_changed_at' => now(),
-    ]);
+    $redirectLinks = $query->get();
+    $updated = 0;
+
+    foreach ($redirectLinks as $redirectLink) {
+      $redirectLink->update([
+        'received_status' => RedirectLink::RECEIVED_STATUS_RECEIVED,
+      ]);
+
+      // Log received status change
+      $redirectLink->logHistory(
+        'received_status_changed',
+        __('messages.redirect_links.not_received'),
+        __('messages.redirect_links.received'),
+        $actualUserId,
+        __('messages.redirect_links.history.received_status_changed', [
+          'old' => __('messages.redirect_links.not_received'),
+          'new' => __('messages.redirect_links.received')
+        ])
+      );
+
+      $updated++;
+    }
 
     if ($updated > 0) {
       session()->flash('success', __('messages.redirect_links.marked_as_received') . ' (' . $updated . ' links)');
@@ -888,7 +943,7 @@ class RedirectLinkController extends Controller
 
   public function edit($id)
   {
-    $redirectLink = RedirectLink::with(['statusChangedBy', 'receivedStatusChangedBy'])->findOrFail($id);
+    $redirectLink = RedirectLink::with(['histories.changedBy'])->findOrFail($id);
 
     if (auth()->user()->hasRole('sales') && $redirectLink->assigned_id != auth()->id()) {
       abort(403, 'Unauthorized');
@@ -925,6 +980,11 @@ class RedirectLinkController extends Controller
       'status' => $statusRule,
     ];
 
+    // Allow sales to update assigned_id
+    if (auth()->user()->hasRole('sales')) {
+      $rules['assigned_id'] = 'nullable|exists:users,id';
+    }
+
     if (!auth()->user()->hasRole('sales')) {
       $rules = array_merge($rules, [
         'user_id' => 'nullable|exists:users,id',
@@ -957,33 +1017,108 @@ class RedirectLinkController extends Controller
       ? app('impersonate')->getImpersonatorId()
       : auth()->id();
 
+    // Track changes for history
+    $changes = [];
+
     // Track status changes
     if (isset($updateData['status']) && $redirectLink->status != $updateData['status']) {
-      $updateData['status_changed_by'] = $actualUserId;
-      $updateData['status_changed_at'] = now();
+      $statusLabels = [
+        0 => __('messages.redirect_links.not_redeemed'),
+        1 => __('messages.redirect_links.redeemed'),
+        2 => __('messages.redirect_links.rejected')
+      ];
+      
+      $changes['status'] = [
+        'old' => $statusLabels[$redirectLink->status],
+        'new' => $statusLabels[$updateData['status']]
+      ];
     }
 
     // Track received_status changes
     if (isset($updateData['received_status']) && $redirectLink->received_status != $updateData['received_status']) {
-      $updateData['received_status_changed_by'] = $actualUserId;
-      $updateData['received_status_changed_at'] = now();
+      $receivedStatusLabels = [
+        0 => __('messages.redirect_links.not_received'),
+        1 => __('messages.redirect_links.received')
+      ];
+      
+      $changes['received_status'] = [
+        'old' => $receivedStatusLabels[$redirectLink->received_status],
+        'new' => $receivedStatusLabels[$updateData['received_status']]
+      ];
+    }
+
+    // Track assigned_id changes
+    if (isset($updateData['assigned_id']) && $redirectLink->assigned_id != $updateData['assigned_id']) {
+      $oldAssigned = $redirectLink->assigned_id ? $redirectLink->assignedUser->first_name . ' ' . $redirectLink->assignedUser->last_name : __('messages.redirect_links.history.none');
+      $newAssigned = $updateData['assigned_id'] ? User::find($updateData['assigned_id'])->first_name . ' ' . User::find($updateData['assigned_id'])->last_name : __('messages.redirect_links.history.none');
+      
+      $changes['assigned_id'] = [
+        'old' => $oldAssigned,
+        'new' => $newAssigned
+      ];
+    }
+
+    // Track user_id changes
+    if (isset($updateData['user_id']) && $redirectLink->user_id != $updateData['user_id']) {
+      $oldUser = $redirectLink->user_id ? $redirectLink->user->first_name . ' ' . $redirectLink->user->last_name : __('messages.redirect_links.history.none');
+      $newUser = $updateData['user_id'] ? User::find($updateData['user_id'])->first_name . ' ' . User::find($updateData['user_id'])->last_name : __('messages.redirect_links.history.none');
+      
+      $changes['user_id'] = [
+        'old' => $oldUser,
+        'new' => $newUser
+      ];
+    }
+
+    // Track redirect_link changes
+    if (isset($updateData['redirect_link']) && $redirectLink->redirect_link != $updateData['redirect_link']) {
+      $changes['redirect_link'] = [
+        'old' => $redirectLink->redirect_link ?? __('messages.redirect_links.history.none'),
+        'new' => $updateData['redirect_link'] ?? __('messages.redirect_links.history.none')
+      ];
+    }
+
+    // Handle assignment changes - reset received_status if sales is reassigning
+    if (isset($updateData['assigned_id']) && $redirectLink->assigned_id != $updateData['assigned_id']) {
+      if (auth()->user()->hasRole('sales')) {
+        $updateData['received_status'] = RedirectLink::RECEIVED_STATUS_NOT_RECEIVED;
+        
+        // Track received_status reset if it was previously received
+        if ($redirectLink->received_status == RedirectLink::RECEIVED_STATUS_RECEIVED) {
+          $changes['received_status'] = [
+            'old' => __('messages.redirect_links.received'),
+            'new' => __('messages.redirect_links.not_received')
+          ];
+        }
+      }
     }
 
     if (auth()->user()->hasRole('sales')) {
-      // For sales, only allow updating redirect_link and status
-      $allowedFields = ['redirect_link', 'status', 'status_changed_by', 'status_changed_at'];
+      // For sales, allow updating redirect_link, status, and assigned_id
+      $allowedFields = ['redirect_link', 'status', 'assigned_id', 'received_status'];
       $updateData = array_intersect_key($updateData, array_flip($allowedFields));
     } else if (auth()->user()->hasRole('super_admin')) {
       // For super admin, allow all fields including price and sales_price
-      $allowedFields = ['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status', 'price', 'sales_price', 'status_changed_by', 'status_changed_at', 'received_status_changed_by', 'received_status_changed_at'];
+      $allowedFields = ['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status', 'price', 'sales_price'];
       $updateData = array_intersect_key($updateData, array_flip($allowedFields));
     } else {
       // For other admins, allow all except price fields
-      $allowedFields = ['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status', 'status_changed_by', 'status_changed_at', 'received_status_changed_by', 'received_status_changed_at'];
+      $allowedFields = ['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status'];
       $updateData = array_intersect_key($updateData, array_flip($allowedFields));
     }
 
     $redirectLink->update($updateData);
+
+    // Log all changes to history
+    foreach ($changes as $field => $change) {
+      $action = $field . '_changed';
+      $redirectLink->logHistory(
+        $action,
+        $change['old'],
+        $change['new'],
+        $actualUserId,
+        __('messages.redirect_links.history.' . $action, ['old' => $change['old'], 'new' => $change['new']])
+      );
+    }
 
     return redirect()->route('redirect-links.index')->with('success', __('messages.redirect_links.updated'));
   }

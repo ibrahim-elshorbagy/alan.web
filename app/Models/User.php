@@ -466,4 +466,26 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
   {
     return $this->hasMany(RedirectLink::class);
   }
+
+  // /**
+  //  * Check if this user can impersonate another user
+  //  */
+  // public function canImpersonate(): bool
+  // {
+  //   return $this->hasRole('super_admin');
+  // }
+
+  // /**
+  //  * Check if this user can be impersonated by another user
+  //  */
+  // public function canBeImpersonated(): bool
+  // {
+  //   // Super admins can only be impersonated by other super admins
+  //   if ($this->hasRole('super_admin')) {
+  //     return false;
+  //   }
+
+  //   // Allow impersonation of all other roles
+  //   return true;
+  // }
 }

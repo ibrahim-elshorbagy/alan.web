@@ -12,6 +12,7 @@ use Laracasts\Flash\Flash;
 use App\Enums\RedirectLinkTypeEnum;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
+use Illuminate\Support\Facades\Log;
 
 class ClientRedirectLinkController extends Controller
 {
@@ -145,7 +146,24 @@ class ClientRedirectLinkController extends Controller
       return redirect()->back()->withErrors($validator)->withInput();
     }
 
+    $oldRedirectLink = $redirectLink->redirect_link;
+    $newRedirectLink = $request->input('redirect_link');
+
     $redirectLink->update($request->only(['redirect_link']));
+
+    // Log history if redirect_link changed
+    if ($oldRedirectLink != $newRedirectLink) {
+      $redirectLink->logHistory(
+        'redirect_link_changed',
+        $oldRedirectLink ?? __('messages.redirect_links.history.none'),
+        $newRedirectLink ?? __('messages.redirect_links.history.none'),
+        auth()->id(),
+        __('messages.redirect_links.history.redirect_link_changed', [
+          'old' => $oldRedirectLink ?? __('messages.redirect_links.history.none'),
+          'new' => $newRedirectLink ?? __('messages.redirect_links.history.none')
+        ])
+      );
+    }
 
     return redirect()->route('client.redirect-links.index')->with('success', __('messages.redirect_links.updated'));
   }
@@ -234,14 +252,25 @@ class ClientRedirectLinkController extends Controller
         ? app('impersonate')->getImpersonatorId()
         : auth()->id();
 
+
+
       // Assign redirect link to user and mark as redeemed
       $redirectLink->update([
         'user_id' => $user->id,
         'status' => $redeemedStatus,
-        'status_changed_by' => $actualUserId,
-        'status_changed_at' => now(),
         'nfc_order_id' => $nfcOrder->id,
       ]);
+
+      // Log user assignment history
+      $redirectLink->logHistory(
+        'user_redeem',
+        null,
+        $user->first_name . ' ' . $user->last_name,
+        $actualUserId,
+        __('messages.redirect_links.history.user_redeem', [
+          'user' => $user->first_name . ' ' . $user->last_name
+        ])
+      );
 
       // Send email to admin
       Mail::to(getSuperAdminSettingValue('email'))->send(

@@ -21,8 +21,7 @@ class RedirectLink extends Model
   const RECEIVED_STATUS_RECEIVED = 1;
 
   protected $casts = [
-    'status_changed_at' => 'datetime',
-    'received_status_changed_at' => 'datetime',
+
   ];
 
   public function user(): BelongsTo
@@ -40,13 +39,28 @@ class RedirectLink extends Model
     return $this->belongsTo(Nfc::class, 'nfcs_id');
   }
 
-  public function statusChangedBy(): BelongsTo
+  public function histories()
   {
-    return $this->belongsTo(User::class, 'status_changed_by');
+    return $this->hasMany(RedirectLinkHistory::class)->orderBy('created_at', 'desc');
   }
 
-  public function receivedStatusChangedBy(): BelongsTo
+  /**
+   * Log history for any action on this redirect link
+   */
+  public function logHistory(string $action, $oldValue, $newValue, ?int $changedBy = null, ?string $description = null)
   {
-    return $this->belongsTo(User::class, 'received_status_changed_by');
+    $changedByUser = $changedBy ? \App\Models\User::withoutGlobalScopes()->find($changedBy) : auth()->user();
+
+    $history = new RedirectLinkHistory([
+      'redirect_link_id' => $this->id,
+      'action' => $action,
+      'changed_by' => $changedByUser?->id,
+      'changed_by_name' => $changedByUser ? ($changedByUser->first_name . ' ' . $changedByUser->last_name) : null,
+      'old_value' => is_array($oldValue) ? json_encode($oldValue) : $oldValue,
+      'new_value' => is_array($newValue) ? json_encode($newValue) : $newValue,
+      'description' => $description,
+    ]);
+
+    $history->save();
   }
 }
