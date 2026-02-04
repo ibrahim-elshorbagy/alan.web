@@ -51,11 +51,16 @@
           blockquote,
           strong,
           b,
-          em { 
+          em {
           font-family: {{ $whatsappStore->font_family }} !important;
         }
       @endif
       @endif
+
+      /* Ensure FontAwesome icons use correct font */
+      i, .fa, .fas, .far, .fab, .fal, .fad, .fat {
+        font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+      }
 
       @if ($whatsappStore->font_size)
         div>h4 {
