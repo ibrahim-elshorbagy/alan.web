@@ -18,17 +18,17 @@
 
     // Select all items from a given array of IDs
     selectAllItems(ids) {
-      const strIds = ids.map(id => String(id));
-      const allSelected = strIds.every(id => this.selected.includes(id));
+        const strIds = ids.map(id => String(id));
+        const allSelected = strIds.every(id => this.selected.includes(id));
 
-      if (allSelected) {
-          // Deselect all items from this table
-          this.selected = this.selected.filter(id => !strIds.includes(id));
-      } else {
-          // Deselect everything first, then select only this table's items
-          this.selected = [...strIds];
-      }
-  },
+        if (allSelected) {
+            // Deselect all items from this table
+            this.selected = this.selected.filter(id => !strIds.includes(id));
+        } else {
+            // Deselect everything first, then select only this table's items
+            this.selected = [...strIds];
+        }
+    },
 
     // Check if all items from array are selected
     allItemsSelected(ids) {
@@ -391,11 +391,14 @@
           <label class="form-label small mb-1">{{ __('messages.redirect_links.group_by') }}</label>
           <select class="form-control form-select" wire:model.live="groupByFilter">
             <option value="">{{ __('messages.redirect_links.no_grouping') }}</option>
-            @foreach($allowedGroupByOptions as $option)
+            @foreach ($allowedGroupByOptions as $option)
               <option value="{{ $option }}">
-                @if($option == 'redirect_type') {{ __('messages.redirect_links.redirect_type') }}
-                @elseif($option == 'nfc_card') {{ __('messages.redirect_links.card_type') }}
-                @elseif($option == 'sales_rep') {{ __('messages.redirect_links.assigned_to') }}
+                @if ($option == 'redirect_type')
+                  {{ __('messages.redirect_links.redirect_type') }}
+                @elseif($option == 'nfc_card')
+                  {{ __('messages.redirect_links.card_type') }}
+                @elseif($option == 'sales_rep')
+                  {{ __('messages.redirect_links.assigned_to') }}
                 @endif
               </option>
             @endforeach
@@ -479,32 +482,28 @@
   {{-- Summary Card --}}
   <div class="summary-card">
     <div class="row g-2">
-      <div class="col-md-{{ auth()->user()->hasRole('sales') ? '4' : '3' }} col-6">
+      <div class="col-md-3 col-6">
         <div class="stat">
           <div class="stat-value">{{ $totalCount }}</div>
           <div class="stat-label">{{ __('messages.common.total') }} {{ __('messages.common.items') }}</div>
         </div>
       </div>
-      <div class="col-md-{{ auth()->user()->hasRole('sales') ? '4' : '3' }} col-6">
+      <div class="col-md-3 col-6">
         <div class="stat">
           <div class="stat-value" x-text="selected ? selected.length : 0"></div>
           <div class="stat-label">{{ __('messages.common.selected') }}</div>
         </div>
       </div>
-      @if (!auth()->user()->hasRole('sales'))
-        <div class="col-md-3 col-6">
-          <div class="stat">
-            <div class="stat-value">{{ currencyFormat($totalPurchasePrice, 2) }}</div>
-            <div class="stat-label">{{ __('messages.admin_price') }}</div>
-          </div>
+      <div class="col-md-3 col-6">
+        <div class="stat">
+          <div class="stat-value">{{ currencyFormat($totalPurchasePrice, 2) }}</div>
+          <div class="stat-label">{{ __('messages.admin_price') }}</div>
         </div>
-      @endif
-      <div class="col-md-{{ auth()->user()->hasRole('sales') ? '4' : '3' }} col-6">
+      </div>
+      <div class="col-md-3 col-6">
         <div class="stat">
           <div class="stat-value">{{ currencyFormat($totalSalesPrice, 2) }}</div>
-          <div class="stat-label">
-            {{ auth()->user()->hasRole('sales') ? __('messages.admin_price') : __('messages.sales_representative_price') }}
-          </div>
+          <div class="stat-label">{{ __('messages.sales_representative_price') }}</div>
         </div>
       </div>
     </div>
@@ -542,13 +541,13 @@
                   <i class="fas fa-list"></i> {{ $allItems->count() }} <span
                     class="d-none d-sm-inline">{{ __('messages.common.items') }}</span>
                 </span>
-                @if (!auth()->user()->hasRole('sales'))
-                  <span class="stat-item">
-                    <i class="fas fa-money-bill"></i> {{ currencyFormat($groupPurchasePrice, 2) }}
-                  </span>
-                @endif
                 <span class="stat-item">
-                  <i class="fas fa-coins"></i> {{ currencyFormat($groupSalesPrice, 2) }}
+                  <i class="fas fa-money-bill"></i> {{ __('messages.admin_price') }}:
+                  {{ currencyFormat($groupPurchasePrice, 2) }}
+                </span>
+                <span class="stat-item">
+                  <i class="fas fa-coins"></i> {{ __('messages.sales_representative_price') }}:
+                  {{ currencyFormat($groupSalesPrice, 2) }}
                 </span>
               </div>
               <i class="fas fa-chevron-down chevron"></i>
@@ -584,22 +583,20 @@
                       {{ __('messages.redirect_links.status') }}
                       <i class="fas fa-sort sort-icon {{ $sortField === 'status' ? 'active' : '' }}"></i>
                     </th>
-                    @if (!auth()->user()->hasRole('sales'))
+                    @if ($groupByFilter != 'nfc_card')
                       <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('price')">
                         {{ __('messages.admin_price') }}
                         <i class="fas fa-sort sort-icon {{ $sortField === 'price' ? 'active' : '' }}"></i>
                       </th>
-                    @endif
-                    <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('sales_price')">
-                      {{ auth()->user()->hasRole('sales') ? __('messages.admin_price') : __('messages.sales_representative_price') }}
-                      <i class="fas fa-sort sort-icon {{ $sortField === 'sales_price' ? 'active' : '' }}"></i>
-                    </th>
-                    @if (!auth()->user()->hasRole('sales'))
-                      <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('assigned_id')">
-                        {{ __('messages.redirect_links.assigned_to') }}
-                        <i class="fas fa-sort sort-icon {{ $sortField === 'assigned_id' ? 'active' : '' }}"></i>
+                      <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('sales_price')">
+                        {{ __('messages.common.sales_price') }}
+                        <i class="fas fa-sort sort-icon {{ $sortField === 'sales_price' ? 'active' : '' }}"></i>
                       </th>
                     @endif
+                    <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('assigned_id')">
+                      {{ __('messages.redirect_links.assigned_to') }}
+                      <i class="fas fa-sort sort-icon {{ $sortField === 'assigned_id' ? 'active' : '' }}"></i>
+                    </th>
                     <th class="text-center" style="cursor: pointer;" wire:click.stop="sortBy('updated_at')">
                       {{ __('messages.common.dates') }}
                       <i class="fas fa-sort sort-icon {{ $sortField === 'updated_at' ? 'active' : '' }}"></i>
@@ -629,19 +626,17 @@
                       <td class="text-center">
                         @include('admin.redirect_links.columns.combined_status', ['row' => $row])
                       </td>
-                      @if (!auth()->user()->hasRole('sales'))
+                      @if ($groupByFilter != 'nfc_card')
                         <td class="text-center">
                           @include('admin.redirect_links.columns.price', ['row' => $row])
                         </td>
-                      @endif
-                      <td class="text-center">
-                        @include('admin.redirect_links.columns.sales_price', ['row' => $row])
-                      </td>
-                      @if (!auth()->user()->hasRole('sales'))
                         <td class="text-center">
-                          @include('admin.redirect_links.columns.assigned_to', ['row' => $row])
+                          @include('admin.redirect_links.columns.sales_price', ['row' => $row])
                         </td>
                       @endif
+                      <td class="text-center">
+                        @include('admin.redirect_links.columns.assigned_to', ['row' => $row])
+                      </td>
                       <td class="text-center">
                         @include('admin.redirect_links.columns.dates', ['row' => $row])
                       </td>
@@ -715,19 +710,15 @@
               {{ __('messages.redirect_links.status') }}
               <i class="fas fa-sort sort-icon {{ $sortField === 'status' ? 'active' : '' }}"></i>
             </th>
-            @if (!auth()->user()->hasRole('sales'))
-              <th class="text-center" style="cursor: pointer;" wire:click="sortBy('price')">
-                {{ __('messages.admin_price') }}
-                <i class="fas fa-sort sort-icon {{ $sortField === 'price' ? 'active' : '' }}"></i>
-              </th>
-            @endif
+            <th class="text-center" style="cursor: pointer;" wire:click="sortBy('price')">
+              {{ __('messages.admin_price') }}
+              <i class="fas fa-sort sort-icon {{ $sortField === 'price' ? 'active' : '' }}"></i>
+            </th>
             <th class="text-center" style="cursor: pointer;" wire:click="sortBy('sales_price')">
-              {{ auth()->user()->hasRole('sales') ? __('messages.admin_price') : __('messages.sales_representative_price') }}
+              {{ __('messages.common.sales_price') }}
               <i class="fas fa-sort sort-icon {{ $sortField === 'sales_price' ? 'active' : '' }}"></i>
             </th>
-            @if (!auth()->user()->hasRole('sales'))
-              <th class="text-center">{{ __('messages.redirect_links.assigned_to') }}</th>
-            @endif
+            <th class="text-center">{{ __('messages.redirect_links.assigned_to') }}</th>
             <th class="text-center" style="cursor: pointer;" wire:click="sortBy('updated_at')">
               {{ __('messages.common.dates') }}
               <i class="fas fa-sort sort-icon {{ $sortField === 'updated_at' ? 'active' : '' }}"></i>
@@ -757,19 +748,15 @@
               <td class="text-center">
                 @include('admin.redirect_links.columns.combined_status', ['row' => $row])
               </td>
-              @if (!auth()->user()->hasRole('sales'))
-                <td class="text-center">
-                  @include('admin.redirect_links.columns.price', ['row' => $row])
-                </td>
-              @endif
+              <td class="text-center">
+                @include('admin.redirect_links.columns.price', ['row' => $row])
+              </td>
               <td class="text-center">
                 @include('admin.redirect_links.columns.sales_price', ['row' => $row])
               </td>
-              @if (!auth()->user()->hasRole('sales'))
-                <td class="text-center">
-                  @include('admin.redirect_links.columns.assigned_to', ['row' => $row])
-                </td>
-              @endif
+              <td class="text-center">
+                @include('admin.redirect_links.columns.assigned_to', ['row' => $row])
+              </td>
               <td class="text-center">
                 @include('admin.redirect_links.columns.dates', ['row' => $row])
               </td>
@@ -794,17 +781,13 @@
             <td></td>
             <td></td>
             <td></td>
-            @if (!auth()->user()->hasRole('sales'))
-              <td class="text-center fw-bold">
-                {{ currencyFormat($totalPurchasePrice, 2) }}
-              </td>
-            @endif
+            <td class="text-center fw-bold">
+              {{ currencyFormat($totalPurchasePrice, 2) }}
+            </td>
             <td class="text-center fw-bold">
               {{ currencyFormat($totalSalesPrice, 2) }}
             </td>
-            @if (!auth()->user()->hasRole('sales'))
-              <td></td>
-            @endif
+            <td></td>
             <td></td>
             <td></td>
           </tr>

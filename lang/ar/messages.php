@@ -117,7 +117,7 @@ return [
   'wait_for_apporove_of_cash_payment_by_admin' => 'طلب الدفع اليدوي الخاص بك قيد الانتظار.',
   'paid_amount_can\'t_deleted' => 'لا يمكن حذف الموعد المدفوع',
   'virtual_backgrounds' => 'صمم بطاقتك بنفسك',
-  'admin_price' => 'السعر',
+  'admin_price' => 'سعر البيع',
   'selling_price' => 'سعر البيع',
   'sales_representative_price' => 'سعر المندوب',
   'select payment gateway' => 'اختر بوابة الدفع',

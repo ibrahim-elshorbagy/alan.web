@@ -56,7 +56,7 @@
     </div>
     <div class="col-lg-6">
       <div class="mb-5">
-        {{ Form::label('sales_price', __('messages.selling_price') . ':', ['class' => 'form-label']) }}
+        {{ Form::label('sales_price', __('messages.common.sales_price') . ':', ['class' => 'form-label']) }}
         {{ Form::number('sales_price', isset($redirectLink) ? $redirectLink->sales_price : null, ['class' => 'form-control', 'placeholder' => __('messages.selling_price'), 'step' => '0.01', 'min' => '0', 'disabled' => $isDisabled]) }}
       </div>
     </div>
