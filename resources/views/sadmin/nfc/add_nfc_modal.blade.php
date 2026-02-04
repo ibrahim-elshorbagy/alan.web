@@ -38,10 +38,14 @@
           </div>
         </div>
 
-        <div>
-          <div class="col-sm-12 mb-2">
+        <div class="row">
+          <div class="col-md-6 mb-3">
             {{ Form::label('description', __('messages.common.description') . ':', ['class' => 'form-label required']) }}
             {{ Form::textarea('description', null, ['class' => 'form-control', 'placeholder' => __('messages.form.short_description'), 'rows' => '5', 'required']) }}
+          </div>
+          <div class="col-md-6 mb-3">
+            {{ Form::label('admin_notes', __('messages.nfc.admin_notes') . ':', ['class' => 'form-label']) }}
+            {{ Form::textarea('admin_notes', null, ['class' => 'form-control', 'placeholder' => __('messages.nfc.admin_notes'), 'rows' => '5']) }}
           </div>
         </div>
 

@@ -25,6 +25,7 @@ class Nfc extends Model implements HasMedia
     'price' => 'required|numeric',
     'sales_price' => 'nullable|numeric',
     'description' => 'required|string',
+    'admin_notes' => 'nullable|string',
     'nfc_img' => 'required|mimes:jpg,jpeg,png|max:3072',
     'nfc_back_img' => 'required|mimes:jpg,jpeg,png|max:3072',
     'apply_coordinates' => 'boolean',
@@ -70,6 +71,7 @@ class Nfc extends Model implements HasMedia
   protected $fillable = [
     'name',
     'description',
+    'admin_notes',
     'price',
     'sales_price',
     'nfc_img',

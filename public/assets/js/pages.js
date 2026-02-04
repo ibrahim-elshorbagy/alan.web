@@ -48325,6 +48325,7 @@ function nfcRenderDataShow(id) {
         $("#nfcId").val(result.data.id);
         $("#editNfcTitle").val(result.data.name);
         $("#editNfcDescription").val(result.data.description);
+        $("#editNfcAdminNotes").val(result.data.admin_notes);
         $("#editNfcPrice").val(result.data.price);
         $("#editNfcSalesPrice").val(result.data.sales_price);
 

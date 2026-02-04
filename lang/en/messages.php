@@ -1971,6 +1971,7 @@ return [
     'total' => 'Total',
     'item' => 'Item',
     'price_per_nfc_card' => 'Price per NFC Card',
+    'admin_notes' => 'Admin Notes',
   ],
 
   'qr_code' => [

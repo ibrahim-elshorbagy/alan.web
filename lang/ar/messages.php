@@ -1969,6 +1969,7 @@ return [
     'total' => 'الإجمالي',
     'item' => 'عنصر',
     'price_per_nfc_card' => 'السعر لكل بطاقة NFC',
+    'admin_notes' => 'ملاحظات الإدارة',
   ],
 
   'qr_code' => [
