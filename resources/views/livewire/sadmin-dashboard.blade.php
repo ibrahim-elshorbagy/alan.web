@@ -104,8 +104,8 @@
         <div class="col-xxl-3 col-xl-4 col-sm-6 dashboard-card widget d-flex">
             <div class="dashboard-card-bg my-3 d-flex flex-row justify-content-between gap-3 align-items-center w-100">
                 <div class="dashboard-card-content d-flex flex-column justify-content-center">
-                    <p class="fs-14 fw-medium">{{ __('messages.common.total__deactive_vcards') }}</p>
-                    <h5 class="fw-bolder fs-30 mb-0">{{ $deActiveVcard }}</h5>
+                    <p class="fs-14 fw-medium">{{ __('messages.subscription.pending_payments') }}</p>
+                    <h5 class="fw-bolder fs-30 mb-0">{{ $pendingPayments }}</h5>
                 </div>
                 <!-- <div class="text-center">
                    <div class="card-icon d-flex justify-content-center align-items-center">

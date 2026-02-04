@@ -719,6 +719,7 @@ return [
     'buy_now' => 'Buy Now',
     'buy_product' => 'Buy Product',
     'cash_pay' => 'Cash Pay',
+    'pending_payments' => 'Pending Payments',
   ],
   'contact_us' => [
     'enquiry' => 'Enquiry',

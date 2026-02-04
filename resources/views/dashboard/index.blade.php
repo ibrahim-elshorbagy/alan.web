@@ -7,7 +7,7 @@
     <div class="container-fluid">
       <div class="d-flex flex-column">
         <div class="row row-gap-24px">
-          <livewire:sadmin-dashboard lazy :activeUsersCount="$activeUsersCount" :deActiveUsersCount="$deActiveUsersCount" :activeVcard="$activeVcard" :deActiveVcard="$deActiveVcard" />
+          <livewire:sadmin-dashboard lazy :activeUsersCount="$activeUsersCount" :deActiveUsersCount="$deActiveUsersCount" :activeVcard="$activeVcard" :deActiveVcard="$deActiveVcard" :pendingPayments="$pendingPayments" />
           {{-- Plan By User --}}
           <div class="col-xxl-4 col-12 mb-7 mb-xxl-0">
             <div class="card">

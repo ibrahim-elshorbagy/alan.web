@@ -718,6 +718,7 @@ return [
     'buy_now' => 'اشتر الآن',
     'buy_product' => 'شراء منتج',
     'cash_pay' => 'دفع نقدي',
+    'pending_payments' => 'المدفوعات المعلقة',
   ],
   'contact_us' => [
     'enquiry' => 'استفسار',
