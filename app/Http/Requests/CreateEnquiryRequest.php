@@ -27,7 +27,7 @@ class CreateEnquiryRequest extends FormRequest
             $dynamicRules['terms_condition'] = 'required';
         }
         if (getUserSettingValue('enable_attachment_for_inquiry', $this->vcard->user->id) ===  '1') {
-            $dynamicRules['attachment'] = 'mimes:jpg,png,jpeg';
+            $dynamicRules['attachment'] = 'mimes:jpg,png,jpeg,webp';
         }
         return $dynamicRules;
     }
