@@ -73,7 +73,7 @@ class ClientRedirectLinksTable extends LivewireTableComponent
     // Set user_id to null to "delete" from user's account, making it available for sales again
     $redirectLink->update([
       'user_id' => null,
-      'status' => RedirectLink::STATUS_NOT_REDEEMED,
+      // 'status' => RedirectLink::STATUS_NOT_REDEEMED,
       'redirect_link' => null,
     ]);
 
@@ -89,16 +89,16 @@ class ClientRedirectLinksTable extends LivewireTableComponent
     );
 
     // Log status change
-    $redirectLink->logHistory(
-      'status_changed',
-      __('messages.redirect_links.redeemed'),
-      __('messages.redirect_links.not_redeemed'),
-      $actualUserId,
-      __('messages.redirect_links.history.status_changed', [
-        'old' => __('messages.redirect_links.redeemed'),
-        'new' => __('messages.redirect_links.not_redeemed')
-      ])
-    );
+    // $redirectLink->logHistory(
+    //   'status_changed',
+    //   __('messages.redirect_links.redeemed'),
+    //   __('messages.redirect_links.not_redeemed'),
+    //   $actualUserId,
+    //   __('messages.redirect_links.history.status_changed', [
+    //     'old' => __('messages.redirect_links.redeemed'),
+    //     'new' => __('messages.redirect_links.not_redeemed')
+    //   ])
+    // );
 
     session()->flash('success', __('messages.redirect_links.deleted'));
     $this->dispatch('refresh');
