@@ -52,13 +52,20 @@
           strong,
           b,
           em {
-          font-family: {{ $whatsappStore->font_family }} !important;
-        }
-      @endif
+            font-family: {{ $whatsappStore->font_family }} !important;
+          }
+        @endif
       @endif
 
       /* Ensure FontAwesome icons use correct font */
-      i, .fa, .fas, .far, .fab, .fal, .fad, .fat {
+      i,
+      .fa,
+      .fas,
+      .far,
+      .fab,
+      .fal,
+      .fad,
+      .fat {
         font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
       }
 
@@ -237,8 +244,8 @@
                 <i class="fas fa-map-marker-alt"></i> {{ $whatsappStore->address }}
               </div>
               <div>
-                <i class="fa-solid fa-phone"></i> +{{ $whatsappStore->region_code }}
-                {{ $whatsappStore->whatsapp_no }}
+                <i class="fa-solid fa-phone"></i> <span dir="ltr">+{{ $whatsappStore->region_code }}
+                  {{ $whatsappStore->whatsapp_no }}</span>
               </div>
             </div>
           </div>
@@ -332,4 +339,3 @@
 </script>
 
 </html>
-
