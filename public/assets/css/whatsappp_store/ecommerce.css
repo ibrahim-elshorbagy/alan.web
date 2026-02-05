@@ -137,11 +137,6 @@
   color: #999999 !important;
 }
 
-body {
-  font-weight: 400 !important;
-  -webkit-font-smoothing: antialiased;
-}
-
 .btn {
   border-radius: 10px;
   font-weight: 600;
