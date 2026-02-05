@@ -743,3 +743,85 @@ listenClick(".copy-whatsapp-store-clipboard", function () {
     $temp.remove();
     displaySuccessMessage(Lang.get("js.copied_successfully"));
 });
+
+// PWA install prompt handling: hide install button when app is installed or running standalone
+(function() {
+    function isAppInstalled() {
+        return window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || localStorage.getItem('whatsapp_pwa_installed') === '1';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('installPwaBtn');
+        const pwaModal = document.getElementById('pwa-modal');
+
+        if (!btn && !pwaModal) return;
+
+        // helper to hide the entire PWA modal container
+        function hidePwaModal() {
+            const modal = document.getElementById('pwa-modal');
+            if (!modal) return;
+
+            // Hide the modal itself
+            modal.style.display = 'none';
+            modal.classList.add('d-none');
+
+            // Also hide the parent container if it exists
+            const parentContainer = modal.parentElement;
+            if (parentContainer && parentContainer.classList.contains('mt-0')) {
+                parentContainer.style.display = 'none';
+            }
+
+            // Clean up any Bootstrap modal artifacts
+            document.body.classList.remove('modal-open');
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+        }
+
+        if (isAppInstalled()) {
+            if (btn) btn.style.display = 'none';
+            hidePwaModal();
+            return;
+        }
+
+        let deferredPrompt = null;
+        // Use a capturing listener and stopImmediatePropagation to prevent duplicate handlers
+        window.addEventListener('beforeinstallprompt', (e) => {
+            if (isAppInstalled()) return;
+            e.preventDefault();
+            try {
+                e.stopImmediatePropagation();
+            } catch (err) {
+                // ignore
+            }
+            deferredPrompt = e;
+            btn.style.display = 'block';
+        }, true);
+
+        if (btn) {
+            btn.addEventListener('click', async function() {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                const choice = await deferredPrompt.userChoice;
+                if (choice && choice.outcome === 'accepted') {
+                    localStorage.setItem('whatsapp_pwa_installed', '1');
+                    btn.style.display = 'none';
+                    hidePwaModal();
+                }
+                deferredPrompt = null;
+            });
+        }
+
+        window.addEventListener('appinstalled', function() {
+            localStorage.setItem('whatsapp_pwa_installed', '1');
+            deferredPrompt = null;
+            if (btn) btn.style.display = 'none';
+            hidePwaModal();
+        });
+
+        window.addEventListener('load', function() {
+            if (isAppInstalled()) {
+                if (btn) btn.style.display = 'none';
+                hidePwaModal();
+            }
+        });
+    });
+})();
