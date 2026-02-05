@@ -261,6 +261,14 @@
       <span class="aside-menu-title">{{ __('messages.redirect_links.title') }}</span>
     </a>
   </li>
+
+  <li class="nav-item {{ Request::is('sadmin/nfc-showcase*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('sales.nfc.showcase') }}">
+      <span class="aside-menu-icon"><i class="fas fa-credit-card icon-color-bs-blue"></i></span>
+      <span class="aside-menu-title">{{ __('messages.common.nfc_cards_showcase') }}</span>
+    </a>
+  </li>
 @endhasrole
 
 @role(App\Models\Role::ROLE_ADMIN)

@@ -596,6 +596,11 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::put('redirect-links/{redirectLink}', [RedirectLinkController::class, 'update'])->name('redirect-links.update');
     });
 
+    // Sales NFC Showcase
+    Route::prefix('sadmin')->middleware('role:sales')->group(function () {
+      Route::get('nfc-showcase', [App\Http\Controllers\SalesNfcController::class, 'index'])->name('sales.nfc.showcase');
+    });
+
     Route::prefix('sadmin')->middleware('role:super_admin|admin|sales')->group(function () {
       // Global QR Code Settings
       Route::get('global-qr-code', [GlobalQrCodeController::class, 'index'])->name('sadmin.global.qr.code.index');

@@ -621,6 +621,7 @@ return [
     'to_date' => 'إلى تاريخ',
     'all' => "الكل",
     'sales_price' => 'سعر المندوب',
+    'nfc_cards_showcase' => 'عرض بطاقات NFC',
     'items' => 'عنصر',
     'contact_support' => 'اتصل بالدعم',
   ],
