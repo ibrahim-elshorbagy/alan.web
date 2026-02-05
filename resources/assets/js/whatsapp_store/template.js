@@ -746,8 +746,9 @@ listenClick(".copy-whatsapp-store-clipboard", function () {
 
 // PWA install prompt handling: hide install button when app is installed or running standalone
 (function() {
+    let storeId = $("#whatsappStoreId").val();
     function isAppInstalled() {
-        return window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || localStorage.getItem('whatsapp_pwa_installed') === '1';
+        return window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || localStorage.getItem('whatsapp_pwa_installed_' + storeId) === '1';
     }
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -802,7 +803,7 @@ listenClick(".copy-whatsapp-store-clipboard", function () {
                 deferredPrompt.prompt();
                 const choice = await deferredPrompt.userChoice;
                 if (choice && choice.outcome === 'accepted') {
-                    localStorage.setItem('whatsapp_pwa_installed', '1');
+                    localStorage.setItem('whatsapp_pwa_installed_' + storeId, '1');
                     btn.style.display = 'none';
                     hidePwaModal();
                 }
@@ -811,7 +812,7 @@ listenClick(".copy-whatsapp-store-clipboard", function () {
         }
 
         window.addEventListener('appinstalled', function() {
-            localStorage.setItem('whatsapp_pwa_installed', '1');
+            localStorage.setItem('whatsapp_pwa_installed_' + storeId, '1');
             deferredPrompt = null;
             if (btn) btn.style.display = 'none';
             hidePwaModal();
