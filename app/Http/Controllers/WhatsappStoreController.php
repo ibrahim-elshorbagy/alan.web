@@ -167,6 +167,29 @@ class WhatsappStoreController extends AppBaseController
     $qrcodeColor['qrcodeColor'] = Hex::fromString($customQrCode['qrcode_color'])->toRgb();
     $qrcodeColor['background_color'] = Hex::fromString($customQrCode['background_color'])->toRgb();
 
+    // Update PWA manifest for this store (shared file like vCards)
+    $path = public_path('pwa/1.json');
+    $json = json_decode(file_get_contents($path), true);
+    $json['name'] = $whatsappStore->store_name;
+    $json['short_name'] = Str::limit($whatsappStore->store_name, 12);
+    $json['start_url'] = $whatsappStoreUrl;
+    $json['display'] = 'fullscreen';
+    $json['icons'] = [];
+
+    $logoUrl = $whatsappStore->getFirstMediaUrl(WhatsappStore::LOGO);
+    if ($logoUrl) {
+      $json['icons'] = [
+        [
+          'src' => $logoUrl,
+          'sizes' => '512x512',
+          'type' => 'image/png',
+          'purpose' => 'any maskable'
+        ]
+      ];
+    }
+
+    file_put_contents($path, json_encode($json));
+
     return view('whatsapp_stores.templates.' . $whatsappStore->template->name . '.index', compact('whatsappStore', 'enable_pwa', 'news_letter_popup', 'business_hours', 'businessDaysTime', 'hide_sticky_bar', 'whatsappStoreUrl', 'customQrCode', 'qrcodeColor'));
   }
 
