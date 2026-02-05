@@ -22,6 +22,17 @@ class UpdateWhatsappStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $part = $this->input('part');
+
+        if ($part === 'media-assets') {
+            return [
+                'logo' => 'nullable|file|mimes:jpg,png,jpeg',
+                'cover_img' => 'nullable|file|mimes:jpg,png,jpeg',
+                'selected_cover_image' => 'nullable|string',
+                'slider_video_banner' => 'nullable|url',
+            ];
+        }
+
         $rules = WhatsappStore::$rules;
         $rules['logo'] = 'file|mimes:jpg,png,jpeg';
         $rules['cover_img'] = 'file|mimes:jpg,png,jpeg';

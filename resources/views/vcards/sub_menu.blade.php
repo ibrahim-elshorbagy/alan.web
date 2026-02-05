@@ -10,6 +10,12 @@
             {{ __('messages.vcard.basic_details') }}
           </a>
         </li>
+        <li class="nav-item nav-item-1 position-relative">
+          <a class="nav-link-1 nav-link p-3 gap-2 {{ isset($partName) && $partName == 'profile-cover' ? 'active' : '' }}"
+            href="{{ route('vcards.edit', $vcard->id) . '?part=profile-cover' }}">
+            <i class="fa-solid fa-image p-1 icon-color-bs-purple"></i> {{ __('messages.images') }}
+          </a>
+        </li>
         <li class="nav-item nav-item-1 position-relative vcards-templates">
           <a class="nav-link-1 nav-link p-3 gap-2 {{ isset($partName) && $partName == 'templates' ? 'active' : '' }}"
             href="{{ route('vcards.edit', $vcard->id) . '?part=templates' }}">

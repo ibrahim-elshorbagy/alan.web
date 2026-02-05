@@ -1,6 +1,7 @@
 <?php
 
 return [
+  'images'=>"Images",
   'cannot_delete_user_with_active_vcard_or_redirect_link' => 'Cannot delete user with active vCard, redirect link, or NFC card order',
   'total_redirect_links' => 'Total Redirect Links',
   'add_redirect_link' => 'Add Redirect Link',
@@ -749,6 +750,7 @@ return [
     'used_count' => 'Used Count',
   ],
   'vcard' => [
+    'profile-cover'=>"images",
     'create' => 'CREATE',
     'vcard_message' => 'MESSAGE',
     'scan' => 'SCAN',
@@ -1502,7 +1504,7 @@ return [
     'register_img' => 'Best resolution for this image will be 970 x 841',
     'about_us_image' => 'Best resolution for this image will be 500 x 300',
     'testimonial_img' => 'Best resolution for this image will be 110 x 110',
-    'vcard_cover_img' => 'Best resolution for this image will be 576 x 300',
+    'vcard_cover_img' => 'Best resolution for this image will be 360 x 1170',
     'vcard_profile_img' => 'Best resolution for this image will be 150 x 150',
     'vcard_defaut_img' => 'Best resolution for this image will be 250 x 250',
     'nfc_img' => 'Best resolution for this image will be 525 x 420',
@@ -1992,6 +1994,23 @@ return [
     'embed_tag' => 'Embed Tag',
     'select_location_type' => 'Select Location Link Type',
     'location_embed_tag' => 'Location Embed Tag',
+  ],
+
+  'cover_image' => [
+    'cover_images' => 'Cover Images',
+    'manage_cover_images' => 'Manage Cover Images',
+    'add_cover_image' => 'Add Cover Image',
+    'edit_cover_image' => 'Edit Cover Image',
+    'name' => 'Name',
+    'image' => 'Image',
+    'allowed_types' => 'Allowed file types: JPG, PNG, GIF',
+    'no_cover_images' => 'No cover images found',
+    'cover_image_created' => 'Cover image created successfully',
+    'cover_image_updated' => 'Cover image updated successfully',
+    'cover_image_deleted' => 'Cover image deleted successfully',
+    'confirm_delete' => 'Are you sure you want to delete this cover image?',
+    'select_cover_image' => 'Select Cover Image',
+    'predefined_images' => 'Predefined Images',
   ],
 
   'cover_image_type' => [

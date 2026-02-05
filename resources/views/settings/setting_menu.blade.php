@@ -84,6 +84,13 @@
         &nbsp;{{ __('messages.setting.theme_color') }}</a>
     </li>
 
+    <li class=" nav-item position-relative" role="presentation">
+      <a class="nav-link me-0 p-0 gap-2 align-items-center {{ request()->is('sadmin/cover-images*') ? 'active' : '' }}"
+        href="{{ route('cover-images.index') }}" data-turbo="false"><i
+          class="fa-solid fa-images icon-color-bs-teal"></i>
+        &nbsp;{{ __('messages.cover_image.cover_images') }}</a>
+    </li>
+
     @if (moduleExists('SlackIntegration'))
       <li class="nav-item position-relative" role="presentation">
         <a class="nav-link me-0 p-0 gap-2 align-items-center {{ request()->get('section') !== null && request()->get('section') == 'SlackIntegration' ? 'active' : '' }}"

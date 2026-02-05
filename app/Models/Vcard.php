@@ -204,6 +204,7 @@ class Vcard extends Model implements HasMedia
     'youtube_link',
     'cover_type',
     'week_format',
+    'cover_url',
   ];
 
   protected $casts = [
@@ -418,6 +419,12 @@ class Vcard extends Model implements HasMedia
 
   public function getCoverUrlAttribute(): string
   {
+    // First check if there's a direct cover_url field (for predefined images)
+    if (!empty($this->attributes['cover_url'])) {
+      return $this->attributes['cover_url'];
+    }
+
+    // Fall back to media library
     /** @var Media $media */
     $media = $this->getMedia(self::COVER_PATH)->first();
     if ($media !== null) {

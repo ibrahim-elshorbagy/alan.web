@@ -113,7 +113,7 @@
       </div>
 
 
-
+      {{-- Moved to Media & Assets tab for better UX
       <div class="col-lg-3 col-sm-6 mb-7">
         <div class="mb-3" io-image-input="true">
           <label for="exampleInputImage"
@@ -122,29 +122,66 @@
             data-bs-original-title="{{ __('messages.tooltip.app_logo') }}">
             <i class="fas fa-question-circle ml-1 mt-1 general-question-mark"></i>
           </span>
-          <div class="d-block">
-            <div class="images-picker">
-              <div class="image previewImage" id="coverPreview"
-                style="background-image: url('{{ !empty($whatsappStore->cover_url) ? $whatsappStore->cover_url : '' }}');">
-              </div>
-              <span class="picker-edit rounded-circle text-gray-500 fs-small" data-bs-toggle="tooltip"
-                data-placement="top" data-bs-original-title="{{ __('messages.tooltip.cover') }}">
-                <label>
-                  <i class="fa-solid fa-pen click-image" id="profileImageIcon"></i>
-                  <input type="file" id="coverImg" name="cover_img" class="d-none" accept="image/*, video/*"
-                    data-preview-id="whatsappStoreCoverPreview" />
-                </label>
-              </span>
+
+          <div class="mb-3">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="cover_image_source" id="predefinedCover" value="predefined" {{ (!isset($whatsappStore) || !empty($whatsappStore->cover_url) && !str_contains($whatsappStore->cover_url, 'cover_images')) ? 'checked' : '' }}>
+              <label class="form-check-label" for="predefinedCover">
+                {{ __('messages.cover_image.predefined_images') }}
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="cover_image_source" id="customCover" value="custom" {{ (isset($whatsappStore) && !empty($whatsappStore->cover_url) && str_contains($whatsappStore->cover_url, 'cover_images')) ? 'checked' : '' }}>
+              <label class="form-check-label" for="customCover">
+                {{ __('messages.common.custom') }}
+              </label>
             </div>
           </div>
-          <!-- Image Paste Component -->
-          <div data-image-paste data-file-input-id="coverImg" data-preview-id="coverPreview"
-            data-button-text="{{ __('messages.select_image') }}"
-            data-clipboard-button-text="{{ __('messages.paste_from_clipboard') }}"
-            data-success-text="{{ __('messages.image_pasted_successfully') }}"
-            data-invalid-type-text="{{ __('messages.invalid_image_type') }}"
-            data-image-too-large-text="{{ __('messages.image_too_large') }}"
-            data-no-image-text="{{ __('messages.no_image_in_clipboard') }}">
+
+          <div id="predefinedImages" class="mb-3" style="{{ (!isset($whatsappStore) || !empty($whatsappStore->cover_url) && !str_contains($whatsappStore->cover_url, 'cover_images')) ? '' : 'display: none;' }}">
+            @php
+              $coverImages = \App\Models\CoverImage::where('status', 1)->get();
+            @endphp
+            @if ($coverImages->count() > 0)
+              <div class="row">
+                @foreach ($coverImages as $image)
+                  <div class="col-4 mb-2">
+                    <div class="cover-image-option {{ (isset($whatsappStore) && $whatsappStore->cover_url == $image->image_url) ? 'selected' : '' }}" data-url="{{ $image->image_url }}">
+                      <img src="{{ $image->image_url }}" alt="{{ $image->name }}" class="img-fluid" style="cursor: pointer; border: 2px solid transparent;">
+                    </div>
+                  </div>
+                @endforeach
+              </div>
+            @else
+              <p class="text-muted">{{ __('messages.cover_image.no_cover_images') }}</p>
+            @endif
+            <input type="hidden" name="selected_cover_image" id="selectedCoverImage" value="{{ isset($whatsappStore) && !empty($whatsappStore->cover_url) && !str_contains($whatsappStore->cover_url, 'cover_images') ? '' : (isset($whatsappStore) ? $whatsappStore->cover_url : '') }}">
+          </div>
+
+          <div id="customUpload" style="{{ (isset($whatsappStore) && !empty($whatsappStore->cover_url) && !str_contains($whatsappStore->cover_url, 'cover_images')) ? '' : 'display: none;' }}">
+            <div class="d-block">
+              <div class="images-picker">
+                <div class="image previewImage" id="coverPreview"
+                  style="background-image: url('{{ !empty($whatsappStore->cover_url) ? $whatsappStore->cover_url : '' }}');">
+                </div>
+                <span class="picker-edit rounded-circle text-gray-500 fs-small" data-bs-toggle="tooltip"
+                  data-placement="top" data-bs-original-title="{{ __('messages.tooltip.cover') }}">
+                  <label>
+                    <i class="fa-solid fa-pen click-image" id="profileImageIcon"></i>
+                    <input type="file" id="coverImg" name="cover_img" class="d-none" accept="image/*, video/*"
+                      data-preview-id="whatsappStoreCoverPreview" />
+                  </label>
+                </span>
+              </div>
+            </div>
+            <div data-image-paste data-file-input-id="coverImg" data-preview-id="coverPreview"
+              data-button-text="{{ __('messages.select_image') }}"
+              data-clipboard-button-text="{{ __('messages.paste_from_clipboard') }}"
+              data-success-text="{{ __('messages.image_pasted_successfully') }}"
+              data-invalid-type-text="{{ __('messages.invalid_image_type') }}"
+              data-image-too-large-text="{{ __('messages.image_too_large') }}"
+              data-no-image-text="{{ __('messages.no_image_in_clipboard') }}">
+            </div>
           </div>
         </div>
         <div class="form-text">{{ __('messages.allowed_file_types') }}</div>
@@ -174,7 +211,6 @@
               </span>
             </div>
           </div>
-          <!-- Image Paste Component -->
           <div data-image-paste data-file-input-id="logo" data-preview-id="exampleInputImage"
             data-button-text="{{ __('messages.select_image') }}"
             data-clipboard-button-text="{{ __('messages.paste_from_clipboard') }}"
@@ -191,6 +227,7 @@
         {{ Form::label('slider_video_banner', __('messages.whatsapp_stores.slider_video_banner') . ':', ['class' => 'form-label']) }}
         {{ Form::text('slider_video_banner', isset($whatsappStore) ? $whatsappStore->slider_video_banner : null, ['class' => 'form-control ', 'placeholder' => __('messages.whatsapp_stores.enter_youtube_video_link')]) }}
       </div>
+      --}}
 
       <div class="d-flex">
         {{ Form::submit(__('messages.common.save'), ['class' => 'btn btn-primary me-3', 'id' => 'vcardSaveBtn']) }}
@@ -200,6 +237,10 @@
   </div>
 
   {{ Form::close() }}
+@endif
+
+@if ($partName == 'media-assets')
+  @include('whatsapp_stores.media_assets_section')
 @endif
 
 @if ($partName == 'whatsapp-template')
@@ -410,8 +451,7 @@
           <button type="submit" class="btn btn-primary me-3 wp-template-custom-font-save">
             {{ __('messages.common.save') }}
           </button>
-          <a href="{{ route('whatsapp.stores') }}"
-            class="btn btn-secondary">{{ __('messages.common.discard') }}</a>
+          <a href="{{ route('whatsapp.stores') }}" class="btn btn-secondary">{{ __('messages.common.discard') }}</a>
         </div>
       </div>
     </div>
@@ -614,3 +654,30 @@
   </div>
 @endif
 
+<script>
+  $(document).ready(function() {
+    // Handle cover image source selection
+    $('input[name="cover_image_source"]').change(function() {
+      if ($(this).val() === 'predefined') {
+        $('#predefinedImages').show();
+        $('#customUpload').hide();
+        $('#selectedCoverImage').val('');
+      } else {
+        $('#predefinedImages').hide();
+        $('#customUpload').show();
+        $('#selectedCoverImage').val('');
+      }
+    });
+
+    // Handle predefined image selection
+    $('.cover-image-option').click(function() {
+      $('.cover-image-option').removeClass('selected').find('img').css('border', '2px solid transparent');
+      $(this).addClass('selected').find('img').css('border', '2px solid #007bff');
+      $('#selectedCoverImage').val($(this).data('url'));
+      $('#predefinedCover').prop('checked', true);
+      $('#customCover').prop('checked', false);
+      $('#predefinedImages').show();
+      $('#customUpload').hide();
+    });
+  });
+</script>

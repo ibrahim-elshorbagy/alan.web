@@ -172,6 +172,9 @@ class VcardController extends AppBaseController
         null,
         true
       );
+    } elseif ($request->selected_cover_image) {
+      // Handle predefined cover image
+      $input['selected_cover_image'] = $request->selected_cover_image;
     }
 
     $vcard = $this->vcardRepository->store($input);
@@ -561,6 +564,9 @@ class VcardController extends AppBaseController
         null,
         true
       );
+    } elseif ($request->selected_cover_image) {
+      // Handle predefined cover image
+      $input['selected_cover_image'] = $request->selected_cover_image;
     }
 
     $edit_alias_url = getSuperAdminSettingValue('url_alias');

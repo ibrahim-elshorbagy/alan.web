@@ -1,6 +1,7 @@
 <?php
 
 return [
+  'images' => "الصور",
   'cannot_delete_user_with_active_vcard_or_redirect_link' => 'لا يمكن حذف الحساب الذي لديه بطاقة vCard  نشطة أو رابط إعادة توجيه  ',
   'total_redirect_links' => 'إجمالي روابط اعادة التوجيه',
   'add_redirect_link' => 'إضافة رابط اعادة توجيه',
@@ -748,6 +749,7 @@ return [
     'used_count' => 'عدد مرات الاستخدام',
   ],
   'vcard' => [
+    'profile-cover' => "الصور",
     'create' => 'إنشاء',
     'vcard_message' => 'رسالة',
     'scan' => 'مسح',
@@ -1501,7 +1503,7 @@ return [
     'register_img' => 'أفضل دقة لهذه الصورة ستكون 970 × 841',
     'about_us_image' => 'أفضل دقة لهذه الصورة ستكون 500 × 300',
     'testimonial_img' => 'أفضل دقة لهذه الصورة ستكون 110 × 110',
-    'vcard_cover_img' => 'أفضل دقة لهذه الصورة ستكون 576 × 300',
+    'vcard_cover_img' => 'أفضل دقة لهذه الصورة ستكون 360 × 1170',
     'vcard_profile_img' => 'أفضل دقة لهذه الصورة ستكون 150 × 150',
     'vcard_defaut_img' => 'أفضل دقة لهذه الصورة ستكون 250 × 250',
     'nfc_img' => 'أفضل دقة لهذه الصورة ستكون 525 × 420',
@@ -1990,6 +1992,23 @@ return [
     'embed_tag' => 'علامة تضمين',
     'select_location_type' => 'اختر نوع رابط الموقع',
     'location_embed_tag' => 'علامة تضمين الموقع',
+  ],
+
+  'cover_image' => [
+    'cover_images' => 'صور الغلاف',
+    'manage_cover_images' => 'إدارة صور الغلاف',
+    'add_cover_image' => 'إضافة صورة غلاف',
+    'edit_cover_image' => 'تعديل صورة الغلاف',
+    'name' => 'الاسم',
+    'image' => 'الصورة',
+    'allowed_types' => 'أنواع الملفات المسموح بها: JPG، PNG، GIF',
+    'no_cover_images' => 'لم يتم العثور على صور غلاف',
+    'cover_image_created' => 'تم إنشاء صورة الغلاف بنجاح',
+    'cover_image_updated' => 'تم تحديث صورة الغلاف بنجاح',
+    'cover_image_deleted' => 'تم حذف صورة الغلاف بنجاح',
+    'confirm_delete' => 'هل أنت متأكد من حذف هذه الصورة؟',
+    'select_cover_image' => 'اختر صورة الغلاف',
+    'predefined_images' => 'استديو الصور',
   ],
 
   'cover_image_type' => [

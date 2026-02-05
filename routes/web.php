@@ -79,6 +79,7 @@ use App\Http\Controllers\EmailSubscriptionController;
 use App\Http\Controllers\ProductTransactionController;
 use App\Http\Controllers\AffiliationWithdrawController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CoverImageController;
 use App\Http\Controllers\ScheduleAppointmentController;
 use App\Http\Controllers\WhatsappStoreProductController;
 use App\Http\Controllers\EmailTemplatesController;
@@ -781,6 +782,13 @@ Route::middleware(['freshInstall'])->group(function () {
       });
 
       Route::get('/settings', [SettingController::class, 'index'])->name('setting.index');
+
+      // Cover Images
+      Route::get('/cover-images', [CoverImageController::class, 'index'])->name('cover-images.index');
+      Route::post('/cover-images', [CoverImageController::class, 'store'])->name('cover-images.store');
+      Route::put('/cover-images/{coverImage}', [CoverImageController::class, 'update'])->name('cover-images.update');
+      Route::delete('/cover-images/{coverImage}', [CoverImageController::class, 'destroy'])->name('cover-images.destroy');
+      Route::post('/cover-images/{coverImage}/status', [CoverImageController::class, 'updateStatus'])->name('cover-images.status');
 
       Route::get('/custom-page', [CustomPageController::class, 'index'])->name('custom.page.index');
       Route::get('custom-page/create', [CustomPageController::class, 'create'])->name('custom.page.create');

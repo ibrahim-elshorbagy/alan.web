@@ -30,6 +30,7 @@
 
           @if (
               $partName === 'basics' ||
+                  $partName === 'media-assets' ||
                   $partName === 'whatsapp-template' ||
                   $partName === 'business-hours' ||
                   $partName === 'seo' ||
@@ -54,4 +55,3 @@
 @push('scripts')
   <script src="{{ asset('js/image_paste_component.js') }}"></script>
 @endpush
-

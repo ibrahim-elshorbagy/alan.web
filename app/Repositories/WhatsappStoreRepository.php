@@ -64,12 +64,16 @@ class WhatsappStoreRepository extends BaseRepository
     }
     if (isset($input['cover_img']) && !empty($input['cover_img'])) {
       $file = $input['cover_img'];
-      $resizedImage = Image::make($file)->fit(576, 300);
+      $resizedImage = Image::make($file)->fit(360, 1170);
       $tempPath = sys_get_temp_dir() . '/' . time() . '_cover.' . $file->extension();
       $resizedImage->save($tempPath);
       $resizedFile = new UploadedFile($tempPath, $file->getClientOriginalName(), $file->getMimeType(), null, true);
 
       $whatsappStore->newAddMedia($resizedFile)->toMediaCollection(WhatsappStore::COVER_IMAGE, config('app.media_disc'));
+    } elseif (isset($input['selected_cover_image']) && !empty($input['selected_cover_image'])) {
+      // Handle predefined cover image - store the URL directly
+      $whatsappStore->cover_url = $input['selected_cover_image'];
+      $whatsappStore->save();
     }
 
     return $whatsappStore;
@@ -104,7 +108,7 @@ class WhatsappStoreRepository extends BaseRepository
       }
       if (isset($input['cover_img']) && !empty($input['cover_img'])) {
         $file = $input['cover_img'];
-        $resizedImage = Image::make($file)->fit(576, 300);
+        $resizedImage = Image::make($file)->fit(360, 1170);
         $tempPath = sys_get_temp_dir() . '/' . time() . '_cover.' . $file->extension();
         $resizedImage->save($tempPath);
         $resizedFile = new UploadedFile($tempPath, $file->getClientOriginalName(), $file->getMimeType(), null, true);
@@ -118,6 +122,16 @@ class WhatsappStoreRepository extends BaseRepository
           ->where('id', '!=', $tempCoverMedia->id)
           ->where('collection_name', WhatsappStore::COVER_IMAGE)
           ->delete();
+
+        // Clear predefined cover URL when uploading custom
+        $whatsappStore->cover_url = null;
+        $whatsappStore->save();
+      } elseif (isset($input['selected_cover_image']) && !empty($input['selected_cover_image'])) {
+        // Handle predefined cover image - store the URL directly
+        // Clear custom uploaded media
+        $whatsappStore->clearMediaCollection(WhatsappStore::COVER_IMAGE);
+        $whatsappStore->cover_url = $input['selected_cover_image'];
+        $whatsappStore->save();
       }
 
       DB::commit();

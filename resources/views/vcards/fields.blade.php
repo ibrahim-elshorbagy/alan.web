@@ -78,6 +78,7 @@
         </div>
         @include('vcards.ai-description.ai-description-modal')
       </div>
+      {{-- Moved to Profile & Cover tab for better UX
       <div class="col-lg-6 mb-7">
         <div class="row">
           <div class="col-lg-6 col-sm-8 mb-7">
@@ -91,34 +92,81 @@
               {{ Form::select('cover_type', $coverType, isset($vcard) ? $vcard->cover_type : null, ['class' => 'form-select cover-type', 'id' => 'coverType', 'data-control' => 'select2']) }}
             </div>
             <div class="col-lg-6 col-sm-6 mb-7 cover-imgs ms-5">
-              <div class="mb-3" io-image-input="true">
-                <label for="exampleInputImage" class="form-label">{{ __('messages.vcard.cover_img') . ':' }}</label>
+              <div class="mb-3">
+                <label class="form-label">{{ __('messages.vcard.cover_img') . ':' }}</label>
                 <span data-bs-toggle="tooltip" data-placement="top"
                   data-bs-original-title="{{ __('messages.tooltip.vcard_cover_img') }}">
                   <i class="fas fa-question-circle ml-1 general-question-mark"></i>
                 </span>
-                <div class="d-block">
-                  <div class="images-picker">
-                    <div class="image previewImage" id="coverPreview"
-                      style="background-image: url('{{ !empty($vcard->cover_url) && in_array(pathinfo($vcard->cover_url, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'webp']) ? $vcard->cover_url : asset('assets/images/default_cover_image.jpg') }}');">
-                    </div>
-                    <span class="picker-edit rounded-circle text-gray-500 fs-small" data-bs-toggle="tooltip"
-                      data-placement="top" data-bs-original-title="{{ __('messages.tooltip.cover') }}">
-                      <label>
-                        <i class="fa-solid fa-pen click-image" id="profileImageIcon"></i>
-                        <input type="file" id="coverImg" name="cover_img" class="d-none" accept="image/*"
-                          data-preview-id="coverPreview" />
-                      </label>
-                    </span>
+
+                <div class="mb-3">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="cover_image_source" id="predefinedCover"
+                      value="predefined"
+                      {{ !isset($vcard) || (!empty($vcard->cover_url) && !str_contains($vcard->cover_url, 'cover_images')) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="predefinedCover">
+                      {{ __('messages.cover_image.predefined_images') }}
+                    </label>
                   </div>
-                  <!-- Image Paste Component -->
-                  <div data-image-paste data-file-input-id="coverImg" data-preview-id="coverPreview"
-                    data-button-text="{{ __('messages.select_image') }}"
-                    data-clipboard-button-text="{{ __('messages.paste_from_clipboard') }}"
-                    data-success-text="{{ __('messages.image_pasted_successfully') }}"
-                    data-invalid-type-text="{{ __('messages.invalid_image_type') }}"
-                    data-image-too-large-text="{{ __('messages.image_too_large') }}"
-                    data-no-image-text="{{ __('messages.no_image_in_clipboard') }}">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="cover_image_source" id="customCover"
+                      value="custom"
+                      {{ isset($vcard) && !empty($vcard->cover_url) && str_contains($vcard->cover_url, 'cover_images') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="customCover">
+                      {{ __('messages.common.custom') }}
+                    </label>
+                  </div>
+                </div>
+
+                <div id="predefinedImages" class="mb-3"
+                  style="{{ !isset($vcard) || (!empty($vcard->cover_url) && !str_contains($vcard->cover_url, 'cover_images')) ? '' : 'display: none;' }}">
+                  <div class="row">
+                    @php
+                      $coverImages = \App\Models\CoverImage::where('status', true)->get();
+                    @endphp
+                    @forelse($coverImages as $image)
+                      <div class="col-4 mb-2">
+                        <div
+                          class="cover-image-option {{ isset($vcard) && $vcard->cover_url == $image->image_url ? 'selected' : '' }}"
+                          data-url="{{ $image->image_url }}">
+                          <img src="{{ $image->image_url }}" alt="{{ $image->name }}" class="img-fluid"
+                            style="cursor: pointer; border: 2px solid transparent;">
+                        </div>
+                      </div>
+                    @empty
+                      <div class="col-12">
+                        <p class="text-muted">{{ __('messages.cover_image.no_cover_images') }}</p>
+                      </div>
+                    @endforelse
+                  </div>
+                  <input type="hidden" name="selected_cover_image" id="selectedCoverImage"
+                    value="{{ isset($vcard) && !empty($vcard->cover_url) && !str_contains($vcard->cover_url, 'cover_images') ? '' : (isset($vcard) ? $vcard->cover_url : '') }}">
+                </div>
+
+                <div id="customUpload" io-image-input="true"
+                  style="{{ isset($vcard) && !empty($vcard->cover_url) && !str_contains($vcard->cover_url, 'cover_images') ? '' : 'display: none;' }}">
+                  <div class="d-block">
+                    <div class="images-picker">
+                      <div class="image previewImage" id="coverPreview"
+                        style="background-image: url('{{ !empty($vcard->cover_url) && in_array(pathinfo($vcard->cover_url, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'webp']) ? $vcard->cover_url : asset('assets/images/default_cover_image.jpg') }}');">
+                      </div>
+                      <span class="picker-edit rounded-circle text-gray-500 fs-small" data-bs-toggle="tooltip"
+                        data-placement="top" data-bs-original-title="{{ __('messages.tooltip.cover') }}">
+                        <label>
+                          <i class="fa-solid fa-pen click-image" id="profileImageIcon"></i>
+                          <input type="file" id="coverImg" name="cover_img" class="d-none" accept="image/*"
+                            data-preview-id="coverPreview" />
+                        </label>
+                      </span>
+                    </div>
+                    <div data-image-paste data-file-input-id="coverImg" data-preview-id="coverPreview"
+                      data-button-text="{{ __('messages.select_image') }}"
+                      data-clipboard-button-text="{{ __('messages.paste_from_clipboard') }}"
+                      data-success-text="{{ __('messages.image_pasted_successfully') }}"
+                      data-invalid-type-text="{{ __('messages.invalid_image_type') }}"
+                      data-image-too-large-text="{{ __('messages.image_too_large') }}"
+                      data-no-image-text="{{ __('messages.no_image_in_clipboard') }}">
+                    </div>
                   </div>
                 </div>
               </div>
@@ -127,7 +175,8 @@
 
             <div class="col-lg-6 col-sm-6 mb-7 cover-video d-none ms-5">
               <div class="mb-3" io-image-input="true">
-                <label for="exampleInputImage" class="form-label">{{ __('messages.vcard.cover_video') . ':' }}</label>
+                <label for="exampleInputImage"
+                  class="form-label">{{ __('messages.vcard.cover_video') . ':' }}</label>
                 <div class="d-block">
                   <div class="images-picker">
                     <div class="image previewImage" id="coverPreview">
@@ -230,6 +279,7 @@
           </div>
         </div>
       </div>
+      --}}
       <div class="d-flex">
         {{ Form::submit(__('messages.save_next'), ['class' => 'btn btn-primary me-3', 'id' => 'vcardSaveBtn']) }}
         <a href="{{ route('vcards.index') }}" class="btn btn-secondary">{{ __('messages.common.discard') }}</a>
@@ -497,6 +547,11 @@
     </div>
   </div>
 @endif
+
+@if ($partName == 'profile-cover')
+  @include('vcards.profile_cover_section')
+@endif
+
 @if ($partName == 'templates')
   <div class="container-fluid">
     <div class="col-lg-12 mb-3">
@@ -1604,11 +1659,36 @@
     </div>
     <div class="col-lg-12 mt-5">
       <div class="col-lg-12 d-flex">
-        <button type="submit" class="btn btn-primary me-3" id="dynamicColorSave" data-turbo="false">
-          {{ __('messages.common.save') }}
-        </button>
         <a href="{{ route('vcards.index') }}" class="btn btn-secondary">{{ __('messages.common.discard') }}</a>
       </div>
     </div>
   </div>
 @endif
+
+<script>
+  $(document).ready(function() {
+    // Handle cover image source selection
+    $('input[name="cover_image_source"]').change(function() {
+      if ($(this).val() === 'predefined') {
+        $('#predefinedImages').show();
+        $('#customUpload').hide();
+        $('#selectedCoverImage').val('');
+      } else {
+        $('#predefinedImages').hide();
+        $('#customUpload').show();
+        $('#selectedCoverImage').val('');
+      }
+    });
+
+    // Handle predefined image selection
+    $('.cover-image-option').click(function() {
+      $('.cover-image-option').removeClass('selected').find('img').css('border', '2px solid transparent');
+      $(this).addClass('selected').find('img').css('border', '2px solid #007bff');
+      $('#selectedCoverImage').val($(this).data('url'));
+      $('#predefinedCover').prop('checked', true);
+      $('#customCover').prop('checked', false);
+      $('#predefinedImages').show();
+      $('#customUpload').hide();
+    });
+  });
+</script>

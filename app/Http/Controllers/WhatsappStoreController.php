@@ -57,6 +57,13 @@ class WhatsappStoreController extends AppBaseController
   {
     $input = $request->all();
 
+    if ($request->hasFile('cover_img')) {
+      // Handle file upload (existing logic)
+    } elseif ($request->selected_cover_image) {
+      // Handle predefined cover image
+      $input['selected_cover_image'] = $request->selected_cover_image;
+    }
+
     $whatsappStore = $this->whatsappStoreRepository->store($input);
 
     Flash::success(__('messages.flash.whatsapp_store_create'));
@@ -89,6 +96,7 @@ class WhatsappStoreController extends AppBaseController
     $refundCancellation = $whatsappStore->refundCancellation;
     $shippingDelivery = $whatsappStore->shippingDelivery;
 
+    $whatsappStore->load('media');
 
     return view('whatsapp_stores.edit', compact('whatsappStore', 'partName', 'productsCategories', 'templates', 'termCondition', 'privacyPolicy', 'refundCancellation', 'shippingDelivery'));
   }
@@ -165,6 +173,13 @@ class WhatsappStoreController extends AppBaseController
   public function update(WhatsappStore $whatsappStore, UpdateWhatsappStoreRequest $request)
   {
     $input = $request->all();
+
+    if ($request->hasFile('cover_img')) {
+      // Handle file upload (existing logic)
+    } elseif ($request->selected_cover_image) {
+      // Handle predefined cover image
+      $input['selected_cover_image'] = $request->selected_cover_image;
+    }
 
     $whatsappStore = $this->whatsappStoreRepository->update($whatsappStore, $input);
 
