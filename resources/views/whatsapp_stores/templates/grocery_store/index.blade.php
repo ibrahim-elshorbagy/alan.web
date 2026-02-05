@@ -1100,5 +1100,17 @@
   const emailSubscriptionUrl =
     "{{ route('whatsapp.store.emailSubscriprion-store', ['alias' => $whatsappStore->url_alias]) }}";
 </script>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js").then(
+      function(registration) {
+        console.log("Service Worker registered successfully:", registration);
+      },
+      function(error) {
+        console.log("Service Worker registration failed:", error);
+      }
+    );
+  }
+</script>
 
 </html>
