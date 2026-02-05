@@ -133,7 +133,7 @@
   padding: 10px 10px 13px 10px;
 }
 
-/* @font-face {
+@font-face {
   font-family: "Montserrat";
   font-style: normal;
   font-weight: 400;
@@ -160,15 +160,15 @@
   font-weight: 700;
   src: url("/assets/fonts/Montserrat-Bold.ttf") format("truetype");
   font-display: swap;
-} */
+}
 .text-gray-200 {
   color: #999999 !important;
 }
 
 body {
-  /* font-family: "Montserrat"; */
-  /* font-weight: 400 !important; */
-  /* -webkit-font-smoothing: antialiased; */
+  font-family: "Montserrat";
+  font-weight: 400 !important;
+  -webkit-font-smoothing: antialiased;
 }
 
 .btn {
