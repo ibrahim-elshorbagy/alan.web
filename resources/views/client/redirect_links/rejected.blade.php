@@ -28,9 +28,12 @@
                 <i class="fab fa-whatsapp"></i>
               </a>
             @else
-              <a href="{{ route('login') }}" class="btn btn-primary btn-lg">
-                <i class="fas fa-sign-in-alt"></i> {{ __('messages.common.login') }}
-              </a>
+              <p class="text-muted mb-2">
+                {{ __('messages.new_subscriber') }} <a href="{{ route('register') }}" class="text-primary">{{ __('messages.register_subscription') }}</a>
+              </p>
+              <p class="text-muted mb-4">
+                {{ __('messages.have_subscription') }} <a href="{{ route('login') }}" class="text-primary">{{ __('messages.please_login') }}</a>
+              </p>
             @endif
           </div>
         </div>

@@ -887,7 +887,7 @@ class RedirectLinksCustomTable extends Component
 
   public function getSalesUsers()
   {
-    return User::role(['sales', 'super_admin'])->get();
+    return User::role('sales')->get();
   }
 
   public function getNfcCards()

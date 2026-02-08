@@ -23,14 +23,12 @@
             <br>
             <strong>Serial No: </strong>{{ str_pad($uri->id, 4, '0', STR_PAD_LEFT) }}
           </div>
-          <div class="d-flex justify-content-center gap-3">
-            <a href="{{ route('register') }}" class="btn btn-primary btn-lg">
-              <i class="fas fa-user-plus"></i> {{ __('messages.common.register') }}
-            </a>
-            <a href="{{ route('login') }}" class="btn btn-success btn-lg">
-              <i class="fas fa-sign-in-alt"></i> {{ __('messages.common.login') }}
-            </a>
-          </div>
+          <p class="text-muted mb-2">
+            {{ __('messages.new_subscriber') }} <a href="{{ route('register') }}" class="text-primary">{{ __('messages.register_subscription') }}</a>
+          </p>
+          <p class="text-muted mb-4">
+            {{ __('messages.have_subscription') }} <a href="{{ route('login') }}" class="text-primary">{{ __('messages.please_login') }}</a>
+          </p>
         </div>
       </div>
     </div>

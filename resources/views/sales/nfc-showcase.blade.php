@@ -45,15 +45,22 @@
                 </div>
               </div>
               <div class="">
-                <div class="row mt-5 nfc-price fs-3" id="nfc-price">
-                  <div class="col-sm-8 p-0">{{ $nfcCard['name'] }}</div>
-                  <div class="col-sm-4 text-primary p-0">
+                <div class="mt-5 nfc-price fs-3" id="nfc-price">
+                  <!-- First line: full-width name -->
+                  <div class="w-100">
+                    {{ $nfcCard['name'] }}
+                  </div>
+
+                  <!-- Second line: prices -->
+                  <div class="text-primary w-100">
                     {{ __('messages.admin_price') }}:
-                    {{ $currency . (getSuperAdminSettingValue('hide_decimal_values') == 1 ? number_format($nfcCard['price'], 0) : number_format($nfcCard['price'], 2)) }}<br>
+                    {{ $currency . (getSuperAdminSettingValue('hide_decimal_values') == 1 ? number_format($nfcCard['price'], 0) : number_format($nfcCard['price'], 2)) }}
+                    <br>
                     {{ __('messages.common.sales_price') }}:
                     {{ $currency . (getSuperAdminSettingValue('hide_decimal_values') == 1 ? number_format($nfcCard['sales_price'], 0) : number_format($nfcCard['sales_price'], 2)) }}
                   </div>
                 </div>
+
               </div>
             </div>
           @endforeach

@@ -1,6 +1,11 @@
 <?php
 
 return [
+  'new_subscriber' => 'مشترك جديد؟',
+  'register_subscription' => 'تسجيل الاشتراك',
+  'have_subscription' => 'لديك اشتراك؟',
+  'please_login' => 'يرجى تسجيل الدخول',
+
   'images' => "الصور",
   'cannot_delete_user_with_active_vcard_or_redirect_link' => 'لا يمكن حذف الحساب الذي لديه بطاقة vCard  نشطة أو رابط إعادة توجيه  ',
   'total_redirect_links' => 'إجمالي روابط اعادة التوجيه',
@@ -2629,6 +2634,7 @@ return [
     'reset_password_subtitle' => 'أدخل رمز التحقق وكلمة المرور الجديدة.',
     'reset_password_button' => 'إعادة تعيين كلمة المرور',
     'resetting' => 'جارٍ إعادة التعيين...',
+
 
   ],
 ];

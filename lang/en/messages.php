@@ -1,6 +1,12 @@
 <?php
 
 return [
+  
+  'new_subscriber' => 'New subscriber?',
+  'register_subscription' => 'Register subscription',
+  'have_subscription' => 'Do you have a subscription?',
+  'please_login' => 'Please log in',
+
   'images'=>"Images",
   'cannot_delete_user_with_active_vcard_or_redirect_link' => 'Cannot delete user with active vCard, redirect link, or NFC card order',
   'total_redirect_links' => 'Total Redirect Links',
@@ -2631,6 +2637,7 @@ If you want to redirect your card to the smart business card, you must first go 
     'reset_password_subtitle' => 'Enter the verification code and your new password.',
     'reset_password_button' => 'Reset Password',
     'resetting' => 'Resetting...',
+
 
   ],
 ];
