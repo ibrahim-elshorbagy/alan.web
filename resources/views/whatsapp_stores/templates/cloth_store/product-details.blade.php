@@ -21,41 +21,14 @@
   <link rel="stylesheet" href="{{ asset('assets/css/third-party.css') }}">
   <link rel="stylesheet" href="{{ asset('css/plugins.css') }}">
   <link rel="stylesheet" href="{{ mix('assets/css/whatsappp_store/custom.css') }}" />
-  @if ($whatsappStore->font_family || $whatsappStore->font_size || $whatsappStore->custom_css)
-    <style>
-      @if (checkFeature('custom-fonts'))
-        @if ($whatsappStore->font_family)
-          body,
-          body *,
-          button,
-          h1,
-          h2,
-          h3,
-          h4,
-          h5,
-          h6,
-          p,
-          div,
-          span,
-          a,
-          input,
-          textarea,
-          select,
-          label,
-          li,
-          ul,
-          ol,
-          table,
-          th,
-          td,
-          blockquote,
-          strong,
-          b,
-          em {
-            font-family: {{ $whatsappStore->font_family }} !important;
-          }
-        @endif
-      @endif
+  <style>
+    @if ($whatsappStore->font_family)
+
+      @import url('https://fonts.googleapis.com/css2?family={{ urlencode($whatsappStore->font_family) }}:wght@300;400;500;600;700;800&display=swap{{ in_array($whatsappStore->font_family, ['Tajawal', 'Cairo', 'Amiri', 'Noto Sans Arabic', 'Noto Naskh Arabic', 'Noto Kufi Arabic', 'Scheherazade', 'Lateef', 'Harmattan', 'Reem Kufi', 'Jomhuria', 'Mada', 'Lemonada', 'Zain']) ? '&subset=arabic' : '' }}');
+
+      * {
+        font-family: '{{ $whatsappStore->font_family }}', Arial, sans-serif !important;
+      }
 
       /* Ensure FontAwesome icons use correct font */
       i,
@@ -68,18 +41,19 @@
       .fat {
         font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
       }
+    @endif
 
-      @if ($whatsappStore->font_size)
-        div>h4 {
-          font-size: {{ $whatsappStore->font_size }}px !important;
-        }
-      @endif
+    @if ($whatsappStore->font_size)
+      div>h4 {
+        font-size: {{ $whatsappStore->font_size }}px !important;
+      }
+    @endif
 
-      @if ($whatsappStore->custom_css)
-        {!! $whatsappStore->custom_css !!}
-      @endif
-    </style>
-  @endif
+    @if ($whatsappStore->custom_css)
+      {!! $whatsappStore->custom_css !!}
+    @endif
+  </style>
+</head>
 </head>
 
 <div class="main-content mx-auto w-100 overflow-hidden d-flex flex-column justify-content-between"
