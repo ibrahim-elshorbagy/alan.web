@@ -5,8 +5,8 @@
 @section('content')
   <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
-      <div class="card shadow-lg">
-        <div class="card-body text-center p-5">
+      <div class="card shadow-lg mb-0 mb-md-3">
+        <div class="card-body text-center p-3 p-md-5">
           <div class="mb-4">
             <i class="fas fa-link fa-5x text-warning"></i>
           </div>
@@ -14,7 +14,7 @@
           <p class="text-muted mb-4">
             {{ __('messages.redirect_links.please_add_redirect_link_description') }}
           </p>
-          <div class="p-4  alert-info mb-4">
+          <div class="p-2 p-md-4 alert-info mb-4">
             <i class="fas fa-info-circle"></i>
             <strong>{{ __('messages.redirect_links.redirect_code') }}:</strong> {{ $uri->uri }}
           </div>
