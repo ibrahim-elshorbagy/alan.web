@@ -15,7 +15,7 @@
             @endif
           </div>
           <h2 class="mb-3">{{ $nfc->name }}</h2>
-          <p class="text-muted mb-4">
+          <p class="text-muted mb-2">
             {{ __('messages.redirect_links.new_nfc_card_description') }}
           </p>
           <div class="p-2 p-md-4 alert-info mb-4" dir="ltr">
@@ -24,12 +24,16 @@
             <strong>Serial No: </strong>{{ str_pad($uri->id, 4, '0', STR_PAD_LEFT) }}
           </div>
           <p class="text-muted mb-2">
-            {{ __('messages.new_subscriber') }} <a href="{{ route('register') }}"
-              class="text-primary">{{ __('messages.register_subscription') }}</a>
+            {{ __('messages.new_subscriber') }}
           </p>
-          <p class="text-muted mb-4">
-            {{ __('messages.have_subscription') }} <a href="{{ route('login') }}"
-              class="text-primary">{{ __('messages.please_login') }}</a>
+          <p class="text-muted mb-2">
+            <a href="{{ route('register') }}" class="text-primary">{{ __('messages.register_subscription') }}</a>
+          </p>
+          <p class="text-muted mb-2">
+            {{ __('messages.have_subscription') }}
+          </p>
+          <p class="text-muted mb-2">
+            <a href="{{ route('login') }}" class="text-primary">{{ __('messages.please_login') }}</a>
           </p>
         </div>
       </div>

@@ -108,7 +108,7 @@ class UserTable extends LivewireTableComponent
   }
 
   public array $bulkActions = [
-    'bulkDelete' => 'Delete',
+    // 'bulkDelete' => 'Delete',
   ];
   public function setSelectedRecord($recordId)
   {

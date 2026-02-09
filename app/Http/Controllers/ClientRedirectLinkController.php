@@ -190,10 +190,10 @@ class ClientRedirectLinkController extends Controller
       }
 
       // Check if already redeemed
-      if ($redirectLink->status == RedirectLink::STATUS_REDEEMED) {
-        Flash::error(__('messages.redirect_links.code_already_redeemed'));
-        return redirect()->route('client.redirect-links.index');
-      }
+      // if ($redirectLink->status == RedirectLink::STATUS_REDEEMED) {
+      //   Flash::error(__('messages.redirect_links.code_already_redeemed'));
+      //   return redirect()->route('client.redirect-links.index');
+      // }
 
       // Check if rejected
       if ($redirectLink->status == RedirectLink::STATUS_REJECTED) {

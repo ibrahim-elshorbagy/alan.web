@@ -11,7 +11,7 @@
             <i class="fas fa-link fa-5x text-warning"></i>
           </div>
           <h2 class="mb-3">{{ __('messages.redirect_links.no_redirect_link') }}</h2>
-          <p class="text-muted mb-4">
+          <p class="text-muted mb-2">
             {{ __('messages.redirect_links.please_add_redirect_link_description') }}
           </p>
           <div class="p-2 p-md-4 alert-info mb-4">
@@ -21,6 +21,7 @@
           <a href="{{ route('client.redirect-links.edit', $uri->id) }}" class="btn btn-primary btn-lg">
             <i class="fas fa-plus-circle"></i> {{ __('messages.redirect_links.add_redirect_link') }}
           </a>
+
         </div>
       </div>
     </div>

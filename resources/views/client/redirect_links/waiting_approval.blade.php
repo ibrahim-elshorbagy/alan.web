@@ -11,7 +11,7 @@
             <i class="fas fa-clock fa-5x text-info"></i>
           </div>
           <h2 class="mb-3">{{ __('messages.redirect_links.waiting_for_approval') }}</h2>
-          <p class="text-muted mb-4">
+          <p class="text-muted mb-2">
             {{ __('messages.redirect_links.waiting_for_approval_description') }}
           </p>
           <div class="mb-4">
@@ -34,26 +34,46 @@
             {{ __('messages.redirect_links.contact_sales_to_enable') }}
           </div>
 
-          <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+          <div class="d-flex flex-column align-items-center gap-1 text-center">
+
             @if (!empty($isAuth) && $isAuth)
-              <a href="mailto:{{ $setting['email'] }}" class="btn btn-primary btn-lg">
-                <i class="fas fa-envelope"></i>
-              </a>
-              <a href="https://wa.me/{{ $setting['prefix_code'] }}{{ $setting['phone'] }}"
-                class="btn btn-success btn-lg" target="_blank">
-                <i class="fab fa-whatsapp"></i>
-              </a>
-            @else
-              <p class="text-muted mb-2">
-                {{ __('messages.new_subscriber') }} <a href="{{ route('register') }}"
-                  class="text-primary">{{ __('messages.register_subscription') }}</a>
-              </p>
-              <p class="text-muted mb-4">
-                {{ __('messages.have_subscription') }} <a href="{{ route('login') }}"
-                  class="text-primary">{{ __('messages.please_login') }}</a>
-              </p>
+              <!-- Buttons row -->
+              <div class="d-flex w-100 gap-3">
+                <a href="mailto:{{ $setting['email'] }}"
+                   class="btn btn-primary btn-lg flex-fill">
+                  <i class="fas fa-envelope"></i>
+                </a>
+
+                <a href="https://wa.me/{{ $setting['prefix_code'] }}{{ $setting['phone'] }}"
+                   class="btn btn-success btn-lg flex-fill"
+                   target="_blank">
+                  <i class="fab fa-whatsapp"></i>
+                </a>
+              </div>
             @endif
+
+            <p class="text-muted mb-0 mt-2">
+              {{ __('messages.new_subscriber') }}
+            </p>
+
+            <p class="mb-0">
+              <a href="{{ route('register') }}" class="text-primary">
+                {{ __('messages.register_subscription') }}
+              </a>
+            </p>
+
+            <p class="text-muted mb-0">
+              {{ __('messages.have_subscription') }}
+            </p>
+
+            <p class="mb-0">
+              <a href="{{ route('login') }}" class="text-primary">
+                {{ __('messages.please_login') }}
+              </a>
+            </p>
+
           </div>
+
         </div>
       </div>
     </div>
