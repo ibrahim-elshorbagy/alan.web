@@ -240,12 +240,13 @@ class ClientRedirectLinkController extends Controller
         'status' => \App\Models\NfcOrders::SUCCESS, // Already paid
       ]);
 
+      // stopped  keep the redeem status
       // if from sales or super admin don't active[full redeem from sales] it until sales mark as redeem
-      if ($redirectLink->assigned_id) {
-        $redeemedStatus = RedirectLink::STATUS_NOT_REDEEMED;
-      } else {
-        $redeemedStatus = RedirectLink::STATUS_REDEEMED;
-      }
+      // if ($redirectLink->assigned_id) {
+      //   $redeemedStatus = RedirectLink::STATUS_NOT_REDEEMED;
+      // } else {
+      //   $redeemedStatus = RedirectLink::STATUS_REDEEMED;
+      // }
 
       // Get the actual user who is making this change (considering impersonation)
       $actualUserId = auth()->user()->isImpersonated()
@@ -257,7 +258,7 @@ class ClientRedirectLinkController extends Controller
       // Assign redirect link to user and mark as redeemed
       $redirectLink->update([
         'user_id' => $user->id,
-        'status' => $redeemedStatus,
+        // 'status' => $redeemedStatus,
         'nfc_order_id' => $nfcOrder->id,
       ]);
 
