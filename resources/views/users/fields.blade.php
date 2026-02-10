@@ -12,8 +12,8 @@
     </div>
   </div>
   <div class="col-lg-6 mb-5">
-    {{ Form::label('email', __('messages.user.email') . ':', ['class' => 'form-label required']) }}
-    {{ Form::email('email', isset($user) ? $user->email : null, ['class' => 'form-control check-email', 'placeholder' => __('messages.form.mail'), 'required']) }}
+    {{ Form::label('email', __('messages.user.email') . ':', ['class' => 'form-label']) }}
+    {{ Form::email('email', isset($user) ? $user->email : null, ['class' => 'form-control check-email', 'placeholder' => __('messages.form.mail')]) }}
     <input type="hidden" id="originalEmail" value="{{ isset($user) ? $user->email : '' }}">
     <span id="email-error-msg" class="text-danger fw-400 fs-small mt-2"></span>
   </div>

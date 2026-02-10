@@ -130,7 +130,7 @@ listenSubmit("#userEditForm", function () {
         displayErrorMessage(Lang.get("js.first_name_required"));
         return false;
     }
-    if (!isEmailUser($("#email").val())) {
+    if ($("#email").val() !== "" && !isEmailUser($("#email").val())) {
         displayErrorMessage(Lang.get("js.enter_valid_email"));
         return false;
     }
