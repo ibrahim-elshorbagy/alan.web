@@ -65,7 +65,14 @@ class ClientRedirectLinkController extends Controller
       $userVCards = \App\Models\Vcard::where('tenant_id', $tenantId)->get();
     }
 
-    return view('client.redirect_links.edit', compact('redirectLink', 'customQrCode', 'qrcodeColor', 'userVCards'));
+    $assignedUser = null;
+    if ($redirectLink->assigned_id) {
+      $assignedUser = \App\Models\User::withoutGlobalScopes()->where('id', $redirectLink->assigned_id)->select('id', 'first_name', 'last_name', 'contact')->first();
+    }
+
+
+
+    return view('client.redirect_links.edit', compact('redirectLink', 'customQrCode', 'qrcodeColor', 'userVCards', 'assignedUser'));
   }
 
   public function update(Request $request, $id)
@@ -297,15 +304,20 @@ class ClientRedirectLinkController extends Controller
     // Whether a visitor is authenticated — views use this to change CTA behaviour
     $isAuth = Auth::check();
 
+    $assignedUser = null;
+    if ($uri->assigned_id) {
+      $assignedUser = \App\Models\User::withoutGlobalScopes()->where('id', $uri->assigned_id)->select('id', 'first_name', 'last_name', 'contact')->first();
+    }
+
     // STEP 1: Check if card has been received by sales
     if ($uri->received_status != RedirectLink::RECEIVED_STATUS_RECEIVED) {
-      return view('client.redirect_links.not_received', compact('uri', 'setting', 'isAuth'))
+      return view('client.redirect_links.not_received', compact('uri', 'setting', 'isAuth', 'assignedUser'))
         ->with('info', __('messages.redirect_links.card_not_received_description'));
     }
 
     // STEP 2: Check if the link has been rejected
     if ($uri->status == RedirectLink::STATUS_REJECTED) {
-      return view('client.redirect_links.rejected', compact('uri', 'setting', 'isAuth'));
+      return view('client.redirect_links.rejected', compact('uri', 'setting', 'isAuth', 'assignedUser'));
     }
 
     // STEP 3: Check redemption status
@@ -315,12 +327,12 @@ class ClientRedirectLinkController extends Controller
       if ($uri->user_id === null) {
         session(['pending_redeem_uri' => $uri->uri]);
         $nfc = $uri->nfc;
-        return view('client.redirect_links.new_redirect_link', compact('uri', 'setting', 'isAuth', 'nfc'));
+        return view('client.redirect_links.new_redirect_link', compact('uri', 'setting', 'isAuth', 'nfc', 'assignedUser'));
       }
 
       // STEP 3b: Card is claimed - check if redirect link URL has been set
       if (empty($uri->redirect_link)) {
-        return view('client.redirect_links.add_link', compact('uri', 'setting', 'isAuth'));
+        return view('client.redirect_links.add_link', compact('uri', 'setting', 'isAuth', 'assignedUser'));
       }
 
       // STEP 3c: Validate and redirect to destination
@@ -350,7 +362,7 @@ class ClientRedirectLinkController extends Controller
       // STEP 4b: User has redeemed but waiting for sales approval
       if ($uri->user_id == Auth::id()) {
         $nfc = $uri->nfc;
-        return view('client.redirect_links.waiting_approval', compact('uri', 'setting', 'isAuth', 'nfc'));
+        return view('client.redirect_links.waiting_approval', compact('uri', 'setting', 'isAuth', 'nfc', 'assignedUser'));
       }
 
       // STEP 4c: Access denied if not the owner

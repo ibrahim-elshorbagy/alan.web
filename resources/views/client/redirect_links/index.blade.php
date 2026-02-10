@@ -12,7 +12,9 @@
         </button>
       </div>
       @include('flash::message')
-      <livewire:client-redirect-links-table lazy />
+      <div class="table-responsive">
+        <livewire:client-redirect-links-table lazy />
+      </div>
     </div>
   </div>
 
@@ -48,13 +50,13 @@
 @endsection
 
 @push('scripts')
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    @if(session('pending_redeem_uri'))
-      // Auto-open the redeem modal if there's a pending URI in session
-      var redeemModal = new bootstrap.Modal(document.getElementById('redeemModal'));
-      redeemModal.show();
-    @endif
-  });
-</script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      @if (session('pending_redeem_uri'))
+        // Auto-open the redeem modal if there's a pending URI in session
+        var redeemModal = new bootstrap.Modal(document.getElementById('redeemModal'));
+        redeemModal.show();
+      @endif
+    });
+  </script>
 @endpush

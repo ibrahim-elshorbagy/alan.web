@@ -41,13 +41,8 @@ class ClientRedirectLinksTable extends LivewireTableComponent
         ->view('client.redirect_links.columns.redirect_link'),
       Column::make(__('messages.redirect_links.status'), 'status')
         ->view('client.redirect_links.columns.status'),
-      Column::make(__('messages.redirect_links.nfc'), 'nfc.name')
-        ->searchable(function (Builder $query, $direction) {
-          $query->whereHas('nfc', function ($q) use ($direction) {
-            $q->where('name', 'like', '%' . $direction . '%');
-          });
-        })->view('client.redirect_links.columns.nfc'),
-      Column::make(__('messages.redirect_links.updated_at'), 'updated_at')->sortable(),
+      Column::make(__('messages.redirect_links.updated_at'), 'updated_at')->sortable()
+        ->view('client.redirect_links.columns.updated_at'),
       Column::make(__('messages.common.action'), 'id')
         ->view('client.redirect_links.columns.action'),
     ];

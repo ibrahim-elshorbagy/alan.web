@@ -1,11 +1,13 @@
 <?php
 
 return [
-  
+
   'new_subscriber' => 'New subscriber?',
   'register_subscription' => 'Register subscription',
   'have_subscription' => 'Do you have a subscription?',
   'please_login' => 'Please log in',
+  'sold_by' => 'Sold by:',
+  'contact_sales_rep' => 'Contact Sales Representative',
 
   'images'=>"Images",
   'cannot_delete_user_with_active_vcard_or_redirect_link' => 'Cannot delete user with active vCard, redirect link, or NFC card order',
@@ -2640,4 +2642,5 @@ If you want to redirect your card to the smart business card, you must first go 
 
 
   ],
+
 ];

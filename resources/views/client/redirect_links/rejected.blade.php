@@ -19,7 +19,7 @@
             <strong>{{ __('messages.redirect_links.redirect_code') }}:</strong> {{ $uri->uri }}
           </div>
           <div class="d-flex justify-content-center gap-3">
-              <i class="fas fa-envelope"></i>
+            <i class="fas fa-envelope"></i>
             </a>
             <a href="https://wa.me/{{ $setting['prefix_code'] }}{{ $setting['phone'] }}" class="btn btn-success btn-lg"
               target="_blank">
@@ -27,6 +27,17 @@
             </a>
 
           </div>
+
+          @if ($assignedUser)
+            <hr>
+            <div class="text-center">
+              <p><strong>{{ __('messages.sold_by') }}</strong> {{ $assignedUser->first_name }}
+                {{ $assignedUser->last_name }}</p>
+              <p><a href="https://wa.me/{{ $assignedUser->contact }}" class="text-success" target="_blank"><i
+                    class="fab fa-whatsapp fa-sm"></i> {{ $assignedUser->contact }}</a></p>
+            </div>
+          @endif
+
         </div>
       </div>
     </div>

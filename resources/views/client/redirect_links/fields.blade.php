@@ -11,6 +11,14 @@
       {{ Form::select('status', [0 => __('messages.redirect_links.not_redeemed'), 1 => __('messages.redirect_links.redeemed'), 2 => __('messages.redirect_links.rejected')], isset($redirectLink) ? $redirectLink->status : null, ['class' => 'form-control', 'disabled']) }}
     </div>
   </div>
+  @if ($assignedUser)
+    <p><strong>{{ __('messages.sold_by') }}</strong> {{ $assignedUser->first_name }}
+      {{ $assignedUser->last_name }} -
+      <a href="https://wa.me/{{ $assignedUser->contact }}" class="text-success"
+        target="_blank"><i
+        class="fab fa-whatsapp fa-sm"></i> {{ $assignedUser->contact }}</a>
+    </p>
+  @endif
   <div class="col-lg-6">
     <div class="">
       <label class="form-label">{{ __('messages.redirect_links.redirect_link_type') }}:</label>
@@ -19,6 +27,7 @@
       </p>
     </div>
   </div>
+
   @if (isset($redirectLink) && $redirectLink->redirect_link_type == 1)
     <div class="col-12 mb-4">
       <small class="text-muted">{!! nl2br(__('messages.redirect_links.website_redirect_note')) !!}</small>

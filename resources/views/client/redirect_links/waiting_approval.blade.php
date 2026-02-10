@@ -39,14 +39,12 @@
             @if (!empty($isAuth) && $isAuth)
               <!-- Buttons row -->
               <div class="d-flex w-100 gap-3">
-                <a href="mailto:{{ $setting['email'] }}"
-                   class="btn btn-primary btn-lg flex-fill">
+                <a href="mailto:{{ $setting['email'] }}" class="btn btn-primary btn-lg flex-fill">
                   <i class="fas fa-envelope"></i>
                 </a>
 
                 <a href="https://wa.me/{{ $setting['prefix_code'] }}{{ $setting['phone'] }}"
-                   class="btn btn-success btn-lg flex-fill"
-                   target="_blank">
+                  class="btn btn-success btn-lg flex-fill" target="_blank">
                   <i class="fab fa-whatsapp"></i>
                 </a>
               </div>
@@ -73,6 +71,16 @@
             </p>
 
           </div>
+
+          @if ($assignedUser)
+            <hr>
+            <div class="text-center">
+              <p><strong>{{ __('messages.sold_by') }}</strong> {{ $assignedUser->first_name }}
+                {{ $assignedUser->last_name }}</p>
+              <p><a href="https://wa.me/{{ $assignedUser->contact }}" class="text-success" target="_blank"><i
+                    class="fab fa-whatsapp fa-sm"></i> {{ $assignedUser->contact }}</a></p>
+            </div>
+          @endif
 
         </div>
       </div>

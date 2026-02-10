@@ -21,6 +21,7 @@ use App\Models\NfcOrderTransaction;
 use App\Models\Testimonial;
 use App\Models\Withdrawal;
 use App\Models\WithdrawalTransaction;
+use App\Models\MultiTenant;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Exception;

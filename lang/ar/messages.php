@@ -6,6 +6,9 @@ return [
   'have_subscription' => 'لديك اشتراك؟',
   'please_login' => 'يرجى تسجيل الدخول',
 
+  'sold_by' => 'المندوب:',
+  'contact_sales_rep' => 'تواصل مع مندوب المبيعات',
+
   'images' => "الصور",
   'cannot_delete_user_with_active_vcard_or_redirect_link' => 'لا يمكن حذف الحساب الذي لديه بطاقة vCard  نشطة أو رابط إعادة توجيه  ',
   'total_redirect_links' => 'إجمالي روابط اعادة التوجيه',
