@@ -273,17 +273,20 @@ class UserController extends AppBaseController
     try {
       $input['password'] = Hash::make($input['new_password']);
       $this->userRepo->update($input, $user);
-      $data = [
-        'name' => $user->full_name,
-        'toName' => getLogInUser()->full_name,
-      ];
 
-      Mail::to($user->email)
-        ->send(new ChangePasswordMail(
-          'emails.change_password_mail',
-          __('messages.flash.password_update'),
-          $data
-        ));
+      if (!empty($user->email)) {
+        $data = [
+          'name' => $user->full_name,
+          'toName' => getLogInUser()->full_name,
+        ];
+
+        Mail::to($user->email)
+          ->send(new ChangePasswordMail(
+            'emails.change_password_mail',
+            __('messages.flash.password_update'),
+            $data
+          ));
+      }
 
       return $this->sendSuccess(__('messages.flash.password_update'));
     } catch (Exception $e) {

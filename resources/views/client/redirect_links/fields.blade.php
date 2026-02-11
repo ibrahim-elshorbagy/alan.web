@@ -25,8 +25,12 @@
       <p class="form-control-plaintext">
         {{ isset($redirectLink) ? \App\Enums\RedirectLinkTypeEnum::from($redirectLink->redirect_link_type)->label() : '' }}
       </p>
+      <p class="form-control-plaintext">
+        {{ $redirectLink->nfc->name ?? '' }}
+      </p>
     </div>
   </div>
+
 
   @if (isset($redirectLink) && $redirectLink->redirect_link_type == 1)
     <div class="col-12 mb-4">

@@ -2395,7 +2395,7 @@ return [
     'title' => 'روابط إعادة التوجيه',
     'id' => 'المعرف',
     'user' => 'المستخدم',
-    'redeem_code' => 'الرمز',
+    'redeem_code' => 'اضافة رابط',
     'uri' => 'URI',
     'redirect_link' => 'رابط إعادة التوجيه',
     'redirect_link_type' => 'النوع',
