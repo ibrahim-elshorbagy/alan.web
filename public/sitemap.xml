@@ -2,37 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     <url>
         <loc>https://nfcjo.com</loc>
-        <lastmod>2026-02-10T00:00:02+00:00</lastmod>
+        <lastmod>2026-02-11T00:00:48+00:00</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
             </url>
     <url>
         <loc>https://nfcjo.com/terms-conditions</loc>
-        <lastmod>2026-02-10T00:00:02+00:00</lastmod>
+        <lastmod>2026-02-11T00:00:48+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
             </url>
     <url>
         <loc>https://nfcjo.com/privacy-policy</loc>
-        <lastmod>2026-02-10T00:00:02+00:00</lastmod>
+        <lastmod>2026-02-11T00:00:48+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
             </url>
     <url>
         <loc>https://nfcjo.com/refund-cancellation-policy</loc>
-        <lastmod>2026-02-10T00:00:02+00:00</lastmod>
+        <lastmod>2026-02-11T00:00:48+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
             </url>
     <url>
         <loc>https://nfcjo.com/shipping-delivery-policy</loc>
-        <lastmod>2026-02-10T00:00:02+00:00</lastmod>
+        <lastmod>2026-02-11T00:00:48+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
             </url>
     <url>
         <loc>https://nfcjo.com/imprint-policy</loc>
-        <lastmod>2026-02-10T00:00:02+00:00</lastmod>
+        <lastmod>2026-02-11T00:00:48+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
             </url>
@@ -135,6 +135,12 @@
     <url>
         <loc>https://nfcjo.com/auto-ICQIHPOBVo</loc>
         <lastmod>2026-02-02T12:31:58+00:00</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+            </url>
+    <url>
+        <loc>https://nfcjo.com/auto-dyOvQFfbnq</loc>
+        <lastmod>2026-02-10T12:04:45+00:00</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.6</priority>
             </url>
