@@ -1,6 +1,28 @@
 <div x-data="{
     selected: [],
 
+    // Get URI by ID from the DOM
+    getUriById(id) {
+        // Find all checkboxes and locate the one with matching ID
+        const checkboxes = document.querySelectorAll('input[type=\'checkbox\']');
+        for (let checkbox of checkboxes) {
+            const checkAttribute = checkbox.getAttribute('x-bind:checked');
+            if (checkAttribute && checkAttribute.includes(`isSelected(${id})`)) {
+                const row = checkbox.closest('tr');
+                if (row) {
+                    // The URI is in the 4th td (index 3), accounting for checkbox being the 1st
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length >= 4) {
+                        const uriCell = cells[3]; // 0=checkbox, 1=serial, 2=user, 3=uri
+                        const uriText = uriCell.textContent.trim();
+                        return uriText || `#${id}`;
+                    }
+                }
+            }
+        }
+        return `#${id}`;
+    },
+
     // Check if an item is selected
     isSelected(id) {
         return this.selected.includes(String(id));
@@ -301,6 +323,71 @@
         margin-bottom: 10px;
       }
     }
+
+    .selected-preview {
+      position: relative;
+      display: block;
+      /* Change from inline-block to block */
+      width: 100%;
+      /* Ensure full width */
+    }
+
+    .stat {
+      text-align: center;
+      /* Ensure all stats are centered */
+    }
+
+    .selected-preview-tooltip {
+      visibility: hidden;
+      opacity: 0;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 8px;
+      z-index: 1000;
+      margin-bottom: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: opacity 0.2s, visibility 0.2s;
+      max-width: 300px;
+      max-height: 200px;
+      overflow-y: auto;
+      white-space: normal;
+      min-width: 200px;
+      text-align: center;
+    }
+
+    .selected-preview-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: #333;
+    }
+
+    .selected-preview:hover .selected-preview-tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .selected-code-item {
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      text-align: center;
+    }
+
+    .selected-code-item:last-child {
+      border-bottom: none;
+    }
+
+    [x-cloak] {
+      display: none !important;
+    }
   </style>
 
   {{-- Flash Messages --}}
@@ -489,9 +576,19 @@
         </div>
       </div>
       <div class="col-md-3 col-6">
-        <div class="stat">
+        <div class="stat selected-preview">
           <div class="stat-value" x-text="selected ? selected.length : 0"></div>
           <div class="stat-label">{{ __('messages.common.selected') }}</div>
+
+          {{-- Tooltip with selected URIs --}}
+          <div class="selected-preview-tooltip" x-show="selected && selected.length > 0" x-cloak>
+
+            <template x-for="(id, index) in selected" :key="id">
+              <div class="selected-code-item" style="text-align: center;">
+                <span x-text="getUriById(id)"></span>
+              </div>
+            </template>
+          </div>
         </div>
       </div>
       <div class="col-md-3 col-6">

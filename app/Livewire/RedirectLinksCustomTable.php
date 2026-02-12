@@ -585,15 +585,22 @@ class RedirectLinksCustomTable extends Component
 
     // Search
     if ($this->searchQuery !== '') {
-      $searchTerm = $this->searchQuery;
-      $query->where(function ($q) use ($searchTerm) {
-        $q->where('uri', 'like', "{$searchTerm}%") // Search by redeem code
-          ->orWhere('id', 'like', "{$searchTerm}%") // Search by serial number (ID)
-          ->orWhereHas('user', function ($userQ) use ($searchTerm) {
-            $userQ->where('first_name', 'like', "{$searchTerm}%")
-              ->orWhere('last_name', 'like', "{$searchTerm}%");
-          });
-      });
+      $searchTerms = array_map('trim', preg_split('/\s*-\s*|\s+/', $this->searchQuery));
+      $searchTerms = array_filter($searchTerms);
+      if (!empty($searchTerms)) {
+        $query->where(function ($q) use ($searchTerms) {
+          foreach ($searchTerms as $term) {
+            $q->orWhere('uri', 'like', '%' . $term . '%')
+              ->orWhere('id', 'like', '%' . $term . '%');
+          }
+          if (count($searchTerms) == 1) {
+            $q->orWhereHas('user', function ($userQ) use ($searchTerms) {
+              $userQ->where('first_name', 'like', '%' . $searchTerms[0] . '%')
+                ->orWhere('last_name', 'like', '%' . $searchTerms[0] . '%');
+            });
+          }
+        });
+      }
     }
 
     // Apply filters
@@ -909,6 +916,12 @@ class RedirectLinksCustomTable extends Component
     return $options;
   }
 
+  public function getSelectedUris()
+  {
+    if (empty($this->selected)) return [];
+    return RedirectLink::whereIn('id', $this->selected)->pluck('uri')->toArray();
+  }
+
   public function render()
   {
     $groupedData = $this->getGroupedData();
@@ -925,6 +938,7 @@ class RedirectLinksCustomTable extends Component
       'totalPurchasePrice' => $this->getTotalPurchasePrice(),
       'totalSalesPrice' => $this->getTotalSalesPrice(),
       'totalCount' => $this->getTotalCount(),
+      'selectedUris' => $this->getSelectedUris(),
     ]);
   }
 }
