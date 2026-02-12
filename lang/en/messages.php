@@ -33,8 +33,6 @@ return [
   'view_acknowledgment' => 'View Acknowledgment',
   'print_acknowledgment' => 'Print Acknowledgment',
   'no_acknowledgments_found' => 'No acknowledgments found',
-  'total_purchase_price' => 'Total Purchase Price',
-  'total_selling_price' => 'Total Selling Price',
   'acknowledgment_date' => 'Acknowledgment Date',
   'card_uri' => 'Card URI',
 

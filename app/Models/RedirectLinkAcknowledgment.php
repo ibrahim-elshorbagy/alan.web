@@ -59,6 +59,6 @@ class RedirectLinkAcknowledgment extends Model
    */
   public function getSignatureUrlAttribute(): ?string
   {
-    return $this->signature_file ? asset('storage/' . $this->signature_file) : null;
+    return $this->signature_file ? asset('uploads/acknowledgment_signatures/' . $this->signature_file) : null;
   }
 }

@@ -32,7 +32,7 @@ class AcknowledgmentsTable extends LivewireTableComponent
   public function columns(): array
   {
     return [
-      Column::make(__('messages.common.id'), 'id')->sortable()
+      Column::make(__('#'), 'id')->sortable()
         ->view('acknowledgments.columns.id'),
       Column::make(__('messages.received_by'), 'sales_user_id')->sortable()->searchable()
         ->view('acknowledgments.columns.sales_user'),

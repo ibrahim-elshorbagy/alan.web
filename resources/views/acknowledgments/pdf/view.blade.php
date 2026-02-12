@@ -482,11 +482,11 @@
           <td class="value">{{ $acknowledgment->total_count }}</td>
         </tr>
         <tr>
-          <td class="label">{!! __('messages.total_purchase_price') !!}:</td>
+          <td class="label">{!! __('messages.receipts.total_regular_selling_price') !!}:</td>
           <td class="value">${{ number_format($acknowledgment->total_price, 2) }}</td>
         </tr>
         <tr>
-          <td class="label">{!! __('messages.total_selling_price') !!}:</td>
+          <td class="label">{!! __('messages.receipts.total_selling_price_for_representative') !!}:</td>
           <td class="value">${{ number_format($acknowledgment->total_sales_price, 2) }}</td>
         </tr>
       </table>

@@ -80,12 +80,17 @@ class AcknowledgmentController extends Controller
     if ($request->hasFile('signature_file')) {
       // Delete old signature file if exists
       if ($acknowledgment->signature_file) {
-        Storage::disk('public')->delete($acknowledgment->signature_file);
+        $oldFilePath = public_path('uploads/acknowledgment_signatures/' . $acknowledgment->signature_file);
+        if (file_exists($oldFilePath)) {
+          unlink($oldFilePath);
+        }
       }
 
       // Store new file
-      $path = $request->file('signature_file')->store('acknowledgment_signatures', 'public');
-      $data['signature_file'] = $path;
+      $file = $request->file('signature_file');
+      $filename = $file->hashName();
+      $file->move(public_path('uploads/acknowledgment_signatures'), $filename);
+      $data['signature_file'] = $filename;
     }
 
     $acknowledgment->update($data);
@@ -108,7 +113,10 @@ class AcknowledgmentController extends Controller
 
     // Delete signature file if exists
     if ($acknowledgment->signature_file) {
-      Storage::disk('public')->delete($acknowledgment->signature_file);
+      $filePath = public_path('uploads/acknowledgment_signatures/' . $acknowledgment->signature_file);
+      if (file_exists($filePath)) {
+        unlink($filePath);
+      }
     }
 
     $acknowledgment->delete();

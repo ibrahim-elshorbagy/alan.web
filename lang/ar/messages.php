@@ -33,8 +33,6 @@ return [
   'view_acknowledgment' => 'عرض الإقرار',
   'print_acknowledgment' => 'طباعة الإقرار',
   'no_acknowledgments_found' => 'لا توجد إقرارات',
-  'total_purchase_price' => 'إجمالي سعر الشراء',
-  'total_selling_price' => 'إجمالي سعر البيع',
   'acknowledgment_date' => 'تاريخ الإقرار',
   'card_uri' => 'رابط البطاقة',
 

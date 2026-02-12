@@ -24,11 +24,12 @@ class CoverImageController extends AppBaseController
     ]);
 
     $image = $request->file('image');
-    $path = $image->store('cover_images', 'public');
+    $filename = $image->hashName();
+    $image->move(public_path('uploads/cover_images'), $filename);
 
     CoverImage::create([
       'name' => $request->name,
-      'path' => basename($path),
+      'path' => $filename,
     ]);
 
     Flash::success(__('messages.cover_image.cover_image_created'));
@@ -45,11 +46,15 @@ class CoverImageController extends AppBaseController
 
     if ($request->hasFile('image')) {
       // Delete old image
-      Storage::disk('public')->delete('cover_images/' . $coverImage->path);
+      $oldImagePath = public_path('uploads/cover_images/' . $coverImage->path);
+      if (file_exists($oldImagePath)) {
+        unlink($oldImagePath);
+      }
 
       $image = $request->file('image');
-      $path = $image->store('cover_images', 'public');
-      $coverImage->path = basename($path);
+      $filename = $image->hashName();
+      $image->move(public_path('uploads/cover_images'), $filename);
+      $coverImage->path = $filename;
     }
 
     $coverImage->name = $request->name;
@@ -62,7 +67,10 @@ class CoverImageController extends AppBaseController
 
   public function destroy(CoverImage $coverImage)
   {
-    Storage::disk('public')->delete('cover_images/' . $coverImage->path);
+    $imagePath = public_path('uploads/cover_images/' . $coverImage->path);
+    if (file_exists($imagePath)) {
+      unlink($imagePath);
+    }
     $coverImage->delete();
 
     Flash::success(__('messages.cover_image.cover_image_deleted'));
