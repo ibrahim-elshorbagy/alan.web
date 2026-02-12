@@ -57,6 +57,7 @@ class SuperAdminTable extends LivewireTableComponent
         ->view('admin_users.columns.action'),
       Column::make('email', 'email')->hideIf(1)->searchable(),
       Column::make('email_verified_at', 'email_verified_at')->hideIf(1),
+      Column::make('contact', 'contact')->hideIf(1),
     ];
   }
 

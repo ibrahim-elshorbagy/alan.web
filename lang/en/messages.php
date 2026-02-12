@@ -9,7 +9,7 @@ return [
   'sold_by' => 'Sold by:',
   'contact_sales_rep' => 'Contact Sales Representative',
 
-  'images'=>"Images",
+  'images' => "Images",
   'cannot_delete_user_with_active_vcard_or_redirect_link' => 'Cannot delete user with active vCard, redirect link, or NFC card order',
   'total_redirect_links' => 'Total Redirect Links',
   'add_redirect_link' => 'Add Redirect Link',
@@ -445,6 +445,8 @@ return [
     'attachment' => 'Attachment',
   ],
   'common' => [
+    'allowed_file_types' => "Allowed file types:",
+
     'clear_selection' => 'Clear Selection',
     'ask_help' => 'Ask for Help',
     'search' => 'Search...',
@@ -758,7 +760,7 @@ return [
     'used_count' => 'Used Count',
   ],
   'vcard' => [
-    'profile-cover'=>"images",
+    'profile-cover' => "images",
     'create' => 'CREATE',
     'vcard_message' => 'MESSAGE',
     'scan' => 'SCAN',
@@ -2641,6 +2643,23 @@ If you want to redirect your card to the smart business card, you must first go 
     'resetting' => 'Resetting...',
 
 
+  ],
+
+  'documents' => [
+    'upload_documents' => 'Upload Documents',
+    'uploaded_documents' => 'Uploaded Documents',
+    'select_files' => 'Select Files',
+    'no_files_selected' => 'No files selected',
+    'upload' => 'Upload',
+    'uploaded_successfully' => 'Documents uploaded successfully.',
+    'upload_failed' => 'Failed to upload documents.',
+    'no_documents' => 'No documents uploaded yet.',
+    'file_name' => 'File Name',
+    'uploaded_at' => 'Uploaded At',
+    'view' => 'View',
+    'download' => 'Download',
+    'delete' => 'Delete',
+    'document_deleted_successfully' => 'Document deleted successfully.',
   ],
 
 ];

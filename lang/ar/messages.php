@@ -444,6 +444,7 @@ return [
     'attachment' => 'مرفق',
   ],
   'common' => [
+    'allowed_file_types' => "أنواع الملفات المسموح بها",
     'ask_help' => 'طلب المساعدة',
     'search' => 'بحث...',
     'print' => 'طباعة',
@@ -2640,4 +2641,22 @@ return [
 
 
   ],
+
+  'documents' => [
+    'upload_documents' => 'رفع الوثائق',
+    'uploaded_documents' => 'الوثائق المرفوعة',
+    'select_files' => 'اختر الملفات',
+    'no_files_selected' => 'لم يتم اختيار ملفات',
+    'upload' => 'رفع',
+    'uploaded_successfully' => 'تم رفع الوثائق بنجاح.',
+    'upload_failed' => 'فشل في رفع الوثائق.',
+    'no_documents' => 'لم يتم رفع أي وثائق بعد.',
+    'file_name' => 'اسم الملف',
+    'uploaded_at' => 'تاريخ الرفع',
+    'view' => 'عرض',
+    'download' => 'تحميل',
+    'delete' => 'حذف',
+    'document_deleted_successfully' => 'تم حذف الوثيقة بنجاح.',
+  ],
+
 ];

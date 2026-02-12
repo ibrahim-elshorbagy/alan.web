@@ -13,6 +13,7 @@ use App\Models\EmailVerification;
 use App\Models\RedirectLink;
 use App\Models\Subscription;
 use App\Models\User;
+use App\Models\UserDocument;
 use App\Models\Vcard;
 use App\Models\Product;
 use App\Models\VcardBlog;
@@ -346,5 +347,41 @@ class UserController extends AppBaseController
     $user->update();
 
     return response()->json(['message' => 'Steps updated successfully']);
+  }
+
+  public function uploadDocuments(Request $request)
+  {
+    $request->validate([
+      'documents' => 'required|array',
+      'documents.*' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240', // 10MB max
+    ]);
+
+    $user = Auth::user();
+
+    if (!$user->hasRole('sales')) {
+      return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    $uploadedFiles = [];
+
+    if ($request->hasFile('documents')) {
+      foreach ($request->file('documents') as $file) {
+        $originalName = $file->getClientOriginalName();
+        $path = $file->store('user_documents', 'public');
+
+        UserDocument::create([
+          'user_id' => $user->id,
+          'file_name' => $originalName,
+          'file_path' => $path,
+        ]);
+
+        $uploadedFiles[] = $originalName;
+      }
+    }
+
+    return response()->json([
+      'message' => __('messages.documents.uploaded_successfully'),
+      'files' => $uploadedFiles,
+    ]);
   }
 }

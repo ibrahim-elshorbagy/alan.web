@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\MultiTenant;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\UserDocument;
 use App\Models\Vcard;
 use App\Models\Receipt;
 use App\Models\RedirectLink;
@@ -17,7 +18,10 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Laracasts\Flash\Flash;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AdminUserController extends AppBaseController
 {
@@ -106,6 +110,41 @@ class AdminUserController extends AppBaseController
   }
 
   /**
+   * Get user credentials for WhatsApp
+   */
+
+  public function getCredentials($id)
+  {
+      if (!Auth::user()->hasRole('super_admin')) {
+          return $this->sendError('Unauthorized');
+      }
+
+      $user = User::find($id);
+
+      if (!$user || !$user->hasAnyRole(['super_admin', 'sales'])) {
+          return $this->sendError('User not found or not authorized');
+      }
+
+      // generate new password
+      $newPassword = Str::random(8);
+
+      // save hashed version
+      $user->password = Hash::make($newPassword);
+      $user->save();
+
+      return response()->json([
+          'success' => true,
+          'data' => [
+              'email' => $user->email,
+              'password' => $newPassword, // plaintext once
+              'phone' => $user->contact,
+          ],
+          'message' => 'Password has been reset successfully',
+      ]);
+  }
+
+
+  /**
    * @param  User  $user
    * @return mixed
    */
@@ -133,5 +172,23 @@ class AdminUserController extends AppBaseController
     $admin->delete();
 
     return $this->sendSuccess(__('messages.admin.admin_delete_successfully'));
+  }
+
+  public function deleteDocument(UserDocument $document)
+  {
+    // Only super_admin can delete documents
+    if (!auth()->user()->hasRole('super_admin')) {
+      return response()->json(['message' => 'Unauthorized'], 403);
+    }
+
+    // Delete the file from storage
+    if (Storage::disk('public')->exists($document->file_path)) {
+      Storage::disk('public')->delete($document->file_path);
+    }
+
+    // Delete the record
+    $document->delete();
+
+    return response()->json(['message' => __('messages.documents.document_deleted_successfully')]);
   }
 }

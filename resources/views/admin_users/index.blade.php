@@ -25,3 +25,35 @@
   </div>
   @include('users.changePassword')
 @endsection
+
+@section('scripts')
+  <script>
+    $(document).on('click', '.send-whatsapp-btn', function() {
+      let userId = $(this).data('id');
+      $.ajax({
+        url: '{{ route('admins.get.credentials', ':id') }}'.replace(':id', userId),
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        success: function(response) {
+          if (response.success && response.data) {
+            let email = response.data.email || 'No email provided';
+            let password = response.data.password;
+            let phone = response.data.phone;
+            let message = `Email: ${email}\nPassword: ${password}`;
+            let whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+          } else {
+            alert('Error: ' + (response.message || 'Invalid response'));
+          }
+        },
+        error: function() {
+          alert('Error fetching credentials');
+        }
+      });
+    });
+  </script>
+@endsection

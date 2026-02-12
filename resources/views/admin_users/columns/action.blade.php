@@ -8,6 +8,13 @@
       class="btn px-1 text-primary fs-3 user-edit-btn" data-id="{{ $row->id }}">
       <i class="fa-solid fa-pen-to-square"></i>
     </a>
+
+    @if (!empty($row->contact))
+      <a href="javascript:void(0)" data-id="{{ $row->id }}" title="Send Credentials via WhatsApp"
+        class="btn px-1 text-success fs-3 send-whatsapp-btn">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+    @endif
     <a href="javascript:void(0)" data-id="{{ $row->id }}" title="{{ __('messages.common.delete') }}"
       class="btn px-1 text-danger fs-3 admin-delete-btn" data-name="superAdmin">
       <i class="fa-solid fa-trash-can"></i>

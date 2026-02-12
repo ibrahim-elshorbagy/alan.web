@@ -467,6 +467,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     return $this->hasMany(RedirectLink::class);
   }
 
+  public function documents()
+  {
+    return $this->hasMany(UserDocument::class);
+  }
+
   // /**
   //  * Check if this user can impersonate another user
   //  */

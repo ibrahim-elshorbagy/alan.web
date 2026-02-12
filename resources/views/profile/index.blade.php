@@ -170,7 +170,70 @@
             </div>
           </form>
         </div>
+        @role('sales')
+          <div class="card mt-4">
+            <div class="card-body">
+              <h5 class="mb-4">{{ __('messages.documents.upload_documents') }}</h5>
+              <form id="uploadDocumentsForm" enctype="multipart/form-data">
+                @csrf
+                <div class="row mb-6">
+                  <label class="col-lg-4 form-label">{{ __('messages.documents.select_files') }}:</label>
+                  <div class="col-lg-8">
+                    <input type="file" name="documents[]" id="documents" multiple class="form-control"
+                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                    <small class="text-muted">{{ __('messages.common.allowed_file_types') }}: PDF, DOC, DOCX, JPG, JPEG,
+                      PNG (Max 10MB each)</small>
+                  </div>
+                </div>
+                <div class="row mb-6">
+                  <div class="col-lg-8 offset-lg-4">
+                    <button type="submit" class="btn btn-primary"
+                      id="uploadBtn">{{ __('messages.documents.upload') }}</button>
+                  </div>
+                </div>
+              </form>
+              <div id="documentsList">
+                @include('profile.partials.documents_list', ['documents' => $user->documents])
+              </div>
+            </div>
+          </div>
+        @endrole
       </div>
     </div>
   </div>
+@endsection
+
+@section('scripts')
+  <script>
+    $(document).ready(function() {
+      $('#uploadDocumentsForm').on('submit', function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        var files = $('#documents')[0].files;
+        if (files.length === 0) {
+          toastr.error('{{ __('messages.documents.no_files_selected') }}');
+          return;
+        }
+        $('#uploadBtn').prop('disabled', true).text('Uploading...');
+        $.ajax({
+          url: '{{ route('upload.documents') }}',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+            toastr.success(response.message);
+            $('#documents').val('');
+            location.reload(); // Reload to update the documents list
+          },
+          error: function(xhr) {
+            toastr.error(xhr.responseJSON?.message || '{{ __('messages.documents.upload_failed') }}');
+          },
+          complete: function() {
+            $('#uploadBtn').prop('disabled', false).text('{{ __('messages.documents.upload') }}');
+          }
+        });
+      });
+    });
+  </script>
 @endsection

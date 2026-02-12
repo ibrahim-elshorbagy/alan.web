@@ -168,6 +168,8 @@ Route::middleware(['freshInstall'])->group(function () {
     Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('update.profile.setting');
     Route::put('/change-user-password', [UserController::class, 'changePassword'])->name('user.changePassword');
     Route::put('/change-user-language', [UserController::class, 'changeLanguage'])->name('user.changeLanguage');
+    // Upload documents
+    Route::post('/upload-documents', [UserController::class, 'uploadDocuments'])->name('upload.documents');
     //impersonate leave
     Route::get('/impersonate-leave', [UserController::class, 'impersonateLeave'])->name('impersonate.leave');
 
@@ -577,6 +579,9 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::post('nfc-card-tax', [NfcController::class, 'nfcCardTax'])->name('nfc.tax');
       Route::get('nfc-card-tax', [NfcController::class, 'getNfcCardTax'])->name('nfc.tax.get');
 
+      // Super Admin Management For Sales
+      Route::get('/admins/get-credentials/{id}', [AdminUserController::class, 'getCredentials'])->name('admins.get.credentials');
+      Route::delete('/user-documents/{document}', [AdminUserController::class, 'deleteDocument'])->name('sadmin.delete.document');
 
       // Receipts
       Route::get('/all-receipts', [App\Http\Controllers\ReceiptController::class, 'allReceipts'])->name('receipts.all');
@@ -590,16 +595,16 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::delete('/receipts/{id}', [App\Http\Controllers\ReceiptController::class, 'destroy'])->name('receipts.delete');
 
 
-    // Redirect Links Create
+      // Redirect Links Create
 
       Route::post('redirect-links', [RedirectLinkController::class, 'store'])->name('redirect-links.store');
       Route::post('redirect-links/restore-selected', [RedirectLinkController::class, 'restoreSelected'])->name('redirect-links.restore-selected');
       Route::delete('redirect-links/{redirectLink}', [RedirectLinkController::class, 'destroy'])->name('redirect-links.destroy');
-
-      });
+    });
 
 
     Route::prefix('sadmin')->middleware('role:super_admin|sales')->group(function () {
+      Route::get('redirect-links/create', [RedirectLinkController::class, 'create'])->name('redirect-links.create');
       Route::get('redirect-links', [RedirectLinkController::class, 'index'])->name('redirect-links.index');
       Route::get('redirect-links/extract-all', [RedirectLinkController::class, 'extractAll'])->name('redirect-links.extract-all');
       Route::get('redirect-links/export-selected', [RedirectLinkController::class, 'exportSelected'])->name('redirect-links.export-selected');
