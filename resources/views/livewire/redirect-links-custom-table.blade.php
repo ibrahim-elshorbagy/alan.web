@@ -407,12 +407,7 @@
   {{-- Filters Section --}}
   <div class="filter-card">
     <div class="row g-3 align-items-end">
-      {{-- Search --}}
-      <div class="col-md-3 col-sm-6 col-12">
-        <label class="form-label small mb-1">{{ __('messages.common.search') }}</label>
-        <input type="text" class="form-control" wire:model.live.debounce.500ms="searchQuery"
-          placeholder="{{ __('messages.common.search') }}...">
-      </div>
+
 
       {{-- Assigned To Filter (only for non-sales users) --}}
       @if (!auth()->user()->hasRole('sales'))
@@ -512,6 +507,29 @@
         </button>
       </div>
     </div>
+    {{-- Search --}}
+      <div class="col-md-4 col-sm-6 col-12 mt-2">
+  <label class="form-label small mb-1">
+    {{ __('messages.common.search') }}
+  </label>
+
+  <div class="d-flex gap-2 align-items-start">
+    <textarea
+      class="form-control"
+      rows="3"
+      wire:model.defer="searchQuery"
+      placeholder="{{ __('messages.common.search') }}...">
+    </textarea>
+
+    <button
+      class="btn btn-success"
+      wire:click="performSearch"
+      type="button">
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+</div>
+
   </div>
 
   {{-- Action Buttons --}}

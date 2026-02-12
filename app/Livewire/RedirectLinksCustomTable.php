@@ -80,10 +80,8 @@ class RedirectLinksCustomTable extends Component
     }
   }
 
-  public function updatingSearchQuery()
+  public function performSearch()
   {
-    // Keep selections when searching
-    // $this->reset(['selected']);
     $this->resetPage();
   }
 
@@ -585,7 +583,7 @@ class RedirectLinksCustomTable extends Component
 
     // Search
     if ($this->searchQuery !== '') {
-      $searchTerms = array_map('trim', preg_split('/\s*-\s*|\s+/', $this->searchQuery));
+      $searchTerms = array_map('trim', preg_split('/\s*-\s*|\s+|\n+/', $this->searchQuery));
       $searchTerms = array_filter($searchTerms);
       if (!empty($searchTerms)) {
         $query->where(function ($q) use ($searchTerms) {
@@ -723,14 +721,22 @@ class RedirectLinksCustomTable extends Component
 
     // Apply same filters
     if ($this->searchQuery !== '') {
-      $searchTerm = $this->searchQuery;
-      $query->where(function ($q) use ($searchTerm) {
-        $q->where('uri', 'like', "{$searchTerm}%")
-          ->orWhereHas('user', function ($userQ) use ($searchTerm) {
-            $userQ->where('first_name', 'like', "{$searchTerm}%")
-              ->orWhere('last_name', 'like', "{$searchTerm}%");
-          });
-      });
+      $searchTerms = array_map('trim', preg_split('/\s*-\s*|\s+|\n+/', $this->searchQuery));
+      $searchTerms = array_filter($searchTerms);
+      if (!empty($searchTerms)) {
+        $query->where(function ($q) use ($searchTerms) {
+          foreach ($searchTerms as $term) {
+            $q->orWhere('uri', 'like', '%' . $term . '%')
+              ->orWhere('id', 'like', '%' . $term . '%');
+          }
+          if (count($searchTerms) == 1) {
+            $q->orWhereHas('user', function ($userQ) use ($searchTerms) {
+              $userQ->where('first_name', 'like', '%' . $searchTerms[0] . '%')
+                ->orWhere('last_name', 'like', '%' . $searchTerms[0] . '%');
+            });
+          }
+        });
+      }
     }
 
     if ($this->statusFilter !== '') {
@@ -783,14 +789,22 @@ class RedirectLinksCustomTable extends Component
 
     // Apply same filters as getTotalPurchasePrice
     if ($this->searchQuery !== '') {
-      $searchTerm = $this->searchQuery;
-      $query->where(function ($q) use ($searchTerm) {
-        $q->where('uri', 'like', "{$searchTerm}%")
-          ->orWhereHas('user', function ($userQ) use ($searchTerm) {
-            $userQ->where('first_name', 'like', "{$searchTerm}%")
-              ->orWhere('last_name', 'like', "{$searchTerm}%");
-          });
-      });
+      $searchTerms = array_map('trim', preg_split('/\s*-\s*|\s+|\n+/', $this->searchQuery));
+      $searchTerms = array_filter($searchTerms);
+      if (!empty($searchTerms)) {
+        $query->where(function ($q) use ($searchTerms) {
+          foreach ($searchTerms as $term) {
+            $q->orWhere('uri', 'like', '%' . $term . '%')
+              ->orWhere('id', 'like', '%' . $term . '%');
+          }
+          if (count($searchTerms) == 1) {
+            $q->orWhereHas('user', function ($userQ) use ($searchTerms) {
+              $userQ->where('first_name', 'like', '%' . $searchTerms[0] . '%')
+                ->orWhere('last_name', 'like', '%' . $searchTerms[0] . '%');
+            });
+          }
+        });
+      }
     }
 
     if ($this->statusFilter !== '') {
@@ -843,14 +857,22 @@ class RedirectLinksCustomTable extends Component
 
     // Apply same filters
     if ($this->searchQuery !== '') {
-      $searchTerm = $this->searchQuery;
-      $query->where(function ($q) use ($searchTerm) {
-        $q->where('uri', 'like', "{$searchTerm}%")
-          ->orWhereHas('user', function ($userQ) use ($searchTerm) {
-            $userQ->where('first_name', 'like', "{$searchTerm}%")
-              ->orWhere('last_name', 'like', "{$searchTerm}%");
-          });
-      });
+      $searchTerms = array_map('trim', preg_split('/\s*-\s*|\s+|\n+/', $this->searchQuery));
+      $searchTerms = array_filter($searchTerms);
+      if (!empty($searchTerms)) {
+        $query->where(function ($q) use ($searchTerms) {
+          foreach ($searchTerms as $term) {
+            $q->orWhere('uri', 'like', '%' . $term . '%')
+              ->orWhere('id', 'like', '%' . $term . '%');
+          }
+          if (count($searchTerms) == 1) {
+            $q->orWhereHas('user', function ($userQ) use ($searchTerms) {
+              $userQ->where('first_name', 'like', '%' . $searchTerms[0] . '%')
+                ->orWhere('last_name', 'like', '%' . $searchTerms[0] . '%');
+            });
+          }
+        });
+      }
     }
 
     if ($this->statusFilter !== '') {
