@@ -60,16 +60,18 @@
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label"><strong>{{ __('messages.receipts.total_regular_selling_price') }}:</strong></label>
+                <label
+                  class="form-label"><strong>{{ __('messages.receipts.total_regular_selling_price') }}:</strong></label>
                 <p class="form-control-plaintext text-success fw-bold">
-                  ${{ number_format($acknowledgment->total_price, 2) }}</p>
+                  {{ currencyFormat($acknowledgment->total_price, 2) }}</p>
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <label class="form-label"><strong>{{ __('messages.receipts.total_selling_price_for_representative') }}:</strong></label>
+                <label
+                  class="form-label"><strong>{{ __('messages.receipts.total_selling_price_for_representative') }}:</strong></label>
                 <p class="form-control-plaintext text-success fw-bold">
-                  ${{ number_format($acknowledgment->total_sales_price, 2) }}</p>
+                  {{ currencyFormat($acknowledgment->total_sales_price, 2) }}</p>
               </div>
             </div>
           </div>

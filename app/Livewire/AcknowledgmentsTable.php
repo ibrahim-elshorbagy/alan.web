@@ -40,9 +40,9 @@ class AcknowledgmentsTable extends LivewireTableComponent
         ->view('acknowledgments.columns.created_by'),
       Column::make(__('messages.common.total') . ' ' . __('messages.common.items'), 'total_count')
         ->view('acknowledgments.columns.total_count'),
-      Column::make(__('messages.total_purchase_price'), 'total_price')->sortable()
+      Column::make(__(key: 'messages.receipts.total_regular_selling_price'), 'total_price')->sortable()
         ->view('acknowledgments.columns.total_price'),
-      Column::make(__('messages.total_selling_price'), 'total_sales_price')->sortable()
+      Column::make(__('messages.receipts.total_selling_price_for_representative'), 'total_sales_price')->sortable()
         ->view('acknowledgments.columns.total_sales_price'),
       Column::make(__('messages.acknowledgment_date'), 'created_at')->sortable()
         ->view('acknowledgments.columns.created_at'),

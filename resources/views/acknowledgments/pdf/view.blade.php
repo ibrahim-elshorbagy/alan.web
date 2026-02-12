@@ -483,11 +483,11 @@
         </tr>
         <tr>
           <td class="label">{!! __('messages.receipts.total_regular_selling_price') !!}:</td>
-          <td class="value">${{ number_format($acknowledgment->total_price, 2) }}</td>
+          <td class="value">{{ currencyFormat($acknowledgment->total_price, 2) }}</td>
         </tr>
         <tr>
           <td class="label">{!! __('messages.receipts.total_selling_price_for_representative') !!}:</td>
-          <td class="value">${{ number_format($acknowledgment->total_sales_price, 2) }}</td>
+          <td class="value">{{ currencyFormat($acknowledgment->total_sales_price, 2) }}</td>
         </tr>
       </table>
     </div>
@@ -516,8 +516,8 @@
               @else
               @endif
             </td>
-            <td class="amount-cell">${{ number_format($link->price, 2) }}</td>
-            <td class="amount-cell">${{ number_format($link->sales_price, 2) }}</td>
+            <td class="amount-cell">{{ currencyFormat($link->price, 2) }}</td>
+            <td class="amount-cell">{{ currencyFormat($link->sales_price, 2) }}</td>
           </tr>
         @endforeach
       </tbody>
