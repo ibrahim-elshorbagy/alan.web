@@ -547,7 +547,7 @@ Route::middleware(['freshInstall'])->group(function () {
       });
     });
 
-    Route::prefix('sadmin')->middleware('role:super_admin|admin|sales')->group(function () {
+    Route::prefix('sadmin')->middleware('role:super_admin')->group(function () {
       Route::get('/generate-sitemap', [SettingController::class, 'generateSitemap'])->name('generateSitemap');
       //dashboard chart
       Route::post('/dashboard-plan-chart', [DashboardController::class, 'planChartData'])->name('dashboard.plan-chart');
@@ -576,15 +576,28 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('/download-logo/{id}', [NfcCardOrderController::class, 'downloadLogo'])->name('nfc.download.logo');
       Route::post('nfc-card-tax', [NfcController::class, 'nfcCardTax'])->name('nfc.tax');
       Route::get('nfc-card-tax', [NfcController::class, 'getNfcCardTax'])->name('nfc.tax.get');
-    });
+
+
+      // Receipts
+      Route::get('/all-receipts', [App\Http\Controllers\ReceiptController::class, 'allReceipts'])->name('receipts.all');
+      Route::get('/all-receipts/pdf', [App\Http\Controllers\ReceiptController::class, 'allReceiptsPdf'])->name('receipts.all.pdf');
+      Route::get('/receipts/{userId}', [App\Http\Controllers\ReceiptController::class, 'index'])->name('receipts.index');
+      Route::get('/receipts/{userId}/pdf', [App\Http\Controllers\ReceiptController::class, 'receiptsPdf'])->name('receipts.pdf');
+      Route::get('/receipts/single/{receiptId}/pdf', [App\Http\Controllers\ReceiptController::class, 'singleReceiptPdf'])->name('receipts.single.pdf');
+      Route::post('/receipts', [App\Http\Controllers\ReceiptController::class, 'store'])->name('receipts.store');
+      Route::get('/receipts/{id}/edit', [App\Http\Controllers\ReceiptController::class, 'edit'])->name('receipts.edit');
+      Route::post('/receipts/{id}/update', [App\Http\Controllers\ReceiptController::class, 'update'])->name('receipts.update');
+      Route::delete('/receipts/{id}', [App\Http\Controllers\ReceiptController::class, 'destroy'])->name('receipts.delete');
+
 
     // Redirect Links Create
-    Route::prefix('sadmin')->middleware('role:super_admin|sales')->group(function () {
-      Route::get('redirect-links/create', [RedirectLinkController::class, 'create'])->name('redirect-links.create');
+
       Route::post('redirect-links', [RedirectLinkController::class, 'store'])->name('redirect-links.store');
       Route::post('redirect-links/restore-selected', [RedirectLinkController::class, 'restoreSelected'])->name('redirect-links.restore-selected');
       Route::delete('redirect-links/{redirectLink}', [RedirectLinkController::class, 'destroy'])->name('redirect-links.destroy');
-    });
+
+      });
+
 
     Route::prefix('sadmin')->middleware('role:super_admin|sales')->group(function () {
       Route::get('redirect-links', [RedirectLinkController::class, 'index'])->name('redirect-links.index');
@@ -601,6 +614,7 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('nfc-showcase', [App\Http\Controllers\SalesNfcController::class, 'index'])->name('sales.nfc.showcase');
     });
 
+
     Route::prefix('sadmin')->middleware('role:super_admin|admin|sales')->group(function () {
       // Global QR Code Settings
       Route::get('global-qr-code', [GlobalQrCodeController::class, 'index'])->name('sadmin.global.qr.code.index');
@@ -611,16 +625,6 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::resource('/admins', AdminUserController::class);
       Route::get('/admins/update-status/{admin}', [AdminUserController::class, 'updateStatus'])->name('admins.status');
 
-      // Receipts
-      Route::get('/all-receipts', [App\Http\Controllers\ReceiptController::class, 'allReceipts'])->name('receipts.all');
-      Route::get('/all-receipts/pdf', [App\Http\Controllers\ReceiptController::class, 'allReceiptsPdf'])->name('receipts.all.pdf');
-      Route::get('/receipts/{userId}', [App\Http\Controllers\ReceiptController::class, 'index'])->name('receipts.index');
-      Route::get('/receipts/{userId}/pdf', [App\Http\Controllers\ReceiptController::class, 'receiptsPdf'])->name('receipts.pdf');
-      Route::get('/receipts/single/{receiptId}/pdf', [App\Http\Controllers\ReceiptController::class, 'singleReceiptPdf'])->name('receipts.single.pdf');
-      Route::post('/receipts', [App\Http\Controllers\ReceiptController::class, 'store'])->name('receipts.store');
-      Route::get('/receipts/{id}/edit', [App\Http\Controllers\ReceiptController::class, 'edit'])->name('receipts.edit');
-      Route::post('/receipts/{id}/update', [App\Http\Controllers\ReceiptController::class, 'update'])->name('receipts.update');
-      Route::delete('/receipts/{id}', [App\Http\Controllers\ReceiptController::class, 'destroy'])->name('receipts.delete');
 
       //FAQs
       Route::resource('/frontFaqs', FrontFAQsController::class);
