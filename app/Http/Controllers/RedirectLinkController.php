@@ -24,6 +24,11 @@ class RedirectLinkController extends Controller
     return view('admin.redirect_links.index');
   }
 
+  public function historyReport()
+  {
+    return view('redirect_links.history_report');
+  }
+
   public function create()
   {
     $nfcs = Nfc::all();
@@ -1027,7 +1032,7 @@ class RedirectLinkController extends Controller
         1 => __('messages.redirect_links.redeemed'),
         2 => __('messages.redirect_links.rejected')
       ];
-      
+
       $changes['status'] = [
         'old' => $statusLabels[$redirectLink->status],
         'new' => $statusLabels[$updateData['status']]
@@ -1040,7 +1045,7 @@ class RedirectLinkController extends Controller
         0 => __('messages.redirect_links.not_received'),
         1 => __('messages.redirect_links.received')
       ];
-      
+
       $changes['received_status'] = [
         'old' => $receivedStatusLabels[$redirectLink->received_status],
         'new' => $receivedStatusLabels[$updateData['received_status']]
@@ -1051,7 +1056,7 @@ class RedirectLinkController extends Controller
     if (isset($updateData['assigned_id']) && $redirectLink->assigned_id != $updateData['assigned_id']) {
       $oldAssigned = $redirectLink->assigned_id ? $redirectLink->assignedUser->first_name . ' ' . $redirectLink->assignedUser->last_name : __('messages.redirect_links.history.none');
       $newAssigned = $updateData['assigned_id'] ? User::find($updateData['assigned_id'])->first_name . ' ' . User::find($updateData['assigned_id'])->last_name : __('messages.redirect_links.history.none');
-      
+
       $changes['assigned_id'] = [
         'old' => $oldAssigned,
         'new' => $newAssigned
@@ -1062,7 +1067,7 @@ class RedirectLinkController extends Controller
     if (isset($updateData['user_id']) && $redirectLink->user_id != $updateData['user_id']) {
       $oldUser = $redirectLink->user_id ? $redirectLink->user->first_name . ' ' . $redirectLink->user->last_name : __('messages.redirect_links.history.none');
       $newUser = $updateData['user_id'] ? User::find($updateData['user_id'])->first_name . ' ' . User::find($updateData['user_id'])->last_name : __('messages.redirect_links.history.none');
-      
+
       $changes['user_id'] = [
         'old' => $oldUser,
         'new' => $newUser
@@ -1081,7 +1086,7 @@ class RedirectLinkController extends Controller
     if (isset($updateData['assigned_id']) && $redirectLink->assigned_id != $updateData['assigned_id']) {
       if (auth()->user()->hasRole('sales')) {
         $updateData['received_status'] = RedirectLink::RECEIVED_STATUS_NOT_RECEIVED;
-        
+
         // Track received_status reset if it was previously received
         if ($redirectLink->received_status == RedirectLink::RECEIVED_STATUS_RECEIVED) {
           $changes['received_status'] = [

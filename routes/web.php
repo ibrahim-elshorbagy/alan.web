@@ -606,6 +606,7 @@ Route::middleware(['freshInstall'])->group(function () {
     Route::prefix('sadmin')->middleware('role:super_admin|sales')->group(function () {
       Route::get('redirect-links/create', [RedirectLinkController::class, 'create'])->name('redirect-links.create');
       Route::get('redirect-links', [RedirectLinkController::class, 'index'])->name('redirect-links.index');
+      Route::get('redirect-links/history-report', [RedirectLinkController::class, 'historyReport'])->name('redirect-links.history-report');
       Route::get('redirect-links/extract-all', [RedirectLinkController::class, 'extractAll'])->name('redirect-links.extract-all');
       Route::get('redirect-links/export-selected', [RedirectLinkController::class, 'exportSelected'])->name('redirect-links.export-selected');
       Route::post('redirect-links/mark-all-as-received', [RedirectLinkController::class, 'markAllAsReceived'])->name('redirect-links.mark-all-as-received');
