@@ -508,27 +508,21 @@
       </div>
     </div>
     {{-- Search --}}
-      <div class="col-md-4 col-sm-6 col-12 mt-2">
-  <label class="form-label small mb-1">
-    {{ __('messages.common.search') }}
-  </label>
+    <div class="col-md-4 col-sm-6 col-12 mt-2">
+      <label class="form-label small mb-1">
+        {{ __('messages.common.search') }}
+      </label>
 
-  <div class="d-flex gap-2 align-items-start">
-    <textarea
-      class="form-control"
-      rows="3"
-      wire:model.defer="searchQuery"
-      placeholder="{{ __('messages.common.search') }}...">
+      <div class="d-flex gap-2 align-items-start">
+        <textarea class="form-control" rows="3" wire:model.defer="searchQuery"
+          placeholder="{{ __('messages.common.search') }}...">
     </textarea>
 
-    <button
-      class="btn btn-success"
-      wire:click="performSearch"
-      type="button">
-      <i class="fas fa-search"></i>
-    </button>
-  </div>
-</div>
+        <button class="btn btn-success" wire:click="performSearch" type="button">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
 
   </div>
 
@@ -550,6 +544,11 @@
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignModal">
             <i class="fas fa-user-plus"></i> <span
               class="d-none d-sm-inline">{{ __('messages.redirect_links.assign_selected') }}</span>
+          </button>
+
+          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#acknowledgmentModal">
+            <i class="fas fa-file-signature"></i> <span
+              class="d-none d-sm-inline">{{ __('messages.create_acknowledgment') }}</span>
           </button>
 
           <button type="button" class="btn btn-danger"
@@ -961,6 +960,44 @@
             data-bs-dismiss="modal">{{ __('messages.common.cancel') }}</button>
           <button type="button" class="btn btn-primary" @click="syncAndCall('bulkAssign')" data-bs-dismiss="modal">
             {{ __('messages.redirect_links.assign') }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Acknowledgment Modal --}}
+  <div class="modal fade" id="acknowledgmentModal" tabindex="-1" aria-labelledby="acknowledgmentModalLabel"
+    aria-hidden="true" wire:ignore.self>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="acknowledgmentModalLabel">{{ __('messages.create_acknowledgment') }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">{{ __('messages.select_sales_representative') }}:</label>
+            <select class="form-control form-select" wire:model="acknowledgmentSalesUserId">
+              <option value="">{{ __('messages.redirect_links.select_user') }}</option>
+              @foreach ($salesUsers as $salesUser)
+                <option value="{{ $salesUser->id }}">{{ $salesUser->first_name }} {{ $salesUser->last_name }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <span
+              x-text="'{{ __('messages.redirect_links.you_have_selected') }} ' + selected.length + ' {{ __('messages.redirect_links.items') }}'"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary"
+            data-bs-dismiss="modal">{{ __('messages.common.cancel') }}</button>
+          <button type="button" class="btn btn-info" @click="syncAndCall('createAcknowledgment')"
+            data-bs-dismiss="modal">
+            {{ __('messages.create_acknowledgment') }}
           </button>
         </div>
       </div>

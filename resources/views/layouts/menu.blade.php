@@ -48,6 +48,14 @@
     </a>
   </li>
 
+  <li class="nav-item {{ Request::is('sadmin/acknowledgments*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('acknowledgments.index') }}">
+      <span class="aside-menu-icon"><i class="fas fa-file-signature icon-color-bs-blue"></i></span>
+      <span class="aside-menu-title">{{ __('messages.acknowledgments') }}</span>
+    </a>
+  </li>
+
   <li class="nav-item {{ Request::is('sadmin/add-on*') ? 'active' : '' }}">
     <a class="nav-link  d-flex align-items-center py-3 gap-3" href="{{ route('addon.index') }}">
       <span class="aside-menu-icon"><i class="fa-solid fa-upload"></i></span>
@@ -109,7 +117,8 @@
   </li>
 
   <li class="nav-item {{ Request::is('sadmin/custom-page*') ? 'active' : '' }}">
-    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('custom.page.index') }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('custom.page.index') }}">
       <span class="aside-menu-icon"><i class="fa-solid fa-file icon-color-bs-teal"></i></span>
       <span class="aside-menu-title">{{ __('messages.custom_page.custom_page') }}</span>
     </a>
@@ -267,6 +276,14 @@
       href="{{ route('sales.nfc.showcase') }}">
       <span class="aside-menu-icon"><i class="fas fa-credit-card icon-color-bs-blue"></i></span>
       <span class="aside-menu-title">{{ __('messages.common.nfc_cards_showcase') }}</span>
+    </a>
+  </li>
+
+  <li class="nav-item {{ Request::is('sadmin/acknowledgments*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('acknowledgments.index') }}">
+      <span class="aside-menu-icon"><i class="fas fa-file-signature icon-color-bs-blue"></i></span>
+      <span class="aside-menu-title">{{ __('messages.acknowledgments') }}</span>
     </a>
   </li>
 @endhasrole

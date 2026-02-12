@@ -34,6 +34,9 @@ class RedirectLinksCustomTable extends Component
   // For bulk assignment
   public $assignedUserId = '';
 
+  // For acknowledgment creation
+  public $acknowledgmentSalesUserId = '';
+
   // Accordion state - which groups are expanded
   public $expandedGroups = [];
 
@@ -390,6 +393,58 @@ class RedirectLinksCustomTable extends Component
     $this->assignedUserId = '';
     $this->resetPage();
     $this->dispatch('refresh');
+  }
+
+  public function createAcknowledgment()
+  {
+    // Only super_admin can create acknowledgments
+    if (!auth()->user()->hasRole('super_admin')) {
+      session()->flash('error', __('messages.common.unauthorized'));
+      return;
+    }
+
+    $selectedIds = $this->selected;
+    $salesUserId = $this->acknowledgmentSalesUserId;
+
+    if (empty($selectedIds)) {
+      session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    if (empty($salesUserId)) {
+      session()->flash('error', __('messages.select_sales_representative'));
+      return;
+    }
+
+    // Get selected redirect links
+    $redirectLinks = RedirectLink::whereIn('id', $selectedIds)->get();
+
+    if ($redirectLinks->isEmpty()) {
+      session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    // Calculate totals
+    $totalPrice = $redirectLinks->sum('price');
+    $totalSalesPrice = $redirectLinks->sum('sales_price');
+    $totalCount = $redirectLinks->count();
+
+    // Create acknowledgment
+    $acknowledgment = \App\Models\RedirectLinkAcknowledgment::create([
+      'sales_user_id' => $salesUserId,
+      'created_by' => auth()->id(),
+      'redirect_link_ids' => $selectedIds,
+      'total_price' => $totalPrice,
+      'total_sales_price' => $totalSalesPrice,
+      'total_count' => $totalCount,
+    ]);
+
+    session()->flash('success', __('messages.acknowledgment_created'));
+
+    // Reset and redirect to view the acknowledgment
+    $this->acknowledgmentSalesUserId = '';
+
+    return redirect()->route('acknowledgments.view', $acknowledgment->id);
   }
 
   public function syncAndRestore()

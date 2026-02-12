@@ -613,6 +613,17 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('redirect-links/mark-selected-received', [RedirectLinkController::class, 'markSelectedAsReceived'])->name('redirect-links.mark-selected-received');
       Route::get('redirect-links/{redirectLink}/edit', [RedirectLinkController::class, 'edit'])->name('redirect-links.edit');
       Route::put('redirect-links/{redirectLink}', [RedirectLinkController::class, 'update'])->name('redirect-links.update');
+
+      // Acknowledgments Routes
+      Route::get('acknowledgments', [App\Http\Controllers\AcknowledgmentController::class, 'index'])->name('acknowledgments.index');
+      Route::get('acknowledgments/{id}/view', [App\Http\Controllers\AcknowledgmentController::class, 'view'])->name('acknowledgments.view');
+    });
+
+    // Acknowledgments - Super Admin Only Routes
+    Route::prefix('sadmin')->middleware('role:super_admin')->group(function () {
+      Route::get('acknowledgments/{id}/edit', [App\Http\Controllers\AcknowledgmentController::class, 'edit'])->name('acknowledgments.edit');
+      Route::put('acknowledgments/{id}', [App\Http\Controllers\AcknowledgmentController::class, 'update'])->name('acknowledgments.update');
+      Route::delete('acknowledgments/{id}', [App\Http\Controllers\AcknowledgmentController::class, 'destroy'])->name('acknowledgments.destroy');
     });
 
     // Sales NFC Showcase
