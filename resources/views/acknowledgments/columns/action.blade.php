@@ -6,8 +6,8 @@
 
   @if (auth()->user()->hasRole('super_admin'))
     <a href="{{ route('acknowledgments.edit', $row->id) }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip"
-      title="تحميل الملف">
-      <i class="fas fa-download"></i>
+      title="{{ __('messages.upload_acknowledgment') }}">
+      <i class="fas fa-upload"></i>
     </a>
 
     <button type="button" class="btn btn-sm btn-danger" wire:click="delete({{ $row->id }})"
