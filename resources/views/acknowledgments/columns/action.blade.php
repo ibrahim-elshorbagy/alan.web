@@ -5,9 +5,9 @@
   </a>
 
   @if (auth()->user()->hasRole('super_admin'))
-    <a href="{{ route('acknowledgments.edit', $row->id) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
-      title="{{ __('messages.common.edit') }}">
-      <i class="fas fa-edit"></i>
+    <a href="{{ route('acknowledgments.edit', $row->id) }}" class="btn btn-sm btn-success" data-bs-toggle="tooltip"
+      title="تحميل الملف">
+      <i class="fas fa-download"></i>
     </a>
 
     <button type="button" class="btn btn-sm btn-danger" wire:click="delete({{ $row->id }})"

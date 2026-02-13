@@ -130,11 +130,11 @@ class RedirectLinksHistoryReport extends Component
   }
 
   /**
-   * Get active users (redeemed - deleted)
+   * Get active users (links where most recent action is redeem, not delete)
    */
   public function getActiveUsers()
   {
-    // Get all redeemed redirect_link_ids
+    // Get all redirect_link_ids that have been redeemed
     $redeemedQuery = DB::table('redirect_link_histories')
       ->where('action', 'user_redeem')
       ->join('redirect_links', 'redirect_link_histories.redirect_link_id', '=', 'redirect_links.id');
@@ -158,40 +158,33 @@ class RedirectLinksHistoryReport extends Component
       $redeemedQuery->whereDate('redirect_link_histories.created_at', '<=', $this->dateToFilter);
     }
 
-    $redeemedIds = $redeemedQuery->pluck('redirect_link_histories.redirect_link_id')->toArray();
+    $redeemedIds = $redeemedQuery->pluck('redirect_link_histories.redirect_link_id')->unique()->toArray();
 
-    // Get all deleted redirect_link_ids
-    $deletedQuery = DB::table('redirect_link_histories')
-      ->where('action', 'user_deleted_link')
-      ->join('redirect_links', 'redirect_link_histories.redirect_link_id', '=', 'redirect_links.id');
-
-    // Apply same filters
-    if (auth()->user()->hasRole('sales')) {
-      $deletedQuery->where('redirect_links.assigned_id', auth()->id());
+    if (empty($redeemedIds)) {
+      return collect([]);
     }
 
-    if ($this->assignedFilter !== '' && !auth()->user()->hasRole('sales')) {
-      $deletedQuery->where('redirect_links.assigned_id', $this->assignedFilter);
+    // For each redeemed link, check if the MOST RECENT action is a redemption or deletion
+    $activeIds = [];
+
+    foreach ($redeemedIds as $linkId) {
+      $lastAction = DB::table('redirect_link_histories')
+        ->where('redirect_link_id', $linkId)
+        ->whereIn('action', ['user_redeem', 'user_deleted_link'])
+        ->orderBy('created_at', 'desc')
+        ->first();
+
+      // If most recent action is redeem, it's active
+      if ($lastAction && $lastAction->action === 'user_redeem') {
+        $activeIds[] = $linkId;
+      }
     }
-
-    if ($this->dateFromFilter !== '') {
-      $deletedQuery->whereDate('redirect_link_histories.created_at', '>=', $this->dateFromFilter);
-    }
-
-    if ($this->dateToFilter !== '') {
-      $deletedQuery->whereDate('redirect_link_histories.created_at', '<=', $this->dateToFilter);
-    }
-
-    $deletedIds = $deletedQuery->pluck('redirect_link_histories.redirect_link_id')->toArray();
-
-    // Get active IDs (redeemed but not deleted)
-    $activeIds = array_diff($redeemedIds, $deletedIds);
 
     if (empty($activeIds)) {
       return collect([]);
     }
 
-    // Get the history records for active IDs
+    // Get the MOST RECENT redemption history records for active IDs
     $query = DB::table('redirect_link_histories')
       ->where('action', 'user_redeem')
       ->whereIn('redirect_link_id', $activeIds)
@@ -202,11 +195,18 @@ class RedirectLinksHistoryReport extends Component
         'redirect_links.nfcs_id',
         'redirect_links.assigned_id',
         'redirect_links.user_id'
-      );
+      )
+      // Get only the latest redemption for each link
+      ->whereIn('redirect_link_histories.id', function ($subquery) use ($activeIds) {
+        $subquery->select(DB::raw('MAX(id)'))
+          ->from('redirect_link_histories')
+          ->where('action', 'user_redeem')
+          ->whereIn('redirect_link_id', $activeIds)
+          ->groupBy('redirect_link_id');
+      });
 
     return $query->orderBy('redirect_link_histories.created_at', 'desc')->get();
   }
-
   public function getSalesUsers()
   {
     return User::role('sales')->get();

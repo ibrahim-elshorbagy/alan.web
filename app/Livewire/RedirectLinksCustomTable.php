@@ -36,6 +36,7 @@ class RedirectLinksCustomTable extends Component
 
   // For acknowledgment creation
   public $acknowledgmentSalesUserId = '';
+  public $acknowledgmentValidationErrors = [];
 
   // Accordion state - which groups are expanded
   public $expandedGroups = [];
@@ -46,7 +47,7 @@ class RedirectLinksCustomTable extends Component
 
   protected $queryString = [];
 
-  protected $listeners = ['refresh' => '$refresh'];
+  protected $listeners = [];
 
   public function updatingPage()
   {
@@ -297,7 +298,6 @@ class RedirectLinksCustomTable extends Component
     }
 
     $this->selected = [];
-    $this->dispatch('refresh');
   }
 
   public function bulkAssign()
@@ -392,7 +392,6 @@ class RedirectLinksCustomTable extends Component
     // Reset assigned user after successful assignment
     $this->assignedUserId = '';
     $this->resetPage();
-    $this->dispatch('refresh');
   }
 
   public function createAcknowledgment()
@@ -411,16 +410,63 @@ class RedirectLinksCustomTable extends Component
       return;
     }
 
-    if (empty($salesUserId)) {
-      session()->flash('error', __('messages.select_sales_representative'));
-      return;
-    }
-
     // Get selected redirect links
     $redirectLinks = RedirectLink::whereIn('id', $selectedIds)->get();
 
     if ($redirectLinks->isEmpty()) {
       session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    // VALIDATION: Check if sales rep is selected and cards belong to them and aren't already acknowledged
+    $this->acknowledgmentValidationErrors = [];
+    $invalidCards = [];
+
+    // Check if sales representative is selected
+    if (empty($salesUserId)) {
+      $this->acknowledgmentValidationErrors[] = [
+        'type' => 'no_sales_rep',
+        'message' => __('messages.redirect_links.please_select_sales_representative')
+      ];
+      $this->dispatch('showAcknowledgmentValidationErrors');
+      return;
+    }
+
+    // Get all existing acknowledgments with their redirect_link_ids
+    $existingAcknowledgments = \App\Models\RedirectLinkAcknowledgment::all();
+    $alreadyAcknowledgedIds = [];
+    foreach ($existingAcknowledgments as $ack) {
+      $ackIds = is_string($ack->redirect_link_ids) ? json_decode($ack->redirect_link_ids, true) : $ack->redirect_link_ids;
+      if (is_array($ackIds)) {
+        $alreadyAcknowledgedIds = array_merge($alreadyAcknowledgedIds, $ackIds);
+      }
+    }
+
+    foreach ($redirectLinks as $link) {
+      $errors = [];
+
+      // Check if card belongs to selected sales representative
+      if ($link->assigned_id != $salesUserId) {
+        $errors[] = __('messages.redirect_links.card_not_owned');
+      }
+
+      // Check if card is already in another acknowledgment
+      if (in_array($link->id, $alreadyAcknowledgedIds)) {
+        $errors[] = __('messages.redirect_links.card_already_in_acknowledgment');
+      }
+
+      if (!empty($errors)) {
+        $invalidCards[] = [
+          'uri' => $link->uri,
+          'id' => $link->id,
+          'errors' => $errors
+        ];
+      }
+    }
+
+    // If validation errors, just return (modal stays open, shows errors)
+    if (!empty($invalidCards)) {
+      $this->acknowledgmentValidationErrors = $invalidCards;
       return;
     }
 
@@ -439,13 +485,40 @@ class RedirectLinksCustomTable extends Component
       'total_count' => $totalCount,
     ]);
 
-    session()->flash('success', __('messages.acknowledgment_created'));
+    // Get the actual user ID (considering impersonation)
+    $actualUserId = auth()->user()->isImpersonated()
+      ? app('impersonate')->getImpersonatorId()
+      : auth()->id();
 
-    // Reset and redirect to view the acknowledgment
+    // Log history for each card added to the acknowledgment
+    foreach ($redirectLinks as $link) {
+      $link->logHistory(
+        'added_to_acknowledgment',
+        __('messages.redirect_links.history.none'),
+        '#' . $acknowledgment->id,
+        $actualUserId,
+        __('messages.redirect_links.history.added_to_acknowledgment', [
+          'acknowledgment_id' => $acknowledgment->id
+        ])
+      );
+    }
+
+    // Clear everything
+    $this->acknowledgmentValidationErrors = [];
     $this->acknowledgmentSalesUserId = '';
+    $this->selected = [];
 
+    // Set success message and redirect (modal closes automatically on redirect)
+    session()->flash('success', __('messages.acknowledgment_created'));
     return redirect()->route('acknowledgments.view', $acknowledgment->id);
   }
+
+  public function clearAcknowledgmentErrors()
+  {
+    $this->acknowledgmentValidationErrors = [];
+  }
+
+
 
   public function syncAndRestore()
   {
@@ -473,7 +546,6 @@ class RedirectLinksCustomTable extends Component
     // Clear selections after restore
     // $this->selected = [];
     $this->resetPage();
-    $this->dispatch('refresh');
   }
 
   public function markAsReceived($id)
@@ -501,8 +573,6 @@ class RedirectLinksCustomTable extends Component
           'new' => __('messages.redirect_links.received')
         ])
       );
-
-      $this->dispatch('refresh');
     }
   }
 
@@ -532,7 +602,7 @@ class RedirectLinksCustomTable extends Component
       session()->flash('success', __('messages.redirect_links.deleted_successfully'));
 
       // Refresh without page reload
-      $this->dispatch('refresh');
+
     } catch (\Exception $e) {
       session()->flash('error', __('messages.common.something_went_wrong'));
     }
@@ -578,7 +648,7 @@ class RedirectLinksCustomTable extends Component
       session()->flash('success', __('messages.redirect_links.deleted_count', ['count' => $count]));
 
       // Refresh without page reload
-      $this->dispatch('refresh');
+
     } catch (\Exception $e) {
       session()->flash('error', __('messages.common.something_went_wrong'));
     }

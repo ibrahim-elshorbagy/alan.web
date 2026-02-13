@@ -1,6 +1,6 @@
 <div class="d-flex gap-2 justify-content-center">
   <a href="{{ route('redirect-links.edit', $row->id) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip"
-    title="{{ __('messages.common.edit') }}">
+    title="{{ __('messages.common.edit') }}" target="_blank">
     <i class="fas fa-edit"></i>
   </a>
   @if (!auth()->user()->hasRole('sales'))

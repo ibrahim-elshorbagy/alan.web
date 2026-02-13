@@ -1,4 +1,4 @@
-<div class="text-center">
+<div class="">
   @if ($row->creator)
     <div>{{ $row->creator->first_name }} {{ $row->creator->last_name }}</div>
   @else

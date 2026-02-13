@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Schema; 
 
 return new class extends Migration
 {
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->timestamp('status_changed_at')->nullable()->after('status_changed_by');
             $table->unsignedBigInteger('received_status_changed_by')->nullable()->after('received_status');
             $table->timestamp('received_status_changed_at')->nullable()->after('received_status_changed_by');
-            
+
             $table->foreign('status_changed_by')->references('id')->on('users')->onDelete('set null');
             $table->foreign('received_status_changed_by')->references('id')->on('users')->onDelete('set null');
         });

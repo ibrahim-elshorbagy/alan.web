@@ -15,7 +15,7 @@
                     if (cells.length >= 4) {
                         const uriCell = cells[3]; // 0=checkbox, 1=serial, 2=user, 3=uri
                         const uriText = uriCell.textContent.trim();
-                        return uriText || `#${id}`;
+                        return `${uriText} - #${id}`;
                     }
                 }
             }
@@ -357,7 +357,8 @@
       overflow-y: auto;
       white-space: normal;
       min-width: 200px;
-      text-align: center;
+      text-align: right;
+      direction: rtl;
     }
 
     .selected-preview-tooltip::after {
@@ -378,7 +379,7 @@
     .selected-code-item {
       padding: 4px 0;
       border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      text-align: center;
+      text-align: right;
     }
 
     .selected-code-item:last-child {
@@ -407,6 +408,12 @@
   {{-- Filters Section --}}
   <div class="filter-card">
     <div class="row g-3 align-items-end">
+      {{-- Search --}}
+      <div class="col-md-3 col-sm-6 col-12">
+        <label class="form-label small mb-1">{{ __('messages.common.search') }}</label>
+        <input type="text" class="form-control" wire:model.live.debounce.500ms="searchQuery"
+          placeholder="{{ __('messages.common.search') }}...">
+      </div>
 
 
       {{-- Assigned To Filter (only for non-sales users) --}}
@@ -547,8 +554,8 @@
           </button>
 
           <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#acknowledgmentModal">
-            <i class="fas fa-file-signature"></i> <span
-              class="d-none d-sm-inline">{{ __('messages.create_acknowledgment') }}</span>
+            <i class="fas fa-file-signature"></i>
+            <span class="d-none d-sm-inline">{{ __('messages.create_acknowledgment') }}</span>
           </button>
 
           <button type="button" class="btn btn-danger"
@@ -969,7 +976,7 @@
   {{-- Acknowledgment Modal --}}
   <div class="modal fade" id="acknowledgmentModal" tabindex="-1" aria-labelledby="acknowledgmentModalLabel"
     aria-hidden="true" wire:ignore.self>
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="acknowledgmentModalLabel">{{ __('messages.create_acknowledgment') }}</h5>
@@ -986,21 +993,55 @@
               @endforeach
             </select>
           </div>
-          <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i>
-            <span
-              x-text="'{{ __('messages.redirect_links.you_have_selected') }} ' + selected.length + ' {{ __('messages.redirect_links.items') }}'"></span>
-          </div>
+
+          @if (!empty($acknowledgmentValidationErrors))
+            <div class="alert alert-danger">
+              @if (isset($acknowledgmentValidationErrors[0]['type']) && $acknowledgmentValidationErrors[0]['type'] === 'no_sales_rep')
+                <h6 class="alert-heading"><i class="fas fa-exclamation-triangle"></i>
+                  {{ $acknowledgmentValidationErrors[0]['message'] }}</h6>
+              @else
+                <h6 class="alert-heading"><i class="fas fa-exclamation-triangle"></i>
+                  {{ __('messages.redirect_links.validation_errors') }}</h6>
+                <p class="mb-2">{{ __('messages.redirect_links.validation_error_intro') }}</p>
+                <ul class="mb-0">
+                  @foreach ($acknowledgmentValidationErrors as $error)
+                    <li>
+                      <hr>
+                      <strong>{{ $error['uri'] }} - #{{ $error['id'] }}</strong>
+                      <ul>
+                        @foreach ($error['errors'] as $errorMsg)
+                          <li>{{ $errorMsg }}</li>
+                        @endforeach
+                      </ul>
+                    </li>
+                  @endforeach
+                </ul>
+              @endif
+            </div>
+          @else
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i>
+              <span
+                x-text="'{{ __('messages.redirect_links.you_have_selected') }} ' + selected.length + ' {{ __('messages.redirect_links.items') }}'"></span>
+            </div>
+          @endif
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary"
             data-bs-dismiss="modal">{{ __('messages.common.cancel') }}</button>
           <button type="button" class="btn btn-info" @click="syncAndCall('createAcknowledgment')"
-            data-bs-dismiss="modal">
-            {{ __('messages.create_acknowledgment') }}
+            wire:loading.attr="disabled">
+            <span wire:loading.remove
+              wire:target="createAcknowledgment">{{ __('messages.create_acknowledgment') }}</span>
+            <span wire:loading wire:target="createAcknowledgment">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              {{ __('messages.common.loading') }}...
+            </span>
           </button>
         </div>
       </div>
     </div>
   </div>
+
+
 </div>

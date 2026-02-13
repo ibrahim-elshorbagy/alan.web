@@ -83,18 +83,6 @@ class ClientRedirectLinksTable extends LivewireTableComponent
       ])
     );
 
-    // Log status change
-    // $redirectLink->logHistory(
-    //   'status_changed',
-    //   __('messages.redirect_links.redeemed'),
-    //   __('messages.redirect_links.not_redeemed'),
-    //   $actualUserId,
-    //   __('messages.redirect_links.history.status_changed', [
-    //     'old' => __('messages.redirect_links.redeemed'),
-    //     'new' => __('messages.redirect_links.not_redeemed')
-    //   ])
-    // );
-
     session()->flash('success', __('messages.redirect_links.deleted'));
     $this->dispatch('refresh');
   }

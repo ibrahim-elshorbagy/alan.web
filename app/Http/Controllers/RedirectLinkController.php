@@ -963,7 +963,12 @@ class RedirectLinkController extends Controller
       $q->whereIn('name', ['sales', 'super_admin']);
     })->get();
 
-    return view('admin.redirect_links.edit', compact('redirectLink', 'users', 'nfcs', 'salesUsers'));
+    // Get the latest acknowledgment for this redirect link
+    $latestAcknowledgment = \App\Models\RedirectLinkAcknowledgment::whereJsonContains('redirect_link_ids', $id)
+      ->orderBy('created_at', 'desc')
+      ->first();
+
+    return view('admin.redirect_links.edit', compact('redirectLink', 'users', 'nfcs', 'salesUsers', 'latestAcknowledgment'));
   }
 
   public function update(Request $request, $id)

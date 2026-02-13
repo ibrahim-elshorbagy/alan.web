@@ -14,6 +14,8 @@ return [
   'total_redirect_links' => 'Total Redirect Links',
   'add_redirect_link' => 'Add Redirect Link',
 
+  'count'=>'Count',
+
   // Acknowledgment translations
   'create_acknowledgment' => 'Create Acknowledgment',
   'acknowledgments' => 'Acknowledgments',
@@ -35,6 +37,7 @@ return [
   'no_acknowledgments_found' => 'No acknowledgments found',
   'acknowledgment_date' => 'Acknowledgment Date',
   'card_uri' => 'Card URI',
+  'acknowledgment_number' => "Acknowledgment Number",
 
   'reset_password' => 'Reset Password',
   'free' => "Free",
@@ -2550,6 +2553,7 @@ If you want to redirect your card to the smart business card, you must first go 
     'not_received' => 'Not Received',
     'mark_as_received' => 'Mark as Received',
     'received_status' => 'Received Status',
+    'acknowledgment_info' => 'Acknowledgment',
     'received_all' => 'Received All',
     'rejected_note' => 'This redirect link has been rejected.',
     'mark_selected_as_received' => 'Mark Selected as Received',
@@ -2598,6 +2602,7 @@ If you want to redirect your card to the smart business card, you must first go 
       'changed_at' => 'Changed At',
       'none' => 'None',
       'deleted_user' => 'Deleted User',
+      'unknown_user' => 'Unknown User',
       'created' => 'Redirect link created with URI: :uri',
       'assigned_to' => 'Assigned to :name',
       'status_changed' => 'Status changed from :old to :new',
@@ -2607,6 +2612,8 @@ If you want to redirect your card to the smart business card, you must first go 
       'user_id_changed' => 'User changed from :old to :new',
       'user_redeem' => 'User :user redeemed the redirect link',
       'user_deleted_link' => 'User :user deleted their redirect link',
+      'added_to_acknowledgment' => 'Card added to acknowledgment #:acknowledgment_id',
+      'removed_from_acknowledgment' => 'Card removed from acknowledgment #:acknowledgment_id',
       'redirect_link_changed' => 'Redirect link changed from :old to :new',
       'actions' => [
         'created' => 'Created',
@@ -2617,8 +2624,16 @@ If you want to redirect your card to the smart business card, you must first go 
         'user_id_changed' => 'User Changed',
         'user_redeem' => 'User Redeemed',
         'user_deleted_link' => 'User Deleted Link',
+        'added_to_acknowledgment' => 'Added to Acknowledgment',
+        'removed_from_acknowledgment' => 'Removed from Acknowledgment',
         'redirect_link_changed' => 'Redirect Link Changed',
       ],
+      'card_not_owned' => 'This card does not belong to the selected sales representative',
+      'card_already_in_acknowledgment' => 'This card is already in another acknowledgment',
+      'validation_error_intro' => 'The following cards cannot be added to this acknowledgment. Please remove them from your selection:',
+      'no_eligible_links_to_delete' => 'No eligible links to delete. with special user associations cannot be deleted.',
+      'validation_errors' => 'Validation Errors',
+      'please_select_sales_representative' => 'Please select a sales representative.',
     ],
   ],
   'receipts' => [

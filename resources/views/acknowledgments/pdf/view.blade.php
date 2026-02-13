@@ -8,7 +8,7 @@
   <style>
     /* ==================== Base Document Styles ==================== */
     @page {
-      margin: 2.5cm;
+      margin: 1.5cm;
     }
 
     * {
@@ -19,8 +19,8 @@
 
     body {
       font-family: 'Times New Roman', Times, serif;
-      font-size: 12pt;
-      line-height: 1.5;
+      font-size: 11pt;
+      line-height: 1.3;
       color: #000000;
       background: #ffffff;
       direction: {{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }};
@@ -31,120 +31,165 @@
     .document-container {
       max-width: 21cm;
       margin: 0 auto;
-      padding: 2cm;
+      padding: 1.5cm;
       background: white;
     }
 
-    /* ==================== Header ==================== */
+    /* ==================== Compact Header ==================== */
     .document-header {
-      text-align: center;
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 3px double #000000;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #000000;
     }
 
     .logo-container {
-      margin-bottom: 20px;
+      flex-shrink: 0;
+      {{ app()->getLocale() == 'ar' ? 'margin-right' : 'margin-left' }}: 0;
     }
 
     .logo-container img {
-      max-width: 120px;
+      max-width: 80px;
       height: auto;
+      display: block;
     }
 
     .company-info {
-      margin-bottom: 15px;
-      font-size: 11pt;
-      line-height: 1.4;
+      flex: 1;
+      text-align: {{ app()->getLocale() == 'ar' ? 'right' : 'left' }};
+      {{ app()->getLocale() == 'ar' ? 'padding-left' : 'padding-right' }}: 15px;
+      font-size: 9pt;
+      line-height: 1.3;
     }
 
     .company-name {
-      font-size: 16pt;
+      font-size: 12pt;
       font-weight: bold;
-      margin-bottom: 5px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      margin-bottom: 3px;
+    }
+
+    .company-info>div {
+      margin-bottom: 2px;
+    }
+
+    /* ==================== Document Title & Reference ==================== */
+    .document-title-section {
+      text-align: center;
+      margin: 10px 0;
     }
 
     .document-title {
-      font-size: 18pt;
+      font-size: 14pt;
       font-weight: bold;
       text-transform: uppercase;
-      margin: 20px 0 10px 0;
-      letter-spacing: 2px;
+      margin-bottom: 5px;
     }
 
-    .document-reference {
+    .document-meta {
+      font-size: 10pt;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .document-meta span {
+      white-space: nowrap;
+    }
+
+    /* ==================== Compact Info Section ==================== */
+    .recipient-info {
+      margin: 15px 0;
+      padding: 8px 12px;
+      background: #f8f8f8;
+      border: 1px solid #ddd;
+      font-size: 10pt;
+      line-height: 1.4;
+    }
+
+    .recipient-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px 15px;
+    }
+
+    .info-item {
+      display: flex;
+      gap: 5px;
+    }
+
+    .info-item .label {
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .info-item .value {
+      flex: 1;
+    }
+
+    /* ==================== Compact Summary ==================== */
+    .summary-compact {
+      margin: 12px 0;
+      padding: 8px 12px;
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 10pt;
+    }
+
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .summary-item .label {
+      font-weight: bold;
+    }
+
+    .summary-item .value {
+      font-weight: bold;
       font-size: 11pt;
-      margin-top: 10px;
     }
 
-    /* ==================== Information Sections ==================== */
-    .section-heading {
-      font-size: 13pt;
-      font-weight: bold;
-      text-transform: uppercase;
-      margin: 30px 0 15px 0;
-      padding-bottom: 5px;
-      border-bottom: 2px solid #000000;
-      text-align: {{ app()->getLocale() == 'ar' ? 'right' : 'left' }};
-    }
-
-    .info-table {
-      width: 100%;
-      margin-bottom: 25px;
-      border-collapse: collapse;
-    }
-
-    .info-table td {
-      padding: 8px 10px;
-      vertical-align: top;
-      text-align: {{ app()->getLocale() == 'ar' ? 'right' : 'left' }};
-      line-height: 1.6;
-    }
-
-    .info-table .label {
-      font-weight: bold;
-      width: 35%;
-    }
-
-    .info-table .value {
-      width: 65%;
-    }
-
-    .info-row {
-      border-bottom: 1px solid #cccccc;
-    }
-
-    /* ==================== Data Table ==================== */
+    /* ==================== Compact Data Table ==================== */
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 25px 0;
-      font-size: 11pt;
+      margin: 12px 0;
+      font-size: 10pt;
     }
 
     .data-table th,
     .data-table td {
       border: 1px solid #000000;
-      padding: 10px;
+      padding: 6px 8px;
       text-align: {{ app()->getLocale() == 'ar' ? 'right' : 'left' }};
       vertical-align: middle;
     }
 
     .data-table th {
-      background-color: #f0f0f0;
+      background-color: #e8e8e8;
       font-weight: bold;
       text-align: center;
-      text-transform: uppercase;
-      font-size: 10pt;
-      letter-spacing: 0.5px;
+      font-size: 9pt;
     }
 
     .data-table td:first-child,
     .data-table th:first-child {
       text-align: center;
-      width: 50px;
+      width: 35px;
+    }
+
+    .data-table .serial-cell {
+      font-family: 'Courier New', monospace;
+      font-size: 9pt;
+      font-weight: bold;
     }
 
     .data-table .amount-cell {
@@ -152,139 +197,106 @@
       font-weight: bold;
     }
 
-    .data-table code {
-      font-family: 'Courier New', monospace;
+    /* ==================== Compact Totals Below Table ==================== */
+    .totals-compact {
+      margin: 8px 0 15px auto;
+      width: fit-content;
+      {{ app()->getLocale() == 'ar' ? 'margin-left' : 'margin-right' }}: 0;
+      border-top: 2px solid #000;
+      padding-top: 6px;
       font-size: 10pt;
-      background: #f5f5f5;
-      padding: 2px 5px;
     }
 
-    /* ==================== Summary Box ==================== */
-    .summary-box {
-      margin: 30px 0;
-      border: 2px solid #000000;
-      padding: 20px;
-      background: #fafafa;
+    .totals-compact .total-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 4px;
     }
 
-    .summary-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .summary-table td {
-      padding: 10px;
-      border-bottom: 1px solid #cccccc;
-    }
-
-    .summary-table .label {
+    .totals-compact .label {
       font-weight: bold;
-      width: 70%;
-      text-align: {{ app()->getLocale() == 'ar' ? 'right' : 'left' }};
     }
 
-    .summary-table .value {
-      width: 30%;
+    .totals-compact .value {
+      font-weight: bold;
       text-align: {{ app()->getLocale() == 'ar' ? 'left' : 'right' }};
-      font-weight: bold;
-      font-size: 13pt;
-    }
-
-    .summary-table tr:last-child td {
-      border-bottom: none;
-      padding-top: 15px;
-      font-size: 14pt;
-      border-top: 2px solid #000000;
     }
 
     /* ==================== Declaration ==================== */
     .declaration-box {
-      margin: 35px 0;
-      padding: 20px;
-      border: 2px solid #000000;
-      background: #ffffff;
-    }
-
-    .declaration-title {
-      font-weight: bold;
-      font-size: 12pt;
-      margin-bottom: 15px;
-      text-align: center;
-      text-transform: uppercase;
+      margin: 20px 0;
+      padding: 12px;
+      border: 1px solid #000000;
+      background: #fafafa;
+      font-size: 10pt;
     }
 
     .declaration-text {
       text-align: justify;
-      line-height: 1.8;
-      margin-bottom: 15px;
+      line-height: 1.5;
+      margin-bottom: 10px;
     }
 
     .notes-box {
-      margin-top: 20px;
-      padding-top: 15px;
-      border-top: 1px solid #000000;
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px solid #ccc;
     }
 
     .notes-label {
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       display: block;
     }
 
-    /* ==================== Signature Section ==================== */
+    /* ==================== Compact Signature Section ==================== */
     .signature-section {
-      margin-top: 50px;
+      margin-top: 25px;
       page-break-inside: avoid;
     }
 
     .signature-grid {
-      display: table;
-      width: 100%;
-      margin-top: 40px;
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
     }
 
     .signature-cell {
-      display: table-cell;
-      width: 50%;
-      padding: 20px;
-      vertical-align: top;
       text-align: center;
-    }
-
-    .signature-space {
-      min-height: 60px;
-      margin-bottom: 10px;
+      min-width: 150px;
     }
 
     .signature-line {
-      width: 200px;
-      border-bottom: 2px solid #000000;
-      margin: 50px auto 15px auto;
+      width: 150px;
+      border-bottom: 1.5px solid #000000;
+      margin: 30px auto 8px auto;
     }
 
     .signature-label {
       font-weight: bold;
-      margin-bottom: 5px;
+      font-size: 10pt;
+      margin-bottom: 3px;
     }
 
     .signature-name {
-      font-size: 11pt;
-      margin-top: 5px;
+      font-size: 10pt;
+      margin-top: 3px;
     }
 
-    /* ==================== Footer ==================== */
+    /* ==================== Compact Footer ==================== */
     .document-footer {
-      margin-top: 50px;
-      padding-top: 20px;
-      border-top: 3px double #000000;
-      font-size: 10pt;
-      text-align: {{ app()->getLocale() == 'ar' ? 'right' : 'left' }};
-      line-height: 1.6;
+      margin-top: 25px;
+      padding-top: 10px;
+      border-top: 2px solid #000000;
+      font-size: 9pt;
+      text-align: center;
+      line-height: 1.4;
     }
 
     .document-footer .company-name-footer {
       font-weight: bold;
-      margin-bottom: 5px;
+      margin-bottom: 3px;
     }
 
     .document-footer a {
@@ -368,8 +380,6 @@
         display: none !important;
       }
 
-      .section-heading,
-      .summary-box,
       .declaration-box,
       .signature-section {
         page-break-inside: avoid;
@@ -384,26 +394,29 @@
         page-break-after: auto;
       }
 
-      /* ✅ Force print backgrounds */
-      .summary-box,
-      .data-table th,
-      .data-table code {
+      .summary-compact,
+      .recipient-info,
+      .declaration-box,
+      .data-table th {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
         color-adjust: exact !important;
       }
 
-      /* Explicitly set backgrounds for print */
-      .summary-box {
+      .summary-compact {
+        background-color: #f0f0f0 !important;
+      }
+
+      .recipient-info {
+        background-color: #f8f8f8 !important;
+      }
+
+      .declaration-box {
         background-color: #fafafa !important;
       }
 
       .data-table th {
-        background-color: #f0f0f0 !important;
-      }
-
-      .data-table code {
-        background-color: #f5f5f5 !important;
+        background-color: #e8e8e8 !important;
       }
     }
 
@@ -428,7 +441,7 @@
 
   <div class="document-container">
 
-    <!-- Document Header -->
+    <!-- Compact Header: Logo Left, Company Info Right -->
     <div class="document-header">
       <div class="logo-container">
         <img src="{{ getLogoUrl() }}">
@@ -444,57 +457,57 @@
           @endif
         </div>
       </div>
+    </div>
 
+    <!-- Document Title & Meta Info -->
+    <div class="document-title-section">
       <div class="document-title">{!! __('messages.acknowledgment_report') !!}</div>
-
-      <div class="document-reference">
-        {{ __('messages.acknowledgment_date') }}: {{ $acknowledgment->created_at->format('d/m/Y') }}
+      <div class="document-meta">
+        <span><strong>{!! __('messages.acknowledgment_number') !!}:</strong> #{{ $acknowledgment->id }}</span>
+        <span><strong>{{ __('messages.acknowledgment_date') }}:</strong>
+          {{ $acknowledgment->created_at->format('d/m/Y') }}</span>
       </div>
     </div>
 
-    <!-- Received By Section -->
-    <h2 class="section-heading">{!! __('messages.received_by') !!}</h2>
-
-    <table class="info-table">
-      <tr class="info-row">
-        <td class="label">{!! __('messages.common.name') !!}:</td>
-        <td class="value">{!! $acknowledgment->salesUser->first_name . ' ' . $acknowledgment->salesUser->last_name !!}</td>
-      </tr>
-      <tr class="info-row">
-        <td class="label">{!! __('messages.common.email') !!}:</td>
-        <td class="value">{{ $acknowledgment->salesUser->email }}</td>
-      </tr>
-      <tr class="info-row">
-        <td class="label">{!! __('messages.common.phone') !!}:</td>
-        <td class="value">{{ $acknowledgment->salesUser->phone ?? '' }}</td>
-      </tr>
-      <tr class="info-row">
-        <td class="label">{!! __('messages.created_by_admin') !!}:</td>
-        <td class="value">{!! $acknowledgment->creator->first_name . ' ' . $acknowledgment->creator->last_name !!}</td>
-      </tr>
-    </table>
-
-    <!-- Items Summary -->
-    <div class="summary-box">
-      <table class="summary-table">
-        <tr>
-          <td class="label">{!! __('messages.common.total') !!} {!! __('messages.common.items') !!}:</td>
-          <td class="value">{{ $acknowledgment->total_count }}</td>
-        </tr>
-        <tr>
-          <td class="label">{!! __('messages.receipts.total_regular_selling_price') !!}:</td>
-          <td class="value">{{ currencyFormat($acknowledgment->total_price, 2) }}</td>
-        </tr>
-        <tr>
-          <td class="label">{!! __('messages.receipts.total_selling_price_for_representative') !!}:</td>
-          <td class="value">{{ currencyFormat($acknowledgment->total_sales_price, 2) }}</td>
-        </tr>
-      </table>
+    <!-- Compact Recipient Info -->
+    <div class="recipient-info">
+      <div class="recipient-info-grid">
+        <div class="info-item">
+          <span class="label">{!! __('messages.common.name') !!}:</span>
+          <span class="value">{!! $acknowledgment->salesUser->first_name . ' ' . $acknowledgment->salesUser->last_name !!}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">{!! __('messages.common.phone') !!}:</span>
+          <span class="value">{{ $acknowledgment->salesUser->phone ?? '' }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">{!! __('messages.common.email') !!}:</span>
+          <span class="value">{{ $acknowledgment->salesUser->email }}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">{!! __('messages.created_by_admin') !!}:</span>
+          <span class="value">{!! $acknowledgment->creator->first_name . ' ' . $acknowledgment->creator->last_name !!}</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Card Details -->
-    <h2 class="section-heading">{!! __('messages.card_details') !!}</h2>
+    <!-- Compact Summary -->
+    <div class="summary-compact">
+      <div class="summary-item">
+        <span class="label">{!! __('messages.common.total') !!} {!! __('messages.common.items') !!}:</span>
+        <span class="value">{{ $acknowledgment->total_count }}</span>
+      </div>
+      <div class="summary-item">
+        <span class="label">{!! __('messages.receipts.total_regular_selling_price') !!}:</span>
+        <span class="value">{{ currencyFormat($acknowledgment->total_price, 2) }}</span>
+      </div>
+      <div class="summary-item">
+        <span class="label">{!! __('messages.receipts.total_selling_price_for_representative') !!}:</span>
+        <span class="value">{{ currencyFormat($acknowledgment->total_sales_price, 2) }}</span>
+      </div>
+    </div>
 
+    <!-- Card Details Table -->
     <table class="data-table">
       <thead>
         <tr>
@@ -509,11 +522,12 @@
         @foreach ($redirectLinks as $index => $link)
           <tr>
             <td>{{ $index + 1 }}</td>
-            <td><code>{{ $link->uri }}</code></td>
+            <td class="serial-cell">{{ $link->uri }}</td>
             <td style="text-align: center;">
               @if ($link->nfc)
                 {!! $link->nfc->name !!}
               @else
+                -
               @endif
             </td>
             <td class="amount-cell">{{ currencyFormat($link->price, 2) }}</td>
@@ -525,7 +539,6 @@
 
     <!-- Declaration -->
     <div class="declaration-box">
-      <div class="declaration-title">{!! __('messages.common.declaration') !!}</div>
       <div class="declaration-text">
         {!! __('messages.acknowledgment_declaration_text') !!}
       </div>
@@ -538,26 +551,24 @@
       @endif
     </div>
 
-    <!-- Signatures -->
+    <!-- Compact Signatures -->
     <div class="signature-section">
       <div class="signature-grid">
         <div class="signature-cell">
-          <div class="signature-space"></div>
           <div class="signature-line"></div>
           <div class="signature-label">{!! __('messages.signature') !!}</div>
           <div class="signature-name">{!! $acknowledgment->salesUser->first_name . ' ' . $acknowledgment->salesUser->last_name !!}</div>
         </div>
 
         <div class="signature-cell">
-          <div class="signature-space"></div>
           <div class="signature-line"></div>
           <div class="signature-label">{!! __('messages.common.date') !!}</div>
         </div>
       </div>
     </div>
 
-    <!-- Footer -->
-    <div class="document-footer">
+    <!-- Compact Footer -->
+    {{-- <div class="document-footer">
       <div class="company-name-footer">{!! getSuperAdminSettingValue('app_name') !!}</div>
       <div>{!! getSuperAdminSettingValue('address') !!}</div>
       <div>
@@ -567,7 +578,7 @@
           | +{{ getSuperAdminSettingValue('prefix_code') }}{{ getSuperAdminSettingValue('phone') }}
         @endif
       </div>
-    </div>
+    </div> --}}
 
   </div>
 

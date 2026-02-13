@@ -87,6 +87,14 @@
         {{ Form::select('received_status', [0 => __('messages.redirect_links.not_received'), 1 => __('messages.redirect_links.received')], isset($redirectLink) ? $redirectLink->received_status : 0, ['class' => 'form-control']) }}
       @endif
     </div>
+    @if(isset($latestAcknowledgment))
+      <div class="mb-3">
+        <small class="text-info">
+          <i class="fas fa-info-circle"></i>
+          {{ __('messages.redirect_links.acknowledgment_info') }}: #{{ $latestAcknowledgment->id }}
+        </small>
+      </div>
+    @endif
   </div>
 
   @if (auth()->user()->hasRole('super_admin') &&  isset($redirectLink) && $redirectLink->histories->isNotEmpty())
