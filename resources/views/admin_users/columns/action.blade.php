@@ -10,7 +10,7 @@
     </a>
 
     @if (!empty($row->contact))
-      <a href="javascript:void(0)" data-id="{{ $row->id }}" title="Send Credentials via WhatsApp"
+      <a href="javascript:void(0)" data-id="{{ $row->id }}" title="إعادة تعيين كلمة المرور وارسالها برسالة واتس لرقم المندوب"
         class="btn px-1 text-success fs-3 send-whatsapp-btn">
         <i class="fab fa-whatsapp"></i>
       </a>

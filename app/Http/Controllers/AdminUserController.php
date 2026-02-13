@@ -115,32 +115,42 @@ class AdminUserController extends AppBaseController
 
   public function getCredentials($id)
   {
-      if (!Auth::user()->hasRole('super_admin')) {
-          return $this->sendError('Unauthorized');
-      }
+    if (!Auth::user()->hasRole('super_admin')) {
+      return $this->sendError('Unauthorized');
+    }
 
-      $user = User::find($id);
+    $user = User::find($id);
 
-      if (!$user || !$user->hasAnyRole(['super_admin', 'sales'])) {
-          return $this->sendError('User not found or not authorized');
-      }
+    if (!$user || !$user->hasAnyRole(['super_admin', 'sales'])) {
+      return $this->sendError('User not found or not authorized');
+    }
 
-      // generate new password
-      $newPassword = Str::random(8);
+    // generate new password
+    $newPassword = Str::random(8);
 
-      // save hashed version
-      $user->password = Hash::make($newPassword);
-      $user->save();
+    // save hashed version
+    $user->password = Hash::make($newPassword);
+    $user->save();
 
-      return response()->json([
-          'success' => true,
-          'data' => [
-              'email' => $user->email,
-              'password' => $newPassword, // plaintext once
-              'phone' => $user->contact,
-          ],
-          'message' => 'Password has been reset successfully',
-      ]);
+    // Construct WhatsApp message
+    $message = "عزيزي، {$user->first_name} {$user->last_name}\n\nيمكنك الدخول للوحة التحكم عبر الرابط\n\nhttps://nfcjo.com/login\n\nاسم الدخول {$user->email}\n\nالباسوورد {$newPassword}\n\nيرجى الدخول وتحميل صورة الهوية الشخصية الوجهين";
+
+    // URL encode the message
+    $encodedMessage = urlencode($message);
+
+    // Construct WhatsApp URL
+    $whatsappUrl = "https://wa.me/{$user->contact}?text={$encodedMessage}";
+
+    return response()->json([
+      'success' => true,
+      'data' => [
+        'email' => $user->email,
+        'password' => $newPassword, // plaintext once
+        'phone' => $user->contact,
+        'whatsapp_url' => $whatsappUrl,
+      ],
+      'message' => 'Password has been reset successfully',
+    ]);
   }
 
 

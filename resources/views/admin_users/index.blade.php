@@ -18,6 +18,11 @@
             {{ __('messages.receipts.receipts') }}
           </a>
         </li>
+        <li class="nav-item position-relative me-7 mb-3" role="presentation">
+          <a class="nav-link p-0" href="{{ route('acknowledgments.index') }}">
+            {{ __('messages.acknowledgments') }}
+          </a>
+        </li>
       </ul>
 
       <livewire:super-admin-table lazy />
@@ -39,13 +44,8 @@
           'X-Requested-With': 'XMLHttpRequest'
         },
         success: function(response) {
-          if (response.success && response.data) {
-            let email = response.data.email || 'No email provided';
-            let password = response.data.password;
-            let phone = response.data.phone;
-            let message = `Email: ${email}\nPassword: ${password}`;
-            let whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+          if (response.success && response.data && response.data.whatsapp_url) {
+            window.open(response.data.whatsapp_url, '_blank');
           } else {
             alert('Error: ' + (response.message || 'Invalid response'));
           }

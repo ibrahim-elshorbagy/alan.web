@@ -643,8 +643,8 @@ class RedirectLinksCustomTable extends Component
       if (!empty($searchTerms)) {
         $query->where(function ($q) use ($searchTerms) {
           foreach ($searchTerms as $term) {
-            $q->orWhere('uri', 'like', '%' . $term . '%')
-              ->orWhere('id', 'like', '%' . $term . '%');
+            $q->orWhere('uri', '=', $term)
+              ->orWhere('id', '=', $term);
           }
           if (count($searchTerms) == 1) {
             $q->orWhereHas('user', function ($userQ) use ($searchTerms) {
