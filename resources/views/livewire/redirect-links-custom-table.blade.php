@@ -521,16 +521,15 @@
       </label>
 
       <div class="d-flex gap-2 align-items-start">
-        <textarea class="form-control" rows="3" wire:model.defer="searchQuery"
+        <textarea class="form-control" rows="3" wire:model.defer="textareaSearch"
           placeholder="{{ __('messages.common.search') }}...">
-    </textarea>
+        </textarea>
 
         <button class="btn btn-success" wire:click="performSearch" type="button">
           <i class="fas fa-search"></i>
         </button>
       </div>
     </div>
-
   </div>
 
   {{-- Action Buttons --}}

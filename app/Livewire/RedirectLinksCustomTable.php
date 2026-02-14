@@ -16,6 +16,7 @@ class RedirectLinksCustomTable extends Component
   protected $paginationTheme = 'bootstrap';
 
   // Filter properties
+
   public $statusFilter = '';
   public $redirectTypeFilter = '';
   public $cardTypeFilter = '';
@@ -24,6 +25,8 @@ class RedirectLinksCustomTable extends Component
   public $dateToFilter = '';
   public $groupByFilter = '';
   public $searchQuery = '';
+
+  public $textareaSearch = '';
   public $perPage = 25;
   public $sortField = 'updated_at';
   public $sortDirection = 'desc';
@@ -94,6 +97,16 @@ class RedirectLinksCustomTable extends Component
 
   public function performSearch()
   {
+    // Take the textarea content and convert newlines to spaces
+    $this->searchQuery = preg_replace('/\s*\n\s*/', ' ', $this->textareaSearch);
+
+    // Clean up multiple spaces
+    $this->searchQuery = preg_replace('/\s+/', ' ', $this->searchQuery);
+
+    // Trim extra spaces
+    $this->searchQuery = trim($this->searchQuery);
+
+    // Reset to first page
     $this->resetPage();
   }
 
@@ -1124,8 +1137,10 @@ class RedirectLinksCustomTable extends Component
 
     // Search
     if ($this->searchQuery !== '') {
-      $searchTerms = array_map('trim', preg_split('/\s*-\s*|\s+|\n+/', $this->searchQuery));
+      $searchTerms = array_map('trim', preg_split('/\s*-\s*|\s+/', $this->searchQuery));
       $searchTerms = array_filter($searchTerms);
+      $searchTerms = array_values($searchTerms); // FIX: Re-index array to start from 0
+
       if (!empty($searchTerms)) {
         $query->where(function ($q) use ($searchTerms) {
           foreach ($searchTerms as $term) {
@@ -1134,14 +1149,13 @@ class RedirectLinksCustomTable extends Component
           }
           if (count($searchTerms) == 1) {
             $q->orWhereHas('user', function ($userQ) use ($searchTerms) {
-              $userQ->where('first_name', 'like', '%' . $searchTerms[0] . '%')
+              $userQ->where('first_name', 'like', '%' . $searchTerms[0] . '%')  // NOW IT WORKS!
                 ->orWhere('last_name', 'like', '%' . $searchTerms[0] . '%');
             });
           }
         });
       }
     }
-
     // Apply filters
     if ($this->statusFilter !== '') {
       $query->where('status', $this->statusFilter);
