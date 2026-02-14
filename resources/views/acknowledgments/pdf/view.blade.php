@@ -522,7 +522,7 @@
         @foreach ($redirectLinks as $index => $link)
           <tr>
             <td>{{ $index + 1 }}</td>
-            <td class="serial-cell">{{ $link->uri }}</td>
+            <td class="serial-cell">{{ $link->uri }} - #{{ str_pad($link->id, 4, '0', STR_PAD_LEFT) }}</td>
             <td style="text-align: center;">
               @if ($link->nfc)
                 {!! $link->nfc->name !!}

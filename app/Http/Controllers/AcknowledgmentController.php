@@ -30,7 +30,7 @@ class AcknowledgmentController extends Controller
     $acknowledgment = RedirectLinkAcknowledgment::with(['salesUser', 'creator'])->findOrFail($id);
 
     // Authorization check
-    if (auth()->user()->hasRole('sales') && $acknowledgment->sales_user_id !== auth()->id()) {
+    if (auth()->user()->hasRole('sales') && $acknowledgment->sales_user_id != auth()->id()) {
       abort(403, __('messages.common.unauthorized'));
     }
 

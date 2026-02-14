@@ -548,12 +548,18 @@
         </button>
 
         @if (auth()->user()->hasRole('super_admin'))
+          <button type="button" class="btn btn-secondary"
+            @click="if(confirm('{{ __('messages.redirect_links.update_prices_confirm') }}')) { syncAndCall('updateSelectedPrices') }">
+            <i class="fas fa-sync-alt"></i> <span
+              class="d-none d-sm-inline">{{ __('messages.redirect_links.update_prices_from_nfc') }}</span>
+          </button>
+
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignModal">
             <i class="fas fa-user-plus"></i> <span
               class="d-none d-sm-inline">{{ __('messages.redirect_links.assign_selected') }}</span>
           </button>
 
-          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#acknowledgmentModal">
+          <button type="button" class="btn btn-info" @click="syncAndCall('prepareAcknowledgmentModal')">
             <i class="fas fa-file-signature"></i>
             <span class="d-none d-sm-inline">{{ __('messages.create_acknowledgment') }}</span>
           </button>
@@ -1018,18 +1024,26 @@
         <div class="modal-body">
           <div class="mb-3">
             <label class="form-label">{{ __('messages.select_sales_representative') }}:</label>
-            <select class="form-control form-select" wire:model="acknowledgmentSalesUserId">
+            <select class="form-control form-select" wire:model="acknowledgmentSalesUserId"
+              {{ $acknowledgmentSalesUserDisabled ? 'disabled' : '' }}>
               <option value="">{{ __('messages.redirect_links.select_user') }}</option>
               @foreach ($salesUsers as $salesUser)
                 <option value="{{ $salesUser->id }}">{{ $salesUser->first_name }} {{ $salesUser->last_name }}
                 </option>
               @endforeach
             </select>
+            @if ($acknowledgmentSalesUserDisabled)
+              <small class="form-text text-muted">
+                <i class="fas fa-info-circle"></i>
+                {{ __('messages.redirect_links.sales_rep_auto_selected') }}
+              </small>
+            @endif
           </div>
 
           @if (!empty($acknowledgmentValidationErrors))
             <div class="alert alert-danger">
-              @if (isset($acknowledgmentValidationErrors[0]['type']) && $acknowledgmentValidationErrors[0]['type'] === 'no_sales_rep')
+              @if (isset($acknowledgmentValidationErrors[0]['type']) &&
+                      in_array($acknowledgmentValidationErrors[0]['type'], ['no_sales_rep', 'not_assigned', 'multiple_sales_reps']))
                 <h6 class="alert-heading"><i class="fas fa-exclamation-triangle"></i>
                   {{ $acknowledgmentValidationErrors[0]['message'] }}</h6>
               @else
@@ -1108,7 +1122,9 @@
                       <br>
                     @endif --}}
                     @if (isset($error['client_user']) && $error['client_user'])
-                      <i class="fas fa-user"></i> <strong>{{ __('messages.redirect_links.used_by_client') }}:</strong> {{ $error['client_user'] }}
+                      <i class="fas fa-user"></i>
+                      <strong>{{ __('messages.redirect_links.used_by_client') }}:</strong>
+                      {{ $error['client_user'] }}
                       {{-- @if (isset($error['user_id']))
                         (ID: {{ $error['user_id'] }})
                       @endif --}}
@@ -1132,11 +1148,67 @@
     </div>
   </div>
 
+  {{-- Received Validation Modal --}}
+  <div class="modal fade" id="receivedValidationModal" tabindex="-1" aria-labelledby="receivedValidationModalLabel"
+    aria-hidden="true" wire:ignore.self>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-warning text-dark">
+          <h5 class="modal-title" id="receivedValidationModalLabel">
+            <i class="fas fa-exclamation-triangle"></i>
+            {{ __('messages.redirect_links.cannot_mark_received_title') }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            wire:click="clearReceivedErrors"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-warning">
+            <h6 class="alert-heading"><i class="fas fa-info-circle"></i>
+              {{ __('messages.redirect_links.received_validation_errors') }}</h6>
+            <p class="mb-2">{{ __('messages.redirect_links.received_validation_intro') }}</p>
+            <ul class="mb-0">
+              @foreach ($receivedValidationErrors as $error)
+                <li>
+                  <hr>
+                  <strong>{{ $error['uri'] }} - #{{ $error['id'] }}</strong>
+                  <ul>
+                    @foreach ($error['errors'] as $errorMsg)
+                      <li>{{ $errorMsg }}</li>
+                    @endforeach
+                  </ul>
+                </li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            wire:click="clearReceivedErrors">{{ __('messages.common.cancel') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Listen for showDeleteValidationErrors event
     document.addEventListener('livewire:initialized', () => {
       Livewire.on('showDeleteValidationErrors', () => {
         const modal = new bootstrap.Modal(document.getElementById('deleteValidationModal'));
+        modal.show();
+      });
+
+      Livewire.on('showReceivedValidationErrors', () => {
+        const modal = new bootstrap.Modal(document.getElementById('receivedValidationModal'));
+        modal.show();
+      });
+
+      Livewire.on('showAcknowledgmentValidationErrors', () => {
+        const modal = new bootstrap.Modal(document.getElementById('acknowledgmentModal'));
+        modal.show();
+      });
+
+      Livewire.on('openAcknowledgmentModal', () => {
+        const modal = new bootstrap.Modal(document.getElementById('acknowledgmentModal'));
         modal.show();
       });
     });

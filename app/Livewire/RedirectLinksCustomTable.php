@@ -38,9 +38,13 @@ class RedirectLinksCustomTable extends Component
   // For acknowledgment creation
   public $acknowledgmentSalesUserId = '';
   public $acknowledgmentValidationErrors = [];
+  public $acknowledgmentSalesUserDisabled = false;
 
   // For delete validation
   public $deleteValidationErrors = [];
+
+  // For received validation
+  public $receivedValidationErrors = [];
 
   // Accordion state - which groups are expanded
   public $expandedGroups = [];
@@ -240,6 +244,95 @@ class RedirectLinksCustomTable extends Component
     return redirect()->route('redirect-links.export-selected', ['ids' => implode(',', $selectedIds)]);
   }
 
+  public function updateSelectedPrices()
+  {
+    // Only super admin can update prices
+    if (!auth()->user()->hasRole('super_admin')) {
+      session()->flash('error', __('messages.common.unauthorized'));
+      return;
+    }
+
+    $selectedIds = $this->selected;
+
+    if (empty($selectedIds)) {
+      session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    // Get selected redirect links
+    $redirectLinks = RedirectLink::whereIn('id', $selectedIds)->get();
+
+    if ($redirectLinks->isEmpty()) {
+      session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    // Get the actual user ID (considering impersonation)
+    $actualUserId = auth()->user()->isImpersonated()
+      ? app('impersonate')->getImpersonatorId()
+      : auth()->id();
+
+    $updated = 0;
+
+    foreach ($redirectLinks as $link) {
+      // Get current NFC prices
+      $nfc = Nfc::find($link->nfcs_id);
+
+      if (!$nfc) {
+        continue;
+      }
+
+      $oldPrice = $link->price;
+      $oldSalesPrice = $link->sales_price;
+      $newPrice = $nfc->price;
+      $newSalesPrice = $nfc->sales_price;
+
+      // Only update if prices changed
+      if ($oldPrice != $newPrice || $oldSalesPrice != $newSalesPrice) {
+        $link->update([
+          'price' => $newPrice,
+          'sales_price' => $newSalesPrice,
+        ]);
+
+        // Log price change
+        if ($oldPrice != $newPrice) {
+          $link->logHistory(
+            'price_changed',
+            $oldPrice,
+            $newPrice,
+            $actualUserId,
+            __('messages.redirect_links.history.price_updated', [
+              'old' => $oldPrice,
+              'new' => $newPrice
+            ])
+          );
+        }
+
+        if ($oldSalesPrice != $newSalesPrice) {
+          $link->logHistory(
+            'sales_price_changed',
+            $oldSalesPrice,
+            $newSalesPrice,
+            $actualUserId,
+            __('messages.redirect_links.history.sales_price_updated', [
+              'old' => $oldSalesPrice,
+              'new' => $newSalesPrice
+            ])
+          );
+        }
+
+        $updated++;
+      }
+    }
+
+    if ($updated > 0) {
+      session()->flash('success', __('messages.redirect_links.prices_updated_successfully', ['count' => $updated]));
+      $this->selected = [];
+    } else {
+      session()->flash('info', __('messages.redirect_links.no_price_changes'));
+    }
+  }
+
   public function markSelectedAsReceived()
   {
     $selectedIds = $this->selected;
@@ -260,6 +353,42 @@ class RedirectLinksCustomTable extends Component
         session()->flash('error', __('messages.redirect_links.no_items_selected'));
         return;
       }
+    }
+
+    // VALIDATION: For sales, check if cards are in acknowledgments
+    $redirectLinks = RedirectLink::whereIn('id', $selectedIds)->get();
+
+    // Get all existing acknowledgments
+    $existingAcknowledgments = \App\Models\RedirectLinkAcknowledgment::all();
+    $acknowledgmentMap = []; // Map redirect_link_id to acknowledgment_id
+
+    foreach ($existingAcknowledgments as $ack) {
+      $ackIds = is_string($ack->redirect_link_ids) ? json_decode($ack->redirect_link_ids, true) : $ack->redirect_link_ids;
+      if (is_array($ackIds)) {
+        foreach ($ackIds as $ackId) {
+          $acknowledgmentMap[$ackId] = $ack->id;
+        }
+      }
+    }
+
+    // Check each redirect link
+    $invalidCards = [];
+    foreach ($redirectLinks as $link) {
+      // Check if card is NOT in any acknowledgment
+      if (!isset($acknowledgmentMap[$link->id])) {
+        $invalidCards[] = [
+          'uri' => $link->uri,
+          'id' => $link->id,
+          'errors' => [__('messages.redirect_links.card_not_in_acknowledgment')]
+        ];
+      }
+    }
+
+    // If validation errors, store them and return (modal will show errors)
+    if (!empty($invalidCards)) {
+      $this->receivedValidationErrors = $invalidCards;
+      $this->dispatch('showReceivedValidationErrors');
+      return;
     }
 
     // Get the actual user ID (considering impersonation)
@@ -301,6 +430,8 @@ class RedirectLinksCustomTable extends Component
       session()->flash('error', __('messages.redirect_links.no_links_marked'));
     }
 
+    // Clear errors and selections after successful marking
+    $this->receivedValidationErrors = [];
     $this->selected = [];
   }
 
@@ -447,6 +578,60 @@ class RedirectLinksCustomTable extends Component
     $this->resetPage();
   }
 
+  public function prepareAcknowledgmentModal()
+  {
+    // Clear previous errors
+    $this->acknowledgmentValidationErrors = [];
+    $this->acknowledgmentSalesUserId = '';
+    $this->acknowledgmentSalesUserDisabled = false;
+
+    // Check if items are selected
+    $selectedIds = $this->selected;
+    if (empty($selectedIds)) {
+      session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    // Get selected redirect links with their assigned users
+    $redirectLinks = RedirectLink::whereIn('id', $selectedIds)->get();
+
+    if ($redirectLinks->isEmpty()) {
+      session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    // Check assigned_user_id for all selected links
+    $assignedUserIds = $redirectLinks->pluck('assigned_id')->unique()->filter()->values();
+
+    // If no cards are assigned to anyone
+    if ($assignedUserIds->isEmpty()) {
+      $this->acknowledgmentValidationErrors[] = [
+        'type' => 'not_assigned',
+        'message' => __('messages.redirect_links.cards_not_assigned_to_sales_rep')
+      ];
+      $this->dispatch('showAcknowledgmentValidationErrors');
+      return;
+    }
+
+    // If cards are assigned to multiple different sales reps
+    if ($assignedUserIds->count() > 1) {
+      $this->acknowledgmentValidationErrors[] = [
+        'type' => 'multiple_sales_reps',
+        'message' => __('messages.redirect_links.cards_assigned_to_different_sales_reps')
+      ];
+      $this->dispatch('showAcknowledgmentValidationErrors');
+      return;
+    }
+
+    // All cards are assigned to the same sales rep
+    // Auto-select the sales rep and disable the dropdown
+    $this->acknowledgmentSalesUserId = $assignedUserIds->first();
+    $this->acknowledgmentSalesUserDisabled = true;
+
+    // Open the modal
+    $this->dispatch('openAcknowledgmentModal');
+  }
+
   public function createAcknowledgment()
   {
     // Only super_admin can create acknowledgments
@@ -579,6 +764,11 @@ class RedirectLinksCustomTable extends Component
   public function clearAssignErrors()
   {
     $this->assignValidationErrors = [];
+  }
+
+  public function clearReceivedErrors()
+  {
+    $this->receivedValidationErrors = [];
   }
 
 
@@ -1300,8 +1490,50 @@ class RedirectLinksCustomTable extends Component
     $groupedData = $this->getGroupedData();
     $isGrouped = $groupedData !== null && count($groupedData) > 0;
 
+    // Get redirect links
+    $redirectLinks = $isGrouped ? null : $this->getQuery()->paginate($this->perPage);
+
+    // Eager load acknowledgments to avoid N+1 problem
+    $acknowledgmentMap = [];
+
+    if ($redirectLinks) {
+      $linkIds = $redirectLinks->pluck('id')->toArray();
+      if (!empty($linkIds)) {
+        $acknowledgments = \App\Models\RedirectLinkAcknowledgment::all();
+        foreach ($acknowledgments as $ack) {
+          $ackIds = is_string($ack->redirect_link_ids)
+            ? json_decode($ack->redirect_link_ids, true)
+            : $ack->redirect_link_ids;
+          if (is_array($ackIds)) {
+            foreach ($ackIds as $linkId) {
+              $acknowledgmentMap[$linkId] = $ack->id;
+            }
+          }
+        }
+      }
+    } elseif ($groupedData) {
+      // For grouped data, get all link IDs
+      $allLinkIds = [];
+      foreach ($groupedData as $items) {
+        $allLinkIds = array_merge($allLinkIds, $items->pluck('id')->toArray());
+      }
+      if (!empty($allLinkIds)) {
+        $acknowledgments = \App\Models\RedirectLinkAcknowledgment::all();
+        foreach ($acknowledgments as $ack) {
+          $ackIds = is_string($ack->redirect_link_ids)
+            ? json_decode($ack->redirect_link_ids, true)
+            : $ack->redirect_link_ids;
+          if (is_array($ackIds)) {
+            foreach ($ackIds as $linkId) {
+              $acknowledgmentMap[$linkId] = $ack->id;
+            }
+          }
+        }
+      }
+    }
+
     return view('livewire.redirect-links-custom-table', [
-      'redirectLinks' => $isGrouped ? null : $this->getQuery()->paginate($this->perPage),
+      'redirectLinks' => $redirectLinks,
       'groupedData' => $groupedData,
       'isGrouped' => $isGrouped,
       'salesUsers' => $this->getSalesUsers(),
@@ -1312,6 +1544,7 @@ class RedirectLinksCustomTable extends Component
       'totalSalesPrice' => $this->getTotalSalesPrice(),
       'totalCount' => $this->getTotalCount(),
       'selectedUris' => $this->getSelectedUris(),
+      'acknowledgmentMap' => $acknowledgmentMap,
     ]);
   }
 }
