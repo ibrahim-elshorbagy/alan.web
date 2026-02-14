@@ -20,6 +20,11 @@
         <div class="mb-3">
           <label class="form-label required">{{ __('messages.vcard.cover_image') . ':' }}</label>
 
+          <span data-bs-toggle="tooltip" data-placement="top"
+            data-bs-original-title="{{ __('messages.tooltip.cover_selection') }}">
+            <i class="fas fa-question-circle ml-1 general-question-mark"></i>
+          </span>
+
           <!-- Cover Image Source Selection -->
 
           <div class="mb-4 mt-3">

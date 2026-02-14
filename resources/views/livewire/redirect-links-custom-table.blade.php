@@ -939,11 +939,12 @@
   {{-- Assignment Modal --}}
   <div class="modal fade" id="assignModal" tabindex="-1" aria-labelledby="assignModalLabel" aria-hidden="true"
     wire:ignore.self>
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="assignModalLabel">{{ __('messages.redirect_links.assign_selected') }}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            wire:click="clearAssignErrors"></button>
         </div>
         <div class="modal-body">
           <div class="mb-3">
@@ -956,17 +957,49 @@
               @endforeach
             </select>
           </div>
-          <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i>
-            <span
-              x-text="'{{ __('messages.redirect_links.you_have_selected') }} ' + selected.length + ' {{ __('messages.redirect_links.items') }}'"></span>
+
+          @if (!empty($assignValidationErrors))
+            <div class="alert alert-danger">
+              <h6 class="alert-heading"><i class="fas fa-exclamation-triangle"></i>
+                {{ __('messages.redirect_links.assign_validation_errors') }}</h6>
+              <p class="mb-2">{{ __('messages.redirect_links.assign_validation_intro') }}</p>
+              <ul class="mb-0">
+                @foreach ($assignValidationErrors as $error)
+                  <li>
+                    <hr>
+                    <strong>{{ $error['uri'] }} - #{{ $error['id'] }}</strong>
+                    <ul>
+                      @foreach ($error['errors'] as $errorMsg)
+                        <li>{{ $errorMsg }}</li>
+                      @endforeach
+                    </ul>
+                  </li>
+                @endforeach
+              </ul>
+            </div>
+          @else
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i>
+              <span
+                x-text="'{{ __('messages.redirect_links.you_have_selected') }} ' + selected.length + ' {{ __('messages.redirect_links.items') }}'"></span>
+            </div>
+          @endif
+
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ __('messages.redirect_links.reassign_resets_received_status') }}
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary"
-            data-bs-dismiss="modal">{{ __('messages.common.cancel') }}</button>
-          <button type="button" class="btn btn-primary" @click="syncAndCall('bulkAssign')" data-bs-dismiss="modal">
-            {{ __('messages.redirect_links.assign') }}
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            wire:click="clearAssignErrors">{{ __('messages.common.cancel') }}</button>
+          <button type="button" class="btn btn-primary" @click="syncAndCall('bulkAssign')"
+            wire:loading.attr="disabled">
+            <span wire:loading.remove wire:target="bulkAssign">{{ __('messages.redirect_links.assign') }}</span>
+            <span wire:loading wire:target="bulkAssign">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              {{ __('messages.common.loading') }}...
+            </span>
           </button>
         </div>
       </div>
@@ -1043,5 +1076,70 @@
     </div>
   </div>
 
+  {{-- Delete Validation Modal --}}
+  <div class="modal fade" id="deleteValidationModal" tabindex="-1" aria-labelledby="deleteValidationModalLabel"
+    aria-hidden="true" wire:ignore.self>
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="deleteValidationModalLabel">
+            <i class="fas fa-exclamation-triangle"></i> {{ __('messages.redirect_links.cannot_delete_title') }}
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"
+            wire:click="clearDeleteErrors"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-danger">
+            <h6 class="alert-heading"><i class="fas fa-ban"></i>
+              {{ __('messages.redirect_links.delete_validation_errors') }}</h6>
+            <p class="mb-2">{{ __('messages.redirect_links.delete_validation_intro') }}</p>
+            <ul class="mb-0">
+              @foreach ($deleteValidationErrors as $error)
+                <li>
+                  <hr>
+                  <strong>{{ $error['uri'] }} - #{{ $error['id'] }}</strong>
+                  <br>
+                  <small class="text-white">
+                    {{-- @if (isset($error['assigned_user']))
+                      <i class="fas fa-user-tie"></i> <strong>{{ __('messages.redirect_links.assigned_to') }}:</strong> {{ $error['assigned_user'] }}
+                      @if (isset($error['assigned_id']))
+                        (ID: {{ $error['assigned_id'] }})
+                      @endif
+                      <br>
+                    @endif --}}
+                    @if (isset($error['client_user']) && $error['client_user'])
+                      <i class="fas fa-user"></i> <strong>{{ __('messages.redirect_links.used_by_client') }}:</strong> {{ $error['client_user'] }}
+                      {{-- @if (isset($error['user_id']))
+                        (ID: {{ $error['user_id'] }})
+                      @endif --}}
+                    @endif
+                  </small>
+                  <ul>
+                    @foreach ($error['errors'] as $errorMsg)
+                      <li>{{ $errorMsg }}</li>
+                    @endforeach
+                  </ul>
+                </li>
+              @endforeach
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+            wire:click="clearDeleteErrors">{{ __('messages.common.cancel') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Listen for showDeleteValidationErrors event
+    document.addEventListener('livewire:initialized', () => {
+      Livewire.on('showDeleteValidationErrors', () => {
+        const modal = new bootstrap.Modal(document.getElementById('deleteValidationModal'));
+        modal.show();
+      });
+    });
+  </script>
 
 </div>

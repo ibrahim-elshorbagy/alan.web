@@ -14,7 +14,7 @@ return [
   'total_redirect_links' => 'Total Redirect Links',
   'add_redirect_link' => 'Add Redirect Link',
 
-  'count'=>'Count',
+  'count' => 'Count',
 
   // Acknowledgment translations
   'create_acknowledgment' => 'Create Acknowledgment',
@@ -38,6 +38,8 @@ return [
   'acknowledgment_date' => 'Acknowledgment Date',
   'card_uri' => 'Card URI',
   'acknowledgment_number' => "Acknowledgment Number",
+  'upload_acknowledgment' => 'Upload Acknowledgment Signature',
+
 
   'reset_password' => 'Reset Password',
   'free' => "Free",
@@ -1562,6 +1564,7 @@ return [
     'copy' => 'Copy to clipboard',
     'profile' => 'Change Profile',
     'cover' => 'Change Cover Image',
+    'cover_selection' => 'Choose from predefined cover images or upload your custom image',
     'script' => 'Add custom JS code without script tag',
     'product_image' => 'Best resolution for this profile will be 250x250',
     'light_mode' => 'Switch to Light mode',
@@ -2457,6 +2460,7 @@ return [
     'nfc' => 'NFC',
     'nfc_price' => 'NFC Price',
     'assigned_to' => 'Assigned To',
+    'used_by_client' => 'Used By Client',
     'created_at' => 'Created At',
     'updated_at' => 'Updated At',
     'not_redeemed' => 'Not Redeemed',
@@ -2615,6 +2619,7 @@ If you want to redirect your card to the smart business card, you must first go 
       'added_to_acknowledgment' => 'Card added to acknowledgment #:acknowledgment_id',
       'removed_from_acknowledgment' => 'Card removed from acknowledgment #:acknowledgment_id',
       'redirect_link_changed' => 'Redirect link changed from :old to :new',
+      'restored' => 'Redirect link restored: :uri',
       'actions' => [
         'created' => 'Created',
         'status_changed' => 'Status Changed',
@@ -2627,13 +2632,23 @@ If you want to redirect your card to the smart business card, you must first go 
         'added_to_acknowledgment' => 'Added to Acknowledgment',
         'removed_from_acknowledgment' => 'Removed from Acknowledgment',
         'redirect_link_changed' => 'Redirect Link Changed',
+        'restored' => 'Restored',
       ],
       'card_not_owned' => 'This card does not belong to the selected sales representative',
       'card_already_in_acknowledgment' => 'This card is already in another acknowledgment',
       'validation_error_intro' => 'The following cards cannot be added to this acknowledgment. Please remove them from your selection:',
-      'no_eligible_links_to_delete' => 'No eligible links to delete. with special user associations cannot be deleted.',
+      'no_eligible_links_to_delete' => 'No eligible links to delete. Links with special user associations cannot be deleted.',
       'validation_errors' => 'Validation Errors',
       'please_select_sales_representative' => 'Please select a sales representative.',
+      'cannot_delete_title' => 'Cannot Delete Cards',
+      'cannot_delete_assigned_link' => 'Cannot delete links that are assigned to users.',
+      'delete_validation_errors' => 'Delete Validation Errors',
+      'delete_validation_intro' => 'The following cards cannot be deleted because they are in acknowledgments. Please remove them from your selection:',
+      'card_in_acknowledgment' => 'This card is in acknowledgment #:acknowledgment_id',
+      'cannot_delete_in_acknowledgment' => 'Cannot delete card :uri - #:id because it is in acknowledgment #:acknowledgment_id',
+      'assign_validation_errors' => 'Assignment Validation Errors',
+      'assign_validation_intro' => 'The following cards cannot be assigned because they are in acknowledgments with different sales representatives. Please remove them from your selection:',
+      'card_in_acknowledgment_different_sales' => 'This card is in acknowledgment #:acknowledgment_id with sales representative :sales_name',
     ],
   ],
   'receipts' => [

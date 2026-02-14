@@ -33,10 +33,14 @@ class RedirectLinksCustomTable extends Component
 
   // For bulk assignment
   public $assignedUserId = '';
+  public $assignValidationErrors = [];
 
   // For acknowledgment creation
   public $acknowledgmentSalesUserId = '';
   public $acknowledgmentValidationErrors = [];
+
+  // For delete validation
+  public $deleteValidationErrors = [];
 
   // Accordion state - which groups are expanded
   public $expandedGroups = [];
@@ -340,6 +344,54 @@ class RedirectLinksCustomTable extends Component
       return;
     }
 
+    // VALIDATION: Check if any redirect links are in acknowledgments with different sales users
+    $this->assignValidationErrors = [];
+    $invalidCards = [];
+
+    // Get all existing acknowledgments with their redirect_link_ids
+    $existingAcknowledgments = \App\Models\RedirectLinkAcknowledgment::all();
+    $acknowledgmentMap = []; // Map redirect_link_id to acknowledgment sales_user_id
+
+    foreach ($existingAcknowledgments as $ack) {
+      $ackIds = is_string($ack->redirect_link_ids) ? json_decode($ack->redirect_link_ids, true) : $ack->redirect_link_ids;
+      if (is_array($ackIds)) {
+        foreach ($ackIds as $ackId) {
+          $acknowledgmentMap[$ackId] = [
+            'acknowledgment_id' => $ack->id,
+            'sales_user_id' => $ack->sales_user_id
+          ];
+        }
+      }
+    }
+
+    // Check each redirect link
+    foreach ($redirectLinks as $link) {
+      // If this card is in an acknowledgment
+      if (isset($acknowledgmentMap[$link->id])) {
+        $ackInfo = $acknowledgmentMap[$link->id];
+        // If trying to assign to a different sales user than the one in acknowledgment
+        if ($ackInfo['sales_user_id'] != $assignedUserId) {
+          $salesUser = User::find($ackInfo['sales_user_id']);
+          $invalidCards[] = [
+            'uri' => $link->uri,
+            'id' => $link->id,
+            'errors' => [
+              __('messages.redirect_links.card_in_acknowledgment_different_sales', [
+                'acknowledgment_id' => $ackInfo['acknowledgment_id'],
+                'sales_name' => $salesUser ? ($salesUser->first_name . ' ' . $salesUser->last_name) : 'Unknown'
+              ])
+            ]
+          ];
+        }
+      }
+    }
+
+    // If validation errors, just return (modal stays open, shows errors)
+    if (!empty($invalidCards)) {
+      $this->assignValidationErrors = $invalidCards;
+      return;
+    }
+
     $newAssignedUser = User::find($assignedUserId);
     $updated = 0;
 
@@ -389,8 +441,9 @@ class RedirectLinksCustomTable extends Component
       session()->flash('error', __('messages.redirect_links.no_links_assigned'));
     }
 
-    // Reset assigned user after successful assignment
+    // Reset assigned user and clear errors after successful assignment
     $this->assignedUserId = '';
+    $this->assignValidationErrors = [];
     $this->resetPage();
   }
 
@@ -518,6 +571,16 @@ class RedirectLinksCustomTable extends Component
     $this->acknowledgmentValidationErrors = [];
   }
 
+  public function clearDeleteErrors()
+  {
+    $this->deleteValidationErrors = [];
+  }
+
+  public function clearAssignErrors()
+  {
+    $this->assignValidationErrors = [];
+  }
+
 
 
   public function syncAndRestore()
@@ -534,17 +597,107 @@ class RedirectLinksCustomTable extends Component
       return;
     }
 
-    $updated = RedirectLink::whereIn('id', $selectedIds)
+    // Get the actual user ID (considering impersonation)
+    $actualUserId = auth()->user()->isImpersonated()
+      ? app('impersonate')->getImpersonatorId()
+      : auth()->id();
+
+    // Get redirect links to restore
+    $redirectLinks = RedirectLink::whereIn('id', $selectedIds)
       ->whereNull('user_id')
-      ->update(['user_id' => null, 'assigned_id' => null, 'received_status' => RedirectLink::RECEIVED_STATUS_NOT_RECEIVED]);
+      ->get();
+
+    if ($redirectLinks->isEmpty()) {
+      session()->flash('error', __('messages.redirect_links.no_links_restored'));
+      return;
+    }
+
+    // Get all existing acknowledgments
+    $existingAcknowledgments = \App\Models\RedirectLinkAcknowledgment::all();
+    $acknowledgmentMap = []; // Map redirect_link_id to acknowledgment
+
+    foreach ($existingAcknowledgments as $ack) {
+      $ackIds = is_string($ack->redirect_link_ids) ? json_decode($ack->redirect_link_ids, true) : $ack->redirect_link_ids;
+      if (is_array($ackIds)) {
+        foreach ($ackIds as $ackId) {
+          $acknowledgmentMap[$ackId] = $ack;
+        }
+      }
+    }
+
+    $updated = 0;
+    foreach ($redirectLinks as $redirectLink) {
+      $oldAssignedId = $redirectLink->assigned_id;
+      $oldAssignedUser = $oldAssignedId ? $redirectLink->assignedUser : null;
+
+      // Update redirect link
+      $redirectLink->update([
+        'user_id' => null,
+        'assigned_id' => null,
+        'received_status' => RedirectLink::RECEIVED_STATUS_NOT_RECEIVED
+      ]);
+
+      // Log restore history
+      $redirectLink->logHistory(
+        'restored',
+        $oldAssignedUser ? ($oldAssignedUser->first_name . ' ' . $oldAssignedUser->last_name) : __('messages.redirect_links.history.none'),
+        __('messages.redirect_links.history.none'),
+        $actualUserId,
+        __('messages.redirect_links.history.restored', [
+          'uri' => $redirectLink->uri
+        ])
+      );
+
+      // If this redirect link is in an acknowledgment, remove it from the acknowledgment
+      if (isset($acknowledgmentMap[$redirectLink->id])) {
+        $acknowledgment = $acknowledgmentMap[$redirectLink->id];
+        $currentIds = is_string($acknowledgment->redirect_link_ids)
+          ? json_decode($acknowledgment->redirect_link_ids, true)
+          : $acknowledgment->redirect_link_ids;
+
+        if (is_array($currentIds)) {
+          // Remove the current redirect link ID from the array
+          $newIds = array_values(array_filter($currentIds, fn($id) => $id != $redirectLink->id));
+
+          // Update acknowledgment with new IDs
+          if (empty($newIds)) {
+            // If no more cards in acknowledgment, delete it
+            $acknowledgment->delete();
+          } else {
+            // Recalculate totals
+            $remainingLinks = RedirectLink::whereIn('id', $newIds)->get();
+            $acknowledgment->update([
+              'redirect_link_ids' => $newIds,
+              'total_price' => $remainingLinks->sum('price'),
+              'total_sales_price' => $remainingLinks->sum('sales_price'),
+              'total_count' => $remainingLinks->count(),
+            ]);
+          }
+
+          // Log removal from acknowledgment
+          $redirectLink->logHistory(
+            'removed_from_acknowledgment',
+            '#' . $acknowledgment->id,
+            __('messages.redirect_links.history.none'),
+            $actualUserId,
+            __('messages.redirect_links.history.removed_from_acknowledgment', [
+              'acknowledgment_id' => $acknowledgment->id
+            ])
+          );
+        }
+      }
+
+      $updated++;
+    }
 
     if ($updated > 0) {
       session()->flash('success', __('messages.redirect_links.restored_successfully') . ' (' . $updated . ' links)');
     } else {
       session()->flash('error', __('messages.redirect_links.no_links_restored'));
     }
+
     // Clear selections after restore
-    // $this->selected = [];
+    $this->selected = [];
     $this->resetPage();
   }
 
@@ -594,6 +747,29 @@ class RedirectLinksCustomTable extends Component
         return;
       }
 
+      // Check if redirect link is in any acknowledgment
+      $existingAcknowledgments = \App\Models\RedirectLinkAcknowledgment::all();
+      $isInAcknowledgment = false;
+      $acknowledgmentId = null;
+
+      foreach ($existingAcknowledgments as $ack) {
+        $ackIds = is_string($ack->redirect_link_ids) ? json_decode($ack->redirect_link_ids, true) : $ack->redirect_link_ids;
+        if (is_array($ackIds) && in_array($id, $ackIds)) {
+          $isInAcknowledgment = true;
+          $acknowledgmentId = $ack->id;
+          break;
+        }
+      }
+
+      if ($isInAcknowledgment) {
+        session()->flash('error', __('messages.redirect_links.cannot_delete_in_acknowledgment', [
+          'uri' => $redirectLink->uri,
+          'id' => $redirectLink->id,
+          'acknowledgment_id' => $acknowledgmentId
+        ]));
+        return;
+      }
+
       $redirectLink->delete();
 
       // Remove from selected if it was selected
@@ -625,6 +801,55 @@ class RedirectLinksCustomTable extends Component
         return;
       }
 
+      // Check if any redirect links are in acknowledgments
+      $existingAcknowledgments = \App\Models\RedirectLinkAcknowledgment::all();
+      $alreadyAcknowledgedIds = [];
+      $acknowledgmentMap = []; // Map redirect_link_id to acknowledgment_id
+
+      foreach ($existingAcknowledgments as $ack) {
+        $ackIds = is_string($ack->redirect_link_ids) ? json_decode($ack->redirect_link_ids, true) : $ack->redirect_link_ids;
+        if (is_array($ackIds)) {
+          foreach ($ackIds as $ackId) {
+            $alreadyAcknowledgedIds[] = $ackId;
+            $acknowledgmentMap[$ackId] = $ack->id;
+          }
+        }
+      }
+
+      // Get redirect links that are in acknowledgments
+      $redirectLinks = RedirectLink::whereIn('id', $selectedIds)->get();
+      $invalidCards = [];
+
+      foreach ($redirectLinks as $link) {
+        if (in_array($link->id, $alreadyAcknowledgedIds)) {
+          // Get assigned sales representative
+          $assignedUser = $link->assignedUser;
+          $assignedUserName = $assignedUser ? ($assignedUser->first_name . ' ' . $assignedUser->last_name) : __('messages.redirect_links.history.none');
+
+          // Get client/user who is using the card
+          $clientUser = $link->user;
+          $clientUserName = $clientUser ? ($clientUser->first_name . ' ' . $clientUser->last_name) : null;
+
+          $invalidCards[] = [
+            'uri' => $link->uri,
+            'id' => $link->id,
+            'acknowledgment_id' => $acknowledgmentMap[$link->id],
+            'assigned_user' => $assignedUserName,
+            'assigned_id' => $link->assigned_id,
+            'client_user' => $clientUserName,
+            'user_id' => $link->user_id,
+            'errors' => [__('messages.redirect_links.card_in_acknowledgment', ['acknowledgment_id' => $acknowledgmentMap[$link->id]])]
+          ];
+        }
+      }
+
+      // If validation errors, store them and return (modal will show errors)
+      if (!empty($invalidCards)) {
+        $this->deleteValidationErrors = $invalidCards;
+        $this->dispatch('showDeleteValidationErrors');
+        return;
+      }
+
       // Build query based on user role
       $query = RedirectLink::whereIn('id', $selectedIds);
 
@@ -642,8 +867,9 @@ class RedirectLinksCustomTable extends Component
 
       $query->delete();
 
-      // Clear selections after delete
+      // Clear selections and errors after delete
       $this->selected = [];
+      $this->deleteValidationErrors = [];
 
       session()->flash('success', __('messages.redirect_links.deleted_count', ['count' => $count]));
 
