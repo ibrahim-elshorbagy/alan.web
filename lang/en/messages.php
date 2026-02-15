@@ -666,6 +666,7 @@ return [
     'max_size' => '5MB',
     'notes' => 'Notes',
     'current' => 'Current',
+    'preview' => 'Preview',
     'contact_support' => 'Contact Support',
   ],
   'user' => [

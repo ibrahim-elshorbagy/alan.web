@@ -138,8 +138,10 @@
                 data-no-image-text="{{ __('messages.no_image_in_clipboard') }}">
               </div>
               {{-- Image Preview --}}
-              <div id="addImagePreview" class="mt-2"
-                style="display:none; width: 100%; height: 200px; background-size: contain; background-position: center; background-repeat: no-repeat; border: 1px solid #ddd; border-radius: 4px;">
+              <div id="addImagePreviewContainer" class="mt-3" style="display:none;">
+                <div id="addImagePreview"
+                  style="width: 100%; max-width: 600px; height: 200px; background-size: contain; background-position: center; background-repeat: no-repeat; border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                </div>
               </div>
             </div>
           </div>
@@ -195,8 +197,10 @@
                 data-no-image-text="{{ __('messages.no_image_in_clipboard') }}">
               </div>
               {{-- Image Preview --}}
-              <div id="editImagePreview" class="mt-2"
-                style="display:none; width: 100%; height: 200px; background-size: contain; background-position: center; background-repeat: no-repeat; border: 1px solid #ddd; border-radius: 4px;">
+              <div id="editImagePreviewContainer" class="mt-3" style="display:none;">
+                <div id="editImagePreview"
+                  style="width: 100%; max-width: 600px; height: 200px; background-size: contain; background-position: center; background-repeat: no-repeat; border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                </div>
               </div>
             </div>
           </div>
@@ -219,8 +223,9 @@
       document.getElementById('editCoverImageForm').action = `/sadmin/cover-images/${id}`;
       // Reset preview
       const editPreview = document.getElementById('editImagePreview');
-      if (editPreview) {
-        editPreview.style.display = 'none';
+      const editPreviewContainer = document.getElementById('editImagePreviewContainer');
+      if (editPreview && editPreviewContainer) {
+        editPreviewContainer.style.display = 'none';
         editPreview.style.backgroundImage = '';
       }
       new bootstrap.Modal(document.getElementById('editCoverImageModal')).show();
@@ -244,15 +249,17 @@
       const editImageInput = document.getElementById('edit_image');
       const addPreview = document.getElementById('addImagePreview');
       const editPreview = document.getElementById('editImagePreview');
+      const addPreviewContainer = document.getElementById('addImagePreviewContainer');
+      const editPreviewContainer = document.getElementById('editImagePreviewContainer');
 
       if (imageInput) {
         imageInput.addEventListener('change', function(e) {
           if (e.target.files && e.target.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-              if (addPreview) {
+              if (addPreview && addPreviewContainer) {
                 addPreview.style.backgroundImage = `url('${e.target.result}')`;
-                addPreview.style.display = 'block';
+                addPreviewContainer.style.display = 'block';
               }
             };
             reader.readAsDataURL(e.target.files[0]);
@@ -265,9 +272,9 @@
           if (e.target.files && e.target.files[0]) {
             const reader = new FileReader();
             reader.onload = function(e) {
-              if (editPreview) {
+              if (editPreview && editPreviewContainer) {
                 editPreview.style.backgroundImage = `url('${e.target.result}')`;
-                editPreview.style.display = 'block';
+                editPreviewContainer.style.display = 'block';
               }
             };
             reader.readAsDataURL(e.target.files[0]);
@@ -279,8 +286,8 @@
       const addModal = document.getElementById('addCoverImageModal');
       if (addModal) {
         addModal.addEventListener('hidden.bs.modal', function() {
-          if (addPreview) {
-            addPreview.style.display = 'none';
+          if (addPreview && addPreviewContainer) {
+            addPreviewContainer.style.display = 'none';
             addPreview.style.backgroundImage = '';
           }
           if (imageInput) {

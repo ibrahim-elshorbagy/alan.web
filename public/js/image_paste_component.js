@@ -176,6 +176,15 @@ class ImagePasteComponent {
                 const preview = document.getElementById(this.options.previewId);
                 if (preview) {
                     preview.style.backgroundImage = `url('${dataUrl}')`;
+                    // Show the preview
+                    preview.style.display = 'block';
+
+                    // If there's a container parent, show it too
+                    const containerId = this.options.previewId + 'Container';
+                    const container = document.getElementById(containerId);
+                    if (container) {
+                        container.style.display = 'block';
+                    }
                 }
             }
 

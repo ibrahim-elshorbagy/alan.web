@@ -664,6 +664,7 @@ return [
     'max_size' => '5 ميجابايت',
     'notes' => 'ملاحظات',
     'current' => 'الحالي',
+    'preview' => 'معاينة',
     'contact_support' => 'اتصل بالدعم',
   ],
   'user' => [
