@@ -21,7 +21,7 @@
         {{-- Cover Images Grid --}}
         <div class="row g-4">
           @forelse($coverImages as $image)
-            <div class="col-sm-6 col-md-4 col-lg-5">
+            <div class="col-12 col-md-6">
               <div class="card h-100 shadow-sm hover-shadow transition">
                 {{-- Image Container with Aspect Ratio and Overlay Buttons --}}
                 <div class="position-relative bg-light" style="padding-top: 75%; overflow: hidden;">
