@@ -79,9 +79,9 @@
           <div id="customUpload"
             style="{{ isset($whatsappStore) && !empty($whatsappStore->cover_url) && !str_contains($whatsappStore->cover_url, 'cover_images') ? '' : 'display: none;' }}">
             <div class="d-block">
-              <div class="images-picker">
+              <div class="images-picker" style="width: 100%; max-width: 600px;">
                 <div class="image previewImage" id="coverPreview"
-                  style="background-image: url('{{ !empty($whatsappStore->cover_url) ? $whatsappStore->cover_url : '' }}');">
+                  style="background-image: url('{{ !empty($whatsappStore->cover_url) ? $whatsappStore->cover_url : '' }}'); width: 100%; height: 200px; background-size: contain; background-position: center;">
                 </div>
                 <span class="picker-edit rounded-circle text-gray-500 fs-small" data-bs-toggle="tooltip"
                   data-placement="top" data-bs-original-title="{{ __('messages.tooltip.cover') }}">

@@ -101,9 +101,9 @@
           <div id="customUpload" io-image-input="true"
             style="{{ isset($vcard) && !empty($vcard->cover_url) && !str_contains($vcard->cover_url, 'cover_images') ? '' : 'display: none;' }}">
             <div class="d-block">
-              <div class="images-picker">
+              <div class="images-picker" style="width: 100%; max-width: 600px;">
                 <div class="image previewImage" id="coverPreview"
-                  style="background-image: url('{{ !empty($vcard->cover_url) && in_array(pathinfo($vcard->cover_url, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'webp']) ? $vcard->cover_url : asset('assets/images/default_cover_image.jpg') }}');">
+                  style="background-image: url('{{ !empty($vcard->cover_url) && in_array(pathinfo($vcard->cover_url, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'png', 'gif', 'webp']) ? $vcard->cover_url : asset('assets/images/default_cover_image.jpg') }}'); width: 100%; height: 200px; background-size: contain; background-position: center;">
                 </div>
                 <span class="picker-edit rounded-circle text-gray-500 fs-small" data-bs-toggle="tooltip"
                   data-placement="top" data-bs-original-title="{{ __('messages.tooltip.cover') }}">

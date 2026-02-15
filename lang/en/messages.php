@@ -2056,6 +2056,7 @@ return [
     'select_cover_image' => 'Select Cover Image',
     'predefined_images' => 'Predefined Images',
     'reference_only' => 'Reference Only - Will Not Print',
+    'name_auto_note' => 'Leave empty to auto-generate from image file name',
   ],
 
   'cover_image_type' => [

@@ -19,7 +19,7 @@ class CoverImageController extends AppBaseController
   public function store(Request $request)
   {
     $request->validate([
-      'name' => 'required|string|max:255',
+      'name' => 'nullable|string|max:255',
       'image' => 'required|image|mimes:jpg,jpeg,png,gif|max:5120', // 5MB max
     ]);
 
@@ -27,8 +27,14 @@ class CoverImageController extends AppBaseController
     $filename = $image->hashName();
     $image->move(public_path('uploads/cover_images'), $filename);
 
+    // If name is not provided, use the original filename without extension
+    $name = $request->name;
+    if (empty($name)) {
+      $name = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+    }
+
     CoverImage::create([
-      'name' => $request->name,
+      'name' => $name,
       'path' => $filename,
     ]);
 
@@ -40,7 +46,7 @@ class CoverImageController extends AppBaseController
   public function update(Request $request, CoverImage $coverImage)
   {
     $request->validate([
-      'name' => 'required|string|max:255',
+      'name' => 'nullable|string|max:255',
       'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:5120',
     ]);
 
@@ -55,9 +61,20 @@ class CoverImageController extends AppBaseController
       $filename = $image->hashName();
       $image->move(public_path('uploads/cover_images'), $filename);
       $coverImage->path = $filename;
+
+      // If name is not provided when uploading new image, use the filename
+      if (empty($request->name)) {
+        $coverImage->name = pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME);
+      } else {
+        $coverImage->name = $request->name;
+      }
+    } else {
+      // If no new image, only update name if provided
+      if (!empty($request->name)) {
+        $coverImage->name = $request->name;
+      }
     }
 
-    $coverImage->name = $request->name;
     $coverImage->save();
 
     Flash::success(__('messages.cover_image.cover_image_updated'));

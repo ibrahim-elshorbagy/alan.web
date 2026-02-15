@@ -2053,6 +2053,7 @@ return [
     'select_cover_image' => 'اختر صورة الغلاف',
     'predefined_images' => 'استديو الصور',
     'reference_only' => 'للمرجعية فقط - لن تُطبع',
+    'name_auto_note' => 'اتركه فارغاً ليتم إنشاء الاسم تلقائياً من اسم ملف الصورة',
   ],
 
   'cover_image_type' => [

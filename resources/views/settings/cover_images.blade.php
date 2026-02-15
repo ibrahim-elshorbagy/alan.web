@@ -1,5 +1,8 @@
 @extends('settings.edit')
 @section('section')
+  {{-- Include Image Paste Component Script --}}
+  <script src="{{ asset('js/image_paste_component.js') }}" defer></script>
+
   <div class="card w-100">
     <div class="card-body d-flex flex-column flex-md-row">
       @include('settings.setting_menu')
@@ -20,44 +23,40 @@
           @forelse($coverImages as $image)
             <div class="col-sm-6 col-md-4 col-lg-5">
               <div class="card h-100 shadow-sm hover-shadow transition">
-                {{-- Image Container with Aspect Ratio --}}
+                {{-- Image Container with Aspect Ratio and Overlay Buttons --}}
                 <div class="position-relative bg-light" style="padding-top: 75%; overflow: hidden;">
                   <img src="{{ $image->image_url }}" alt="{{ $image->name }}"
                     class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: contain;"
                     onerror="this.onerror=null; this.src='/images/placeholder.png';">
 
                   {{-- Status Badge --}}
-                  <div class="position-absolute top-0 end-0 m-2">
+                  <div class="position-absolute top-0 start-0 m-2">
                     <span class="badge {{ $image->status ? 'bg-success' : 'bg-secondary' }}">
                       {{ $image->status ? __('messages.common.active') : __('messages.common.inactive') }}
                     </span>
                   </div>
-                </div>
 
-                <div class="card-body">
-                  <h6 class="card-title mb-3 text-truncate fw-semibold" title="{{ $image->name }}">
-                    {{ $image->name }}
-                  </h6>
-
-                  <div class="d-flex justify-content-between align-items-center gap-2">
-                    {{-- Action Buttons --}}
-                    <div class="btn-group btn-group-sm" role="group">
-                      <button type="button" class="btn btn-outline-primary mx-2 rounded"
-                        onclick="editCoverImage({{ $image->id }}, '{{ addslashes($image->name) }}')"
-                        title="{{ __('messages.common.edit') }}">
-                        <i class="fa fa-edit"></i>
-                      </button>
-                      <button type="button" class="btn btn-outline-danger mx-2 rounded"
-                        onclick="deleteCoverImage({{ $image->id }})" title="{{ __('messages.common.delete') }}">
-                        <i class="fa fa-trash"></i>
-                      </button>
-                    </div>
-
+                  {{-- Action Buttons Overlay --}}
+                  <div class="position-absolute bottom-0 end-0 m-2 d-flex align-items-center gap-2">
                     {{-- Status Toggle --}}
-                    <div class="form-check form-switch mb-0">
+                    <div class="form-check form-switch mb-0 bg-white rounded px-2 py-1"
+                      style="box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
                       <input class="form-check-input" type="checkbox" role="switch" id="status-{{ $image->id }}"
                         {{ $image->status ? 'checked' : '' }} onchange="updateStatus({{ $image->id }})"
                         title="{{ __('messages.common.toggle_status') ?? 'Toggle Status' }}">
+                    </div>
+
+                    {{-- Action Buttons --}}
+                    <div class="btn-group btn-group-sm" role="group" style="box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                      <button type="button" class="btn btn-light" onclick="deleteCoverImage({{ $image->id }})"
+                        title="{{ __('messages.common.delete') }}">
+                        <i class="fa fa-trash text-danger"></i>
+                      </button>
+                      <button type="button" class="btn btn-light"
+                        onclick="editCoverImage({{ $image->id }}, '{{ addslashes($image->name) }}')"
+                        title="{{ __('messages.common.edit') }}">
+                        <i class="fa fa-edit text-primary"></i>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -112,10 +111,13 @@
           <div class="modal-body">
             <div class="mb-3">
               <label for="name" class="form-label fw-semibold">
-                {{ __('messages.cover_image.name') }} <span class="text-danger">*</span>
+                {{ __('messages.cover_image.name') }}
               </label>
-              <input type="text" class="form-control" id="name" name="name" required
-                placeholder="{{ 'Enter cover image name' }}">
+              <input type="text" class="form-control" id="name" name="name"
+                placeholder="{{ __('messages.cover_image.name') }}">
+              <div class="form-text">
+                <i class="fa fa-info-circle me-1"></i>{{ __('messages.cover_image.name_auto_note') }}
+              </div>
             </div>
             <div class="mb-3">
               <label for="image" class="form-label fw-semibold">
@@ -125,6 +127,19 @@
               <div class="form-text">
                 <i
                   class="fa fa-info-circle me-1"></i>{{ __('messages.cover_image.allowed_types') ?? 'Allowed: JPG, PNG, JPEG (Max: 5MB)' }}
+              </div>
+              {{-- Image Paste Component --}}
+              <div data-image-paste data-file-input-id="image" data-preview-id="addImagePreview"
+                data-button-text="{{ __('messages.select_image') }}"
+                data-clipboard-button-text="{{ __('messages.paste_from_clipboard') }}"
+                data-success-text="{{ __('messages.image_pasted_successfully') }}"
+                data-invalid-type-text="{{ __('messages.invalid_image_type') }}"
+                data-image-too-large-text="{{ __('messages.image_too_large') }}"
+                data-no-image-text="{{ __('messages.no_image_in_clipboard') }}">
+              </div>
+              {{-- Image Preview --}}
+              <div id="addImagePreview" class="mt-2"
+                style="display:none; width: 100%; height: 200px; background-size: contain; background-position: center; background-repeat: no-repeat; border: 1px solid #ddd; border-radius: 4px;">
               </div>
             </div>
           </div>
@@ -158,18 +173,30 @@
           <div class="modal-body">
             <div class="mb-3">
               <label for="edit_name" class="form-label fw-semibold">
-                {{ __('messages.cover_image.name') }} <span class="text-danger">*</span>
+                {{ __('messages.cover_image.name') }}
               </label>
-              <input type="text" class="form-control" id="edit_name" name="name" required>
+              <input type="text" class="form-control" id="edit_name" name="name">
+              <div class="form-text">
+                <i class="fa fa-info-circle me-1"></i>{{ __('messages.cover_image.name_auto_note') }}
+              </div>
             </div>
             <div class="mb-3">
               <label for="edit_image" class="form-label fw-semibold">
                 {{ __('messages.cover_image.image') }}
               </label>
               <input type="file" class="form-control" id="edit_image" name="image" accept="image/*">
-              <div class="form-text">
-                <i
-                  class="fa fa-info-circle me-1"></i>{{ __('messages.cover_image.leave_empty_to_keep') ?? 'Leave empty to keep current image' }}
+              {{-- Image Paste Component --}}
+              <div data-image-paste data-file-input-id="edit_image" data-preview-id="editImagePreview"
+                data-button-text="{{ __('messages.select_image') }}"
+                data-clipboard-button-text="{{ __('messages.paste_from_clipboard') }}"
+                data-success-text="{{ __('messages.image_pasted_successfully') }}"
+                data-invalid-type-text="{{ __('messages.invalid_image_type') }}"
+                data-image-too-large-text="{{ __('messages.image_too_large') }}"
+                data-no-image-text="{{ __('messages.no_image_in_clipboard') }}">
+              </div>
+              {{-- Image Preview --}}
+              <div id="editImagePreview" class="mt-2"
+                style="display:none; width: 100%; height: 200px; background-size: contain; background-position: center; background-repeat: no-repeat; border: 1px solid #ddd; border-radius: 4px;">
               </div>
             </div>
           </div>
@@ -190,6 +217,12 @@
     function editCoverImage(id, name) {
       document.getElementById('edit_name').value = name;
       document.getElementById('editCoverImageForm').action = `/sadmin/cover-images/${id}`;
+      // Reset preview
+      const editPreview = document.getElementById('editImagePreview');
+      if (editPreview) {
+        editPreview.style.display = 'none';
+        editPreview.style.backgroundImage = '';
+      }
       new bootstrap.Modal(document.getElementById('editCoverImageModal')).show();
     }
 
@@ -204,6 +237,58 @@
         form.submit();
       }
     }
+
+    // Show preview when file is selected
+    document.addEventListener('DOMContentLoaded', function() {
+      const imageInput = document.getElementById('image');
+      const editImageInput = document.getElementById('edit_image');
+      const addPreview = document.getElementById('addImagePreview');
+      const editPreview = document.getElementById('editImagePreview');
+
+      if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+          if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              if (addPreview) {
+                addPreview.style.backgroundImage = `url('${e.target.result}')`;
+                addPreview.style.display = 'block';
+              }
+            };
+            reader.readAsDataURL(e.target.files[0]);
+          }
+        });
+      }
+
+      if (editImageInput) {
+        editImageInput.addEventListener('change', function(e) {
+          if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              if (editPreview) {
+                editPreview.style.backgroundImage = `url('${e.target.result}')`;
+                editPreview.style.display = 'block';
+              }
+            };
+            reader.readAsDataURL(e.target.files[0]);
+          }
+        });
+      }
+
+      // Reset add modal preview when modal is closed
+      const addModal = document.getElementById('addCoverImageModal');
+      if (addModal) {
+        addModal.addEventListener('hidden.bs.modal', function() {
+          if (addPreview) {
+            addPreview.style.display = 'none';
+            addPreview.style.backgroundImage = '';
+          }
+          if (imageInput) {
+            imageInput.value = '';
+          }
+        });
+      }
+    });
 
     function updateStatus(id) {
       const checkbox = document.getElementById(`status-${id}`);
