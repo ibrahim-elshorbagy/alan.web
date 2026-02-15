@@ -1332,7 +1332,7 @@ return [
     'dynamic_vcard' => 'بطاقة vCard ديناميكية',
     'custom_links' => 'روابط مخصصة',
     'allow_custom_domain' => 'السماح بنطاق مخصص',
-    'whatsapp_store' => 'متاجر واتساب',
+    'whatsapp_store' => 'منيو ومتجر واتساب',
     'linkedin_embed' => 'تغذية لينكدإن',
   ],
   'front_cms' => [
@@ -1545,7 +1545,7 @@ return [
     'register_img' => 'أفضل دقة لهذه الصورة ستكون 970 × 841',
     'about_us_image' => 'أفضل دقة لهذه الصورة ستكون 500 × 300',
     'testimonial_img' => 'أفضل دقة لهذه الصورة ستكون 110 × 110',
-    'vcard_cover_img' => 'أفضل دقة لهذه الصورة ستكون 360 × 1170',
+    'vcard_cover_img' => 'اختر من الاستوديو او ارفع صورة مخصصة بدقة 1300*580',
     'vcard_profile_img' => 'أفضل دقة لهذه الصورة ستكون 150 × 150',
     'vcard_defaut_img' => 'أفضل دقة لهذه الصورة ستكون 250 × 250',
     'nfc_img' => 'أفضل دقة لهذه الصورة ستكون 525 × 420',
@@ -1562,7 +1562,7 @@ return [
     'copy' => 'نسخ إلى الحافظة',
     'profile' => 'تغيير الملف الشخصي',
     'cover' => 'تغيير صورة الغلاف',
-    'cover_selection' => 'اختر من صور الغلاف المحددة مسبقاً أو ارفع صورتك المخصصة',
+    'cover_selection' => 'اختر من الاستوديو او ارفع صورة مخصصة بدقة 1300*580',
     'script' => 'إضافة كود JS مخصص بدون وسم script',
     'product_image' => 'أفضل دقة لهذا الملف الشخصي ستكون 250×250',
     'light_mode' => 'التبديل إلى وضع النهار',
@@ -2039,7 +2039,7 @@ return [
 
   'cover_image' => [
     'cover_images' => 'صور الغلاف',
-    'manage_cover_images' => 'إدارة صور الغلاف',
+    'manage_cover_images' => 'إدارة صور الغلاف 1300*580',
     'add_cover_image' => 'إضافة صورة غلاف',
     'edit_cover_image' => 'تعديل صورة الغلاف',
     'name' => 'الاسم',
@@ -2177,7 +2177,7 @@ return [
   ],
 
   'whatsapp_stores' => [
-    'whatsapp_stores' => 'متاجر واتساب',
+    'whatsapp_stores' => 'منيو ومتجر واتساب',
     'new' => 'متجر واتساب جديد',
     'whatsapp_templates' => 'قوالب واتساب',
     'products_categories' => 'فئات المنتجات',
