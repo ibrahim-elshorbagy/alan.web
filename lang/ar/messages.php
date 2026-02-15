@@ -2402,6 +2402,8 @@ return [
     'please_enter_6_digit_code_from_your_authenticator_app_to_login' => 'الرجاء إدخال رمز الـ 6 أرقام من تطبيق المصادقة الخاص بك لإكمال تسجيل الدخول',
     '2fa_enabled_successfully' => 'تم تفعيل 2FA بنجاح',
     'two_factor_authentication_has_been_disabled' => 'تم تعطيل المصادقة ذات العاملين.',
+    'user_does_not_have_2fa_enabled' => 'المستخدم لا يملك المصادقة ذات العاملين مفعلة.',
+    '2fa_disabled_successfully_by_admin' => 'تم تعطيل المصادقة ذات العاملين بنجاح لهذا المستخدم.',
   ],
 
   // ترجمات خريطة الموقع

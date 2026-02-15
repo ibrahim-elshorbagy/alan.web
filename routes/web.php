@@ -624,7 +624,11 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('acknowledgments/{id}/edit', [App\Http\Controllers\AcknowledgmentController::class, 'edit'])->name('acknowledgments.edit');
       Route::put('acknowledgments/{id}', [App\Http\Controllers\AcknowledgmentController::class, 'update'])->name('acknowledgments.update');
       Route::delete('acknowledgments/{id}', [App\Http\Controllers\AcknowledgmentController::class, 'destroy'])->name('acknowledgments.destroy');
-    });
+
+      // Super admin can disable 2FA for any user
+      Route::post('/disable-user-2fa/{user}', [TwofactorAuthenticationController::class, 'adminDisableUser2FA'])->name('admin.disable.user.2fa')->middleware('role:super_admin');
+
+      });
 
     // Sales NFC Showcase
     Route::prefix('sadmin')->middleware('role:sales')->group(function () {
@@ -1304,12 +1308,10 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
   Route::get("enable-2fa", [TwofactorAuthenticationController::class, 'index'])->name('enable-2fa');
   Route::post('/enable-2fa-auth', [TwofactorAuthenticationController::class, 'enable2FA'])->name('2fa.enable');
   Route::post('/disable-2fa', [TwofactorAuthenticationController::class, 'disable'])->name('disable.2fa');
+
 });
 
-// Allow admins and super_admins to disable 2FA for any user (no verification code required)
-Route::post('admin/users/{id}/disable-2fa-by-admin', [TwofactorAuthenticationController::class, 'adminDisableUser'])
-  ->middleware(['auth', 'role:super_admin'])
-  ->name('admin.disable.2fa');
+
 
 Route::get('/2fa/verify', [TwofactorAuthenticationController::class, 'showVerifyForm'])->middleware('setLanguage')->name('2fa.verify');
 Route::post('/2fa/verify', [TwofactorAuthenticationController::class, 'verify'])->middleware('setLanguage');

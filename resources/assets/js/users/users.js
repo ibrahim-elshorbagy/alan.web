@@ -170,6 +170,38 @@ listenClick("#UserPasswordChangeBtn", function () {
 listenHiddenBsModal("#changeUserPasswordModal", function () {
     $("#changeUserPasswordForm")[0].reset();
 });
+
+listenClick(".admin-disable-2fa-btn", function () {
+    let userId = $(this).attr("data-id");
+    swal({
+        title: Lang.get("js.warning") + " !",
+        text: Lang.get("js.are_you_sure_disable_2fa_for_user"),
+        buttons: {
+            confirm: Lang.get("js.yes"),
+            cancel: Lang.get("js.no"),
+        },
+        reverseButtons: true,
+        icon: sweetAlertIcon,
+    }).then(function (willDisable) {
+        if (willDisable) {
+            $.ajax({
+                url: route("admin.disable.user.2fa", userId),
+                type: "POST",
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr("content"),
+                },
+                success: function (result) {
+                    Livewire.dispatch("refresh");
+                    displaySuccessMessage(result.message);
+                },
+                error: function (result) {
+                    displayErrorMessage(result.responseJSON.message);
+                },
+            });
+        }
+    });
+});
+
 function loadUserfilter() {
     $("#userStatus").select2();
 }

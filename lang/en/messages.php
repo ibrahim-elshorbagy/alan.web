@@ -2407,6 +2407,8 @@ return [
     'please_enter_6_digit_code_from_your_authenticator_app_to_login' => 'Please enter the 6-digit code from Your Authenticator App to complete login',
     '2fa_enabled_successfully' => '2FA enabled successfully',
     'two_factor_authentication_has_been_disabled' => 'Two-Factor Authentication has been disabled.',
+    'user_does_not_have_2fa_enabled' => 'User does not have Two-Factor Authentication enabled.',
+    '2fa_disabled_successfully_by_admin' => 'Two-Factor Authentication has been successfully disabled for this user.',
   ],
 
   // Sitemap translations

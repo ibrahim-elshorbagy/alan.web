@@ -66,6 +66,24 @@ class TwofactorAuthenticationController extends AppBaseController
     return $this->sendSuccess(__('messages.two_factor_auth.two_factor_authentication_has_been_disabled'));
   }
 
+  public function adminDisableUser2FA(User $user)
+  {
+    // Super admin can disable 2FA for any user without verification code
+    if (!auth()->user()->hasRole('super_admin')) {
+      return $this->sendError(__('messages.unauthorized'));
+    }
+
+    if (!$user->enable_two_factor_authentication) {
+      return $this->sendError(__('messages.two_factor_auth.user_does_not_have_2fa_enabled'));
+    }
+
+    $user->google2fa_secret = null;
+    $user->enable_two_factor_authentication = false;
+    $user->save();
+
+    return $this->sendSuccess(__('messages.two_factor_auth.2fa_disabled_successfully_by_admin'));
+  }
+
   public function showVerifyForm()
   {
     if (!session('2fa:user:id')) {
@@ -105,28 +123,4 @@ class TwofactorAuthenticationController extends AppBaseController
     return redirect()->intended(getDashboardURL());
   }
 
-  /**
-   * Disable 2FA for a user by an admin without requiring verification code.
-   */
-  public function adminDisableUser($id)
-  {
-
-  Log::info('Admin disable 2FA request received for user ID: ' . $id);
-    $current = auth()->user();
-    if (! $current || ! $current->hasAnyRole(['super_admin'])) {
-      return $this->sendError(__('messages.permission_denied'), [], 403);
-    }
-
-
-    $user = User::find($id);
-    if (! $user) {
-      return $this->sendError(__('messages.user.not_found'), [], 404);
-    }
-
-    $user->google2fa_secret = null;
-    $user->enable_two_factor_authentication = false;
-    $user->save();
-
-    return $this->sendSuccess(__('messages.two_factor_auth.two_factor_authentication_has_been_disabled'));
-  }
 }
