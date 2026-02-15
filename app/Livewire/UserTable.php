@@ -93,7 +93,7 @@ class UserTable extends LivewireTableComponent
   public function builder(): Builder
   {
     $status = $this->status;
-    $query =  User::role('admin')->with(['media', 'subscriptions.plan'])->where('users.id', '!=', getLogInUserId());
+    $query =  User::role('admin')->with(['media', 'subscriptions.plan', 'socialAccounts'])->where('users.id', '!=', getLogInUserId());
 
     $query->when($status != "", function ($q) use ($status) {
       if ($status == User::IS_ACTIVE) {

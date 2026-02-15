@@ -115,6 +115,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     'language',
     'tenant_id',
     'vcard_table_view_type',
+    'enable_two_factor_authentication',
+    'google2fa_secret',
   ];
 
   protected $casts = [
@@ -131,6 +133,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     'language' => 'string',
     'tenant_id' => 'string',
     'remember_token' => 'string',
+    'enable_two_factor_authentication' => 'boolean',
+    'google2fa_secret' => 'string',
   ];
 
   protected static function boot()
@@ -470,6 +474,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
   public function documents()
   {
     return $this->hasMany(UserDocument::class);
+  }
+
+  public function socialAccounts()
+  {
+    return $this->hasMany(SocialAccount::class, 'tenant_id', 'tenant_id');
   }
 
   // /**
