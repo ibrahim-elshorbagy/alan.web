@@ -129,7 +129,7 @@
                         <div
                           class="cover-image-option {{ isset($vcard) && $vcard->cover_url == $image->image_url ? 'selected' : '' }}"
                           data-url="{{ $image->image_url }}">
-                          <img src="{{ $image->image_url }}" alt="{{ $image->name }}" class="img-fluid"
+                          <img src="{{ $image->image_url }}" alt="Cover Image" class="img-fluid"
                             style="cursor: pointer; border: 2px solid transparent;">
                         </div>
                       </div>

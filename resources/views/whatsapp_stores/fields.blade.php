@@ -147,7 +147,7 @@
                 @foreach ($coverImages as $image)
                   <div class="col-4 mb-2">
                     <div class="cover-image-option {{ (isset($whatsappStore) && $whatsappStore->cover_url == $image->image_url) ? 'selected' : '' }}" data-url="{{ $image->image_url }}">
-                      <img src="{{ $image->image_url }}" alt="{{ $image->name }}" class="img-fluid" style="cursor: pointer; border: 2px solid transparent;">
+                      <img src="{{ $image->image_url }}" alt="Cover Image" class="img-fluid" style="cursor: pointer; border: 2px solid transparent;">
                     </div>
                   </div>
                 @endforeach

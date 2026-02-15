@@ -21,11 +21,11 @@
         {{-- Cover Images Grid --}}
         <div class="row g-4">
           @forelse($coverImages as $image)
-            <div class="col-12 col-md-6">
+            <div class="col-12">
               <div class="card h-100 shadow-sm hover-shadow transition">
                 {{-- Image Container with Aspect Ratio and Overlay Buttons --}}
                 <div class="position-relative bg-light" style="padding-top: 75%; overflow: hidden;">
-                  <img src="{{ $image->image_url }}" alt="{{ $image->name }}"
+                  <img src="{{ $image->image_url }}" alt="Cover Image"
                     class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: contain;"
                     onerror="this.onerror=null; this.src='/images/placeholder.png';">
 
@@ -53,7 +53,7 @@
                         <i class="fa fa-trash text-danger"></i>
                       </button>
                       <button type="button" class="btn btn-light"
-                        onclick="editCoverImage({{ $image->id }}, '{{ addslashes($image->name) }}')"
+                        onclick="editCoverImage({{ $image->id }})"
                         title="{{ __('messages.common.edit') }}">
                         <i class="fa fa-edit text-primary"></i>
                       </button>
@@ -110,16 +110,6 @@
           @csrf
           <div class="modal-body">
             <div class="mb-3">
-              <label for="name" class="form-label fw-semibold">
-                {{ __('messages.cover_image.name') }}
-              </label>
-              <input type="text" class="form-control" id="name" name="name"
-                placeholder="{{ __('messages.cover_image.name') }}">
-              <div class="form-text">
-                <i class="fa fa-info-circle me-1"></i>{{ __('messages.cover_image.name_auto_note') }}
-              </div>
-            </div>
-            <div class="mb-3">
               <label for="image" class="form-label fw-semibold">
                 {{ __('messages.cover_image.image') }} <span class="text-danger">*</span>
               </label>
@@ -174,15 +164,6 @@
           @method('PUT')
           <div class="modal-body">
             <div class="mb-3">
-              <label for="edit_name" class="form-label fw-semibold">
-                {{ __('messages.cover_image.name') }}
-              </label>
-              <input type="text" class="form-control" id="edit_name" name="name">
-              <div class="form-text">
-                <i class="fa fa-info-circle me-1"></i>{{ __('messages.cover_image.name_auto_note') }}
-              </div>
-            </div>
-            <div class="mb-3">
               <label for="edit_image" class="form-label fw-semibold">
                 {{ __('messages.cover_image.image') }}
               </label>
@@ -218,8 +199,7 @@
   </div>
 
   <script>
-    function editCoverImage(id, name) {
-      document.getElementById('edit_name').value = name;
+    function editCoverImage(id) {
       document.getElementById('editCoverImageForm').action = `/sadmin/cover-images/${id}`;
       // Reset preview
       const editPreview = document.getElementById('editImagePreview');

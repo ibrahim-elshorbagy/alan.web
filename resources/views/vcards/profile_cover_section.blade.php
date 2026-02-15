@@ -77,13 +77,12 @@
                   $coverImages = \App\Models\CoverImage::where('status', true)->get();
                 @endphp
                 @forelse($coverImages as $image)
-                  <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+                  <div class="col-lg-4 col-md-6 col-12">
                     <div
                       class="cover-image-option {{ isset($vcard) && $vcard->cover_url == $image->image_url ? 'selected' : '' }}"
                       data-url="{{ $image->image_url }}">
-                      <img src="{{ $image->image_url }}" alt="{{ $image->name }}" class="img-fluid rounded"
+                      <img src="{{ $image->image_url }}" alt="Cover Image" class="img-fluid rounded"
                         style="cursor: pointer; border: 3px solid transparent; transition: all 0.3s;">
-                      <p class="text-center mt-2 small">{{ $image->name }}</p>
                     </div>
                   </div>
                 @empty
