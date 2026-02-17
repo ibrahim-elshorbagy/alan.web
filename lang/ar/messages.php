@@ -2180,13 +2180,13 @@ return [
 
   'whatsapp_stores' => [
     'whatsapp_stores' => 'منيو ومتجر واتساب',
-    'new' => 'متجر واتساب جديد',
+    'new' => 'منيو ومتجر جديد',
     'whatsapp_templates' => 'قوالب واتساب',
     'products_categories' => 'فئات المنتجات',
     'products' => 'المنتجات',
-    'store_name' => 'اسم المتجر',
+    'store_name' => 'اسم المنيو والمتجر',
     'whatsapp_no' => 'رقم واتساب',
-    'store_unique_alias' => 'الاسم المستعار الفريد للمتجر',
+    'store_unique_alias' => 'رابط المنيو والمتجر',
     'change_logo' => 'تغيير الشعار',
     'new_product_category' => 'فئة منتج جديدة',
     'product_count' => 'عدد المنتجات',
