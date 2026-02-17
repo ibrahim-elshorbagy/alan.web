@@ -14,7 +14,7 @@ class ProductCategoryController extends AppBaseController
         try {
             $request->validate([
                 'name' => 'required',
-                'image' => 'required|file|image|mimes:jpg,jpeg,png|max:1024',
+                'image' => 'file|image|mimes:jpg,jpeg,png|max:1024',
             ]);
             $input = $request->all();
             $productCategory = ProductCategory::create([

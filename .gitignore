@@ -13,6 +13,7 @@ yarn-error.log
 /.vscode
 .idea
 /public/uploads
+/public/pwa/1.json
 _ide_helper.php
 update/
 /vendor
