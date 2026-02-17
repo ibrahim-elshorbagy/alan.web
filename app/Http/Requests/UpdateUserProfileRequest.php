@@ -26,7 +26,14 @@ class UpdateUserProfileRequest extends FormRequest
     $rules = User::$rules;
     $rules['email'] = $rules['email'] . $id;
     $rules['profile'] = 'mimes:jpg,bmp,png,apng,avif,jpeg,';
-    $rules['contact'] = 'required|unique:users,contact,' . $id;
+
+    // Only require contact if user has neither email nor phone
+    $user = Auth::user();
+    if (empty($user->email) && empty($user->contact)) {
+      $rules['contact'] = 'required|unique:users,contact,' . $id;
+    } else {
+      $rules['contact'] = 'nullable|unique:users,contact,' . $id;
+    }
 
     return $rules;
   }

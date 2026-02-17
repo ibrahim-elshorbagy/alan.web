@@ -175,7 +175,7 @@ listenClick(".admin-disable-2fa-btn", function () {
     let userId = $(this).attr("data-id");
     swal({
         title: Lang.get("js.warning") + " !",
-        text: Lang.get("js.are_you_sure_disable_2fa_for_user"),
+        text: Lang.get("هل أنت متأكد أنك تريد تعطيل المصادقة الثنائية لهذا المستخدم؟"),
         buttons: {
             confirm: Lang.get("js.yes"),
             cancel: Lang.get("js.no"),

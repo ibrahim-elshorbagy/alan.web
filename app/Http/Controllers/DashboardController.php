@@ -47,7 +47,7 @@ class DashboardController extends AppBaseController
     if (\Request::is('sadmin/dashboard')) {
       $activeVcard = Vcard::whereStatus(1)->count();
       $deActiveVcard = Vcard::whereStatus(0)->count();
-      $pendingPayments = Subscription::where('payment_type', Subscription::MANUALLY)->where('status', Subscription::INACTIVE)->count();
+        $pendingPayments = Subscription::where('status', Subscription::PENDING)->count();
 
       return view('dashboard.index', compact('activeUsersCount', 'deActiveUsersCount', 'activeVcard', 'deActiveVcard', 'pendingPayments'));
     }

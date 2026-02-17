@@ -90,7 +90,9 @@ class WhatsappStore extends Model implements HasMedia
       return $media->getFullUrl();
     }
 
-    return '';
+    // Return default placeholder logo so validation/saves and front-end
+    // don't break when no logo has been uploaded yet.
+    return asset('assets/img/logo-placholder.jpeg');
   }
 
   public function getCoverUrlAttribute()
@@ -167,8 +169,8 @@ class WhatsappStore extends Model implements HasMedia
     'store_name' => 'required',
     'region_code' => 'required',
     'whatsapp_no' => 'required|numeric',
-    'logo' => 'required|file|image|mimes:jpg,png,jpeg|max:1024', // Max 1MB
-    'cover_img' => 'required|file|image|mimes:jpg,png,jpeg|max:1024', // Max 1MB
+    'logo' => 'nullable|file|image|mimes:jpg,png,jpeg|max:1024', // Max 1MB
+    'cover_img' => 'nullable|file|image|mimes:jpg,png,jpeg|max:1024', // Max 1MB
     'slider_video_banner' => 'nullable|url',
   ];
 }
