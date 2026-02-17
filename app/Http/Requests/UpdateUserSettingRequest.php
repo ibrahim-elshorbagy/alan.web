@@ -22,7 +22,7 @@ class UpdateUserSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'pwa_icon' => 'image|mimes:jpeg,png,jpg|dimensions:width=512,height=512',
+            'pwa_icon' => 'image|mimes:jpeg,png,jpg',
         ];
     }
 }

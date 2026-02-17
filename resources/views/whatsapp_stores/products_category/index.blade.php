@@ -1,5 +1,5 @@
 <div class="overflow-auto">
-    <div class="table-striped w-100">
+    <div class="table-striped" style="overflow:auto !important">
             <livewire:product-categories-table :whatsapp-store-id="$whatsappStore->id" lazy>
     </div>
     @include('whatsapp_stores.products_category.add_product_category')
