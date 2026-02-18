@@ -101,7 +101,7 @@
                     </span>
                     <div class="d-block">
                       <div class="image-picker">
-                        <div class="image previewImage" id="pwaPreview" style="background-image: url('{{ isset($setting['pwa_icon']) ? $setting['pwa_icon'] : asset('web/media/logo/favicon-infyom.png') }}');">
+                        <div class="image previewImage" id="pwaPreview" style="background-image: url('{{ isset($setting['pwa_icon']) ? $setting['pwa_icon'] : getLogInUser()->profile_image }}');">
                         </div>
                         <span class="picker-edit rounded-circle text-gray-500 fs-small" data-bs-toggle="tooltip" data-placement="top" data-bs-original-title="{{ __('messages.pwa.pwa_icon_change') }}">
                           <label>

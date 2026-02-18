@@ -482,6 +482,7 @@ Route::middleware(['freshInstall'])->group(function () {
           Route::get('virtual-backgrounds/{ecard_id}', [ECardsController::class, 'getEcard'])->name('get.ecard');
           Route::post('download-virtual-backgrounds', [ECardsController::class, 'downloadEcard'])->name('download.ecard');
           Route::get('get-vcard-data', [ECardsController::class, 'getVcardData'])->name('get-vcard-data');
+          Route::get('get-whatsapp-store-data', [ECardsController::class, 'getWhatsappStoreData'])->name('get-whatsapp-store-data');
 
           // Product Transactions
           Route::resource('product-orders', ProductTransactionController::class);
@@ -627,8 +628,7 @@ Route::middleware(['freshInstall'])->group(function () {
 
       // Super admin can disable 2FA for any user
       Route::post('/disable-user-2fa/{user}', [TwofactorAuthenticationController::class, 'adminDisableUser2FA'])->name('admin.disable.user.2fa')->middleware('role:super_admin');
-
-      });
+    });
 
     // Sales NFC Showcase
     Route::prefix('sadmin')->middleware('role:sales')->group(function () {
@@ -1308,7 +1308,6 @@ Route::prefix('admin')->middleware('role:admin')->group(function () {
   Route::get("enable-2fa", [TwofactorAuthenticationController::class, 'index'])->name('enable-2fa');
   Route::post('/enable-2fa-auth', [TwofactorAuthenticationController::class, 'enable2FA'])->name('2fa.enable');
   Route::post('/disable-2fa', [TwofactorAuthenticationController::class, 'disable'])->name('disable.2fa');
-
 });
 
 

@@ -262,6 +262,16 @@ class UserRepository extends BaseRepository
           $user->clearMediaCollection(User::PROFILE);
           $user->addMedia($userInput['profile'])->toMediaCollection(User::PROFILE, config('app.media_disc'));
         }
+
+        // Update PWA icon to match the new profile image
+        $pwaSetting = \App\Models\UserSetting::where('key', 'pwa_icon')->where('user_id', $user->id)->first();
+        if (!$pwaSetting) {
+          \App\Models\UserSetting::create([
+            'user_id' => $user->id,
+            'key' => 'pwa_icon',
+            'value' => $user->fresh()->profile_image,
+          ]);
+        }
       }
 
       DB::commit();
@@ -311,6 +321,16 @@ class UserRepository extends BaseRepository
       if (isset($userInput['profile']) && !empty($userInput['profile'])) {
         $user->clearMediaCollection(User::PROFILE);
         $user->addMedia($userInput['profile'])->toMediaCollection(User::PROFILE, config('app.media_disc'));
+
+        // Update PWA icon to match the new profile image
+        $pwaSetting = \App\Models\UserSetting::where('key', 'pwa_icon')->where('user_id', $user->id)->first();
+        if (!$pwaSetting) {
+          \App\Models\UserSetting::create([
+            'user_id' => $user->id,
+            'key' => 'pwa_icon',
+            'value' => $user->fresh()->profile_image,
+          ]);
+        }
       }
 
       DB::commit();

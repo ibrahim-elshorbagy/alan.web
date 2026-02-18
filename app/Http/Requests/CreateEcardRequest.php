@@ -19,8 +19,10 @@ class CreateEcardRequest extends FormRequest
    */
   public function rules(): array
   {
+    $isWpStore = $this->input('source_type') === 'whatsapp_store';
+
     return [
-      'vcard_id' => 'required',
+      'vcard_id' => $isWpStore ? 'nullable' : 'required',
       'first_name' => 'required|max:10',
       'last_name' => 'required|max:10',
       'email' => 'required|email:filter',

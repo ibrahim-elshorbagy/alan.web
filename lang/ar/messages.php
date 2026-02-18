@@ -2178,6 +2178,10 @@ return [
     'how_work_msg3' => 'الرابط بعد النطاق المخصص:',
   ],
 
+  'whatsapp_store' => [
+    'whatsapp_store' => 'متجر واتساب',
+    'select_whatsapp_store' => 'اختر متجر واتساب',
+  ],
   'whatsapp_stores' => [
     'whatsapp_stores' => 'منيو ومتجر واتساب',
     'new' => 'منيو ومتجر جديد',

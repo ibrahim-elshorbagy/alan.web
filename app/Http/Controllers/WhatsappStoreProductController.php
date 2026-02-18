@@ -30,6 +30,8 @@ class WhatsappStoreProductController extends AppBaseController
 
     try {
       $input = $request->all();
+      // Set currency from user's general settings (server-side)
+      $input['currency_id'] = getUserSettingValue('currency_id', getLogInUserId());
       $access = WhatsappStore::findOrFail($input['whatsapp_store_id']);
 
       if (!$access->tenant_id == getLogInTenantId()) {
@@ -79,6 +81,8 @@ class WhatsappStoreProductController extends AppBaseController
     }
 
     $input = $request->all();
+    // Ensure currency is taken from user's general settings, not from user input
+    $input['currency_id'] = getUserSettingValue('currency_id', getLogInUserId());
 
     $wpStoreProduct->update($input);
 

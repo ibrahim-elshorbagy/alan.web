@@ -7,24 +7,29 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateWhatsappProductRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
+  /**
+   * Determine if the user is authorized to make this request.
+   */
+  public function authorize(): bool
+  {
+    return true;
+  }
+
+  /**
+   * Get the validation rules that apply to the request.
+   *
+   * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+   */
+  public function rules(): array
+  {
+    $rules = WhatsappStoreProduct::$rules;
+    // Remove currency validation: currency will be set from user general settings server-side
+    if (isset($rules['currency_id'])) {
+      unset($rules['currency_id']);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
-     */
-    public function rules(): array
-    {
-        $rules= WhatsappStoreProduct::$rules;
-        $rules['images'] = 'array|min:1';
-        
-        return $rules;
-    }
+    $rules['images'] = 'array|min:1';
+
+    return $rules;
+  }
 }

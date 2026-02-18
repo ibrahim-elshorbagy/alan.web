@@ -2181,6 +2181,10 @@ return [
     'how_work_msg3' => 'URL after custom domain:',
   ],
 
+  'whatsapp_store' => [
+    'whatsapp_store' => 'WhatsApp Store',
+    'select_whatsapp_store' => 'Select WhatsApp Store',
+  ],
   'whatsapp_stores' => [
     'whatsapp_stores' => 'WhatsApp Stores',
     'new' => 'New WhatsApp Store',

@@ -42,18 +42,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-6 mt-5">
-              <div class="form-group">
-                <label class="form-label required">{{ __('messages.setting.currency') . ':' }}</label>
-                <select name="currency_id" class="form-control wpStoreCurrency" required data-control="select2"
-                  data-dropdown-parent="#addWpStoreProductModal">
-                  <option value="0">{{ __('messages.setting.select_currency') }}</option>
-                  @foreach (getCurrencies() as $id => $name)
-                    <option value="{{ $id }}">{{ $name }}</option>
-                  @endforeach
-                </select>
-              </div>
-            </div>
+
             <div class="col-md-6 mt-5">
               <div class="form-group">
                 <label class="form-label required">{{ __('messages.whatsapp_stores.total_stock') . ':' }}</label>

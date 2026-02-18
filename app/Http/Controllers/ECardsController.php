@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateEcardRequest;
 use App\Models\Vcard;
+use App\Models\WhatsappStore;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -43,6 +44,29 @@ class ECardsController extends Controller
       'region_code' => $vcard['region_code'],
       'phone' => $vcard['phone'],
       'website' => $vcard['socialLink']['website'],
+    ];
+
+    return response()->json(['data' => $data, 'success' => true]);
+  }
+
+  public function getWhatsappStoreData(Request $request): JsonResponse
+  {
+    $input = $request->all();
+    $store = WhatsappStore::findOrFail($input['storeId']);
+
+    // Build a website URL from the store alias
+    $website = url('/wp-store/' . $store->url_alias);
+
+    $data = [
+      'id'          => $store->id,
+      'first_name'  => $store->store_name,
+      'last_name'   => '',
+      'email'       => '',
+      'occupation'  => $store->store_name,
+      'location'    => $store->address ?? '',
+      'region_code' => $store->region_code ?? '',
+      'phone'       => $store->whatsapp_no ?? '',
+      'website'     => $website,
     ];
 
     return response()->json(['data' => $data, 'success' => true]);
@@ -163,7 +187,9 @@ class ECardsController extends Controller
     }
 
     // delete images after generate zip file
-    $vcardId = $input['vcard_id'];
+    $vcardId = ($input['source_type'] ?? 'vcard') === 'whatsapp_store'
+      ? 'ws_' . ($input['whatsapp_store_id'] ?? 0)
+      : $input['vcard_id'];
     $qrCodeImage = public_path('ecard/' . $vcardId . '-qr.png');
     $frontImage = public_path('virtual_backgrounds/Front.jpg');
     $backImage = public_path('virtual_backgrounds/Back.jpg');
@@ -200,8 +226,9 @@ class ECardsController extends Controller
   public function create($ecard): \Illuminate\View\View
   {
     $vcards = Vcard::whereTenantId(getLogInTenantId())->where('status', Vcard::ACTIVE)->pluck('name', 'id')->toArray();
+    $whatsappStores = WhatsappStore::whereTenantId(getLogInTenantId())->pluck('store_name', 'id')->toArray();
 
-    return view('virtual-backgrounds.create', compact('vcards', 'ecard'));
+    return view('virtual-backgrounds.create', compact('vcards', 'ecard', 'whatsappStores'));
   }
 
   public function store(Request $request, $cardImageId) {}

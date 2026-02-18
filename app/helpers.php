@@ -1983,14 +1983,21 @@ if (!function_exists('processArabicText')) {
 if (!function_exists('retriveH1Card')) {
   function retriveH1Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    // Resolve URL and entity ID regardless of source type
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
 
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $location = processArabicText($input['location']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2029,18 +2036,18 @@ if (!function_exists('retriveH1Card')) {
 
     $img = Image::make($imageH1Front);
     $img->insert($imageH1AppLogo, 'center');
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/H-Vcard/H-1/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
@@ -2058,9 +2065,9 @@ if (!function_exists('retriveH1Card')) {
     imagettftext($imageH1Back, 16, 0, 233, 566, $white, $fontsRegular, $phoneNumber);
     imagettftext($imageH1Back, 16, 0, 737, 455, $white, $fontsRegular, wordwrap($location, 30, "\n"));
     imagettftext($imageH1Back, 16, 0, 737, 556, $white, $fontsRegular, wordwrap($input['website'], 27, "\n", true));
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -2071,12 +2078,18 @@ if (!function_exists('retriveH2Card')) {
   {
     $fonts = public_path('fonts/Zain-Regular.ttf');
     $fontsRegular = public_path('fonts/Zain-Regular.ttf');
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2114,18 +2127,18 @@ if (!function_exists('retriveH2Card')) {
 
     $img = Image::make($imageH1Front);
     $img->insert($imageH1AppLogo, 'center');
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/H-Vcard/H-2/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
@@ -2139,11 +2152,11 @@ if (!function_exists('retriveH2Card')) {
     imagettftext($imageH1Back, 20, 0, 609, 400, $color, $fontsRegular, $phoneNumber);
     header('Content-Type: image/png');
 
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
 
     imagepng($imageH1Back, $backPAth);
 
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -2152,12 +2165,18 @@ if (!function_exists('retriveH2Card')) {
 if (!function_exists('retriveH3Card')) {
   function retriveH3Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2195,18 +2214,18 @@ if (!function_exists('retriveH3Card')) {
 
     $img = Image::make($imageH1Front);
     $img->insert($imageH1AppLogo, 'center');
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/H-Vcard/H-3/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     [$width, $height] = getimagesize($imageH1QrCode);
     $imageH1Back = imagecreatefromstring(file_get_contents($imageH1Back));
@@ -2227,9 +2246,9 @@ if (!function_exists('retriveH3Card')) {
 
     imagecopy($imageH1Back, $imageH1QrCode, $x, $y, 0, 0, $qrCodeWidth, $qrCodeHeight);
 
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -2238,13 +2257,19 @@ if (!function_exists('retriveH3Card')) {
 if (!function_exists('retriveH4Card')) {
   function retriveH4Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $location = processArabicText($input['location']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2294,18 +2319,18 @@ if (!function_exists('retriveH4Card')) {
     imagecopy($imageH1Front, $imageH1AppLogo, 725, 255, 0, 0, $newWidth, $newHeight);
     header('Content-Type: image/png');
 
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/H-Vcard/H-4/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
     $imageH1Back = imagecreatefromstring(file_get_contents($imageH1Back));
@@ -2325,9 +2350,9 @@ if (!function_exists('retriveH4Card')) {
     imagettftext($imageH1Back, 16, 0, 160, 490, 000, $fontsRegular, wordwrap($input['website'], 45, "\n", true));
 
     header('Content-Type: image/png');
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -2336,13 +2361,19 @@ if (!function_exists('retriveH4Card')) {
 if (!function_exists('retriveH5Card')) {
   function retriveH5Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $location = processArabicText($input['location']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2390,18 +2421,18 @@ if (!function_exists('retriveH5Card')) {
 
     imagecopy($imageH1Front, $imageH1AppLogo, 700, 250, 0, 0, $newWidth, $newHeight);
 
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/H-Vcard/H-5/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
@@ -2418,9 +2449,9 @@ if (!function_exists('retriveH5Card')) {
     imagettftext($imageH1Back, 16, 0, 308, 424, 000, $fontsRegular, $input['email']);
     imagettftext($imageH1Back, 16, 0, 308, 478, 000, $fontsRegular, wordwrap($input['website'], 45, "\n", true));
 
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -2429,12 +2460,18 @@ if (!function_exists('retriveH5Card')) {
 if (!function_exists('retriveH6Card')) {
   function retriveH6Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2483,18 +2520,18 @@ if (!function_exists('retriveH6Card')) {
     imagecopy($imageH1Front, $imageH1AppLogo, 50, 490, 0, 0, $maxWidth, $maxHeight);
     header('Content-Type: image/png');
 
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/H-Vcard/H-6/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
@@ -2506,9 +2543,9 @@ if (!function_exists('retriveH6Card')) {
     insertTextInImg($imageH1Back, $occupation, 760, 430, 16, $fontsRegular, $white);
 
     imagecopy($imageH1Back, $imageH1QrCode, 690, 220, 0, 0, $width, $height);
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -2517,13 +2554,19 @@ if (!function_exists('retriveH6Card')) {
 if (!function_exists('retriveH7Card')) {
   function retriveH7Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $location = processArabicText($input['location']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2565,18 +2608,18 @@ if (!function_exists('retriveH7Card')) {
     $img = Image::make($imageH1Front);
     $img->insert($imageH1AppLogo, 'center');
     header('Content-Type: image/png');
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/H-Vcard/H-7/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
@@ -2598,9 +2641,9 @@ if (!function_exists('retriveH7Card')) {
     imagettftext($imageH1Back, 16, 0, 160, 410, 000, $fontsRegular, wordwrap($input['website'], 75, "\n", true));
     imagettftext($imageH1Back, 16, 0, 160, 492, 000, $fontsRegular, wordwrap($location, 60, "\n"));
 
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -2609,13 +2652,19 @@ if (!function_exists('retriveH7Card')) {
 if (!function_exists('retriveH8Card')) {
   function retriveH8Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $location = processArabicText($input['location']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2665,23 +2714,23 @@ if (!function_exists('retriveH8Card')) {
 
     imagecopy($imageH1Front, $imageH1AppLogo, 250, 300, 0, 0, $newWidth, $newHeight);
     header('Content-Type: image/png');
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/V-Vcard/V-8/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
 
     $file = public_path('qr/qr.png');
-    $tempDirectory = public_path('ecard/tempQRCode' . $vcard->id);
+    $tempDirectory = public_path('ecard/tempQRCode' . $entityId);
     if (!is_dir($tempDirectory)) {
       File::makeDirectory($tempDirectory, 0777, true);
     }
@@ -2707,9 +2756,9 @@ if (!function_exists('retriveH8Card')) {
     imagettftext($imageH1Back, 14, 0, 121, 852, 000, $fontsRegular, $phoneNumber);
     imagettftext($imageH1Back, 14, 0, 121, 907, 000, $fontsRegular, $input['email']);
     imagettftext($imageH1Back, 14, 0, 121, 971, 000, $fontsRegular, wordwrap($input['website'], 30, "\n", true));
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -2718,13 +2767,19 @@ if (!function_exists('retriveH8Card')) {
 if (!function_exists('retriveH9Card')) {
   function retriveH9Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $location = processArabicText($input['location']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2783,18 +2838,18 @@ if (!function_exists('retriveH9Card')) {
     });
     header('Content-Type: image/png');
 
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/V-Vcard/V-9/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
@@ -2810,9 +2865,9 @@ if (!function_exists('retriveH9Card')) {
     imagettftext($imageH1Back, 14, 0, 125, 720, 000, $fontsRegular, wordwrap($input['website'], 40, "\n", true));
     imagettftext($imageH1Back, 14, 0, 125, 817, 000, $fontsRegular, wordwrap($location, 45, "\n"));
 
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -2821,13 +2876,19 @@ if (!function_exists('retriveH9Card')) {
 if (!function_exists('retriveH10Card')) {
   function retriveH10Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $location = processArabicText($input['location']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2870,18 +2931,18 @@ if (!function_exists('retriveH10Card')) {
     $img->insert($imageH1AppLogo, 'center');
     header('Content-Type: image/png');
 
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/V-Vcard/V-10/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
@@ -2909,9 +2970,9 @@ if (!function_exists('retriveH10Card')) {
     imagettftext($imageH1Back, 14, 0, 170, 880, $white, $fontsRegular, $input['email']);
     imagettftext($imageH1Back, 14, 0, 170, 945, $white, $fontsRegular, wordwrap($input['website'], 40, "\n", true));
 
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -2920,13 +2981,19 @@ if (!function_exists('retriveH10Card')) {
 if (!function_exists('retriveH11Card')) {
   function retriveH11Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $location = processArabicText($input['location']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -2977,18 +3044,18 @@ if (!function_exists('retriveH11Card')) {
     imagecopy($imageH1Front, $imageH1AppLogo, 255, 230, 0, 0, $newWidth, $newHeight);
     header('Content-Type: image/png');
 
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/V-Vcard/V-11/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
@@ -3006,9 +3073,9 @@ if (!function_exists('retriveH11Card')) {
     }
     imagettftext($imageH1Back, 14, 0, 200, 605, 000, $fontsRegular, wordwrap($input['website'], 40, "\n", true));
     imagettftext($imageH1Back, 14, 0, 200, 710, 000, $fontsRegular, $phoneNumber);
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -3017,12 +3084,18 @@ if (!function_exists('retriveH11Card')) {
 if (!function_exists('retriveH12Card')) {
   function retriveH12Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -3073,18 +3146,18 @@ if (!function_exists('retriveH12Card')) {
     imagecopy($imageH1Front, $imageH1AppLogo, 255, 250, 0, 0, $newWidth, $newHeight);
     header('Content-Type: image/png');
 
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
 
     imagepng($imageH1Front, $frontPAth);
 
     $imageH1Back = asset('assets/img/ecards/V-Vcard/V-12/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
@@ -3096,9 +3169,9 @@ if (!function_exists('retriveH12Card')) {
     insertTextInImg($imageH1Back, $occupation, 648 / 2, 800, 20, $fontsRegular, '000');
 
     imagecopy($imageH1Back, $imageH1QrCode, 255, 860, 0, 0, $width, $height);
-    $backPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $backPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $backPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }
@@ -3107,12 +3180,18 @@ if (!function_exists('retriveH12Card')) {
 if (!function_exists('retriveH13Card')) {
   function retriveH13Card($input, $customQrCode = [], $qrcodeColor = [])
   {
-    $vcard = Vcard::whereId($input['vcard_id'])->first();
+    if (($input['source_type'] ?? 'vcard') === 'whatsapp_store') {
+      $entityId = 'ws_' . ($input['whatsapp_store_id'] ?? 0);
+      $vcardUrl  = $input['website'] ?? url('/');
+    } else {
+      $vcard    = Vcard::whereId($input['vcard_id'])->first();
+      $entityId = $vcard->id;
+      $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
+    }
     $fullName = processArabicText($input['first_name'] . ' ' . $input['last_name']);
     $occupation = processArabicText($input['occupation']);
     $phoneNumber = '+' . $input['region_code'] . ' ' . $input['phone'];
-    $vcardUrl = route('vcard.show', ['alias' => $vcard->url_alias]);
-    $QRCodePath = public_path('ecard/' . $vcard->id . '-qr.png');
+    $QRCodePath = public_path('ecard/' . $entityId . '-qr.png');
 
     // Generate QR code with custom settings
     if (!empty($customQrCode) && !empty($qrcodeColor)) {
@@ -3161,18 +3240,18 @@ if (!function_exists('retriveH13Card')) {
     $newHeight = min($maxHeight, $logoHeight);
 
     imagecopy($imageH1Front, $imageH1AppLogo, 255, 620, 0, 0, $newWidth, $newHeight);
-    $FrontImgPath = asset('uploads/ecard/' . $vcard->id);
+    $FrontImgPath = asset('uploads/ecard/' . $entityId);
 
     if (!Storage::exists($FrontImgPath)) {
-      Storage::disk('public')->makeDirectory('ecard/' . $vcard->id);
+      Storage::disk('public')->makeDirectory('ecard/' . $entityId);
     }
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
     imagepng($imageH1Front, $frontPAth);
 
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Front.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Front.png');
     $imageH1Back = asset('assets/img/ecards/V-Vcard/V-13/BG/Back.png');
-    $imageH1QrCode = public_path('ecard/' . $vcard->id . '-qr.png');
+    $imageH1QrCode = public_path('ecard/' . $entityId . '-qr.png');
 
     $im = imagecreatetruecolor(400, 30);
     [$width, $height] = getimagesize($imageH1QrCode);
@@ -3189,9 +3268,9 @@ if (!function_exists('retriveH13Card')) {
     $yPosition = 320;
     imagecopy($imageH1Back, $imageH1QrCode, $centerX, $yPosition, 0, 0, $qrCodeWidth, $qrCodeHeight);
     header('Content-Type: image/png');
-    $frontPAth = public_path('uploads/ecard/' . $vcard->id . '/Back.png');
+    $frontPAth = public_path('uploads/ecard/' . $entityId . '/Back.png');
     imagepng($imageH1Back, $frontPAth);
-    $fineName = storeImage($vcard);
+    $fineName = storeImage((object)['id' => $entityId]);
 
     return $fineName;
   }

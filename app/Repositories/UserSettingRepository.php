@@ -58,6 +58,14 @@ class UserSettingRepository extends BaseRepository
       }
     }
 
+    if ($inputArr['enable_pwa'] == '1') {
+      $user = \App\Models\User::find($id);
+      UserSetting::updateOrCreate(
+        ['key' => 'pwa_icon', 'user_id' => $id],
+        ['value' => $user->profile_image]
+      );
+    }
+
     return $setting;
   }
 

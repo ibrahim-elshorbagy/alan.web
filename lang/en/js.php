@@ -191,7 +191,7 @@ return [
   'no_cancel' => 'No, Cancel',
   'plan' => 'Plan',
   'custom_link' => 'Custom Link',
-  'select_vcard' => 'Select vCard',
+  'select_vcard' => 'Select',
   'select_all' => 'Select All',
   'select_payment_type' => 'Select Payment Type',
   'please_wait' => 'Please Wait...',

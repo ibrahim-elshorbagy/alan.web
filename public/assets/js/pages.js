@@ -50849,13 +50849,40 @@ function loadEcardData() {
   $("#e-vcard-id").select2({
     placeholder: Lang.get("js.select_vcard")
   });
+  $("#e-wp-store-id").select2({
+    placeholder: Lang.get("js.select_vcard")
+  });
   $("#custom-e-vcard-id").select2({
     placeholder: Lang.get("js.select_vcard")
   });
   $("#vcard_size").select2({
     placeholder: Lang.get("js.select_vcard")
   });
+
+  // Source type toggle: show/hide the right selector
+  $('input[name="source_type"]').on("change", function () {
+    var type = $(this).val();
+    if (type === "vcard") {
+      $("#vcardSelectWrapper").show();
+      $("#wpStoreSelectWrapper").hide();
+      $("#e-wp-store-id").val("").trigger("change.select2");
+    } else {
+      $("#vcardSelectWrapper").hide();
+      $("#wpStoreSelectWrapper").show();
+      $("#e-vcard-id").val("").trigger("change.select2");
+    }
+  });
   resetCardFrom();
+}
+function fillEcardFields(data) {
+  $("#e-card-first-name").val(data.first_name);
+  $("#e-card-last-name").val(data.last_name);
+  $("#e-card-email").val(data.email);
+  $("#e-card-occupation").val(data.occupation);
+  $("#e-card-location").val(data.location);
+  $("#prefix_code").val(data.region_code);
+  $("#phoneNumber").val(data.phone);
+  $("#e-card-website").val(data.website);
 }
 listenChange("#e-vcard-id", function (e) {
   e.preventDefault();
@@ -50871,14 +50898,29 @@ listenChange("#e-vcard-id", function (e) {
     },
     success: function success(result) {
       if (result.success) {
-        $("#e-card-first-name").val(result.data.first_name);
-        $("#e-card-last-name").val(result.data.last_name);
-        $("#e-card-email").val(result.data.email);
-        $("#e-card-occupation").val(result.data.occupation);
-        $("#e-card-location").val(result.data.location);
-        $("#prefix_code").val(result.data.region_code);
-        $("#phoneNumber").val(result.data.phone);
-        $("#e-card-website").val(result.data.website);
+        fillEcardFields(result.data);
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+});
+listenChange("#e-wp-store-id", function (e) {
+  e.preventDefault();
+  var storeId = $("#e-wp-store-id").val();
+  if (!storeId) {
+    return;
+  }
+  $.ajax({
+    url: route("get-whatsapp-store-data"),
+    type: "GET",
+    data: {
+      storeId: storeId
+    },
+    success: function success(result) {
+      if (result.success) {
+        fillEcardFields(result.data);
       }
     },
     error: function error(result) {

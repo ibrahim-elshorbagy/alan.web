@@ -81,20 +81,21 @@
         padding: 8px 5px;
       }
     }
+
   </style>
 
   {{-- Flash Messages --}}
   @if (session()->has('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      {{ session('success') }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
   @endif
   @if (session()->has('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      {{ session('error') }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ session('error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
   @endif
 
   {{-- Page Header --}}
@@ -120,15 +121,15 @@
 
       {{-- Assigned To Filter (only for super_admin) --}}
       @if (!auth()->user()->hasRole('sales'))
-        <div class="col-md-3 col-sm-6 col-12">
-          <label class="form-label small mb-1">{{ __('messages.redirect_links.assigned_to') }}</label>
-          <select class="form-control form-select" wire:model.live="assignedFilter">
-            <option value="">{{ __('messages.common.all') }}</option>
-            @foreach ($salesUsers as $salesUser)
-              <option value="{{ $salesUser->id }}">{{ $salesUser->first_name }} {{ $salesUser->last_name }}</option>
-            @endforeach
-          </select>
-        </div>
+      <div class="col-md-3 col-sm-6 col-12">
+        <label class="form-label small mb-1">{{ __('messages.redirect_links.assigned_to') }}</label>
+        <select class="form-control form-select" wire:model.live="assignedFilter">
+          <option value="">{{ __('messages.common.all') }}</option>
+          @foreach ($salesUsers as $salesUser)
+          <option value="{{ $salesUser->id }}">{{ $salesUser->first_name }} {{ $salesUser->last_name }}</option>
+          @endforeach
+        </select>
+      </div>
       @endif
 
       {{-- Reset Button --}}
@@ -142,16 +143,13 @@
 
   {{-- Report Type Selector --}}
   <div class="mb-3 d-flex flex-wrap gap-2 justify-content-center">
-    <button class="btn report-type-btn {{ $reportType === 'redeemed' ? 'active' : 'btn-outline-success' }}"
-      wire:click="$set('reportType', 'redeemed')">
+    <button class="btn report-type-btn {{ $reportType === 'redeemed' ? 'active' : 'btn-outline-success' }}" wire:click="$set('reportType', 'redeemed')">
       <i class="fas fa-user-check"></i> {{ __('messages.redirect_links.redeemed_users') }}
     </button>
-    <button class="btn report-type-btn {{ $reportType === 'deleted' ? 'active' : 'btn-outline-danger' }}"
-      wire:click="$set('reportType', 'deleted')">
+    <button class="btn report-type-btn {{ $reportType === 'deleted' ? 'active' : 'btn-outline-danger' }}" wire:click="$set('reportType', 'deleted')">
       <i class="fas fa-user-times"></i> {{ __('messages.redirect_links.user_deleted_redirect_link') }}
     </button>
-    <button class="btn report-type-btn {{ $reportType === 'active' ? 'active' : 'btn-outline-info' }}"
-      wire:click="$set('reportType', 'active')">
+    <button class="btn report-type-btn {{ $reportType === 'active' ? 'active' : 'btn-outline-info' }}" wire:click="$set('reportType', 'active')">
       <i class="fas fa-user-shield"></i> {{ __('messages.redirect_links.user_active_redirect_link') }}
     </button>
   </div>
@@ -191,64 +189,63 @@
           <th class="text-center">{{ __('messages.redirect_links.action') }}</th>
           <th class="text-center">{{ __('messages.redirect_links.date') }}</th>
           @if (!auth()->user()->hasRole('sales'))
-            <th class="text-center">{{ __('messages.redirect_links.assigned_to') }}</th>
+          <th class="text-center">{{ __('messages.redirect_links.assigned_to') }}</th>
           @endif
         </tr>
       </thead>
       <tbody>
         @forelse ($displayData as $index => $record)
-          <tr>
-            <td class="text-center">{{ $index + 1 }}</td>
-            <td class="text-center">
-              <a href="{{ url('/auto-' . $record->uri) }}" target="_blank"
-                class="text-decoration-none fw-bold">
-                {{ $record->uri }}
-              </a>
+        <tr>
+          <td class="text-center">{{ $index + 1 }}</td>
+          <td class="text-center">
+            <a href="{{ url('/auto-' . $record->uri) }}" target="_blank" class="text-decoration-none fw-bold">
+              {{ $record->uri }}
+            </a>
 
-            </td>
-            <td class="text-center">
-              @if ($record->action === 'user_redeem')
-                {{ $record->new_value }}
-              @elseif ($record->action === 'user_deleted_link')
-                {{ $record->old_value }}
-              @else
-                {{ $record->new_value }}
-              @endif
-            </td>
-            <td class="text-center">
-              @if ($record->action === 'user_redeem')
-                <span class="badge bg-success">{{ __('messages.redirect_links.redeemed') }}</span>
-              @elseif ($record->action === 'user_deleted_link')
-                <span class="badge bg-danger">{{ __('messages.redirect_links.deleted') }}</span>
-              @endif
-            </td>
-            <td class="text-center">
-              {{ \Carbon\Carbon::parse($record->created_at)->format('Y-m-d H:i') }}
-            </td>
-            @if (!auth()->user()->hasRole('sales'))
-              <td class="text-center">
-                @if ($record->assigned_id)
-                  @php
-                    $assignedUser = \App\Models\User::withoutGlobalScopes()->find($record->assigned_id);
-                  @endphp
-                  @if ($assignedUser)
-                    {{ $assignedUser->first_name }} {{ $assignedUser->last_name }}
-                  @else
-                    <span class="text-muted">-</span>
-                  @endif
-                @else
-                  <span class="text-muted">-</span>
-                @endif
-              </td>
+          </td>
+          <td class="text-center">
+            @if ($record->action === 'user_redeem')
+            {{ $record->new_value }}
+            @elseif ($record->action === 'user_deleted_link')
+            {{ $record->old_value }}
+            @else
+            {{ $record->new_value }}
             @endif
-          </tr>
+          </td>
+          <td class="text-center">
+            @if ($record->action === 'user_redeem')
+            <span class="badge bg-success">{{ __('messages.redirect_links.redeemed') }}</span>
+            @elseif ($record->action === 'user_deleted_link')
+            <span class="badge bg-danger">{{ __('messages.redirect_links.deleted') }}</span>
+            @endif
+          </td>
+          <td class="text-center">
+            {{ \Carbon\Carbon::parse($record->created_at)->format('Y-m-d H:i') }}
+          </td>
+          @if (!auth()->user()->hasRole('sales'))
+          <td class="text-center">
+            @if ($record->assigned_id)
+            @php
+            $assignedUser = \App\Models\User::withoutGlobalScopes()->find($record->assigned_id);
+            @endphp
+            @if (!empty($assignedUser))
+            {{ $assignedUser->first_name }} {{ $assignedUser->last_name }}
+            @else
+            <span class="text-muted">-</span>
+            @endif
+            @else
+            <span class="text-muted">-</span>
+            @endif
+          </td>
+          @endif
+        </tr>
         @empty
-          <tr>
-            <td colspan="{{ auth()->user()->hasRole('sales') ? '5' : '6' }}" class="text-center text-muted py-5">
-              <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
-              {{ __('messages.redirect_links.no_history_records') }}
-            </td>
-          </tr>
+        <tr>
+          <td colspan="{{ auth()->user()->hasRole('sales') ? '5' : '6' }}" class="text-center text-muted py-5">
+            <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+            {{ __('messages.redirect_links.no_history_records') }}
+          </td>
+        </tr>
         @endforelse
       </tbody>
     </table>
@@ -259,7 +256,7 @@
     <div class="mt-3 d-flex justify-content-end">
       <button class="btn btn-primary" onclick="window.print()">
         <i class="fas fa-print"></i> {{ __('messages.common.print') }}
-      </button>
-    </div>
-  @endif --}}
+  </button>
+</div>
+@endif --}}
 </div>
