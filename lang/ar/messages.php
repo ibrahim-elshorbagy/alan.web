@@ -1919,6 +1919,32 @@ return [
     'used_at' => 'تم الاستخدام في',
   ],
 
+  'sales_advertise' => [
+    'advertise_settings'   => 'إعدادات الإعلان',
+    'advertise'            => 'الإعلان',
+    'my_advertise'         => 'إعلاني',
+    'enable_advertise'     => 'تفعيل الإعلان',
+    'yes'                  => 'نعم',
+    'no'                   => 'لا',
+    'duration_label'       => 'مدة ظهور الإعلان',
+    'duration_hint'        => 'من 1 إلى 5 ثواني',
+    'seconds'              => 'ثانية',
+    'current_images'       => 'الصور الحالية',
+    'add_images'           => 'إضافة صور الإعلان',
+    'max_images_hint'      => 'يمكنك إضافة :remaining صورة بعد',
+    'max_images_reached'   => 'تم الوصول إلى الحد الأقصى (5 صور). احذف صورة لإضافة أخرى.',
+    'max_images_alert'     => 'يمكنك رفع :max صورة فقط.',
+    'images_count'         => ':count من أصل :max صور مرفوعة',
+    'compress_note'        => 'سيتم ضغط الصور تلقائياً إلى عرض أقصاه 1600 بكسل.',
+    'not_enabled'          => 'الإعلان غير مفعّل لحسابك.',
+    'updated_successfully' => 'تم تحديث إعدادات الإعلان بنجاح.',
+    'ad_page_title'        => 'محتوى إعلاني',
+    'ad_label'             => 'مادة إعلانية',
+    'ad_closes_in'         => 'سيتم غلق الإعلان خلال :seconds ثانية',
+    'ad_closes_in_template' => 'سيتم غلق الإعلان خلال :seconds ثانية',
+    'ad_impressions'       => 'عدد مرات ظهور كل صورة',
+  ],
+
   'save' => 'حفظ',
 
   'e_card' => [

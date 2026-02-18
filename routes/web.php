@@ -635,6 +635,18 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('nfc-showcase', [App\Http\Controllers\SalesNfcController::class, 'index'])->name('sales.nfc.showcase');
     });
 
+    // Sales Advertisement – super_admin manages per-user settings
+    Route::prefix('sadmin')->middleware('role:super_admin')->group(function () {
+      Route::get('sales-advertise/{userId}/edit', [App\Http\Controllers\SalesAdvertiseController::class, 'edit'])->name('sadmin.sales.advertise.edit');
+      Route::put('sales-advertise/{userId}', [App\Http\Controllers\SalesAdvertiseController::class, 'update'])->name('sadmin.sales.advertise.update');
+    });
+
+    // Sales Advertisement – the sales user manages their own (only if enabled)
+    Route::prefix('sadmin')->middleware('role:sales')->group(function () {
+      Route::get('my-advertise', [App\Http\Controllers\SalesAdvertiseController::class, 'salesEdit'])->name('sales.advertise.edit');
+      Route::put('my-advertise', [App\Http\Controllers\SalesAdvertiseController::class, 'salesUpdate'])->name('sales.advertise.update');
+    });
+
 
     Route::prefix('sadmin')->middleware('role:super_admin|admin|sales')->group(function () {
       // Global QR Code Settings

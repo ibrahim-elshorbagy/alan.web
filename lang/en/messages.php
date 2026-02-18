@@ -1922,6 +1922,32 @@ return [
     'used_at' => 'Used At',
   ],
 
+  'sales_advertise' => [
+    'advertise_settings'   => 'Advertisement Settings',
+    'advertise'            => 'Advertisement',
+    'my_advertise'         => 'My Advertisement',
+    'enable_advertise'     => 'Enable Advertisement',
+    'yes'                  => 'Yes',
+    'no'                   => 'No',
+    'duration_label'       => 'Ad Display Duration',
+    'duration_hint'        => '1 to 5 seconds',
+    'seconds'              => 'seconds',
+    'current_images'       => 'Current Images',
+    'add_images'           => 'Add Advertisement Images',
+    'max_images_hint'      => 'You can add up to :remaining more image(s)',
+    'max_images_reached'   => 'Maximum of 5 images reached. Please delete one to add more.',
+    'max_images_alert'     => 'You can only upload :max more image(s).',
+    'images_count'         => ':count of :max images uploaded',
+    'compress_note'        => 'Images will be automatically compressed to a maximum width of 1600 pixels.',
+    'not_enabled'          => 'Advertisement is not enabled for your account.',
+    'updated_successfully' => 'Advertisement settings updated successfully.',
+    'ad_page_title'        => 'Sponsored Content',
+    'ad_label'             => 'Sponsored',
+    'ad_closes_in'         => 'Ad closes in :seconds second(s)',
+    'ad_closes_in_template' => 'Ad closes in :seconds second(s)',
+    'ad_impressions'       => 'Impressions per Image',
+  ],
+
   'save' => 'Save',
 
   'e_card' => [

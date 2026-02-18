@@ -12,6 +12,7 @@ use Laracasts\Flash\Flash;
 use App\Enums\RedirectLinkTypeEnum;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
+use App\Http\Controllers\SalesAdvertiseController;
 use Illuminate\Support\Facades\Log;
 
 class ClientRedirectLinkController extends Controller
@@ -338,6 +339,15 @@ class ClientRedirectLinkController extends Controller
       // STEP 3c: Validate and redirect to destination
       if (!filter_var($uri->redirect_link, FILTER_VALIDATE_URL)) {
         abort(404);
+      }
+
+      // STEP 3c.1: Show interstitial ad if the assigned salesman has active ads
+      if ($uri->assigned_id) {
+        $adController = new SalesAdvertiseController();
+        $adView = $adController->showAdBeforeRedirect((int) $uri->assigned_id, $uri->redirect_link);
+        if ($adView !== null) {
+          return $adView;
+        }
       }
 
       return redirect()->away($uri->redirect_link);
