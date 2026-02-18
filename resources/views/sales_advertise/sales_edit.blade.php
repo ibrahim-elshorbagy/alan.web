@@ -46,7 +46,7 @@
               <div class="d-flex flex-wrap gap-3">
                 @foreach($images as $idx => $imgPath)
                 <div class="position-relative" id="img-wrap-{{ $idx }}">
-                  <img src="{{ asset($imgPath) }}" alt="" style="width:120px;height:90px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">
+                  <img src="{{ asset($imgPath) }}" alt="" style="width:90px;height:160px;object-fit:cover;border-radius:6px;border:1px solid #ddd;display:block;">
                   <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 px-1" style="line-height:1.2;" onclick="markForDelete({{ $idx }}, this)">
                     <i class="fa-solid fa-times"></i>
                   </button>
@@ -112,9 +112,14 @@
 
   // Limit file input to remaining slots
   document.getElementById('imageInput') && document.getElementById('imageInput').addEventListener('change', function() {
-    var remaining = {{ $remaining ?? 0 }};
+    var remaining = {
+      {
+        $remaining ? ? 0
+      }
+    };
     if (this.files.length > remaining) {
-      alert('{{ __('messages.sales_advertise.max_images_alert') }}'.replace(':max', remaining));
+      alert('{{ __('
+        messages.sales_advertise.max_images_alert ') }}'.replace(':max', remaining));
       this.value = '';
     }
   });

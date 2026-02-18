@@ -1938,7 +1938,7 @@ return [
     'max_images_reached'   => 'Maximum of 5 images reached. Please delete one to add more.',
     'max_images_alert'     => 'You can only upload :max more image(s).',
     'images_count'         => ':count of :max images uploaded',
-    'compress_note'        => 'Images will be automatically compressed to a maximum width of 1600 pixels.',
+    'compress_note' => 'Images will be automatically resized to 1080×1920 pixels.',
     'not_enabled'          => 'Advertisement is not enabled for your account.',
     'updated_successfully' => 'Advertisement settings updated successfully.',
     'ad_page_title'        => 'Sponsored Content',
