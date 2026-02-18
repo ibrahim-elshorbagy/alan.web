@@ -6,8 +6,8 @@ return [
   'have_subscription' => 'لديك اشتراك؟',
   'please_login' => 'يرجى تسجيل الدخول',
 
-  'sold_by' => 'المندوب:',
-  'contact_sales_rep' => 'تواصل مع مندوب المبيعات',
+  'sold_by' => 'وكالة التسويق',
+  'contact_sales_rep' => 'تواصل مع وكيل التسويق',
 
   'images' => "الصور",
   'cannot_delete_user_with_active_vcard_or_redirect_link' => 'لا يمكن حذف الحساب الذي لديه بطاقة vCard  نشطة أو رابط إعادة توجيه  ',
@@ -207,7 +207,7 @@ return [
   'by_signing_up_you_agree_to_our' => 'بتسجيلك فإنك توافق على',
   'type_in_script' => 'اكتب كود js داخل الوسم',
   'extra_scripts' => 'نصوص إضافية',
-  'admins' => 'المدراء والمندوبين',
+  'admins' => 'المدراء والتسويق',
   'subscriber' => 'مشتركي النشرة الاخبارية',
   'email_not_found' => 'لم نتمكن من العثور على مستخدم بهذا البريد الإلكتروني',
   'product_details' => 'تفاصيل طلب المنتج',
