@@ -13,6 +13,24 @@
     min-height: 100vh;
   }
 
+  /* Top progress bar */
+  .promo-top-bar-track {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    z-index: 9999;
+  }
+
+  .promo-top-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    transition: none;
+  }
+
   .promo-wrapper {
     min-height: 100vh;
     display: flex;
@@ -20,6 +38,8 @@
     align-items: center;
     justify-content: center;
     padding: 16px;
+    padding-top: 21px;
+    /* offset for top bar */
   }
 
   .promo-badge {
@@ -66,54 +86,16 @@
     display: block;
   }
 
-  .promo-footer {
-    padding: 18px 22px 20px;
-    background: #fff;
-  }
-
-  .timer-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-
-  .timer-text {
-    font-size: 0.9rem;
-    color: #4a5568;
-    font-weight: 500;
-  }
-
-  .timer-badge {
-    background: #e53e3e;
-    color: #fff;
-    border-radius: 20px;
-    padding: 3px 13px;
-    font-size: 0.88rem;
-    font-weight: 700;
-    min-width: 36px;
-    text-align: center;
-  }
-
-  .promo-bar-track {
-    height: 6px;
-    border-radius: 4px;
-    background: #e2e8f0;
-    overflow: hidden;
-  }
-
-  .promo-bar-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    border-radius: 4px;
-    transition: none;
-  }
-
 </style>
 @endpush
 
 @section('content')
+
+{{-- Top progress bar --}}
+<div class="promo-top-bar-track">
+  <div class="promo-top-bar-fill" id="promoBar"></div>
+</div>
+
 <div class="promo-wrapper" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 
   {{-- Label --}}
@@ -127,18 +109,6 @@
     <div class="promo-photo-box">
       <img src="{{ $imageUrl }}" alt="" class="promo-photo" loading="eager">
     </div>
-
-    <div class="promo-footer">
-      <div class="timer-row">
-        <span class="timer-text" id="timerText">
-          {{ __('messages.sales_advertise.ad_closes_in', ['seconds' => $duration]) }}
-        </span>
-        <span class="timer-badge" id="timerBadge">{{ $duration }}</span>
-      </div>
-      <div class="promo-bar-track">
-        <div class="promo-bar-fill" id="promoBar"></div>
-      </div>
-    </div>
   </div>
 
 </div>
@@ -148,24 +118,16 @@
 <script>
   var promoDuration = @json($duration);
   var promoDestination = @json($destinationUrl);
-  var promoTemplate = @json(__('messages.sales_advertise.ad_closes_in_template'));
 
   (function() {
     var elapsed = 0;
     var interval = 50;
-
     var bar = document.getElementById('promoBar');
-    var badge = document.getElementById('timerBadge');
-    var text = document.getElementById('timerText');
 
     var timer = setInterval(function() {
       elapsed += interval;
       var pct = Math.min((elapsed / (promoDuration * 1000)) * 100, 100);
-      var remaining = Math.max(Math.ceil((promoDuration * 1000 - elapsed) / 1000), 0);
-
       bar.style.width = pct + '%';
-      badge.textContent = remaining;
-      text.textContent = promoTemplate.replace(':seconds', remaining);
 
       if (elapsed >= promoDuration * 1000) {
         clearInterval(timer);

@@ -68,23 +68,37 @@
                 </select>
               </div>
 
-              {{-- Existing images --}}
-              @php $images = $setting->images ?? []; @endphp
+              {{-- Existing images + impressions merged --}}
+              @php
+              $images = $setting->images ?? [];
+              $impressions = $setting->impressions ?? [];
+              @endphp
               @if(count($images))
               <div class="mb-4">
-                <label class="form-label fw-bold">{{ __('messages.sales_advertise.current_images') }}</label>
-                <div class="d-flex flex-wrap gap-3" id="existingImages">
+                <label class="form-label fw-bold">
+                  {{ __('messages.sales_advertise.current_images') }}
+                  <span class="text-muted small ms-2">
+                    <i class="fa-solid fa-chart-bar me-1"></i>{{ __('messages.sales_advertise.ad_impressions') }}
+                  </span>
+                </label>
+                <div class="d-flex flex-wrap gap-3 mt-2" id="existingImages">
                   @foreach($images as $idx => $imgPath)
-                  <div class="position-relative" id="img-wrap-{{ $idx }}">
-                    <img src="{{ asset($imgPath) }}" alt="" style="width:120px;height:90px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">
+                  <div class="position-relative text-center" id="img-wrap-{{ $idx }}">
+                    {{-- Portrait thumbnail --}}
+                    <img src="{{ asset($imgPath) }}" alt="" style="width:90px;height:160px;object-fit:cover;border-radius:6px;border:1px solid #ddd;display:block;">
+                    {{-- Delete button top-right --}}
                     <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 px-1" style="line-height:1.2;" onclick="markForDelete({{ $idx }}, this)">
                       <i class="fa-solid fa-times"></i>
                     </button>
+                    {{-- Impression badge bottom-center --}}
+                    <span class="badge bg-primary mt-1 d-inline-block">
+                      <i class="fa-solid fa-eye me-1"></i>{{ $impressions[$imgPath] ?? 0 }}
+                    </span>
                     <input type="hidden" name="delete_images[]" value="{{ $idx }}" id="del-{{ $idx }}" disabled>
                   </div>
                   @endforeach
                 </div>
-                <p class="text-muted small mt-1">
+                <p class="text-muted small mt-2">
                   {{ __('messages.sales_advertise.images_count', ['count' => count($images), 'max' => 5]) }}
                 </p>
               </div>
@@ -108,29 +122,6 @@
               @else
               <div class="alert alert-info mb-4">
                 {{ __('messages.sales_advertise.max_images_reached') }}
-              </div>
-              @endif
-
-              {{-- Impressions stats (admin only) --}}
-              @php $impressions = $setting->impressions ?? []; @endphp
-              @if(count($images))
-              <div class="mb-4">
-                <label class="form-label fw-bold">
-                  <i class="fa-solid fa-chart-bar me-1 text-primary"></i>
-                  {{ __('messages.sales_advertise.ad_impressions') }}
-                </label>
-                <div class="d-flex flex-wrap gap-3 mt-2">
-                  @foreach($images as $idx => $imgPath)
-                  <div class="text-center">
-                    <img src="{{ asset($imgPath) }}" alt="" style="width:100px;height:75px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">
-                    <div class="mt-1">
-                      <span class="badge bg-primary">
-                        <i class="fa-solid fa-eye me-1"></i>{{ $impressions[$imgPath] ?? 0 }}
-                      </span>
-                    </div>
-                  </div>
-                  @endforeach
-                </div>
               </div>
               @endif
 
@@ -174,7 +165,7 @@
   }
 
   // Limit file input to remaining slots
-  var remainingSlots = @json($remaining ?? 0);
+  var remainingSlots = @json($remaining ? ? 0);
   var maxAlert = @json(__('messages.sales_advertise.max_images_alert'));
   document.getElementById('imageInput') && document.getElementById('imageInput').addEventListener('change', function() {
     if (this.files.length > remainingSlots) {

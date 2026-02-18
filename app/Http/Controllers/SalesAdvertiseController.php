@@ -27,19 +27,6 @@ class SalesAdvertiseController extends Controller
 
     $setting = SalesAdvertiseSetting::firstOrNew(['user_id' => $userId]);
 
-    // Convert old indexed impressions to associative if needed
-    if ($setting->impressions && is_array($setting->impressions) && array_key_exists(0, $setting->impressions)) {
-      $images = $setting->images ?? [];
-      $newImpressions = [];
-      foreach ($setting->impressions as $idx => $count) {
-        if (isset($images[$idx])) {
-          $newImpressions[$images[$idx]] = $count;
-        }
-      }
-      $setting->impressions = $newImpressions;
-      $setting->save();
-    }
-
     return view('sales_advertise.edit', compact('salesUser', 'setting'));
   }
 
@@ -109,7 +96,6 @@ class SalesAdvertiseController extends Controller
     }
 
     $setting->images = $existingImages;
-    $setting->impressions = $impressions;
     $setting->save();
 
     Flash::success(__('messages.sales_advertise.updated_successfully'));
@@ -133,19 +119,6 @@ class SalesAdvertiseController extends Controller
     // If not enabled, deny
     if (!$setting || !$setting->is_enabled) {
       abort(403, __('messages.sales_advertise.not_enabled'));
-    }
-
-    // Convert old indexed impressions to associative if needed
-    if ($setting->impressions && is_array($setting->impressions) && array_key_exists(0, $setting->impressions)) {
-      $images = $setting->images ?? [];
-      $newImpressions = [];
-      foreach ($setting->impressions as $idx => $count) {
-        if (isset($images[$idx])) {
-          $newImpressions[$images[$idx]] = $count;
-        }
-      }
-      $setting->impressions = $newImpressions;
-      $setting->save();
     }
 
     return view('sales_advertise.sales_edit', compact('setting'));
@@ -215,7 +188,6 @@ class SalesAdvertiseController extends Controller
     }
 
     $setting->images = $existingImages;
-    $setting->impressions = $impressions;
     $setting->save();
 
     Flash::success(__('messages.sales_advertise.updated_successfully'));
@@ -252,18 +224,6 @@ class SalesAdvertiseController extends Controller
       return null;
     }
 
-    // Convert old indexed impressions to associative if needed
-    if ($setting->impressions && is_array($setting->impressions) && array_key_exists(0, $setting->impressions)) {
-      $newImpressions = [];
-      foreach ($setting->impressions as $idx => $count) {
-        if (isset($images[$idx])) {
-          $newImpressions[$images[$idx]] = $count;
-        }
-      }
-      $setting->impressions = $newImpressions;
-      $setting->save();
-    }
-
     // Determine which image to show (round-robin)
     $impressions  = $setting->impressions ?? [];
     $totalShown   = array_sum($impressions);
@@ -271,8 +231,7 @@ class SalesAdvertiseController extends Controller
     $nextIndex    = $totalShown % $imageCount;
 
     // Increment impression for this image
-    $imagePath = $images[$nextIndex];
-    $impressions[$imagePath] = ($impressions[$imagePath] ?? 0) + 1;
+    $impressions[$nextIndex] = ($impressions[$nextIndex] ?? 0) + 1;
     $setting->impressions    = $impressions;
     $setting->save();
 
