@@ -165,7 +165,7 @@
   }
 
   // Limit file input to remaining slots
-  var remainingSlots = @json($remaining ? ? 0);
+  var remainingSlots = @json($remaining ?? 0);
   var maxAlert = @json(__('messages.sales_advertise.max_images_alert'));
   document.getElementById('imageInput') && document.getElementById('imageInput').addEventListener('change', function() {
     if (this.files.length > remainingSlots) {
