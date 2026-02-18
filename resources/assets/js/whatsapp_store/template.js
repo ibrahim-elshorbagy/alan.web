@@ -609,6 +609,80 @@ listenClick(".pwa-close", function () {
     $(".pwa-support").addClass("d-none");
 });
 
+// PWA install prompt handling
+(function () {
+    function isAppInstalled() {
+        return (
+            (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+            window.navigator.standalone === true ||
+            localStorage.getItem('pwa_installed') === '1'
+        );
+    }
+
+    function hidePwaModal() {
+        var modal = document.getElementById('pwa-modal');
+        if (!modal) return;
+        modal.style.display = 'none';
+        modal.classList.add('d-none');
+        var parentContainer = modal.parentElement;
+        if (parentContainer && parentContainer.classList.contains('mt-0')) {
+            parentContainer.style.display = 'none';
+        }
+        document.body.classList.remove('modal-open');
+        document.querySelectorAll('.modal-backdrop').forEach(function (b) { b.remove(); });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var btn = document.getElementById('installPwaBtn');
+        var pwaModal = document.getElementById('pwa-modal');
+
+        if (!btn && !pwaModal) return;
+
+        if (isAppInstalled()) {
+            if (btn) btn.style.display = 'none';
+            hidePwaModal();
+            return;
+        }
+
+        var deferredPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', function (e) {
+            if (isAppInstalled()) return;
+            e.preventDefault();
+            try { e.stopImmediatePropagation(); } catch (err) { /* ignore */ }
+            deferredPrompt = e;
+            if (btn) btn.style.display = 'block';
+        }, true);
+
+        if (btn) {
+            btn.addEventListener('click', async function () {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                var choice = await deferredPrompt.userChoice;
+                if (choice && choice.outcome === 'accepted') {
+                    localStorage.setItem('pwa_installed', '1');
+                    btn.style.display = 'none';
+                    hidePwaModal();
+                }
+                deferredPrompt = null;
+            });
+        }
+
+        window.addEventListener('appinstalled', function () {
+            localStorage.setItem('pwa_installed', '1');
+            deferredPrompt = null;
+            if (btn) btn.style.display = 'none';
+            hidePwaModal();
+        });
+
+        window.addEventListener('load', function () {
+            if (isAppInstalled()) {
+                if (btn) btn.style.display = 'none';
+                hidePwaModal();
+            }
+        });
+    });
+})();
 listenSubmit('#newsLetterForm', function (event) {
     event.preventDefault();
 
