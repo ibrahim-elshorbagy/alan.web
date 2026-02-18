@@ -244,7 +244,7 @@ return [
   'add_new_card' => 'إضافة بطاقة جديدة',
   'hey' => 'مرحباً',
   'vcard_creat_card_detail' => 'أنشئ بطاقة vCard التجارية فوراً - لا حاجة لمهارات تقنية!',
-  'whatsapp_product_order' => 'طلب منتج واتساب',
+  'whatsapp_product_order' => 'طلبات الزبائن',
   'or_continue' => 'أو متابعة',
   'product_category' => 'فئة المنتج',
   'checking' => 'جارٍ التحقق',
