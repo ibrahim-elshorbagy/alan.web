@@ -138,7 +138,7 @@ class SalesAdvertiseController extends Controller
 
     $request->validate([
       'duration'  => 'required|integer|min:1|max:5',
-      'images.*'  => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:10240',
+      'images.*'  => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:500',
     ]);
 
     $setting->duration = (int) $request->input('duration', 3);
@@ -176,9 +176,9 @@ class SalesAdvertiseController extends Controller
         $img = Image::make($file);
 
         // Resize & crop to portrait reel format (1080×1920 / 9:16) with center-crop
-        $img->fit(1080, 1920, function ($constraint) {
-          $constraint->upsize();
-        });
+        // $img->fit(1080, 1920, function ($constraint) {
+        //   $constraint->upsize();
+        // });
 
         $filename = time() . '_' . uniqid() . '.jpg';
         $img->save($uploadDir . '/' . $filename, 80);
