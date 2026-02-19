@@ -40,56 +40,56 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  */
 class Enquiry extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
+  use HasFactory, InteractsWithMedia;
 
-    protected $table = 'enquiries';
+  protected $table = 'enquiries';
 
-    /**
-     * @var array
-     */
-    protected $fillable = [
-        'vcard_id',
-        'name',
-        'email',
-        'phone',
-        'message',
-    ];
+  /**
+   * @var array
+   */
+  protected $fillable = [
+    'vcard_id',
+    'name',
+    'email',
+    'phone',
+    'message',
+  ];
 
-    protected $casts = [
-        'vcard_id' => 'integer',
-        'name' => 'string',
-        'email' => 'string',
-        'phone' => 'double',
-        'message' => 'string',
-    ];
+  protected $casts = [
+    'vcard_id' => 'integer',
+    'name' => 'string',
+    'email' => 'string',
+    'phone' => 'double',
+    'message' => 'string',
+  ];
 
-    /**
-     * @var array
-     */
-    public static $rules = [
-        'name' => 'required|min:2',
-        'email' => 'required|email:filter',
-        'phone' => 'nullable|numeric|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-        'message' => 'required|min:2|max:255',
-    ];
+  /**
+   * @var array
+   */
+  public static $rules = [
+    'name' => 'required|min:2',
+    'email' => 'nullable|email:filter',
+    'phone' => 'nullable|numeric|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+    'message' => 'required|min:2|max:255',
+  ];
 
-    const ATTACHMENT = 'attachment';
+  const ATTACHMENT = 'attachment';
 
-    protected $appends = ['attachment'];
+  protected $appends = ['attachment'];
 
-    public function getattachmentAttribute(): string
-    {
-        /** @var Media $media */
-        $media = $this->getMedia(self::ATTACHMENT)->first();
-        if (!empty($media)) {
-            return $media->getFullUrl();
-        }
-
-        return false;
+  public function getattachmentAttribute(): string
+  {
+    /** @var Media $media */
+    $media = $this->getMedia(self::ATTACHMENT)->first();
+    if (!empty($media)) {
+      return $media->getFullUrl();
     }
 
-    public function vcard(): BelongsTo
-    {
-        return $this->belongsTo(Vcard::class);
-    }
+    return false;
+  }
+
+  public function vcard(): BelongsTo
+  {
+    return $this->belongsTo(Vcard::class);
+  }
 }

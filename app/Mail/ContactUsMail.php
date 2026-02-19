@@ -43,7 +43,7 @@ class ContactUsMail extends Mailable
     if ($this->template) {
       $content = parseEmailTemplate($this->template->email_template_content, [
         'name' => $this->input['name'],
-        'email' => $this->input['email'],
+        'email' => $this->input['email'] ?? null,
         'message' => $this->input['message'],
         'phone' => $this->input['phone'],
         'vcardname' => $this->input['vcard_name'],

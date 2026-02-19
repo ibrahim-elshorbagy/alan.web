@@ -793,7 +793,7 @@
                 </div>
                 <div class="mb-3">
                   <label class="form-label">
-                    {{ __('messages.user.email') }}<span class="text-danger">*</span></label>
+                    {{ __('messages.user.email') }}</label>
                   <div class="input-group mb-3">
                     <span class="input-group-text border-end-0"><i class="far fa-envelope"></i></span>
                     <input type="email" name="email" class="form-control border-start-0"
@@ -867,7 +867,7 @@
                 </div>
                 <div class="mb-3">
                   <label class="form-label">
-                    {{ __('messages.user.email') }}<span class="text-danger">*</span></label>
+                    {{ __('messages.user.email') }}</label>
                   <div class="input-group mb-3">
                     <span class="input-group-text border-start-0"><i class="far fa-envelope"></i></span>
                     <input type="email" name="email" class="form-control border-end-0 text-start"

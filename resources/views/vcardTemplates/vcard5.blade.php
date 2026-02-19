@@ -879,8 +879,7 @@
                             id="name" placeholder="{{ __('messages.form.your_name') }}">
                         </div>
 
-                        <label for="basic-url" class="form-label mb-0">{{ __('messages.user.email') }} <span
-                            class="text-danger">*</span></label>
+                        <label for="basic-url" class="form-label mb-0">{{ __('messages.user.email') }}</label>
                         <div class="col-12 mb-3 input-group">
                           <span class="input-group-text bg-white contact-input border-end-0" id="basic-addon1"><i
                               class="far fa-envelope"></i></span>
@@ -972,8 +971,7 @@
                             placeholder="{{ __('messages.form.your_name') }}">
                         </div>
 
-                        <label for="basic-url" class="form-label mb-0">{{ __('messages.user.email') }} <span
-                            class="text-danger">*</span></label>
+                        <label for="basic-url" class="form-label mb-0">{{ __('messages.user.email') }}</label>
                         <div class="col-12 mb-3 input-group">
                           <span class="input-group-text bg-white contact-input border-start-0" id="basic-addon1"><i
                               class="far fa-envelope"></i></span>

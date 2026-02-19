@@ -920,8 +920,7 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label class="form-label">{{ __('messages.user.email') }} <span
-                            class="text-danger">*</span></label>
+                        <label class="form-label">{{ __('messages.user.email') }}</label>
                         <div class="input-group mb-3">
                           <input type="email" name="email" id="email" class="form-control border-start-0"
                             placeholder="{{ __('messages.form.enter_email') }}">
@@ -1002,8 +1001,7 @@
                         </div>
                       </div>
                       <div class="mb-3">
-                        <label class="form-label">{{ __('messages.user.email') }} <span
-                            class="text-danger">*</span></label>
+                        <label class="form-label">{{ __('messages.user.email') }}</label>
                         <div class="input-group mb-3">
                           <input type="email" name="email" id="email"
                             class="form-control border-start-0 text-start"

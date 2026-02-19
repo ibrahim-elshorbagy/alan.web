@@ -1034,8 +1034,7 @@
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label class="text-white mb-1">{{ __('messages.form.your_email') }} <span
-                          class="text-danger">*</span></label>
+                      <label class="text-white mb-1">{{ __('messages.form.your_email') }}</label>
                       <input type="email" name="email" class="form-control"
                         placeholder="{{ __('messages.form.your_email') }}" />
                     </div>
@@ -1113,8 +1112,7 @@
                   </div>
                   <div class="col-sm-6">
                     <div class="mb-3">
-                      <label class="text-white mb-1">{{ __('messages.form.your_email') }} <span
-                          class="text-danger">*</span></label>
+                      <label class="text-white mb-1">{{ __('messages.form.your_email') }}</label>
                       <input type="email" name="email" class="form-control text-start"
                         placeholder="{{ __('messages.form.your_email') }}" />
                     </div>
