@@ -1057,6 +1057,13 @@
                                 return $a <=> $b;
                             })
                             ->toArray();
+                    } elseif ($weekFormat == 3) {
+                        $businessDaysTime = collect($businessDaysTime)
+                            ->sortKeysUsing(function ($a, $b) {
+                                $order = [6 => 1, 7 => 2, 1 => 3, 2 => 4, 3 => 5, 4 => 6, 5 => 7];
+                                return ($order[$a] ?? 99) <=> ($order[$b] ?? 99);
+                            })
+                            ->toArray();
                     }
                   @endphp
                   @foreach ($businessDaysTime as $key => $dayTime)
@@ -1108,6 +1115,13 @@
                                     return 1;
                                 }
                                 return $a <=> $b;
+                            })
+                            ->toArray();
+                    } elseif ($weekFormat == 3) {
+                        $businessDaysTime = collect($businessDaysTime)
+                            ->sortKeysUsing(function ($a, $b) {
+                                $order = [6 => 1, 7 => 2, 1 => 3, 2 => 4, 3 => 5, 4 => 6, 5 => 7];
+                                return ($order[$a] ?? 99) <=> ($order[$b] ?? 99);
                             })
                             ->toArray();
                     }

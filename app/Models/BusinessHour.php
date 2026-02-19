@@ -97,9 +97,13 @@ class BusinessHour extends Model
 
     const SUN_TO_SAT = 2;
 
+    const SAT_TO_FRI = 3;
+
+
     const WEEK_FORMAT_TYPE = [
         self::MON_TO_SUN => 'mon_to_sun',
         self::SUN_TO_SAT => 'sun_to_sat',
+        self::SAT_TO_FRI => 'sat_to_fri', 
     ];
 
     public function vcard(): BelongsTo

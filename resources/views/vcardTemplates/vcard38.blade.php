@@ -916,6 +916,30 @@
             <img src="{{ asset('assets/img/vcard38/right-line-img.png') }}" alt="img" />
           </div>
           <div class="row row-gap-30 justify-content-center" @if (getLanguage($vcard->default_language) == 'Arabic' || getLanguage($vcard->default_language) == 'Persian') dir="rtl" @endif>
+            @php
+              $weekFormat = $vcard->week_format ?? 1;
+
+              if ($weekFormat == 2) {
+                  $businessDaysTime = collect($businessDaysTime)
+                      ->sortKeysUsing(function ($a, $b) {
+                          if ($a == 7) {
+                              return -1;
+                          } // Sunday first
+                          if ($b == 7) {
+                              return 1;
+                          }
+                          return $a <=> $b;
+                      })
+                      ->toArray();
+              } elseif ($weekFormat == 3) {
+                  $businessDaysTime = collect($businessDaysTime)
+                      ->sortKeysUsing(function ($a, $b) {
+                          $order = [6 => 1, 7 => 2, 1 => 3, 2 => 4, 3 => 5, 4 => 6, 5 => 7];
+                          return ($order[$a] ?? 99) <=> ($order[$b] ?? 99);
+                      })
+                      ->toArray();
+              }
+            @endphp
             @foreach ($businessDaysTime as $key => $dayTime)
               <div class="col-sm-6">
                 <div class="contact-box">

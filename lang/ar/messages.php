@@ -2096,6 +2096,7 @@ return [
   'week_format_type' => [
     'mon_to_sun' => 'الاثنين إلى الأحد',
     'sun_to_sat' => 'الأحد إلى السبت',
+    'sat_to_fri' => 'السبت الى الجمعة',  
     'week_format_type' => 'نوع تنسيق الأسبوع',
   ],
 

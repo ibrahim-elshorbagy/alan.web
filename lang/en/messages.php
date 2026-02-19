@@ -2099,6 +2099,7 @@ return [
   'week_format_type' => [
     'mon_to_sun' => 'Monday To Sunday',
     'sun_to_sat' => 'Sunday To Saturday',
+    'sat_to_fri' => 'Saturday To Friday',
     'week_format_type' => 'Week Format Type',
   ],
 
