@@ -160,7 +160,6 @@
   .floating-save-bar {
     position: fixed;
     bottom: 24px;
-    right: 24px;
     z-index: 1050;
     background: linear-gradient(135deg, #0d6efd, #0a58ca);
     color: #fff;
