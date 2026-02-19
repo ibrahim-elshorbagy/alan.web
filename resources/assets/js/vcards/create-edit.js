@@ -202,8 +202,10 @@ function loadVcardCreateEdit() {
     }
 
     listenClick("#vcardSaveBtn", function () {
-        let editor_content_1 = quillVcardDescription.root.innerHTML;
-        $("#vcardDescriptionData").val(editor_content_1);
+        if (typeof quillVcardDescription !== 'undefined') {
+            let editor_content_1 = quillVcardDescription.root.innerHTML;
+            $("#vcardDescriptionData").val(editor_content_1);
+        }
     });
 
     $('select[name^="endTimes"]').each(function () {

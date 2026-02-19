@@ -24,7 +24,7 @@
               <a href="javascript:void(0)" id="generateAiServiceDescriptionBtn"
                 class="text-primary text-decoration-none fw-semibold d-inline-flex align-items-center gap-2 me-3">
                 <i class="bi bi-stars"></i>
-                {{ __('messages.vcard.generate_description_with_ai') }}
+                {{ __('messages.vcard.generate_vcard_service_description_with_ai') }}
               </a>
             </div>
             {{ Form::textarea('description', null, ['class' => 'form-control', 'id' => 'editDescription', 'placeholder' => __('messages.form.short_description'), 'rows' => '5', 'required']) }}

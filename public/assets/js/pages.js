@@ -44944,8 +44944,10 @@ function loadVcardCreateEdit() {
     quillVcardDescription.root.innerHTML = element.value;
   }
   listenClick("#vcardSaveBtn", function () {
-    var editor_content_1 = quillVcardDescription.root.innerHTML;
-    $("#vcardDescriptionData").val(editor_content_1);
+    if (typeof quillVcardDescription !== 'undefined') {
+      var editor_content_1 = quillVcardDescription.root.innerHTML;
+      $("#vcardDescriptionData").val(editor_content_1);
+    }
   });
   $('select[name^="endTimes"]').each(function () {
     var selectedIndex = $(this)[0].selectedIndex;

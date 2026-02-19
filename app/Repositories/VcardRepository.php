@@ -70,7 +70,10 @@ class VcardRepository extends BaseRepository
       if (isset($input['url_alias'])) {
         $input['url_alias'] = str_replace(' ', '-', $input['url_alias']);
       }
-      $subscription = getCurrentSubscription();
+      // Auto-generate vcard name from url_alias if not provided
+      if (empty($input['name']) && !empty($input['url_alias'])) {
+        $input['name'] = $input['url_alias'];
+      }
       if ($subscription->plan) {
         $input['template_id'] = $subscription->plan->templates->first()->id;
       }
@@ -163,6 +166,10 @@ class VcardRepository extends BaseRepository
       DB::beginTransaction();
       if (isset($input['url_alias'])) {
         $input['url_alias'] = str_replace(' ', '-', $input['url_alias']);
+      }
+      // Auto-generate vcard name from url_alias if not provided
+      if (empty($input['name']) && !empty($input['url_alias'])) {
+        $input['name'] = $input['url_alias'];
       }
       // if (isset($input['phone'])) {
       //     $input['phone'] = str_replace([' ', '-'], '', $input['phone']);
@@ -1007,6 +1014,10 @@ class VcardRepository extends BaseRepository
       DB::beginTransaction();
       if (isset($input['url_alias'])) {
         $input['url_alias'] = str_replace(' ', '-', $input['url_alias']);
+      }
+      // Auto-generate vcard name from url_alias if not provided
+      if (empty($input['name']) && !empty($input['url_alias'])) {
+        $input['name'] = $input['url_alias'];
       }
 
       $vcard->update($input);

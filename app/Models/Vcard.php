@@ -272,7 +272,7 @@ class Vcard extends Model implements HasMedia
    */
   public static $rules = [
     'url_alias' => 'string|min:6|max:100|unique:vcards,url_alias',
-    'name' => 'string|min:2',
+    'name' => 'nullable|string|min:2',
     'occupation' => 'nullable|string',
     'first_name' => 'string|min:2',
     'description' => 'nullable|string',
