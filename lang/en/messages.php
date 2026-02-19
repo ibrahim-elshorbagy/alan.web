@@ -1114,6 +1114,7 @@ return [
     'fri' => 'Friday',
     'sat' => 'Saturday',
     'sun' => 'Sunday',
+    'copy_to_all' => 'Copy to all',
   ],
   'font' => [
     'fonts' => 'Fonts',
