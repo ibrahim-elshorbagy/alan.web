@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
+  <script>window._pwaPrompt = null; window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); window._pwaPrompt = e; });</script>
   @if (checkFeature('seo') && $whatsappStore->site_title && $whatsappStore->home_title)
     <title>{{ $whatsappStore->home_title }} | {{ $whatsappStore->site_title }}</title>
   @else
