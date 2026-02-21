@@ -646,31 +646,41 @@ listenClick(".pwa-close", function () {
 
         var deferredPrompt = null;
 
+        // If beforeinstallprompt was captured early (in <head>), use it now
+        if (window._pwaPrompt) {
+            deferredPrompt = window._pwaPrompt;
+            if (btn) btn.style.display = 'block';
+        }
+
         window.addEventListener('beforeinstallprompt', function (e) {
             if (isAppInstalled()) return;
             e.preventDefault();
             try { e.stopImmediatePropagation(); } catch (err) { /* ignore */ }
             deferredPrompt = e;
+            window._pwaPrompt = e;
             if (btn) btn.style.display = 'block';
         }, true);
 
         if (btn) {
             btn.addEventListener('click', async function () {
-                if (!deferredPrompt) return;
-                deferredPrompt.prompt();
-                var choice = await deferredPrompt.userChoice;
+                var activePrompt = deferredPrompt || window._pwaPrompt;
+                if (!activePrompt) return;
+                activePrompt.prompt();
+                var choice = await activePrompt.userChoice;
                 if (choice && choice.outcome === 'accepted') {
                     localStorage.setItem('pwa_installed', '1');
                     btn.style.display = 'none';
                     hidePwaModal();
                 }
                 deferredPrompt = null;
+                window._pwaPrompt = null;
             });
         }
 
         window.addEventListener('appinstalled', function () {
             localStorage.setItem('pwa_installed', '1');
             deferredPrompt = null;
+            window._pwaPrompt = null;
             if (btn) btn.style.display = 'none';
             hidePwaModal();
         });

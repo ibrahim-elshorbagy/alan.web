@@ -433,6 +433,12 @@ listenClick(".pwa-close", function () {
       return;
     }
     var deferredPrompt = null;
+
+    // If beforeinstallprompt was captured early (in <head>), use it now
+    if (window._pwaPrompt) {
+      deferredPrompt = window._pwaPrompt;
+      if (btn) btn.style.display = 'block';
+    }
     window.addEventListener('beforeinstallprompt', function (e) {
       if (isAppInstalled()) return;
       e.preventDefault();
@@ -440,24 +446,26 @@ listenClick(".pwa-close", function () {
         e.stopImmediatePropagation();
       } catch (err) {/* ignore */}
       deferredPrompt = e;
+      window._pwaPrompt = e;
       if (btn) btn.style.display = 'block';
     }, true);
     if (btn) {
       btn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var choice;
+        var activePrompt, choice;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              if (deferredPrompt) {
-                _context.next = 2;
+              activePrompt = deferredPrompt || window._pwaPrompt;
+              if (activePrompt) {
+                _context.next = 3;
                 break;
               }
               return _context.abrupt("return");
-            case 2:
-              deferredPrompt.prompt();
-              _context.next = 5;
-              return deferredPrompt.userChoice;
-            case 5:
+            case 3:
+              activePrompt.prompt();
+              _context.next = 6;
+              return activePrompt.userChoice;
+            case 6:
               choice = _context.sent;
               if (choice && choice.outcome === 'accepted') {
                 localStorage.setItem('pwa_installed', '1');
@@ -465,7 +473,8 @@ listenClick(".pwa-close", function () {
                 hidePwaModal();
               }
               deferredPrompt = null;
-            case 8:
+              window._pwaPrompt = null;
+            case 10:
             case "end":
               return _context.stop();
           }
@@ -475,6 +484,7 @@ listenClick(".pwa-close", function () {
     window.addEventListener('appinstalled', function () {
       localStorage.setItem('pwa_installed', '1');
       deferredPrompt = null;
+      window._pwaPrompt = null;
       if (btn) btn.style.display = 'none';
       hidePwaModal();
     });
