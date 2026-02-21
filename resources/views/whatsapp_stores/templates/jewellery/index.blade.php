@@ -3,7 +3,6 @@
 
 <head>
   <meta charset="UTF-8" />
-  <script>window._pwaPrompt = null; window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); window._pwaPrompt = e; });</script>
 
   @if (checkFeature('seo') && $whatsappStore->site_title && $whatsappStore->home_title)
     <title>{{ $whatsappStore->home_title }} | {{ $whatsappStore->site_title }}</title>
@@ -27,7 +26,7 @@
   <!-- PWA  -->
   <meta name="theme-color" content="#6777ef" />
   <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
-  <link rel="manifest" href="{{ route('whatsapp.store.manifest', $whatsappStore->url_alias) }}">
+  <link rel="manifest" href="{{ asset('pwa/1.json') }}">
 
   <link href="{{ asset('front/css/bootstrap.min.css') }}" rel="stylesheet">
   {{-- google Font --}}
@@ -63,17 +62,14 @@
       .fat {
         font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
       }
-
     @endif
 
     @if ($whatsappStore->font_size)
       div>h4 {
-        font-size:
-          {{ $whatsappStore->font_size }}
-          px !important;
+        font-size: {{ $whatsappStore->font_size }}px !important;
       }
-
     @endif
+
     @if ($whatsappStore->custom_css)
       {!! $whatsappStore->custom_css !!}
     @endif
@@ -82,10 +78,10 @@
 </head>
 
 <body>
-  <div class="main-content mx-auto w-100 overflow-hidden d-flex flex-column justify-content-between" {{ getLocalLanguage() == 'ar' || getLocalLanguage() == 'fa' ? 'rtl' : '' }}" @if (
-    getLanguage($whatsappStore->default_language) == 'Arabic' ||
-    getLanguage($whatsappStore->default_language) == 'Persian'
-  ) dir="rtl" @endif>
+  <div
+    class="main-content mx-auto w-100 overflow-hidden d-flex flex-column justify-content-between"{{ getLocalLanguage() == 'ar' || getLocalLanguage() == 'fa' ? 'rtl' : '' }}"
+    @if (getLanguage($whatsappStore->default_language) == 'Arabic' ||
+            getLanguage($whatsappStore->default_language) == 'Persian') dir="rtl" @endif>
     <div>
       <nav class="navbar navbar-expand-lg px-50 position-relative">
         <div class="container-fluid header">
@@ -109,8 +105,8 @@
                 @endif
                 {{ strtoupper(getLanguageIsoCode($whatsappStore->default_language) ?? 'en') }}
               </button>
-              <svg xmlns="http://www.w3.org/2000/svg" width="25" class="dropdown-arrow" height="26" viewBox="0 0 25 26"
-                fill="none">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" class="dropdown-arrow" height="26"
+                viewBox="0 0 25 26" fill="none">
                 <path fill-rule="evenodd" clip-rule="evenodd"
                   d="M5.97382 9.28803C5.78611 9.47579 5.68066 9.73042 5.68066 9.99591C5.68066 10.2614 5.78611 10.516 5.97382 10.7038L11.9813 16.7113C12.1691 16.899 12.4237 17.0045 12.6892 17.0045C12.9547 17.0045 13.2093 16.899 13.3971 16.7113L19.4046 10.7038C19.587 10.515 19.6879 10.262 19.6856 9.99952C19.6834 9.73699 19.5781 9.48586 19.3924 9.30022C19.2068 9.11458 18.9557 9.00928 18.6931 9.007C18.4306 9.00472 18.1777 9.10564 17.9888 9.28803L12.6892 14.5877L7.38959 9.28803C7.20183 9.10032 6.9472 8.99487 6.6817 8.99487C6.41621 8.99487 6.16158 9.10032 5.97382 9.28803Z"
                   fill="black" />
@@ -121,8 +117,8 @@
                     <a class="dropdown-item" href="javascript:void(0)" id="languageName"
                       data-name="{{ $language->iso_code }}">
                       @if (array_key_exists($language->iso_code, \App\Models\User::FLAG))
-                        <img class="flag" alt="flag" src="{{ asset(\App\Models\User::FLAG[$language->iso_code]) }} "
-                          loading="lazy" />
+                        <img class="flag" alt="flag"
+                          src="{{ asset(\App\Models\User::FLAG[$language->iso_code]) }} " loading="lazy" />
                       @else
                         @if (count($language->media) != 0)
                           <img src="{{ $language->image_url }}" class="me-1" loading="lazy" />
@@ -175,18 +171,19 @@
           </div>
         @else
           <div class="banner-img">
-            <img src="{{ $whatsappStore->cover_url }}" class="w-100 h-100 object-fit-cover" alt="banner" loading="lazy" />
+            <img src="{{ $whatsappStore->cover_url }}" class="w-100 h-100 object-fit-cover" alt="banner"
+              loading="lazy" />
           </div>
         @endif
       </div>
       <div class="category-section px-50 pt-30 position-relative mb-30">
         <div class="position-absolute vector-all vector-1">
-          <img src="{{ asset('assets/img/whatsapp_stores/jewellery/vector-1.png') }}" alt="images" class="w-100" />
+          <img src="{{ asset('assets/img/whatsapp_stores/jewellery/vector-1.png') }}" alt="images"
+            class="w-100" />
         </div>
         <div class="section-heading mb-30">
           <h2 class="position-relative mb-0 text-center">
-            {{ __('messages.whatsapp_stores_templates.choos_your_category') }}
-          </h2>
+            {{ __('messages.whatsapp_stores_templates.choos_your_category') }}</h2>
         </div>
 
         <div class="px-70px pb-3">
@@ -211,15 +208,15 @@
           @if ($whatsappStore->categories->count() == 0)
             <div class="text-center mb-5 mt-3">
               <h3 class="fs-20 fw-6 mb-0 ">
-                {{ __('messages.whatsapp_stores_templates.category_not_found') }}
-              </h3>
+                {{ __('messages.whatsapp_stores_templates.category_not_found') }}</h3>
             </div>
           @endif
         </div>
       </div>
       <div class="product-section px-50 pt-30 position-relative">
         <div class="position-absolute vector-all vector-2">
-          <img src="{{ asset('assets/img/whatsapp_stores/jewellery/vector-2.png') }}" alt="images" class="w-100" />
+          <img src="{{ asset('assets/img/whatsapp_stores/jewellery/vector-2.png') }}" alt="images"
+            class="w-100" />
         </div>
         <div class="section-heading mb-30">
           <h2 class="mb-0 text-center">{{ __('messages.whatsapp_stores_templates.choose_your_product') }}</h2>
@@ -239,17 +236,20 @@
                   <div class="d-flex flex-column h-100 justify-content-between">
                     <div>
                       <input type="hidden" value="{{ $product->category->name }}" class="product-category">
-                      <a href="{{ route('whatsapp.store.product.details', [$whatsappStore->url_alias, $product->id]) }}">
+                      <a
+                        href="{{ route('whatsapp.store.product.details', [$whatsappStore->url_alias, $product->id]) }}">
                         <h6 class="fs-20 text-black fw-normal mb-10 pt-2 product-name">{{ $product->name }}</h6>
                       </a>
-                      <a href="{{ route('whatsapp.store.product.details', [$whatsappStore->url_alias, $product->id]) }}">
+                      <a
+                        href="{{ route('whatsapp.store.product.details', [$whatsappStore->url_alias, $product->id]) }}">
                         <p class="fs-16 fw-normal text-gray-100 lh-sm product-category">
                           {{ $product->category->name }}
                         </p>
                       </a>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-auto">
-                      <a href="{{ route('whatsapp.store.product.details', [$whatsappStore->url_alias, $product->id]) }}">
+                      <a
+                        href="{{ route('whatsapp.store.product.details', [$whatsappStore->url_alias, $product->id]) }}">
                         <h4 class="fs-20 text-black fw-6 mb-0">
                           <span
                             class="currency_icon selling_price">{{ currencyFormat($product->selling_price, 2, $product->currency->currency_code) }}</span>
@@ -264,7 +264,8 @@
                       <button
                         class="cart-btn d-flex justify-content-center align-items-center @if ($product->available_stock == 0) disabled @endif addToCartBtn"
                         data-id="{{ $product->id }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                          fill="none">
                           <path fill-rule="evenodd" clip-rule="evenodd"
                             d="M5.7103 6.00002H21.2921L19.8081 15H7.19428L5.7103 6.00002Z" stroke="white"
                             stroke-width="1.48438" stroke-linecap="round" stroke-linejoin="round" />
@@ -294,7 +295,8 @@
       </div>
       <div class="view-more-section position-relative px-50">
         <div class="position-absolute vector-all vector-3">
-          <img src="{{ asset('assets/img/whatsapp_stores/jewellery/vector-3.png') }}" alt="images" class="w-100" />
+          <img src="{{ asset('assets/img/whatsapp_stores/jewellery/vector-3.png') }}" alt="images"
+            class="w-100" />
         </div>
         @if ($whatsappStore->products->count() > 0)
           <div class="text-center mb-5">
@@ -302,7 +304,8 @@
               class="btn view-more-btn d-flex align-items-center justify-content-center mx-auto gap-20 fs-24 fw-5 position-relative">
               {{ __('messages.whatsapp_stores_templates.view_more') }}
               <span class="arrow-view d-flex justify-content-center align-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 24 18" fill="none">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 24 18"
+                  fill="none">
                   <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M12.1844 0.475262C12.304 0.337965 12.4495 0.225601 12.6126 0.144599C12.7757 0.063596 12.9532 0.0155439 13.1349 0.00319103C13.3166 -0.00916181 13.4989 0.0144274 13.6715 0.0726083C13.8441 0.130789 14.0035 0.22242 14.1406 0.342261L22.6157 7.7312C22.7646 7.86124 22.884 8.02166 22.9659 8.20168C23.0477 8.3817 23.09 8.57714 23.09 8.77488C23.09 8.97262 23.0477 9.16807 22.9659 9.34809C22.884 9.52811 22.7646 9.68853 22.6157 9.81857L14.1406 17.2075C14.0042 17.3314 13.8444 17.4269 13.6707 17.4883C13.497 17.5497 13.3127 17.5758 13.1288 17.5652C12.9448 17.5545 12.7648 17.5072 12.5993 17.4262C12.4339 17.3451 12.2862 17.2318 12.1651 17.0929C12.0439 16.9541 11.9517 16.7925 11.8938 16.6175C11.8358 16.4426 11.8134 16.2579 11.8277 16.0742C11.8421 15.8904 11.893 15.7114 11.9773 15.5476C12.0617 15.3838 12.178 15.2385 12.3192 15.1201L18.0087 10.1603H1.38543C1.01799 10.1603 0.665599 10.0143 0.405782 9.75452C0.145964 9.49471 0 9.14232 0 8.77488C0 8.40744 0.145964 8.05506 0.405782 7.79524C0.665599 7.53542 1.01799 7.38946 1.38543 7.38946H18.0068L12.3174 2.42963C12.0406 2.18806 11.8711 1.84648 11.8462 1.47999C11.8213 1.11349 11.9429 0.752096 12.1844 0.475262Z"
                     fill="#AE937D" />
@@ -326,25 +329,26 @@
                   $weekFormat = $whatsappStore->week_format ?? 1;
 
                   if ($weekFormat == 2) {
-                    $businessDaysTime = collect($businessDaysTime)
-                      ->sortKeysUsing(function ($a, $b) {
-                        if ($a == 7) {
-                          return -1;
-                        } // Sunday first
-                        if ($b == 7) {
-                          return 1;
-                        }
-                        return $a <=> $b;
-                      })
-                      ->toArray();
+                      $businessDaysTime = collect($businessDaysTime)
+                          ->sortKeysUsing(function ($a, $b) {
+                              if ($a == 7) {
+                                  return -1;
+                              } // Sunday first
+                              if ($b == 7) {
+                                  return 1;
+                              }
+                              return $a <=> $b;
+                          })
+                          ->toArray();
                   }
                 @endphp
                 @foreach ($businessDaysTime as $key => $dayTime)
                   <div class="col-xl-3 col-lg-4 col-md-6">
                     <div class="businesshour-item position-relative p-3 d-flex gap-3 align-items-center">
                       <div class="time-icons d-flex align-items-center justify-content-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time text-white"
-                          width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                          class="icon icon-tabler icon-tabler-calendar-time text-white" width="24" height="24"
+                          viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                           stroke-linecap="round" stroke-linejoin="round">
                           <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                           <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
@@ -386,11 +390,11 @@
                   $isShort = strpos($video->youtube_link, '/shorts/') !== false;
 
                   if ($isShort) {
-                    $embedParams = "autoplay=1&controls=0&loop=1&playlist={$videoId}&mute=1&modestbranding=1&rel=0";
-                    $modalParams = 'autoplay=1&controls=1&modestbranding=1&rel=0';
+                      $embedParams = "autoplay=1&controls=0&loop=1&playlist={$videoId}&mute=1&modestbranding=1&rel=0";
+                      $modalParams = 'autoplay=1&controls=1&modestbranding=1&rel=0';
                   } else {
-                    $embedParams = "autoplay=1&mute=1&loop=1&playlist={$videoId}&controls=0&modestbranding=0&showinfo=0&rel=0";
-                    $modalParams = 'autoplay=1&controls=1&modestbranding=1&showinfo=0&rel=0';
+                      $embedParams = "autoplay=1&mute=1&loop=1&playlist={$videoId}&controls=0&modestbranding=0&showinfo=0&rel=0";
+                      $modalParams = 'autoplay=1&controls=1&modestbranding=1&showinfo=0&rel=0';
                   }
                 @endphp
                 <div class="trending-video-slide horizontal-videos">
@@ -402,8 +406,8 @@
                     </iframe>
 
                     <!-- Invisible overlay div for click detection -->
-                    <div class="video-click-overlay" data-video-id="{{ $videoId }}" data-modal-params="{{ $modalParams }}"
-                      title="Click to enlarge video"></div>
+                    <div class="video-click-overlay" data-video-id="{{ $videoId }}"
+                      data-modal-params="{{ $modalParams }}" title="Click to enlarge video"></div>
                   </div>
                 </div>
               @endforeach
@@ -428,14 +432,13 @@
     @php
       $shareUrl = $whatsappStoreUrl;
     @endphp
-    <div class="btn-section cursor-pointer @if (
-      getLanguage($whatsappStore->default_language) == 'Arabic' ||
-      getLanguage($whatsappStore->default_language) == 'Persian'
-    ) rtl @endif">
+    <div class="btn-section cursor-pointer @if (getLanguage($whatsappStore->default_language) == 'Arabic' ||
+            getLanguage($whatsappStore->default_language) == 'Persian') rtl @endif">
       <div class="fixed-btn-section">
         @if (empty($whatsappStore->hide_stickybar))
           <div class="bars-btn whatsapp-store-bars-btn">
-            <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="25" height="25" viewBox="0 0 25 25" fill="none"
+              xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M15.4135 0.540405H22.4891C23.5721 0.540405 24.4602 1.42855 24.4602 2.51152V9.58713C24.4602 10.6773 23.5732 11.5582 22.4891 11.5582H15.4135C14.3223 11.5582 13.4424 10.6783 13.4424 9.58713V2.51152C13.4424 1.42746 14.3234 0.540405 15.4135 0.540405Z"
                 stroke="#ffffff" />
@@ -452,10 +455,8 @@
           </div>
         @endif
         <div class="sub-btn d-none">
-          <div class="sub-btn-div @if (
-            getLanguage($whatsappStore->default_language) == 'Arabic' ||
-            getLanguage($whatsappStore->default_language) == 'Persian'
-          ) sub-btn-div-left @endif">
+          <div class="sub-btn-div @if (getLanguage($whatsappStore->default_language) == 'Arabic' ||
+                  getLanguage($whatsappStore->default_language) == 'Persian') sub-btn-div-left @endif">
             @if (empty($whatsappStore->hide_stickybar))
               <div class="stickyIcon">
                 <button type="button"
@@ -465,15 +466,15 @@
                 @if (!empty($whatsappStore->enable_download_qr_code))
                   <div class="qr-code-image d-none">
                     @if (isset($customQrCode['applySetting']) && $customQrCode['applySetting'] == 1)
-                                {!! QrCode::color(
-                        $qrcodeColor['qrcodeColor']->red(),
-                        $qrcodeColor['qrcodeColor']->green(),
-                        $qrcodeColor['qrcodeColor']->blue(),
+                      {!! QrCode::color(
+                          $qrcodeColor['qrcodeColor']->red(),
+                          $qrcodeColor['qrcodeColor']->green(),
+                          $qrcodeColor['qrcodeColor']->blue(),
                       )->backgroundColor(
-                          $qrcodeColor['background_color']->red(),
-                          $qrcodeColor['background_color']->green(),
-                          $qrcodeColor['background_color']->blue(),
-                        )->style($customQrCode['style'])->eye($customQrCode['eye_style'])->size($whatsappStore->qr_code_download_size ?? 200)->format('svg')->generate($shareUrl) !!}
+                              $qrcodeColor['background_color']->red(),
+                              $qrcodeColor['background_color']->green(),
+                              $qrcodeColor['background_color']->blue(),
+                          )->style($customQrCode['style'])->eye($customQrCode['eye_style'])->size($whatsappStore->qr_code_download_size ?? 200)->format('svg')->generate($shareUrl) !!}
                     @else
                       {!! QrCode::size($whatsappStore->qr_code_download_size ?? 200)->format('svg')->generate($shareUrl) !!}
                     @endif
@@ -495,10 +496,8 @@
     {{-- share modal code --}}
     <div id="whatsapp-store-shareModel" class="modal fade" role="dialog" style="z-index: 9999;">
       <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
-        <div class="modal-content" @if (
-          getLanguage($whatsappStore->default_language) == 'Arabic' ||
-          getLanguage($whatsappStore->default_language) == 'Persian'
-        ) dir="rtl" @endif>
+        <div class="modal-content" @if (getLanguage($whatsappStore->default_language) == 'Arabic' ||
+                getLanguage($whatsappStore->default_language) == 'Persian') dir="rtl" @endif>
           <div class="">
             <div class="row align-items-center mt-3">
               <div class="col-10 text-center">
@@ -533,8 +532,7 @@
                 </div>
                 <div class="col-9 p-1">
                   <p class="align-items-center text-dark fw-bolder">
-                    {{ __('messages.social.Share_on_facebook') }}
-                  </p>
+                    {{ __('messages.social.Share_on_facebook') }}</p>
                 </div>
                 <div class="col-1 p-1">
                   <svg xmlns="http://www.w3.org/2000/svg" class="arrow" version="1.0" height="16px"
@@ -559,8 +557,7 @@
                 </div>
                 <div class="col-9 p-1">
                   <p class="align-items-center text-dark fw-bolder">
-                    {{ __('messages.social.Share_on_twitter') }}
-                  </p>
+                    {{ __('messages.social.Share_on_twitter') }}</p>
                 </div>
                 <div class="col-1 p-1">
                   <svg xmlns="http://www.w3.org/2000/svg" class="arrow" version="1.0" height="16px"
@@ -582,8 +579,7 @@
                 </div>
                 <div class="col-9 p-1">
                   <p class="align-items-center text-dark fw-bolder">
-                    {{ __('messages.social.Share_on_linkedin') }}
-                  </p>
+                    {{ __('messages.social.Share_on_linkedin') }}</p>
                 </div>
                 <div class="col-1 p-1">
                   <svg xmlns="http://www.w3.org/2000/svg" class="arrow" version="1.0" height="16px"
@@ -605,8 +601,7 @@
                 </div>
                 <div class="col-9 p-1">
                   <p class="align-items-center text-dark fw-bolder">
-                    {{ __('messages.social.Share_on_email') }}
-                  </p>
+                    {{ __('messages.social.Share_on_email') }}</p>
                 </div>
                 <div class="col-1 p-1">
                   <svg xmlns="http://www.w3.org/2000/svg" class="arrow" version="1.0" height="16px"
@@ -628,8 +623,7 @@
                 </div>
                 <div class="col-9 p-1">
                   <p class="align-items-center text-dark fw-bolder">
-                    {{ __('messages.social.Share_on_pinterest') }}
-                  </p>
+                    {{ __('messages.social.Share_on_pinterest') }}</p>
                 </div>
                 <div class="col-1 p-1">
                   <svg xmlns="http://www.w3.org/2000/svg" class="arrow" version="1.0" height="16px"
@@ -643,16 +637,15 @@
                 </div>
               </div>
             </a>
-            <a href="http://reddit.com/submit?url={{ $shareUrl }}&title={{ $whatsappStore->name }}" target="_blank"
-              class="text-decoration-none share" title="Reddit">
+            <a href="http://reddit.com/submit?url={{ $shareUrl }}&title={{ $whatsappStore->name }}"
+              target="_blank" class="text-decoration-none share" title="Reddit">
               <div class="row">
                 <div class="col-2">
                   <i class="fab fa-reddit fa-2x" style="color: #ff4500"></i>
                 </div>
                 <div class="col-9 p-1">
                   <p class="align-items-center text-dark fw-bolder">
-                    {{ __('messages.social.Share_on_reddit') }}
-                  </p>
+                    {{ __('messages.social.Share_on_reddit') }}</p>
                 </div>
                 <div class="col-1 p-1">
                   <svg xmlns="http://www.w3.org/2000/svg" class="arrow" version="1.0" height="16px"
@@ -674,8 +667,7 @@
                 </div>
                 <div class="col-9 p-1">
                   <p class="align-items-center text-dark fw-bolder">
-                    {{ __('messages.social.Share_on_whatsapp') }}
-                  </p>
+                    {{ __('messages.social.Share_on_whatsapp') }}</p>
                 </div>
                 <div class="col-1 p-1">
                   <svg xmlns="http://www.w3.org/2000/svg" class="arrow" version="1.0" height="16px"
@@ -693,9 +685,9 @@
               class="text-decoration-none share" title="Snapchat">
               <div class="row">
                 <div class="col-2">
-                  <svg width="30px" height="30px" viewBox="147.353 39.286 514.631 514.631" version="1.1" id="Layer_1"
-                    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
-                    fill="#000000">
+                  <svg width="30px" height="30px" viewBox="147.353 39.286 514.631 514.631" version="1.1"
+                    id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xml:space="preserve" fill="#000000">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
                     </g>
@@ -715,8 +707,7 @@
                 </div>
                 <div class="col-9 p-1">
                   <p class="align-items-center text-dark fw-bolder">
-                    {{ __('messages.social.Share_on_snapchat') }}
-                  </p>
+                    {{ __('messages.social.Share_on_snapchat') }}</p>
                 </div>
                 <div class="col-1 p-1">
                   <svg xmlns="http://www.w3.org/2000/svg" class="arrow" version="1.0" height="16px"
@@ -791,7 +782,7 @@
               <button id="installPwaBtn" class="pwa-install-button w-50 mb-1 btn">{{ __('messages.pwa.install') }}
               </button>
               <button
-                class="pwa-cancel-button w-50  pwa-close btn btn-secondary mb-1 {{ getLocalLanguage() == 'ar' || getLocalLanguage() == 'fa' ? 'me-2' : 'ms-2' }}">{{ __('messages.common.cancel') }}</button>
+                class= "pwa-cancel-button w-50  pwa-close btn btn-secondary mb-1 {{ getLocalLanguage() == 'ar' || getLocalLanguage() == 'fa' ? 'me-2' : 'ms-2' }}">{{ __('messages.common.cancel') }}</button>
             </div>
           </div>
         </div>
@@ -825,8 +816,8 @@
                   </a>
                 </li>
                 <li class="mb-2">
-                  <a href="{{ route('whatsapp.store.show-privacy-policy', $whatsappStore->url_alias) }}" target="_blank"
-                    class="text-decoration-none text-white footer-link-hover">
+                  <a href="{{ route('whatsapp.store.show-privacy-policy', $whatsappStore->url_alias) }}"
+                    target="_blank" class="text-decoration-none text-white footer-link-hover">
                     <i class="fas fa-shield-alt mx-2"></i>{{ __('messages.vcard.privacy_policy') }}
                   </a>
                 </li>
@@ -889,7 +880,7 @@
 <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
 <script type="text/javascript" src="{{ asset('assets/js/whatsapp_store_template.js') }}"></script>
 <script>
-  $(document).ready(function () {
+  $(document).ready(function() {
     $(".category-slider").slick({
       infinite: true,
       slidesToShow: 6,
@@ -900,41 +891,41 @@
       prevArrow: '<div class="prev-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="20" viewBox="0 0 10 20" fill="none"><path d="M8.01843 19.124L0.253456 10.7018C0.16129 10.6016 0.0961597 10.493 0.0580645 10.376C0.0193548 10.259 0 10.1337 0 10C0 9.86631 0.0193548 9.74098 0.0580645 9.62401C0.0961597 9.50704 0.16129 9.39842 0.253456 9.29815L8.01843 0.850923C8.23349 0.616974 8.50231 0.5 8.82489 0.5C9.14747 0.5 9.42396 0.62533 9.65438 0.875989C9.88479 1.12665 10 1.41909 10 1.7533C10 2.08751 9.88479 2.37995 9.65438 2.63061L2.88018 10L9.65438 17.3694C9.86943 17.6033 9.97696 17.8914 9.97696 18.2337C9.97696 18.5766 9.86175 18.8734 9.63134 19.124C9.40092 19.3747 9.1321 19.5 8.82489 19.5C8.51767 19.5 8.24885 19.3747 8.01843 19.124Z" fill="black"/></svg></div>',
       nextArrow: '<div class="next-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="20" viewBox="0 0 10 20" fill="none"><path d="M1.98157 19.124L9.74654 10.7018C9.83871 10.6016 9.90384 10.493 9.94194 10.376C9.98065 10.259 10 10.1337 10 10C10 9.86631 9.98065 9.74098 9.94194 9.62401C9.90384 9.50704 9.83871 9.39842 9.74654 9.29815L1.98157 0.850923C1.76651 0.616974 1.49769 0.5 1.17511 0.5C0.852534 0.5 0.576037 0.62533 0.345622 0.875989C0.115208 1.12665 0 1.41909 0 1.7533C0 2.08751 0.115208 2.37995 0.345622 2.63061L7.11982 10L0.345622 17.3694C0.130569 17.6033 0.0230408 17.8914 0.0230408 18.2337C0.0230408 18.5766 0.138248 18.8734 0.368663 19.124C0.599078 19.3747 0.867895 19.5 1.17511 19.5C1.48233 19.5 1.75115 19.3747 1.98157 19.124Z" fill="black"/></svg></div>',
       responsive: [{
-        breakpoint: 1400,
-        settings: {
-          slidesToShow: 5,
+          breakpoint: 1400,
+          settings: {
+            slidesToShow: 5,
+          },
         },
-      },
-      {
-        breakpoint: 1280,
-        settings: {
-          slidesToShow: 4,
+        {
+          breakpoint: 1280,
+          settings: {
+            slidesToShow: 4,
 
 
+          },
         },
-      },
-      {
-        breakpoint: 991,
-        settings: {
-          slidesToShow: 3,
+        {
+          breakpoint: 991,
+          settings: {
+            slidesToShow: 3,
+          },
         },
-      },
-      {
-        breakpoint: 767,
-        settings: {
-          slidesToShow: 2,
+        {
+          breakpoint: 767,
+          settings: {
+            slidesToShow: 2,
+          },
         },
-      },
-      {
-        breakpoint: 575,
-        settings: {
-          slidesToShow: 1,
-        },
-      }
+        {
+          breakpoint: 575,
+          settings: {
+            slidesToShow: 1,
+          },
+        }
       ],
     });
   });
-  $(document).ready(function () {
+  $(document).ready(function() {
     $(".banner-slider").slick({
       infinite: true,
       slidesToShow: 1,
@@ -944,31 +935,31 @@
       prevArrow: '<button class="slide-banner-arrow prev-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M0 6.99998C0 6.74907 0.0960374 6.49819 0.287709 6.3069L6.32224 0.287199C6.70612 -0.0957328 7.3285 -0.0957328 7.71221 0.287199C8.09593 0.669975 8.09593 1.29071 7.71221 1.67367L2.37252 6.99998L7.71203 12.3263C8.09574 12.7092 8.09574 13.3299 7.71203 13.7127C7.32831 14.0958 6.70593 14.0958 6.32206 13.7127L0.287522 7.69306C0.09582 7.50167 0 7.25079 0 6.99998Z" fill="currentColor" /></svg></button>',
       nextArrow: '<button class="slide-banner-arrow next-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M8 7.00002C8 7.25093 7.90396 7.50181 7.71229 7.6931L1.67776 13.7128C1.29388 14.0957 0.671503 14.0957 0.287787 13.7128C-0.095929 13.33 -0.095929 12.7093 0.287787 12.3263L5.62748 7.00002L0.287973 1.67369C-0.0957425 1.29076 -0.0957425 0.670084 0.287973 0.287339C0.67169 -0.0957785 1.29407 -0.0957785 1.67794 0.287339L7.71248 6.30694C7.90418 6.49833 8 6.74921 8 7.00002Z" fill="currentColor"/></svg></button>',
       responsive: [{
-        breakpoint: 1199,
-        settings: {
-          slidesToShow: 1,
+          breakpoint: 1199,
+          settings: {
+            slidesToShow: 1,
+          },
         },
-      },
-      {
-        breakpoint: 860,
-        settings: {
-          slidesToShow: 1,
+        {
+          breakpoint: 860,
+          settings: {
+            slidesToShow: 1,
+          },
         },
-      },
-      {
-        breakpoint: 575,
-        settings: {
-          slidesToShow: 1,
-          dots: false,
-          arrows: true,
+        {
+          breakpoint: 575,
+          settings: {
+            slidesToShow: 1,
+            dots: false,
+            arrows: true,
+          },
         },
-      },
       ],
     });
   });
 </script>
 <script>
-  $(document).ready(function () {
+  $(document).ready(function() {
     $('#trendingVideosSlider').slick({
       dots: false,
       infinite: true,
@@ -984,61 +975,61 @@
       prevArrow: '<button class="slide-trending-arrow prev-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M0 6.99998C0 6.74907 0.0960374 6.49819 0.287709 6.3069L6.32224 0.287199C6.70612 -0.0957328 7.3285 -0.0957328 7.71221 0.287199C8.09593 0.669975 8.09593 1.29071 7.71221 1.67367L2.37252 6.99998L7.71203 12.3263C8.09574 12.7092 8.09574 13.3299 7.71203 13.7127C7.32831 14.0958 6.70593 14.0958 6.32206 13.7127L0.287522 7.69306C0.09582 7.50167 0 7.25079 0 6.99998Z" fill="currentColor" /></svg></button>',
       nextArrow: '<button class="slide-trending-arrow next-arrow"><svg xmlns="http://www.w3.org/2000/svg" width="8" height="14" viewBox="0 0 8 14" fill="none"><path d="M8 7.00002C8 7.25093 7.90396 7.50181 7.71229 7.6931L1.67776 13.7128C1.29388 14.0957 0.671503 14.0957 0.287787 13.7128C-0.095929 13.33 -0.095929 12.7093 0.287787 12.3263L5.62748 7.00002L0.287973 1.67369C-0.0957425 1.29076 -0.0957425 0.670084 0.287973 0.287339C0.67169 -0.0957785 1.29407 -0.0957785 1.67794 0.287339L7.71248 6.30694C7.90418 6.49833 8 6.74921 8 7.00002Z" fill="currentColor"/></svg></button>',
       responsive: [{
-        breakpoint: 1200,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 1
+          breakpoint: 1200,
+          settings: {
+            slidesToShow: 4,
+            slidesToScroll: 1
+          }
+        },
+        {
+          breakpoint: 1024,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            centerMode: false
+          }
+        },
+        {
+          breakpoint: 768,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            centerMode: false
+          }
+        },
+        {
+          breakpoint: 650,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1,
+            centerMode: false
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            centerMode: true,
+            centerPadding: '40px'
+          }
+        },
+        {
+          breakpoint: 320,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            centerMode: true,
+            centerPadding: '40px'
+          }
         }
-      },
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          centerMode: false
-        }
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          centerMode: false
-        }
-      },
-      {
-        breakpoint: 650,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          centerMode: false
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          centerMode: true,
-          centerPadding: '40px'
-        }
-      },
-      {
-        breakpoint: 320,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          centerMode: true,
-          centerPadding: '40px'
-        }
-      }
       ]
     });
   });
 </script>
 <script>
-  $(document).ready(function () {
-    $('.video-click-overlay').on('click', function (e) {
+  $(document).ready(function() {
+    $('.video-click-overlay').on('click', function(e) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -1046,17 +1037,17 @@
       openVideoModal(videoId);
     });
 
-    $('.video-modal-close').on('click', function () {
+    $('.video-modal-close').on('click', function() {
       closeVideoModal();
     });
 
-    $('#videoModal').on('click', function (e) {
+    $('#videoModal').on('click', function(e) {
       if (e.target === this) {
         closeVideoModal();
       }
     });
 
-    $(document).on('keydown', function (e) {
+    $(document).on('keydown', function(e) {
       if (e.key === 'Escape') {
         closeVideoModal();
       }
@@ -1080,6 +1071,9 @@
   }
 </script>
 <script>
+  let deferredPrompt = null;
+</script>
+<script>
   let defaultCountryCodeValue = "{{ getSuperAdminSettingValue('default_country_code') }}"
 </script>
 <script>
@@ -1090,10 +1084,10 @@
 <script>
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/sw.js").then(
-      function (registration) {
+      function(registration) {
         console.log("Service Worker registered successfully:", registration);
       },
-      function (error) {
+      function(error) {
         console.log("Service Worker registration failed:", error);
       }
     );

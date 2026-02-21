@@ -1280,7 +1280,6 @@ Route::middleware(['freshInstall'])->group(function () {
   Route::get('whatsapp-store/{alias}/shipping-delivery', [WhatsappStoreController::class, 'showShippingDelivery'])->name('whatsapp.store.show-shipping-delivery')->middleware('language', 'whatsappStoreSubscription');
 
   Route::get('whatsapp-stores/getCookie', [WhatsappStoreController::class, 'getCookie'])->name('whatsapp.store.getCookie');
-  Route::get('whatsapp-store/{alias}/manifest.json', [WhatsappStoreController::class, 'manifest'])->name('whatsapp.store.manifest');
   Route::get('whatsapp-stores/language/{languageName}/{alias}', [WhatsappStoreController::class, 'language'])->name('whatsapp.store.LanguageChange');
 
   Route::post('subscribe-vcard', [VcardSubscribersController::class, 'store'])->name('subscribe.vcard');

@@ -3,7 +3,6 @@
 
 <head>
   <meta charset="UTF-8" />
-  <script>window._pwaPrompt=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window._pwaPrompt=e;});</script>
 
   @if (checkFeature('seo') && $whatsappStore->site_title && $whatsappStore->home_title)
     <title>{{ $whatsappStore->home_title }} | {{ $whatsappStore->site_title }}</title>
@@ -28,7 +27,7 @@
   <!-- PWA  -->
   <meta name="theme-color" content="#6777ef" />
   <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
-  <link rel="manifest" href="{{ route('whatsapp.store.manifest', $whatsappStore->url_alias) }}">
+  <link rel="manifest" href="{{ asset('pwa/1.json') }}">
 
   <link href="{{ asset('front/css/bootstrap.min.css') }}" rel="stylesheet">
   {{-- google Font --}}
@@ -886,6 +885,9 @@
 <script src="{{ mix('assets/js/custom/helpers.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/whatsapp_store_template.js') }}"></script>
 <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
+<script>
+  let deferredPrompt = null;
+</script>
 <script>
   $(document).ready(function() {
     $(".banner-slider").slick({

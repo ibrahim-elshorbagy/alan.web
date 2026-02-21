@@ -27,7 +27,7 @@
   <!-- PWA  -->
   <meta name="theme-color" content="#6777ef" />
   <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
-  <link rel="manifest" href="{{ route('whatsapp.store.manifest', \->url_alias) }}">
+  <link rel="manifest" href="{{ asset('pwa/1.json') }}">
 
   <link href="{{ asset('front/css/bootstrap.min.css') }}" rel="stylesheet">
   {{-- google Font --}}

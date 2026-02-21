@@ -614,7 +614,8 @@ listenClick(".pwa-close", function () {
     function isAppInstalled() {
         return (
             (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
-            window.navigator.standalone === true
+            window.navigator.standalone === true ||
+            localStorage.getItem('pwa_installed') === '1'
         );
     }
 
@@ -631,22 +632,6 @@ listenClick(".pwa-close", function () {
         document.querySelectorAll('.modal-backdrop').forEach(function (b) { b.remove(); });
     }
 
-    // Use window._pwaPrompt set by the early <head> script
-    // Also update it if the event fires after this script loads
-    window.addEventListener('beforeinstallprompt', function (e) {
-        e.preventDefault();
-        window._pwaPrompt = e;
-        var btn = document.getElementById('installPwaBtn');
-        if (btn) btn.style.display = 'block';
-    });
-
-    window.addEventListener('appinstalled', function () {
-        window._pwaPrompt = null;
-        var btn = document.getElementById('installPwaBtn');
-        if (btn) btn.style.display = 'none';
-        hidePwaModal();
-    });
-
     document.addEventListener('DOMContentLoaded', function () {
         var btn = document.getElementById('installPwaBtn');
         var pwaModal = document.getElementById('pwa-modal');
@@ -659,33 +644,36 @@ listenClick(".pwa-close", function () {
             return;
         }
 
-        // If beforeinstallprompt already fired (captured in head script), show button
-        if (window._pwaPrompt && btn) {
-            btn.style.display = 'block';
-        }
+        var deferredPrompt = null;
+
+        window.addEventListener('beforeinstallprompt', function (e) {
+            if (isAppInstalled()) return;
+            e.preventDefault();
+            try { e.stopImmediatePropagation(); } catch (err) { /* ignore */ }
+            deferredPrompt = e;
+            if (btn) btn.style.display = 'block';
+        }, true);
 
         if (btn) {
-            btn.addEventListener('click', function () {
-                var prompt = window._pwaPrompt;
-                if (!prompt) {
-                    console.log('PWA: Install prompt not available yet.');
-                    return;
+            btn.addEventListener('click', async function () {
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                var choice = await deferredPrompt.userChoice;
+                if (choice && choice.outcome === 'accepted') {
+                    localStorage.setItem('pwa_installed', '1');
+                    btn.style.display = 'none';
+                    hidePwaModal();
                 }
-                try {
-                    prompt.prompt();
-                    prompt.userChoice.then(function (choice) {
-                        if (choice && choice.outcome === 'accepted') {
-                            if (btn) btn.style.display = 'none';
-                            hidePwaModal();
-                        }
-                        window._pwaPrompt = null;
-                    });
-                } catch (err) {
-                    console.log('PWA: Install prompt error:', err);
-                    window._pwaPrompt = null;
-                }
+                deferredPrompt = null;
             });
         }
+
+        window.addEventListener('appinstalled', function () {
+            localStorage.setItem('pwa_installed', '1');
+            deferredPrompt = null;
+            if (btn) btn.style.display = 'none';
+            hidePwaModal();
+        });
 
         window.addEventListener('load', function () {
             if (isAppInstalled()) {
