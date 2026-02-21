@@ -632,7 +632,7 @@ listenClick(".pwa-close", function () {
         document.querySelectorAll('.modal-backdrop').forEach(function (b) { b.remove(); });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    function initPwa() {
         var btn = document.getElementById('installPwaBtn');
         var pwaModal = document.getElementById('pwa-modal');
 
@@ -652,6 +652,7 @@ listenClick(".pwa-close", function () {
             if (btn) btn.style.display = 'block';
         }
 
+        // Listen for future beforeinstallprompt events
         window.addEventListener('beforeinstallprompt', function (e) {
             if (isAppInstalled()) return;
             e.preventDefault();
@@ -664,13 +665,28 @@ listenClick(".pwa-close", function () {
         if (btn) {
             btn.addEventListener('click', async function () {
                 var activePrompt = deferredPrompt || window._pwaPrompt;
-                if (!activePrompt) return;
-                activePrompt.prompt();
-                var choice = await activePrompt.userChoice;
-                if (choice && choice.outcome === 'accepted') {
-                    localStorage.setItem('pwa_installed', '1');
-                    btn.style.display = 'none';
-                    hidePwaModal();
+                if (!activePrompt) {
+                    // Prompt not ready yet — re-register SW to trigger it
+                    if ('serviceWorker' in navigator) {
+                        try {
+                            await navigator.serviceWorker.register('/sw.js');
+                        } catch (err) { /* ignore */ }
+                    }
+                    // Wait briefly for beforeinstallprompt to fire
+                    await new Promise(function (r) { setTimeout(r, 500); });
+                    activePrompt = deferredPrompt || window._pwaPrompt;
+                    if (!activePrompt) return;
+                }
+                try {
+                    activePrompt.prompt();
+                    var choice = await activePrompt.userChoice;
+                    if (choice && choice.outcome === 'accepted') {
+                        localStorage.setItem('pwa_installed', '1');
+                        btn.style.display = 'none';
+                        hidePwaModal();
+                    }
+                } catch (err) {
+                    // prompt() failed (already called or expired) — ignore
                 }
                 deferredPrompt = null;
                 window._pwaPrompt = null;
@@ -691,7 +707,14 @@ listenClick(".pwa-close", function () {
                 hidePwaModal();
             }
         });
-    });
+    }
+
+    // Run immediately if DOM is already ready, otherwise wait
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPwa);
+    } else {
+        initPwa();
+    }
 })();
 listenSubmit('#newsLetterForm', function (event) {
     event.preventDefault();

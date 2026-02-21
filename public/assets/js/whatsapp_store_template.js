@@ -423,7 +423,7 @@ listenClick(".pwa-close", function () {
       b.remove();
     });
   }
-  document.addEventListener('DOMContentLoaded', function () {
+  function initPwa() {
     var btn = document.getElementById('installPwaBtn');
     var pwaModal = document.getElementById('pwa-modal');
     if (!btn && !pwaModal) return;
@@ -439,6 +439,8 @@ listenClick(".pwa-close", function () {
       deferredPrompt = window._pwaPrompt;
       if (btn) btn.style.display = 'block';
     }
+
+    // Listen for future beforeinstallprompt events
     window.addEventListener('beforeinstallprompt', function (e) {
       if (isAppInstalled()) return;
       e.preventDefault();
@@ -457,28 +459,59 @@ listenClick(".pwa-close", function () {
             case 0:
               activePrompt = deferredPrompt || window._pwaPrompt;
               if (activePrompt) {
-                _context.next = 3;
+                _context.next = 15;
+                break;
+              }
+              if (!('serviceWorker' in navigator)) {
+                _context.next = 10;
+                break;
+              }
+              _context.prev = 3;
+              _context.next = 6;
+              return navigator.serviceWorker.register('/sw.js');
+            case 6:
+              _context.next = 10;
+              break;
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](3);
+            case 10:
+              _context.next = 12;
+              return new Promise(function (r) {
+                setTimeout(r, 500);
+              });
+            case 12:
+              activePrompt = deferredPrompt || window._pwaPrompt;
+              if (activePrompt) {
+                _context.next = 15;
                 break;
               }
               return _context.abrupt("return");
-            case 3:
+            case 15:
+              _context.prev = 15;
               activePrompt.prompt();
-              _context.next = 6;
+              _context.next = 19;
               return activePrompt.userChoice;
-            case 6:
+            case 19:
               choice = _context.sent;
               if (choice && choice.outcome === 'accepted') {
                 localStorage.setItem('pwa_installed', '1');
                 btn.style.display = 'none';
                 hidePwaModal();
               }
+              _context.next = 25;
+              break;
+            case 23:
+              _context.prev = 23;
+              _context.t1 = _context["catch"](15);
+            case 25:
               deferredPrompt = null;
               window._pwaPrompt = null;
-            case 10:
+            case 27:
             case "end":
               return _context.stop();
           }
-        }, _callee);
+        }, _callee, null, [[3, 8], [15, 23]]);
       })));
     }
     window.addEventListener('appinstalled', function () {
@@ -494,7 +527,14 @@ listenClick(".pwa-close", function () {
         hidePwaModal();
       }
     });
-  });
+  }
+
+  // Run immediately if DOM is already ready, otherwise wait
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPwa);
+  } else {
+    initPwa();
+  }
 })();
 listenSubmit('#newsLetterForm', function (event) {
   event.preventDefault();

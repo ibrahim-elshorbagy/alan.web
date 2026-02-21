@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <script>window._pwaPrompt=null;window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window._pwaPrompt=e;});if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js');}</script>
+  <script>window._pwaPrompt = null; window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); window._pwaPrompt = e; });</script>
 
   @if (checkFeature('seo') && $whatsappStore->site_title && $whatsappStore->home_title)
     <title>{{ $whatsappStore->home_title }} | {{ $whatsappStore->site_title }}</title>
@@ -932,7 +932,7 @@
 <script type="text/javascript" src="{{ asset('front/js/bootstrap.bundle.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('assets/js/front-third-party-vcard11.js') }}"></script>
 <script src="{{ mix('assets/js/custom/helpers.js') }}"></script>
-<script type="text/javascript" src="{{ asset('assets/js/whatsapp_store_template.js') }}"></script>
+<script type="text/javascript" src="{{ mix('assets/js/whatsapp_store_template.js') }}"></script>
 <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
 
 <script>
