@@ -7,6 +7,11 @@ const preLoad = function () {
 
 self.addEventListener("install", function (event) {
     event.waitUntil(preLoad());
+    self.skipWaiting();
+});
+
+self.addEventListener("activate", function (event) {
+    event.waitUntil(self.clients.claim());
 });
 
 const filesToCache = [
