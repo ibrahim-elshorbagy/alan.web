@@ -173,7 +173,8 @@ class WhatsappStoreController extends AppBaseController
     $json['name'] = $whatsappStore->store_name;
     $json['short_name'] = Str::limit($whatsappStore->store_name, 12);
     $json['start_url'] = $whatsappStoreUrl;
-    $json['display'] = 'fullscreen';
+    $json['scope'] = '/';
+    $json['display'] = 'standalone';
     $json['icons'] = [];
 
     $logoUrl = $whatsappStore->getFirstMediaUrl(WhatsappStore::LOGO);
@@ -183,7 +184,13 @@ class WhatsappStoreController extends AppBaseController
           'src' => $logoUrl,
           'sizes' => '512x512',
           'type' => 'image/png',
-          'purpose' => 'any maskable'
+          'purpose' => 'any'
+        ],
+        [
+          'src' => $logoUrl,
+          'sizes' => '512x512',
+          'type' => 'image/png',
+          'purpose' => 'maskable'
         ]
       ];
     }
