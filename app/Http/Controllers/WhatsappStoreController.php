@@ -170,17 +170,28 @@ class WhatsappStoreController extends AppBaseController
     // Update PWA manifest for this store (shared file like vCards)
     $path = public_path('pwa/1.json');
     $json = json_decode(file_get_contents($path), true);
+    if (!is_array($json)) {
+      $json = [];
+    }
     $json['name'] = $whatsappStore->store_name;
     $json['short_name'] = Str::limit($whatsappStore->store_name, 12);
     $json['start_url'] = $whatsappStoreUrl;
     $json['display'] = 'fullscreen';
-    $json['icons'] = [];
 
     $logoUrl = $whatsappStore->getFirstMediaUrl(WhatsappStore::LOGO);
     if ($logoUrl) {
       $json['icons'] = [
         [
           'src' => $logoUrl,
+          'sizes' => '512x512',
+          'type' => 'image/png',
+          'purpose' => 'any maskable'
+        ]
+      ];
+    } elseif (empty($json['icons'])) {
+      $json['icons'] = [
+        [
+          'src' => asset('logo.png'),
           'sizes' => '512x512',
           'type' => 'image/png',
           'purpose' => 'any maskable'
@@ -482,6 +493,41 @@ class WhatsappStoreController extends AppBaseController
     }
 
     return $this->sendResponse($valuedata, '');
+  }
+
+  public function manifest($alias)
+  {
+    $whatsappStore = WhatsappStore::where('url_alias', $alias)->where('status', 1)->first();
+
+    if (!$whatsappStore) {
+      abort(404);
+    }
+
+    $whatsappStoreUrl = route('whatsapp.store.show', ['alias' => $alias]);
+
+    $json = [
+      'name' => $whatsappStore->store_name,
+      'short_name' => Str::limit($whatsappStore->store_name, 12),
+      'start_url' => $whatsappStoreUrl,
+      'display' => 'fullscreen',
+      'theme_color' => '#6777ef',
+      'background_color' => '#ffffff',
+    ];
+
+    $logoUrl = $whatsappStore->getFirstMediaUrl(WhatsappStore::LOGO);
+    if ($logoUrl) {
+      $json['icons'] = [
+        ['src' => $logoUrl, 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any maskable'],
+      ];
+    } else {
+      $json['icons'] = [
+        ['src' => asset('logo.png'), 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any maskable'],
+      ];
+    }
+
+    return response()->json($json)
+      ->header('Content-Type', 'application/manifest+json')
+      ->header('Cache-Control', 'no-store, no-cache, must-revalidate');
   }
 
   public function cloneTo(WhatsappStore $whatsappStore)
