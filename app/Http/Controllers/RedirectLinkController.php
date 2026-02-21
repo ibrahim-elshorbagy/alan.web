@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Models\RedirectLink;
 use App\Models\User;
 use App\Models\Nfc;
+use App\Models\Role;
+use App\Models\MultiTenant;
+use App\Models\Plan;
+use App\Models\Setting;
+use App\Models\Subscription;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\RedirectLinksExport;
@@ -15,6 +24,7 @@ use Illuminate\Support\Facades\File;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\QrcodeEdit;
 use Spatie\Color\Hex;
+use Carbon\Carbon;
 use TCPDF;
 
 class RedirectLinkController extends Controller
@@ -990,9 +1000,10 @@ class RedirectLinkController extends Controller
       'status' => $statusRule,
     ];
 
-    // Allow sales to update assigned_id
+    // Allow sales to update assigned_id and user_id
     if (auth()->user()->hasRole('sales')) {
       $rules['assigned_id'] = 'nullable|exists:users,id';
+      $rules['user_id'] = 'nullable|exists:users,id';
     }
 
     if (!auth()->user()->hasRole('sales')) {
@@ -1103,8 +1114,8 @@ class RedirectLinkController extends Controller
     }
 
     if (auth()->user()->hasRole('sales')) {
-      // For sales, allow updating redirect_link, status, and assigned_id
-      $allowedFields = ['redirect_link', 'status', 'assigned_id', 'received_status'];
+      // For sales, allow updating redirect_link, status, assigned_id, received_status, and user_id (from quick user creation)
+      $allowedFields = ['redirect_link', 'status', 'assigned_id', 'received_status', 'user_id'];
       $updateData = array_intersect_key($updateData, array_flip($allowedFields));
     } else if (auth()->user()->hasRole('super_admin')) {
       // For super admin, allow all fields including price and sales_price
@@ -1144,5 +1155,93 @@ class RedirectLinkController extends Controller
     $redirectLink->delete();
 
     return redirect()->route('redirect-links.index')->with('success', __('messages.redirect_links.deleted'));
+  }
+
+  /**
+   * Create a quick user via AJAX from the redirect link edit form.
+   * Available for super_admin and sales roles.
+   */
+  public function createQuickUser(Request $request): JsonResponse
+  {
+    $validator = Validator::make($request->all(), [
+      'first_name' => 'required|string|max:180',
+      'last_name' => 'required|string|max:180',
+      'contact' => 'required|string|unique:users,contact',
+    ], [
+      'contact.unique' => __('messages.redirect_links.quick_user.phone_already_exists'),
+    ]);
+
+    if ($validator->fails()) {
+      return response()->json([
+        'success' => false,
+        'message' => $validator->errors()->first(),
+        'errors' => $validator->errors(),
+      ], 422);
+    }
+
+    try {
+      DB::beginTransaction();
+
+      $tenant = MultiTenant::create(['tenant_username' => $request->first_name]);
+      $userDefaultLanguage = Setting::where('key', 'user_default_language')->first()->value ?? 'en';
+
+      // Generate a random password
+      $rawPassword = substr(str_shuffle('abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 8);
+
+      $user = User::create([
+        'first_name' => $request->first_name,
+        'last_name' => $request->last_name,
+        'email' => null,
+        'region_code' => 'JO',
+        'contact' => $request->contact,
+        'language' => $userDefaultLanguage,
+        'steps' => 0,
+        'email_verified_at' => Carbon::now(), // Mark as verified immediately
+        'password' => Hash::make($rawPassword),
+        'tenant_id' => $tenant->id,
+        'affiliate_code' => generateUniqueAffiliateCode(),
+      ])->assignRole(Role::ROLE_ADMIN);
+
+      // Assign default plan (same as normal registration)
+      $plan = Plan::whereIsDefault(true)->first();
+      $customFields = $plan->planCustomFields;
+      if ($plan->custom_select == 1 && $customFields->isNotEmpty()) {
+        $vcardsOfNo = $customFields->first()->custom_vcard_number;
+      } else {
+        $vcardsOfNo = $plan->no_of_vcards;
+      }
+      Subscription::create([
+        'plan_id' => $plan->id,
+        'plan_amount' => $plan->price,
+        'plan_frequency' => $plan->frequency,
+        'starts_at' => Carbon::now(),
+        'ends_at' => Carbon::now()->addDays($plan->trial_days),
+        'trial_ends_at' => Carbon::now()->addDays($plan->trial_days),
+        'status' => Subscription::ACTIVE,
+        'tenant_id' => $tenant->id,
+        'no_of_vcards' => $vcardsOfNo,
+      ]);
+
+      DB::commit();
+
+      return response()->json([
+        'success' => true,
+        'message' => __('messages.redirect_links.quick_user.created_successfully'),
+        'user' => [
+          'id' => $user->id,
+          'full_name' => $user->first_name . ' ' . $user->last_name,
+          'contact' => $user->contact,
+          'password' => $rawPassword,
+        ],
+      ]);
+    } catch (\Exception $e) {
+      DB::rollBack();
+      Log::error('Quick user creation error', ['error' => $e->getMessage()]);
+
+      return response()->json([
+        'success' => false,
+        'message' => __('messages.redirect_links.quick_user.creation_failed'),
+      ], 500);
+    }
   }
 }

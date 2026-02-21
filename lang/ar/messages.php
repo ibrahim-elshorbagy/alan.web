@@ -2701,7 +2701,22 @@ return [
     'received_validation_errors' => 'أخطاء التحقق من الاستلام',
     'received_validation_intro' => 'لا يمكن وضع علامة مستلم على البطاقات التالية لأنها غير موجودة في أي سند استلام:',
     'card_not_in_acknowledgment' => 'هذه البطاقة غير موجودة في أي سند استلام. يرجى إنشاء سند استلام أولاً.',
+    'quick_user' => [
+      'create_new_user' => 'إنشاء مستخدم جديد',
+      'phone' => 'رقم الهاتف',
+      'phone_placeholder' => 'مثال: 962799999999',
+      'fill_all_fields' => 'يرجى ملء جميع الحقول المطلوبة.',
+      'created_successfully' => 'تم إنشاء المستخدم بنجاح!',
+      'creation_failed' => 'فشل إنشاء المستخدم. يرجى المحاولة مرة أخرى.',
+      'phone_already_exists' => 'رقم الهاتف هذا مسجل بالفعل.',
+      'unsaved_changes' => 'لديك تغييرات غير محفوظة. هل أنت متأكد أنك تريد المغادرة؟',
+      'whatsapp_greeting' => 'مرحباً! تم إنشاء حسابك.',
+      'whatsapp_username' => 'اسم المستخدم (الهاتف)',
+      'whatsapp_password' => 'كلمة المرور',
+      'whatsapp_login_link' => 'رابط تسجيل الدخول',
+    ],
   ],
+
   'receipts' => [
     'receipts' => 'المقبوضات',
     'all_receipts' => 'جميع المقبوضات',

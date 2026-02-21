@@ -614,6 +614,7 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('redirect-links/mark-selected-received', [RedirectLinkController::class, 'markSelectedAsReceived'])->name('redirect-links.mark-selected-received');
       Route::get('redirect-links/{redirectLink}/edit', [RedirectLinkController::class, 'edit'])->name('redirect-links.edit');
       Route::put('redirect-links/{redirectLink}', [RedirectLinkController::class, 'update'])->name('redirect-links.update');
+      Route::post('redirect-links/create-quick-user', [RedirectLinkController::class, 'createQuickUser'])->name('redirect-links.create-quick-user');
 
       // Acknowledgments Routes
       Route::get('acknowledgments', [App\Http\Controllers\AcknowledgmentController::class, 'index'])->name('acknowledgments.index');
