@@ -407,7 +407,7 @@ listenClick(".pwa-close", function () {
 // PWA install prompt handling
 (function () {
   function isAppInstalled() {
-    return window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || localStorage.getItem('pwa_installed') === '1';
+    return window.matchMedia && window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   }
   function hidePwaModal() {
     var modal = document.getElementById('pwa-modal');
@@ -423,6 +423,24 @@ listenClick(".pwa-close", function () {
       b.remove();
     });
   }
+
+  // Store deferredPrompt at a higher scope so it persists
+  var deferredPrompt = null;
+
+  // Listen for beforeinstallprompt as early as possible (before DOMContentLoaded)
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    // If button already exists, show it
+    var btn = document.getElementById('installPwaBtn');
+    if (btn) btn.style.display = 'block';
+  });
+  window.addEventListener('appinstalled', function () {
+    deferredPrompt = null;
+    var btn = document.getElementById('installPwaBtn');
+    if (btn) btn.style.display = 'none';
+    hidePwaModal();
+  });
   document.addEventListener('DOMContentLoaded', function () {
     var btn = document.getElementById('installPwaBtn');
     var pwaModal = document.getElementById('pwa-modal');
@@ -432,52 +450,79 @@ listenClick(".pwa-close", function () {
       hidePwaModal();
       return;
     }
-    var deferredPrompt = null;
-    window.addEventListener('beforeinstallprompt', function (e) {
-      if (isAppInstalled()) return;
-      e.preventDefault();
-      try {
-        e.stopImmediatePropagation();
-      } catch (err) {/* ignore */}
-      deferredPrompt = e;
-      if (btn) btn.style.display = 'block';
-    }, true);
+
+    // If beforeinstallprompt already fired before DOMContentLoaded, button is ready
+    if (deferredPrompt && btn) {
+      btn.style.display = 'block';
+    }
     if (btn) {
       btn.addEventListener('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var choice;
+        var registrations, choice;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               if (deferredPrompt) {
-                _context.next = 2;
+                _context.next = 18;
                 break;
               }
-              return _context.abrupt("return");
-            case 2:
-              deferredPrompt.prompt();
+              // Fallback: if no deferred prompt, try to guide the user
+              // This can happen if the browser doesn't support beforeinstallprompt
+              // or if the manifest/SW requirements aren't met yet
+              console.log('PWA: No install prompt available. Checking requirements...');
+
+              // Check if service worker is registered
+              if (!('serviceWorker' in navigator)) {
+                _context.next = 17;
+                break;
+              }
               _context.next = 5;
-              return deferredPrompt.userChoice;
+              return navigator.serviceWorker.getRegistrations();
             case 5:
+              registrations = _context.sent;
+              if (!(registrations.length === 0)) {
+                _context.next = 17;
+                break;
+              }
+              console.log('PWA: No service worker registered. Registering now...');
+              _context.prev = 8;
+              _context.next = 11;
+              return navigator.serviceWorker.register('/sw.js');
+            case 11:
+              console.log('PWA: Service worker registered. Please try again.');
+              _context.next = 17;
+              break;
+            case 14:
+              _context.prev = 14;
+              _context.t0 = _context["catch"](8);
+              console.log('PWA: Service worker registration failed:', _context.t0);
+            case 17:
+              return _context.abrupt("return");
+            case 18:
+              _context.prev = 18;
+              deferredPrompt.prompt();
+              _context.next = 22;
+              return deferredPrompt.userChoice;
+            case 22:
               choice = _context.sent;
               if (choice && choice.outcome === 'accepted') {
-                localStorage.setItem('pwa_installed', '1');
-                btn.style.display = 'none';
+                if (btn) btn.style.display = 'none';
                 hidePwaModal();
               }
+              _context.next = 29;
+              break;
+            case 26:
+              _context.prev = 26;
+              _context.t1 = _context["catch"](18);
+              console.log('PWA: Install prompt error:', _context.t1);
+            case 29:
               deferredPrompt = null;
-            case 8:
+            case 30:
             case "end":
               return _context.stop();
           }
-        }, _callee);
+        }, _callee, null, [[8, 14], [18, 26]]);
       })));
     }
-    window.addEventListener('appinstalled', function () {
-      localStorage.setItem('pwa_installed', '1');
-      deferredPrompt = null;
-      if (btn) btn.style.display = 'none';
-      hidePwaModal();
-    });
     window.addEventListener('load', function () {
       if (isAppInstalled()) {
         if (btn) btn.style.display = 'none';

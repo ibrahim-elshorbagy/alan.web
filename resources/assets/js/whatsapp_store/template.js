@@ -614,8 +614,7 @@ listenClick(".pwa-close", function () {
     function isAppInstalled() {
         return (
             (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
-            window.navigator.standalone === true ||
-            localStorage.getItem('pwa_installed') === '1'
+            window.navigator.standalone === true
         );
     }
 
@@ -632,6 +631,25 @@ listenClick(".pwa-close", function () {
         document.querySelectorAll('.modal-backdrop').forEach(function (b) { b.remove(); });
     }
 
+    // Store deferredPrompt at a higher scope so it persists
+    var deferredPrompt = null;
+
+    // Listen for beforeinstallprompt as early as possible (before DOMContentLoaded)
+    window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        deferredPrompt = e;
+        // If button already exists, show it
+        var btn = document.getElementById('installPwaBtn');
+        if (btn) btn.style.display = 'block';
+    });
+
+    window.addEventListener('appinstalled', function () {
+        deferredPrompt = null;
+        var btn = document.getElementById('installPwaBtn');
+        if (btn) btn.style.display = 'none';
+        hidePwaModal();
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
         var btn = document.getElementById('installPwaBtn');
         var pwaModal = document.getElementById('pwa-modal');
@@ -644,36 +662,47 @@ listenClick(".pwa-close", function () {
             return;
         }
 
-        var deferredPrompt = null;
-
-        window.addEventListener('beforeinstallprompt', function (e) {
-            if (isAppInstalled()) return;
-            e.preventDefault();
-            try { e.stopImmediatePropagation(); } catch (err) { /* ignore */ }
-            deferredPrompt = e;
-            if (btn) btn.style.display = 'block';
-        }, true);
+        // If beforeinstallprompt already fired before DOMContentLoaded, button is ready
+        if (deferredPrompt && btn) {
+            btn.style.display = 'block';
+        }
 
         if (btn) {
             btn.addEventListener('click', async function () {
-                if (!deferredPrompt) return;
-                deferredPrompt.prompt();
-                var choice = await deferredPrompt.userChoice;
-                if (choice && choice.outcome === 'accepted') {
-                    localStorage.setItem('pwa_installed', '1');
-                    btn.style.display = 'none';
-                    hidePwaModal();
+                if (!deferredPrompt) {
+                    // Fallback: if no deferred prompt, try to guide the user
+                    // This can happen if the browser doesn't support beforeinstallprompt
+                    // or if the manifest/SW requirements aren't met yet
+                    console.log('PWA: No install prompt available. Checking requirements...');
+
+                    // Check if service worker is registered
+                    if ('serviceWorker' in navigator) {
+                        var registrations = await navigator.serviceWorker.getRegistrations();
+                        if (registrations.length === 0) {
+                            console.log('PWA: No service worker registered. Registering now...');
+                            try {
+                                await navigator.serviceWorker.register('/sw.js');
+                                console.log('PWA: Service worker registered. Please try again.');
+                            } catch (err) {
+                                console.log('PWA: Service worker registration failed:', err);
+                            }
+                        }
+                    }
+                    return;
+                }
+                try {
+                    deferredPrompt.prompt();
+                    var choice = await deferredPrompt.userChoice;
+                    if (choice && choice.outcome === 'accepted') {
+                        if (btn) btn.style.display = 'none';
+                        hidePwaModal();
+                    }
+                } catch (err) {
+                    console.log('PWA: Install prompt error:', err);
                 }
                 deferredPrompt = null;
             });
         }
-
-        window.addEventListener('appinstalled', function () {
-            localStorage.setItem('pwa_installed', '1');
-            deferredPrompt = null;
-            if (btn) btn.style.display = 'none';
-            hidePwaModal();
-        });
 
         window.addEventListener('load', function () {
             if (isAppInstalled()) {

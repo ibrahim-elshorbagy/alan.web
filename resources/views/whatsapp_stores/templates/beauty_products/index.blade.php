@@ -886,9 +886,6 @@
 <script type="text/javascript" src="{{ asset('assets/js/whatsapp_store_template.js') }}"></script>
 <script src="{{ asset('assets/js/slider/js/slick.min.js') }}" type="text/javascript"></script>
 <script>
-  let deferredPrompt = null;
-</script>
-<script>
   $(document).ready(function() {
     $(".banner-slider").slick({
       infinite: true,

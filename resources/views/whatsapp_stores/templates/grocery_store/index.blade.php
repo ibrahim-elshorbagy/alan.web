@@ -1078,9 +1078,6 @@
   }
 </script>
 <script>
-  let deferredPrompt = null;
-</script>
-<script>
   let defaultCountryCodeValue = "{{ getSuperAdminSettingValue('default_country_code') }}"
 </script>
 <script>

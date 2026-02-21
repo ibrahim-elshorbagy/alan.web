@@ -509,21 +509,29 @@ class WhatsappStoreController extends AppBaseController
       'name' => $whatsappStore->store_name,
       'short_name' => Str::limit($whatsappStore->store_name, 12),
       'start_url' => $whatsappStoreUrl,
-      'display' => 'fullscreen',
+      'scope' => '/',
+      'display' => 'standalone',
+      'orientation' => 'portrait',
       'theme_color' => '#6777ef',
       'background_color' => '#ffffff',
+      'prefer_related_applications' => false,
     ];
 
     $logoUrl = $whatsappStore->getFirstMediaUrl(WhatsappStore::LOGO);
-    if ($logoUrl) {
-      $json['icons'] = [
-        ['src' => $logoUrl, 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any maskable'],
-      ];
-    } else {
-      $json['icons'] = [
-        ['src' => asset('logo.png'), 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any maskable'],
-      ];
-    }
+    $iconSrc = $logoUrl ?: asset('logo.png');
+
+    $json['icons'] = [
+      ['src' => $iconSrc, 'sizes' => '72x72', 'type' => 'image/png', 'purpose' => 'any'],
+      ['src' => $iconSrc, 'sizes' => '96x96', 'type' => 'image/png', 'purpose' => 'any'],
+      ['src' => $iconSrc, 'sizes' => '128x128', 'type' => 'image/png', 'purpose' => 'any'],
+      ['src' => $iconSrc, 'sizes' => '144x144', 'type' => 'image/png', 'purpose' => 'any'],
+      ['src' => $iconSrc, 'sizes' => '152x152', 'type' => 'image/png', 'purpose' => 'any'],
+      ['src' => $iconSrc, 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'any'],
+      ['src' => $iconSrc, 'sizes' => '384x384', 'type' => 'image/png', 'purpose' => 'any'],
+      ['src' => $iconSrc, 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'any'],
+      ['src' => $iconSrc, 'sizes' => '192x192', 'type' => 'image/png', 'purpose' => 'maskable'],
+      ['src' => $iconSrc, 'sizes' => '512x512', 'type' => 'image/png', 'purpose' => 'maskable'],
+    ];
 
     return response()->json($json)
       ->header('Content-Type', 'application/manifest+json')
