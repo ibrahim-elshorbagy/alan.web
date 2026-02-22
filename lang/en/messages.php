@@ -702,6 +702,7 @@ return [
     'location' => 'Location',
     'overview' => 'Overview',
     'registered_date' => 'Registered Date',
+    'created_by' => 'Created By',
     'change_language' => 'Change Language',
     'your_name' => 'Your Name',
     'your_message' => 'Your Message',

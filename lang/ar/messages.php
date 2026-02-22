@@ -700,6 +700,7 @@ return [
     'location' => 'العنوان - موقع السكن او العمل',
     'overview' => 'نظرة عامة',
     'registered_date' => 'تاريخ التسجيل',
+    'created_by' => 'أُنشئ بواسطة',
     'change_language' => 'تغيير اللغة',
     'your_name' => 'اسمك',
     'your_message' => 'رسالتك',

@@ -1189,6 +1189,11 @@ class RedirectLinkController extends Controller
       // Generate a random password
       $rawPassword = substr(str_shuffle('abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789'), 0, 8);
 
+      // Get the actual user ID (considering impersonation)
+      $actualUserId = auth()->user()->isImpersonated()
+        ? app('impersonate')->getImpersonatorId()
+        : auth()->id();
+
       $user = User::create([
         'first_name' => $request->first_name,
         'last_name' => $request->last_name,
@@ -1201,6 +1206,7 @@ class RedirectLinkController extends Controller
         'password' => Hash::make($rawPassword),
         'tenant_id' => $tenant->id,
         'affiliate_code' => generateUniqueAffiliateCode(),
+        'created_by' => $actualUserId,
       ])->assignRole(Role::ROLE_ADMIN);
 
       // Assign default plan (same as normal registration)

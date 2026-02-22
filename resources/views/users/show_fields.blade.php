@@ -60,6 +60,18 @@
                             <label for="name" class="pb-2 fs-4 text-gray-600">{{__('messages.vcard.last_updated')}}:</label>
                             <span class="fs-4 text-gray-800">{{$user->updated_at->diffForHumans()}}</span>
                         </div>
+                        @if($user->created_by && $user->createdBy)
+                        <div class="col-sm-6 d-flex flex-column mt-md-10 mt-5">
+                            <label for="name" class="pb-2 fs-4 text-gray-600">{{__('messages.user.created_by')}}:</label>
+                            <span class="fs-4 text-gray-800">
+                                {{ $user->createdBy->first_name }} {{ $user->createdBy->last_name }}
+                                @php $creatorRole = $user->createdBy->roles->first(); @endphp
+                                @if($creatorRole)
+                                    <span class="badge bg-secondary ms-2">{{ ucfirst(str_replace('_', ' ', $creatorRole->name)) }}</span>
+                                @endif
+                            </span>
+                        </div>
+                        @endif
 
                     </div>
                 </div>

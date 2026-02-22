@@ -117,6 +117,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     'vcard_table_view_type',
     'enable_two_factor_authentication',
     'google2fa_secret',
+    'created_by',
   ];
 
   protected $casts = [
@@ -395,6 +396,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     }
 
     return '';
+  }
+
+  public function createdBy(): BelongsTo
+  {
+    return $this->belongsTo(User::class, 'created_by');
   }
 
   public function subscription(): BelongsTo

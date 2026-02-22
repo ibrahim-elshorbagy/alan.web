@@ -112,6 +112,13 @@
     @endif
   </div>
 
+  <div class="mb-4">
+    @if (!$isDisabled)
+      {{ Form::submit(__('messages.common.save'), ['class' => 'btn btn-primary me-3']) }}
+    @endif
+    <a href="{{ route('redirect-links.index') }}" class="btn btn-secondary">{{ __('messages.common.discard') }}</a>
+  </div>
+
   @if (auth()->user()->hasRole('super_admin') && isset($redirectLink) && $redirectLink->histories->isNotEmpty())
     {{-- History Section - Only for Super Admin --}}
     <div class="col-12">
@@ -152,12 +159,7 @@
   @endif
 
 
-  <div>
-    @if (!$isDisabled)
-      {{ Form::submit(__('messages.common.save'), ['class' => 'btn btn-primary me-3']) }}
-    @endif
-    <a href="{{ route('redirect-links.index') }}" class="btn btn-secondary">{{ __('messages.common.discard') }}</a>
-  </div>
+
 </div>
 
 {{-- Quick Create User Modal --}}
