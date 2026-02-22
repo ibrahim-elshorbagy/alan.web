@@ -26,6 +26,7 @@ use App\Models\QrcodeEdit;
 use Spatie\Color\Hex;
 use Carbon\Carbon;
 use TCPDF;
+use App\Services\SmsService;
 
 class RedirectLinkController extends Controller
 {
@@ -1223,6 +1224,25 @@ class RedirectLinkController extends Controller
       ]);
 
       DB::commit();
+
+      // Send SMS with login credentials
+      try {
+        $normalizedPhone = normalizePhoneNumber($user->contact);
+        $loginUrl = config('app.url') . '/login';
+        $fullName = $user->first_name . ' ' . $user->last_name;
+        $smsMessage = 'عزيزي، ' . $fullName . "\n\n" .
+          'يمكنك الدخول للوحة التحكم عبر الرابط' . "\n\n" .
+          $loginUrl . "\n\n" .
+          'اسم الدخول ' . $user->contact . "\n\n" .
+          'الباسوورد ' . $rawPassword;
+        $smsService = new SmsService();
+        $smsService->sendSms($normalizedPhone, $smsMessage);
+      } catch (\Exception $smsException) {
+        Log::warning('SMS sending failed for quick user', [
+          'user_id' => $user->id,
+          'error'   => $smsException->getMessage(),
+        ]);
+      }
 
       return response()->json([
         'success' => true,

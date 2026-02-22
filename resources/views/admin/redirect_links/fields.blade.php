@@ -8,7 +8,7 @@
       <div class="d-flex gap-2 align-items-start">
         <div class="flex-grow-1">
           {{ Form::select('user_id', $users->mapWithKeys(fn($user) => [$user->id => $user->first_name . ' ' . $user->last_name])->toArray(), isset($redirectLink) ? $redirectLink->user_id : null, ['class' => 'form-control', 'id' => 'user_id_select', 'placeholder' => __('messages.redirect_links.select_user'), 'disabled' => auth()->user()->hasRole('sales') || $isDisabled]) }}
-          @if(auth()->user()->hasRole('sales') )
+          @if(auth()->user()->hasRole('sales'))
             {{-- Hidden field to submit user_id value when the select is disabled --}}
             <input type="hidden" name="user_id" id="user_id_hidden"
               value="{{ isset($redirectLink) ? $redirectLink->user_id : '' }}">
@@ -291,6 +291,10 @@
           saveBtn.disabled = true;
           spinner.classList.remove('d-none');
 
+          // Open the window NOW (synchronous user gesture) so browsers don't block it.
+          // We'll set the real URL after the fetch succeeds.
+          const whatsappWindow = window.open('', '_blank');
+
           fetch('{{ route("redirect-links.create-quick-user") }}', {
             method: 'POST',
             headers: {
@@ -334,7 +338,7 @@
                 document.getElementById('quick_last_name').value = '';
                 document.getElementById('quick_phone').value = '';
 
-                // Open WhatsApp in new tab with Arabic credentials message
+                // Navigate the already-opened window to WhatsApp
                 const loginUrl = '{{ route("login") }}';
                 const whatsappMessage = encodeURIComponent(
                   'عزيزي، ' + data.user.full_name + '\n\n' +
@@ -344,7 +348,9 @@
                   'الباسوورد ' + data.user.password + '\n\n'
                 );
                 const whatsappUrl = 'https://wa.me/' + data.user.contact + '?text=' + whatsappMessage;
-                window.open(whatsappUrl, '_blank');
+                if (whatsappWindow) {
+                  whatsappWindow.location.href = whatsappUrl;
+                }
 
               } else {
                 errorsDiv.textContent = data.message || '{{ __("messages.redirect_links.quick_user.creation_failed") }}';
@@ -354,6 +360,7 @@
             .catch(error => {
               saveBtn.disabled = false;
               spinner.classList.add('d-none');
+              if (whatsappWindow) { whatsappWindow.close(); }
               errorsDiv.textContent = '{{ __("messages.redirect_links.quick_user.creation_failed") }}';
               errorsDiv.classList.remove('d-none');
               console.error('Error:', error);
