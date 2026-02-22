@@ -74,6 +74,8 @@ class VcardRepository extends BaseRepository
       if (empty($input['name']) && !empty($input['url_alias'])) {
         $input['name'] = $input['url_alias'];
       }
+      $subscription = getCurrentSubscription();
+
       if ($subscription->plan) {
         $input['template_id'] = $subscription->plan->templates->first()->id;
       }
