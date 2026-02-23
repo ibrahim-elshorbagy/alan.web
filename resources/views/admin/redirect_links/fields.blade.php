@@ -293,10 +293,6 @@
           saveBtn.disabled = true;
           spinner.classList.remove('d-none');
 
-          // Open the window NOW (synchronous user gesture) so browsers don't block it.
-          // We'll set the real URL after the fetch succeeds.
-          const whatsappWindow = window.open('', '_blank');
-
           fetch('{{ route("redirect-links.create-quick-user") }}', {
             method: 'POST',
             headers: {
@@ -340,7 +336,7 @@
                 document.getElementById('quick_last_name').value = '';
                 document.getElementById('quick_phone').value = '';
 
-                // Navigate the already-opened window to WhatsApp
+                // Navigate to WhatsApp
                 const loginUrl = '{{ route("login") }}';
                 const whatsappMessage = encodeURIComponent(
                   'عزيزي، ' + data.user.full_name + '\n\n' +
@@ -350,9 +346,7 @@
                   'الباسوورد ' + data.user.password + '\n\n'
                 );
                 const whatsappUrl = 'https://wa.me/' + data.user.contact + '?text=' + whatsappMessage;
-                if (whatsappWindow) {
-                  whatsappWindow.location.href = whatsappUrl;
-                }
+                window.open(whatsappUrl, '_blank');
 
               } else {
                 errorsDiv.textContent = data.message || '{{ __("messages.redirect_links.quick_user.creation_failed") }}';
@@ -362,7 +356,6 @@
             .catch(error => {
               saveBtn.disabled = false;
               spinner.classList.add('d-none');
-              if (whatsappWindow) { whatsappWindow.close(); }
               errorsDiv.textContent = '{{ __("messages.redirect_links.quick_user.creation_failed") }}';
               errorsDiv.classList.remove('d-none');
               console.error('Error:', error);
