@@ -24,14 +24,16 @@
 </li>
 
 <li class="nav-item {{ Request::is('sadmin/vcard*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('sadmin.vcards.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sadmin.vcards.index') }}">
     <span class="aside-menu-icon"><i class="fas fa-id-card icon-color-bs-red"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fas fa-id-card icon-color-gray"></i></span> --}}
     <span class="aside-menu-title">{{ __('messages.vcards') }}</span>
   </a>
 </li>
 <li class="nav-item {{ Request::is('sadmin/whatsapp-store*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('sadmin.whatsapp-stores.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sadmin.whatsapp-stores.index') }}">
     <span class="aside-menu-icon"><i class="fab fa-whatsapp"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fab fa-whatsapp icon-color-gray"></i></span> --}}
     <span class="aside-menu-title">{{ __('messages.whatsapp_stores.whatsapp_stores') }}</span>
@@ -39,8 +41,10 @@
 </li>
 
 <li class="nav-item {{ Request::is('sadmin/redirect-links*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('redirect-links.index') }}">
-    <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span> <span class="aside-menu-title">{{ __('messages.redirect_links.title') }}</span>
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('redirect-links.index') }}">
+    <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span> <span
+      class="aside-menu-title">{{ __('messages.redirect_links.title') }}</span>
   </a>
 </li>
 
@@ -54,16 +58,19 @@
 </li>
 
 <li class="nav-item {{ Request::is('sadmin/nfc*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('sadmin.nfc.card.types') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sadmin.nfc.card.types') }}">
     <span class="aside-menu-icon"><i class="fa-solid fa-credit-card icon-color-bs-orange"></i></span>
-    {{-- <span class="aside-menu-icon"><i class="fa-solid fa-credit-card icon-color-gray"></i></span> --}} <span class="aside-menu-title">{{ __('messages.nfc.sell_nfc_cards') }}</span>
+    {{-- <span class="aside-menu-icon"><i class="fa-solid fa-credit-card icon-color-gray"></i></span> --}} <span
+      class="aside-menu-title">{{ __('messages.nfc.sell_nfc_cards') }}</span>
   </a>
 </li>
 
 
 
 <li class="nav-item {{ Request::is('sadmin/templates*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('sadmin.templates.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sadmin.templates.index') }}">
     <span class="aside-menu-icon"><i class="fa fa-id-card-clip icon-color-bs-yellow"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fa fa-id-card-clip icon-color-gray"></i></span> --}}
     <span class="aside-menu-title">{{ __('messages.vcards_templates') }}</span>
@@ -79,7 +86,8 @@
 </li>
 
 <li class="nav-item {{ Request::is('sadmin/subscribedPlan*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('subscription.user.plan') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('subscription.user.plan') }}">
     <span class="aside-menu-icon"><i class="fa fa-paper-plane icon-color-bs-teal"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fa fa-paper-plane icon-color-gray"></i></span> --}}
     <span class="aside-menu-title">{{ __('messages.subscribed_plans') }}</span>
@@ -110,15 +118,18 @@
 </li>
 
 {{--
-    <li class="nav-item {{ Request::is('sadmin/affiliate-users*') ? 'active' : '' }}">
-<a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('sadmin.affiliate-user.index') }}">
-  <span class="aside-menu-icon"><i class="fas fa-user-group"></i></span>
-  <span class="aside-menu-title">{{ __('messages.vcard.affiliate_user') }}</span>
-</a>
+<li class="nav-item {{ Request::is('sadmin/affiliate-users*') ? 'active' : '' }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sadmin.affiliate-user.index') }}">
+    <span class="aside-menu-icon"><i class="fas fa-user-group"></i></span>
+    <span class="aside-menu-title">{{ __('messages.vcard.affiliate_user') }}</span>
+  </a>
 </li> --}}
 
-<li class="nav-item {{ Request::is('sadmin/affiliation-transactions*') || Request::is('sadmin/affiliate-users*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('sadmin.affiliate-user.index') }}">
+<li
+  class="nav-item {{ Request::is('sadmin/affiliation-transactions*') || Request::is('sadmin/affiliate-users*') ? 'active' : '' }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sadmin.affiliate-user.index') }}">
     <span class="aside-menu-icon"><i class="fas fa-coins icon-color-bs-peach"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fas fa-coins icon-color-gray"></i></span> --}}
     <span class="aside-menu-title">{{ __('messages.affiliation.affiliations') }}</span>
@@ -126,7 +137,8 @@
 </li>
 
 <li class="nav-item {{ Request::is('sadmin/withdraw-transactions*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('sadmin.withdraw-transactions') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sadmin.withdraw-transactions') }}">
     <span class="aside-menu-icon"><i class="fas fa-receipt icon-color-bs-lightred"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fas fa-receipt icon-color-gray"></i></span> --}}
     <span class="aside-menu-title">{{ __('messages.setting.withdrawals') }}</span>
@@ -142,7 +154,8 @@
 </li>
 
 <li class="nav-item {{ Request::is('sadmin/global-qr-code*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('sadmin.global.qr.code.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sadmin.global.qr.code.index') }}">
     <span class="aside-menu-icon"><i class="fa-solid fa-qrcode icon-color-bs-purple"></i></span>
     <span class="aside-menu-title">{{ __('messages.global_qr_code.title') }}</span>
   </a>
@@ -157,20 +170,22 @@
 </li>
 
 {{-- <li class="nav-item {{ Request::is('sadmin/languages*') ? 'active' : '' }}">
-<a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('languages.index') }}">
-  <span class="aside-menu-icon"><i class="fa fa-language"></i></span>
-  <span class="aside-menu-title">{{ __('messages.languages.languages') }}</span>
-</a>
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('languages.index') }}">
+    <span class="aside-menu-icon"><i class="fa fa-language"></i></span>
+    <span class="aside-menu-title">{{ __('messages.languages.languages') }}</span>
+  </a>
 </li> --}}
 
 <li class="nav-item {{ Request::is('sadmin/language*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('languages.default-language') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('languages.default-language') }}">
     <span class="aside-menu-icon"><i class="fa fa-language  icon-color-bs-orange"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fa fa-language  icon-color-gray"></i></span> --}}
     <span class="aside-menu-title">{{ __('messages.languages.languages') }}</span>
   </a>
 </li>
-<li class="nav-item {{ Request::is('sadmin/coupon-codes*') || Request::is('sadmin/used-coupon-code*') ? 'active' : '' }}">
+<li
+  class="nav-item {{ Request::is('sadmin/coupon-codes*') || Request::is('sadmin/used-coupon-code*') ? 'active' : '' }}">
   <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('coupon-codes.index') }}">
     <span class="aside-menu-icon"><i class="fa-solid fa-tags icon-color-bs-pink"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fa-solid fa-tags icon-color-gray"></i></span> --}}
@@ -194,22 +209,22 @@
 </li>
 
 <li class="nav-item {{ Request::is('sadmin/front-cms*') ||
-    Request::is('sadmin/advanced*') ||
-    Request::is('sadmin/email-subscription*') ||
-    Request::is('sadmin/features*') ||
-    Request::is('sadmin/about-us*') ||
-    Request::is('sadmin/frontTestimonial*') ||
-    Request::is('sadmin/frontFaqs*') ||
-    Request::is('sadmin/inquiries*') ||
-    Request::is('sadmin/banner*') ||
-    Request::is('sadmin/contact-us*') ||
-    Request::is('sadmin/app-download*') ||
-    Request::is('sadmin/theme-configuration*') ||
-    Request::is('sadmin/what-drives-us*') ||
-    Request::is('sadmin/our-mission*') ||
-    Request::is('sadmin/front-slider*')
-        ? 'active'
-        : '' }}">
+  Request::is('sadmin/advanced*') ||
+  Request::is('sadmin/email-subscription*') ||
+  Request::is('sadmin/features*') ||
+  Request::is('sadmin/about-us*') ||
+  Request::is('sadmin/frontTestimonial*') ||
+  Request::is('sadmin/frontFaqs*') ||
+  Request::is('sadmin/inquiries*') ||
+  Request::is('sadmin/banner*') ||
+  Request::is('sadmin/contact-us*') ||
+  Request::is('sadmin/app-download*') ||
+  Request::is('sadmin/theme-configuration*') ||
+  Request::is('sadmin/what-drives-us*') ||
+  Request::is('sadmin/our-mission*') ||
+  Request::is('sadmin/front-slider*')
+  ? 'active'
+  : '' }}">
   <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('setting.front.cms') }}">
     <span class="aside-menu-icon"><i class="fa fa-home icon-color-bs-red"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fa fa-home icon-color-gray"></i></span> --}}
@@ -227,14 +242,16 @@
 
 @hasrole('sales')
 <li class="nav-item {{ Request::is('sadmin/dashboard*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('redirect-links.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('redirect-links.index') }}">
     <span class="aside-menu-icon"><i class="fas fa-tachometer-alt icon-color-bs-blue"></i></span>
     <span class="aside-menu-title">{{ __('messages.dashboard') }}</span>
   </a>
 </li>
 
 <li class="nav-item {{ Request::is('sadmin/redirect-links*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('redirect-links.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('redirect-links.index') }}">
     <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span>
     <span class="aside-menu-title">{{ __('messages.redirect_links.title') }}</span>
   </a>
@@ -247,23 +264,33 @@
   </a>
 </li>
 
+<li class="nav-item {{ Request::is('sadmin/my-customers*') ? 'active' : '' }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sales.customers.index') }}">
+    <span class="aside-menu-icon"><i class="fas fa-users icon-color-bs-blue"></i></span>
+    <span class="aside-menu-title">{{ __('messages.sales_customers.title') }}</span>
+  </a>
+</li>
+
 <li class="nav-item {{ Request::is('sadmin/acknowledgments*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('acknowledgments.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('acknowledgments.index') }}">
     <span class="aside-menu-icon"><i class="fas fa-file-signature icon-color-bs-blue"></i></span>
     <span class="aside-menu-title">{{ __('messages.acknowledgments') }}</span>
   </a>
 </li>
 
 @php
-$salesAdSetting = \App\Models\SalesAdvertiseSetting::where('user_id', auth()->id())->first();
+  $salesAdSetting = \App\Models\SalesAdvertiseSetting::where('user_id', auth()->id())->first();
 @endphp
 @if($salesAdSetting && $salesAdSetting->is_enabled)
-<li class="nav-item {{ Request::is('sadmin/my-advertise*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('sales.advertise.edit') }}">
-    <span class="aside-menu-icon"><i class="fas fa-bullhorn icon-color-bs-blue"></i></span>
-    <span class="aside-menu-title">{{ __('messages.sales_advertise.my_advertise') }}</span>
-  </a>
-</li>
+  <li class="nav-item {{ Request::is('sadmin/my-advertise*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('sales.advertise.edit') }}">
+      <span class="aside-menu-icon"><i class="fas fa-bullhorn icon-color-bs-blue"></i></span>
+      <span class="aside-menu-title">{{ __('messages.sales_advertise.my_advertise') }}</span>
+    </a>
+  </li>
 @endif
 @endhasrole
 
@@ -285,17 +312,18 @@ $salesAdSetting = \App\Models\SalesAdvertiseSetting::where('user_id', auth()->id
 </li>
 
 @if (getPlanFeature(getCurrentSubscription()->plan)['whatsapp_store'])
-<li class="vcard-option nav-item {{ Request::is('admin/whatsapp-store*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('whatsapp.stores') }}">
-    <span class="aside-menu-icon"><i class="fab fa-whatsapp"></i></span>
-    {{-- <span class="aside-menu-icon"><i class="fab fa-whatsapp icon-color-gray"></i></span> --}}
-    <span class="aside-menu-title">{{ __('messages.whatsapp_stores.whatsapp_stores') }}</span>
-  </a>
-</li>
+  <li class="vcard-option nav-item {{ Request::is('admin/whatsapp-store*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('whatsapp.stores') }}">
+      <span class="aside-menu-icon"><i class="fab fa-whatsapp"></i></span>
+      {{-- <span class="aside-menu-icon"><i class="fab fa-whatsapp icon-color-gray"></i></span> --}}
+      <span class="aside-menu-title">{{ __('messages.whatsapp_stores.whatsapp_stores') }}</span>
+    </a>
+  </li>
 @endif
 
 <li class="redirect-links-option nav-item {{ Request::is('admin/redirect-links*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('client.redirect-links.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('client.redirect-links.index') }}">
     <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span>
     <span class="aside-menu-title">{{ __('messages.redirect_links.title') }}</span>
   </a>
@@ -303,31 +331,33 @@ $salesAdSetting = \App\Models\SalesAdvertiseSetting::where('user_id', auth()->id
 
 
 <li class="nav-item {{ Request::is('admin/global-qr-code*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('global.qr.code.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('global.qr.code.index') }}">
     <span class="aside-menu-icon"><i class="fa-solid fa-qrcode icon-color-bs-purple"></i></span>
     <span class="aside-menu-title">{{ __('messages.global_qr_code.title') }}</span>
   </a>
 </li>
 
 @if (moduleExists('GoogleWallet'))
-<li class="vcard-option nav-item {{ Request::is('admin/google-wallet*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('google-wallet.index') }}">
-    <span class="aside-menu-icon"><i class="fa-brands fa-google-wallet icon-color-bs-purple"></i></i></span>
-    {{-- <span class="aside-menu-icon"><i
-                            class="fa-brands fa-google-wallet icon-color-gray"></i></i></span> --}}
-    <span class="aside-menu-title">{{ __('googlewallet::messages.google_wallet') }}</span>
-  </a>
-</li>
+  <li class="vcard-option nav-item {{ Request::is('admin/google-wallet*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('google-wallet.index') }}">
+      <span class="aside-menu-icon"><i class="fa-brands fa-google-wallet icon-color-bs-purple"></i></i></span>
+      {{-- <span class="aside-menu-icon"><i class="fa-brands fa-google-wallet icon-color-gray"></i></i></span> --}}
+      <span class="aside-menu-title">{{ __('googlewallet::messages.google_wallet') }}</span>
+    </a>
+  </li>
 @endif
 
 @if (getPlanFeature(getCurrentSubscription()->plan)['whatsapp_store'])
-<li class="nav-item {{ Request::is('admin/wp-product-orders*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('wp-product-order.index') }}">
-    <span class="aside-menu-icon"><i class="fas fa-money-bills icon-color-bs-darkyellow"></i></span>
-    {{-- <span class="aside-menu-icon"><i class="fas fa-money-bills icon-color-gray"></i></span> --}}
-    <span class="aside-menu-title">{{ __('messages.whatsapp_product_order') }}</span>
-  </a>
-</li>
+  <li class="nav-item {{ Request::is('admin/wp-product-orders*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('wp-product-order.index') }}">
+      <span class="aside-menu-icon"><i class="fas fa-money-bills icon-color-bs-darkyellow"></i></span>
+      {{-- <span class="aside-menu-icon"><i class="fas fa-money-bills icon-color-gray"></i></span> --}}
+      <span class="aside-menu-title">{{ __('messages.whatsapp_product_order') }}</span>
+    </a>
+  </li>
 @endif
 
 <li class="nav-item {{ Request::is('admin/inquiries*') ? 'active' : '' }}">
@@ -348,15 +378,18 @@ $salesAdSetting = \App\Models\SalesAdvertiseSetting::where('user_id', auth()->id
 </li>
 
 <li class="nav-item {{ Request::is('admin/product-orders*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('product-orders.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('product-orders.index') }}">
     <span class="aside-menu-icon"><i class="fas fa-money-bills icon-color-bs-darkyellow"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fas fa-money-bills icon-color-gray"></i></span> --}}
     <span class="aside-menu-title">{{ __('messages.product_orders') }}</span>
   </a>
 </li>
 
-<li class="nav-item {{ Request::is('admin/virtual-backgrounds*') || Request::is('admin/custom-virtual-backgrounds*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('virtual-backgrounds.index') }}">
+<li
+  class="nav-item {{ Request::is('admin/virtual-backgrounds*') || Request::is('admin/custom-virtual-backgrounds*') ? 'active' : '' }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('virtual-backgrounds.index') }}">
     <span class="aside-menu-icon"><i class="fas fa-id-card-clip icon-color-bs-lightred"></i></span>
     {{-- <span class="aside-menu-icon"><i class="fas fa-id-card-clip icon-color-gray"></i></span> --}}
     <span class="aside-menu-title">{{ __('messages.virtual_backgrounds') }}</span>
@@ -364,22 +397,23 @@ $salesAdSetting = \App\Models\SalesAdvertiseSetting::where('user_id', auth()->id
 </li>
 
 @if (checkFeature('affiliation'))
-<li class="nav-item {{ Request::is('admin/affiliations*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('user.affiliation.index') }}">
-    <span class="aside-menu-icon"><i class="fas fa-coins icon-color-bs-pink"></i></span>
-    {{-- <span class="aside-menu-icon"><i class="fas fa-coins icon-color-gray"></i></span> --}}
-    <span class="aside-menu-title">{{ __('messages.plan.affiliation') }}</span>
-  </a>
-</li>
+  <li class="nav-item {{ Request::is('admin/affiliations*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('user.affiliation.index') }}">
+      <span class="aside-menu-icon"><i class="fas fa-coins icon-color-bs-pink"></i></span>
+      {{-- <span class="aside-menu-icon"><i class="fas fa-coins icon-color-gray"></i></span> --}}
+      <span class="aside-menu-title">{{ __('messages.plan.affiliation') }}</span>
+    </a>
+  </li>
 @endif
 @if (getNfcCard()->count() > 0)
-<li class="nav-item {{ Request::is('admin/my-nfc-cards*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('user.orders') }}">
-    <span class="aside-menu-icon"><i class="fas fa-id-card icon-color-bs-teal"></i></i></span>
-    {{-- <span class="aside-menu-icon"><i class="fas fa-id-card icon-color-gray"></i></i></span> --}}
-    <span class="aside-menu-title">{{ __('messages.nfc.my_nfc_cards') }}</span>
-  </a>
-</li>
+  <li class="nav-item {{ Request::is('admin/my-nfc-cards*') ? 'active' : '' }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('user.orders') }}">
+      <span class="aside-menu-icon"><i class="fas fa-id-card icon-color-bs-teal"></i></i></span>
+      {{-- <span class="aside-menu-icon"><i class="fas fa-id-card icon-color-gray"></i></i></span> --}}
+      <span class="aside-menu-title">{{ __('messages.nfc.my_nfc_cards') }}</span>
+    </a>
+  </li>
 @endif
 <li class="nav-item {{ Request::is('admin/storage*') ? 'active' : '' }}">
   <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('user.storage') }}">
@@ -390,7 +424,8 @@ $salesAdSetting = \App\Models\SalesAdvertiseSetting::where('user_id', auth()->id
 </li>
 
 <li class="nav-item {{ Request::is('admin/global-qr-code*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('global.qr.code.index') }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('global.qr.code.index') }}">
     <span class="aside-menu-icon"><i class="fa-solid fa-qrcode icon-color-bs-purple"></i></span>
     <span class="aside-menu-title">{{ __('messages.global_qr_code.title') }}</span>
   </a>
@@ -407,10 +442,12 @@ $salesAdSetting = \App\Models\SalesAdvertiseSetting::where('user_id', auth()->id
 {{-- manage subscription fixed button --}}
 <li class="{{ Request::is('admin/manage-subscription*') ? 'active' : '' }} fixed">
   <div class="card bg-light sidebar-bottom-btn m-2">
-    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('subscription.index') }}">
+    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+      href="{{ route('subscription.index') }}">
       <span class="aside-menu-icon"><i class="fa-regular fa-gem icon-color-bs-red"></i></span>
       {{-- <span class="aside-menu-icon"><i class="fa-regular fa-gem icon-color-gray"></i></span> --}}
-      <span class="aside-menu-title {{ Request::is('admin/manage-subscription*') ? 'text-primary' : '' }}">{{ __('messages.subscription.manage_subscription') }}</span>
+      <span
+        class="aside-menu-title {{ Request::is('admin/manage-subscription*') ? 'text-primary' : '' }}">{{ __('messages.subscription.manage_subscription') }}</span>
     </a>
   </div>
 </li>

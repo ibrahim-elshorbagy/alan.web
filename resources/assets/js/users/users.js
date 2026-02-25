@@ -17,18 +17,101 @@ listenClick(".user-is-verified", function () {
 
 listenClick(".user-active", function () {
     let userId = $(this).data("id");
-    // Detect if we're on admin users page or regular users page
-    let isAdminPage = window.location.pathname.includes('/admins');
-    let routeName = isAdminPage ? "admins.status" : "users.status";
-    let updateUrl = route(routeName, userId);
-    $.ajax({
-        type: "get",
-        url: updateUrl,
-        success: function (response) {
-            displaySuccessMessage(response.message);
-            Livewire.dispatch("refresh");
-        },
-    });
+    let isChecked = $(this).is(":checked");
+    let checkbox = $(this);
+
+    // If deactivating (unchecking), show confirmation
+    if (!isChecked) {
+        swal({
+            title: Lang.get("js.warning") + " !",
+            text: Lang.get("js.deactivate_user_confirm"),
+            icon: sweetAlertIcon,
+            buttons: {
+                cancel: Lang.get("js.no"),
+                confirm: Lang.get("js.yes"),
+            },
+            dangerMode: true,
+            reverseButtons: true,
+        }).then(function (willDeactivate) {
+            if (willDeactivate) {
+                // Detect if we're on admin users page or regular users page
+                let isAdminPage = window.location.pathname.includes('/admins');
+                let routeName = isAdminPage ? "admins.status" : "users.status";
+                let updateUrl = route(routeName, userId);
+                $.ajax({
+                    type: "get",
+                    url: updateUrl,
+                    success: function (response) {
+                        displaySuccessMessage(response.message);
+                        Livewire.dispatch("refresh");
+                    },
+                });
+            } else {
+                // Revert checkbox state
+                checkbox.prop("checked", true);
+            }
+        });
+    } else {
+        // Activating - no confirmation needed
+        let isAdminPage = window.location.pathname.includes('/admins');
+        let routeName = isAdminPage ? "admins.status" : "users.status";
+        let updateUrl = route(routeName, userId);
+        $.ajax({
+            type: "get",
+            url: updateUrl,
+            success: function (response) {
+                displaySuccessMessage(response.message);
+                Livewire.dispatch("refresh");
+            },
+        });
+    }
+});
+
+listenClick(".sales-customer-active", function () {
+    let userId = $(this).data("id");
+    let isChecked = $(this).is(":checked");
+    let checkbox = $(this);
+
+    // If deactivating (unchecking), show confirmation
+    if (!isChecked) {
+        swal({
+            title: Lang.get("js.warning") + " !",
+            text: Lang.get("js.deactivate_user_confirm"),
+            icon: sweetAlertIcon,
+            buttons: {
+                cancel: Lang.get("js.no"),
+                confirm: Lang.get("js.yes"),
+            },
+            dangerMode: true,
+            reverseButtons: true,
+        }).then(function (willDeactivate) {
+            if (willDeactivate) {
+                let updateUrl = route("sales.customers.status", userId);
+                $.ajax({
+                    type: "get",
+                    url: updateUrl,
+                    success: function (response) {
+                        displaySuccessMessage(response.message);
+                        Livewire.dispatch("refresh");
+                    },
+                });
+            } else {
+                // Revert checkbox state
+                checkbox.prop("checked", true);
+            }
+        });
+    } else {
+        // Activating - no confirmation needed
+        let updateUrl = route("sales.customers.status", userId);
+        $.ajax({
+            type: "get",
+            url: updateUrl,
+            success: function (response) {
+                displaySuccessMessage(response.message);
+                Livewire.dispatch("refresh");
+            },
+        });
+    }
 });
 
 listenClick(".vcards-verified", function () {

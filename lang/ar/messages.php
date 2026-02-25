@@ -2660,6 +2660,7 @@ return [
       'user_id_changed' => 'تم تغيير المستخدم من :old إلى :new',
       'user_redeem' => 'قام المستخدم :user باستخدام رابط التوجيه',
       'user_deleted_link' => 'قام المستخدم :user بحذف رابط التوجيه الخاص به',
+      'user_deactivated' => 'تم تعطيل المستخدم :user - تم إلغاء تعيين رابط التوجيه',
       'added_to_acknowledgment' => 'تمت إضافة البطاقة إلى سند التسليم #:acknowledgment_id',
       'removed_from_acknowledgment' => 'تمت إزالة البطاقة من سند التسليم #:acknowledgment_id',
       'redirect_link_changed' => 'تم تغيير رابط إعادة التوجيه من :old إلى :new',
@@ -2801,6 +2802,18 @@ return [
     'download' => 'تحميل',
     'delete' => 'حذف',
     'document_deleted_successfully' => 'تم حذف الوثيقة بنجاح.',
+  ],
+
+  'sales_customers' => [
+    'title' => 'عملائي',
+    'name' => 'الاسم',
+    'email' => 'البريد الإلكتروني',
+    'phone' => 'الهاتف',
+    'status' => 'الحالة',
+    'action' => 'الإجراء',
+    'no_customers' => 'لا يوجد عملاء',
+    'customer_deactivated' => 'تم تعطيل العميل بنجاح',
+    'customer_activated' => 'تم تفعيل العميل بنجاح',
   ],
 
 ];

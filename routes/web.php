@@ -636,6 +636,12 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('nfc-showcase', [App\Http\Controllers\SalesNfcController::class, 'index'])->name('sales.nfc.showcase');
     });
 
+    // Sales Customers
+    Route::prefix('sadmin')->middleware('role:sales')->group(function () {
+      Route::get('my-customers', [App\Http\Controllers\SalesCustomerController::class, 'index'])->name('sales.customers.index');
+      Route::get('my-customers/update-status/{user}', [App\Http\Controllers\SalesCustomerController::class, 'updateStatus'])->name('sales.customers.status');
+    });
+
     // Sales Advertisement – super_admin manages per-user settings
     Route::prefix('sadmin')->middleware('role:super_admin')->group(function () {
       Route::get('sales-advertise/{userId}/edit', [App\Http\Controllers\SalesAdvertiseController::class, 'edit'])->name('sadmin.sales.advertise.edit');

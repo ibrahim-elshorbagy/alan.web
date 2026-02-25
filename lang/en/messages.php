@@ -2664,6 +2664,7 @@ If you want to redirect your card to the smart business card, you must first go 
       'user_id_changed' => 'User changed from :old to :new',
       'user_redeem' => 'User :user redeemed the redirect link',
       'user_deleted_link' => 'User :user deleted their redirect link',
+      'user_deactivated' => 'User :user was deactivated - redirect link unassigned',
       'added_to_acknowledgment' => 'Card added to acknowledgment #:acknowledgment_id',
       'removed_from_acknowledgment' => 'Card removed from acknowledgment #:acknowledgment_id',
       'redirect_link_changed' => 'Redirect link changed from :old to :new',
@@ -2804,6 +2805,18 @@ If you want to redirect your card to the smart business card, you must first go 
     'download' => 'Download',
     'delete' => 'Delete',
     'document_deleted_successfully' => 'Document deleted successfully.',
+  ],
+
+  'sales_customers' => [
+    'title' => 'My Customers',
+    'name' => 'Name',
+    'email' => 'Email',
+    'phone' => 'Phone',
+    'status' => 'Status',
+    'action' => 'Action',
+    'no_customers' => 'No customers found',
+    'customer_deactivated' => 'Customer deactivated successfully',
+    'customer_activated' => 'Customer activated successfully',
   ],
 
 ];

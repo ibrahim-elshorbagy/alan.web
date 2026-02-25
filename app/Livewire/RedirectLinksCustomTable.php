@@ -759,9 +759,11 @@ class RedirectLinksCustomTable extends Component
     $this->acknowledgmentSalesUserId = '';
     $this->selected = [];
 
-    // Set success message and redirect (modal closes automatically on redirect)
+    // Set success message
     session()->flash('success', __('messages.acknowledgment_created'));
-    return redirect()->route('acknowledgments.view', $acknowledgment->id);
+
+    // Open acknowledgment in new tab
+    $this->dispatch('openAcknowledgment', $acknowledgment->id);
   }
 
   public function clearAcknowledgmentErrors()

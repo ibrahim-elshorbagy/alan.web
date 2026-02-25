@@ -274,6 +274,7 @@ return [
   'description_required' => 'Description field is required.',
   'request_timeout' => 'Request timed out. Please try again.',
   'generating_ai_content' => 'Generating AI content...',
+  'deactivate_user_confirm' => 'Are you sure you want to deactivate this user? This action will deactivate all their vCards, WhatsApp stores, and unassign all their redirect links. This cannot be undone.',
   'show_vcard_sidebar' => 'Here is the vCard section in the sidebar.',
   'show_redirect_links_sidebar' => 'Here are your Redirect Links in the sidebar.',
   'open_redeem_modal' => 'Click here to redeem a redirect link code.',

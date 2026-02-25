@@ -1210,6 +1210,11 @@
         const modal = new bootstrap.Modal(document.getElementById('acknowledgmentModal'));
         modal.show();
       });
+
+      Livewire.on('openAcknowledgment', (acknowledgmentId) => {
+        const acknowledgmentUrl = '{{ route("acknowledgments.view", ":id") }}'.replace(':id', acknowledgmentId);
+        window.open(acknowledgmentUrl, '_blank');
+      });
     });
   </script>
 

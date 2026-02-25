@@ -44001,18 +44001,100 @@ listenClick(".user-is-verified", function () {
 });
 listenClick(".user-active", function () {
   var userId = $(this).data("id");
-  // Detect if we're on admin users page or regular users page
-  var isAdminPage = window.location.pathname.includes('/admins');
-  var routeName = isAdminPage ? "admins.status" : "users.status";
-  var updateUrl = route(routeName, userId);
-  $.ajax({
-    type: "get",
-    url: updateUrl,
-    success: function success(response) {
-      displaySuccessMessage(response.message);
-      Livewire.dispatch("refresh");
-    }
-  });
+  var isChecked = $(this).is(":checked");
+  var checkbox = $(this);
+
+  // If deactivating (unchecking), show confirmation
+  if (!isChecked) {
+    swal({
+      title: Lang.get("js.warning") + " !",
+      text: Lang.get("js.deactivate_user_confirm"),
+      icon: sweetAlertIcon,
+      buttons: {
+        cancel: Lang.get("js.no"),
+        confirm: Lang.get("js.yes")
+      },
+      dangerMode: true,
+      reverseButtons: true
+    }).then(function (willDeactivate) {
+      if (willDeactivate) {
+        // Detect if we're on admin users page or regular users page
+        var isAdminPage = window.location.pathname.includes('/admins');
+        var routeName = isAdminPage ? "admins.status" : "users.status";
+        var updateUrl = route(routeName, userId);
+        $.ajax({
+          type: "get",
+          url: updateUrl,
+          success: function success(response) {
+            displaySuccessMessage(response.message);
+            Livewire.dispatch("refresh");
+          }
+        });
+      } else {
+        // Revert checkbox state
+        checkbox.prop("checked", true);
+      }
+    });
+  } else {
+    // Activating - no confirmation needed
+    var isAdminPage = window.location.pathname.includes('/admins');
+    var routeName = isAdminPage ? "admins.status" : "users.status";
+    var updateUrl = route(routeName, userId);
+    $.ajax({
+      type: "get",
+      url: updateUrl,
+      success: function success(response) {
+        displaySuccessMessage(response.message);
+        Livewire.dispatch("refresh");
+      }
+    });
+  }
+});
+listenClick(".sales-customer-active", function () {
+  var userId = $(this).data("id");
+  var isChecked = $(this).is(":checked");
+  var checkbox = $(this);
+
+  // If deactivating (unchecking), show confirmation
+  if (!isChecked) {
+    swal({
+      title: Lang.get("js.warning") + " !",
+      text: Lang.get("js.deactivate_user_confirm"),
+      icon: sweetAlertIcon,
+      buttons: {
+        cancel: Lang.get("js.no"),
+        confirm: Lang.get("js.yes")
+      },
+      dangerMode: true,
+      reverseButtons: true
+    }).then(function (willDeactivate) {
+      if (willDeactivate) {
+        var updateUrl = route("sales.customers.status", userId);
+        $.ajax({
+          type: "get",
+          url: updateUrl,
+          success: function success(response) {
+            displaySuccessMessage(response.message);
+            Livewire.dispatch("refresh");
+          }
+        });
+      } else {
+        // Revert checkbox state
+        checkbox.prop("checked", true);
+      }
+    });
+  } else {
+    // Activating - no confirmation needed
+    var updateUrl = route("sales.customers.status", userId);
+    $.ajax({
+      type: "get",
+      url: updateUrl,
+      success: function success(response) {
+        displaySuccessMessage(response.message);
+        Livewire.dispatch("refresh");
+      }
+    });
+  }
 });
 listenClick(".vcards-verified", function () {
   var userId = $(this).data("id");
