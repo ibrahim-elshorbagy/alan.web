@@ -548,9 +548,9 @@
 
         @if (auth()->user()->hasRole('super_admin'))
           <button type="button" class="btn btn-secondary"
-            @click="if(confirm('{{ __('messages.redirect_links.update_prices_confirm') }}')) { syncAndCall('updateSelectedPrices') }">
-            <i class="fas fa-sync-alt"></i> <span
-              class="d-none d-sm-inline">{{ __('messages.redirect_links.update_prices_from_nfc') }}</span>
+            data-bs-toggle="modal" data-bs-target="#updatePricesModal">
+            <i class="fas fa-tags"></i> <span
+              class="d-none d-sm-inline">{{ __('messages.redirect_links.update_prices') }}</span>
           </button>
 
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignModal">
@@ -1216,6 +1216,11 @@
         window.open(acknowledgmentUrl, '_blank');
       });
 
+      Livewire.on('closeUpdatePricesModal', () => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('updatePricesModal'));
+        if (modal) modal.hide();
+      });
+
       Livewire.on('openNoteModal', () => {
         const noteModal = new bootstrap.Modal(document.getElementById('noteModal'));
         noteModal.show();
@@ -1228,6 +1233,64 @@
       });
     });
   </script>
+
+  {{-- Update Prices Modal --}}
+  <div class="modal fade" id="updatePricesModal" tabindex="-1" aria-labelledby="updatePricesModalLabel" aria-hidden="true"
+    wire:ignore.self>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updatePricesModalLabel">
+            <i class="fas fa-tags me-2"></i>{{ __('messages.redirect_links.update_prices') }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          {{-- Option 1: Update from NFC --}}
+          <div class="border rounded p-3 mb-3">
+            <h6 class="fw-bold mb-1">
+              <i class="fas fa-sync-alt me-1 text-primary"></i>
+              {{ __('messages.redirect_links.update_prices_from_nfc') }}
+            </h6>
+            <p class="text-muted small mb-3">{{ __('messages.redirect_links.update_prices_from_nfc_desc') }}</p>
+            <button type="button" class="btn btn-primary w-100"
+              @click="syncAndCall('updateSelectedPrices'); bootstrap.Modal.getInstance(document.getElementById('updatePricesModal'))?.hide()">
+              <i class="fas fa-sync-alt me-1"></i> {{ __('messages.redirect_links.update_prices_from_nfc') }}
+            </button>
+          </div>
+
+          <div class="text-center text-muted my-3 fw-semibold">— {{ __('messages.redirect_links.or') }} —</div>
+
+          {{-- Option 2: Manual price --}}
+          <div class="border rounded p-3">
+            <h6 class="fw-bold mb-3">
+              <i class="fas fa-pencil-alt me-1 text-warning"></i>
+              {{ __('messages.redirect_links.update_prices_manually') }}
+            </h6>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">{{ __('messages.redirect_links.admin_price_label') }}</label>
+              <input type="number" class="form-control" wire:model="manualPrice" min="0" step="0.01"
+                placeholder="0.00">
+            </div>
+            <div class="mb-3">
+              <label class="form-label fw-semibold">{{ __('messages.redirect_links.sales_price_label') }}</label>
+              <input type="number" class="form-control" wire:model="manualSalesPrice" min="0" step="0.01"
+                placeholder="0.00">
+            </div>
+            <button type="button" class="btn btn-warning w-100"
+              @click="$wire.set('selected', selected).then(() => $wire.call('updateSelectedPricesManually'))">
+              <i class="fas fa-save me-1"></i> {{ __('messages.redirect_links.apply_manual_price') }}
+            </button>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.common.cancel') }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   {{-- Note Modal --}}
   <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true"

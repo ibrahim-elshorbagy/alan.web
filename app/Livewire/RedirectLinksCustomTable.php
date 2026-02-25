@@ -55,6 +55,10 @@ class RedirectLinksCustomTable extends Component
   public $noteOldValue = '';
   public $noteLoading = false;
 
+  // For manual price update
+  public $manualPrice = '';
+  public $manualSalesPrice = '';
+
   // Accordion state - which groups are expanded
   public $expandedGroups = [];
 
@@ -350,6 +354,93 @@ class RedirectLinksCustomTable extends Component
     } else {
       session()->flash('info', __('messages.redirect_links.no_price_changes'));
     }
+  }
+
+  public function updateSelectedPricesManually()
+  {
+    // Only super admin can update prices
+    if (!auth()->user()->hasRole('super_admin')) {
+      session()->flash('error', __('messages.common.unauthorized'));
+      return;
+    }
+
+    $selectedIds = $this->selected;
+
+    if (empty($selectedIds)) {
+      session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    if ($this->manualPrice === '' || $this->manualPrice === null) {
+      session()->flash('error', __('messages.redirect_links.manual_price_required'));
+      return;
+    }
+
+    $newPrice = floatval($this->manualPrice);
+    $newSalesPrice = ($this->manualSalesPrice !== '' && $this->manualSalesPrice !== null)
+      ? floatval($this->manualSalesPrice)
+      : null;
+
+    $redirectLinks = RedirectLink::whereIn('id', $selectedIds)->get();
+
+    if ($redirectLinks->isEmpty()) {
+      session()->flash('error', __('messages.redirect_links.no_items_selected'));
+      return;
+    }
+
+    // Get the actual user ID (considering impersonation)
+    $actualUserId = auth()->user()->isImpersonated()
+      ? app('impersonate')->getImpersonatorId()
+      : auth()->id();
+
+    $updated = 0;
+
+    foreach ($redirectLinks as $link) {
+      $oldPrice = $link->price;
+      $oldSalesPrice = $link->sales_price;
+
+      $updateData = ['price' => $newPrice];
+      if ($newSalesPrice !== null) {
+        $updateData['sales_price'] = $newSalesPrice;
+      }
+
+      $link->update($updateData);
+
+      if ($oldPrice != $newPrice) {
+        $link->logHistory(
+          'price_changed',
+          $oldPrice,
+          $newPrice,
+          $actualUserId,
+          __('messages.redirect_links.history.price_updated', [
+            'old' => $oldPrice,
+            'new' => $newPrice
+          ])
+        );
+      }
+
+      if ($newSalesPrice !== null && $oldSalesPrice != $newSalesPrice) {
+        $link->logHistory(
+          'sales_price_changed',
+          $oldSalesPrice,
+          $newSalesPrice,
+          $actualUserId,
+          __('messages.redirect_links.history.sales_price_updated', [
+            'old' => $oldSalesPrice,
+            'new' => $newSalesPrice
+          ])
+        );
+      }
+
+      $updated++;
+    }
+
+    $this->manualPrice = '';
+    $this->manualSalesPrice = '';
+    $this->selected = [];
+
+    $this->dispatch('closeUpdatePricesModal');
+    session()->flash('success', __('messages.redirect_links.prices_manually_updated', ['count' => $updated]));
   }
 
   public function markSelectedAsReceived()
