@@ -224,18 +224,27 @@ class SalesAdvertiseController extends Controller
       return null;
     }
 
-    // Determine which image to show (round-robin)
-    $impressions  = $setting->impressions ?? [];
-    $totalShown   = array_sum($impressions);
-    $imageCount   = count($images);
-    $nextIndex    = $totalShown % $imageCount;
+    // Determine which image to show (round-robin, keyed by image path)
+    $rawImpressions = $setting->impressions ?? [];
 
-    // Increment impression for this image
-    $impressions[$nextIndex] = ($impressions[$nextIndex] ?? 0) + 1;
-    $setting->impressions    = $impressions;
+    // Build a path-keyed impression map for only the current images,
+    // normalising away any legacy numeric-keyed data.
+    $pathCounts = [];
+    foreach ($images as $path) {
+      $pathCounts[$path] = $rawImpressions[$path] ?? 0;
+    }
+
+    $totalShown = array_sum($pathCounts);
+    $imageCount = count($images);
+    $nextIndex  = $totalShown % $imageCount;
+    $imagePath  = $images[$nextIndex];
+
+    // Increment impression for this image path
+    $pathCounts[$imagePath] = ($pathCounts[$imagePath] ?? 0) + 1;
+    $setting->impressions   = $pathCounts;
     $setting->save();
 
-    $imageUrl   = asset($images[$nextIndex]);
+    $imageUrl   = asset($imagePath);
     $duration   = max(1, (int) $setting->duration);
 
     return view('sales_advertise.ad_display', compact('imageUrl', 'duration', 'destinationUrl'));
