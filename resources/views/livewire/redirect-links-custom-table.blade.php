@@ -1215,7 +1215,51 @@
         const acknowledgmentUrl = '{{ route("acknowledgments.view", ":id") }}'.replace(':id', acknowledgmentId);
         window.open(acknowledgmentUrl, '_blank');
       });
+
+      Livewire.on('openNoteModal', () => {
+        const noteModal = new bootstrap.Modal(document.getElementById('noteModal'));
+        noteModal.show();
+      });
+
+      Livewire.on('noteSaved', () => {
+        const noteModalEl = document.getElementById('noteModal');
+        const noteModal = bootstrap.Modal.getInstance(noteModalEl);
+        if (noteModal) noteModal.hide();
+      });
     });
   </script>
+
+  {{-- Note Modal --}}
+  <div class="modal fade" id="noteModal" tabindex="-1" aria-labelledby="noteModalLabel" aria-hidden="true"
+    wire:ignore.self>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="noteModalLabel">
+            <i class="fas fa-sticky-note me-2"></i>{{ __('messages.redirect_links.note') }}
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">{{ __('messages.redirect_links.note') }}:</label>
+            <textarea class="form-control" wire:model="noteText" rows="5"
+              placeholder="{{ __('messages.redirect_links.note_placeholder') }}"
+              style="resize: vertical;"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.common.cancel') }}</button>
+          <button type="button" class="btn btn-primary" wire:click="saveNote" wire:loading.attr="disabled">
+            <span wire:loading.remove wire:target="saveNote">{{ __('messages.common.save') }}</span>
+            <span wire:loading wire:target="saveNote">
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              {{ __('messages.common.loading') }}...
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>

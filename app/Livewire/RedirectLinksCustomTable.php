@@ -49,6 +49,12 @@ class RedirectLinksCustomTable extends Component
   // For received validation
   public $receivedValidationErrors = [];
 
+  // For note modal
+  public $noteId = null;
+  public $noteText = '';
+  public $noteOldValue = '';
+  public $noteLoading = false;
+
   // Accordion state - which groups are expanded
   public $expandedGroups = [];
 
@@ -1499,6 +1505,64 @@ class RedirectLinksCustomTable extends Component
   {
     if (empty($this->selected)) return [];
     return RedirectLink::whereIn('id', $this->selected)->pluck('uri')->toArray();
+  }
+
+  public function openNoteModal($id)
+  {
+    $redirectLink = RedirectLink::findOrFail($id);
+
+    // Only super_admin and sales can access
+    if (!auth()->user()->hasRole(['super_admin', 'sales'])) {
+      return;
+    }
+
+    // For sales, only their assigned links
+    if (auth()->user()->hasRole('sales') && $redirectLink->assigned_id != auth()->id()) {
+      return;
+    }
+
+    $this->noteId = $id;
+    $this->noteText = $redirectLink->note ?? '';
+    $this->noteOldValue = $redirectLink->note ?? '';
+    $this->dispatch('openNoteModal');
+  }
+
+  public function saveNote()
+  {
+    if (!auth()->user()->hasRole(['super_admin', 'sales'])) {
+      session()->flash('error', __('messages.common.unauthorized'));
+      return;
+    }
+
+    $redirectLink = RedirectLink::findOrFail($this->noteId);
+
+    // For sales, only their assigned links
+    if (auth()->user()->hasRole('sales') && $redirectLink->assigned_id != auth()->id()) {
+      session()->flash('error', __('messages.common.unauthorized'));
+      return;
+    }
+
+    $oldNote = $redirectLink->note;
+    $redirectLink->update(['note' => $this->noteText ?: null]);
+
+    // Log history if note changed
+    if ($oldNote !== $this->noteText) {
+      $actualUserId = auth()->user()->isImpersonated()
+        ? app('impersonate')->getImpersonatorId()
+        : auth()->id();
+
+      $redirectLink->logHistory(
+        'note_changed',
+        $oldNote ?? '',
+        $this->noteText ?? '',
+        $actualUserId,
+        'تحديث الملاحظة'
+      );
+    }
+
+    $this->noteOldValue = $this->noteText;
+    $this->dispatch('noteSaved');
+    session()->flash('success', __('messages.flash.vcard_update'));
   }
 
   public function render()

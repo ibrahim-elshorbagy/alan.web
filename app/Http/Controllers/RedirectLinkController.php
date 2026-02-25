@@ -999,6 +999,7 @@ class RedirectLinkController extends Controller
     $rules = [
       'redirect_link' => 'nullable|url',
       'status' => $statusRule,
+      'note' => 'nullable|string|max:5000',
     ];
 
     // Allow sales to update assigned_id and user_id
@@ -1099,6 +1100,14 @@ class RedirectLinkController extends Controller
       ];
     }
 
+    // Track note changes
+    if (array_key_exists('note', $updateData) && $redirectLink->note !== $updateData['note']) {
+      $changes['note'] = [
+        'old' => $redirectLink->note ?? '',
+        'new' => $updateData['note'] ?? ''
+      ];
+    }
+
     // Handle assignment changes - reset received_status if sales is reassigning
     if (isset($updateData['assigned_id']) && $redirectLink->assigned_id != $updateData['assigned_id']) {
       if (auth()->user()->hasRole('sales')) {
@@ -1116,15 +1125,15 @@ class RedirectLinkController extends Controller
 
     if (auth()->user()->hasRole('sales')) {
       // For sales, allow updating redirect_link, status, assigned_id, received_status, and user_id (from quick user creation)
-      $allowedFields = ['redirect_link', 'status', 'assigned_id', 'received_status', 'user_id'];
+      $allowedFields = ['redirect_link', 'status', 'assigned_id', 'received_status', 'user_id', 'note'];
       $updateData = array_intersect_key($updateData, array_flip($allowedFields));
     } else if (auth()->user()->hasRole('super_admin')) {
       // For super admin, allow all fields including price and sales_price
-      $allowedFields = ['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status', 'price', 'sales_price'];
+      $allowedFields = ['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status', 'price', 'sales_price', 'note'];
       $updateData = array_intersect_key($updateData, array_flip($allowedFields));
     } else {
       // For other admins, allow all except price fields
-      $allowedFields = ['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status'];
+      $allowedFields = ['user_id', 'uri', 'redirect_link_type', 'nfcs_id', 'redirect_link', 'status', 'assigned_id', 'received_status', 'note'];
       $updateData = array_intersect_key($updateData, array_flip($allowedFields));
     }
 

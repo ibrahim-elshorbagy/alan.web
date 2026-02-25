@@ -112,6 +112,20 @@
     @endif
   </div>
 
+  <div class="col-12">
+    <div class="mb-5">
+      {{ Form::label('note', __('messages.redirect_links.note') . ':', ['class' => 'form-label']) }}
+      
+      {{ Form::textarea('note', isset($redirectLink) ? $redirectLink->note : null, [
+  'class' => 'form-control',
+  'rows' => 4,
+  'placeholder' => __('messages.redirect_links.note_placeholder'),
+  'style' => 'resize: vertical;',
+  'disabled' => $isDisabled,
+]) }}
+    </div>
+  </div>
+
   <div class="mb-4">
     @if (!$isDisabled)
       {{ Form::submit(__('messages.common.save'), ['class' => 'btn btn-primary me-3']) }}

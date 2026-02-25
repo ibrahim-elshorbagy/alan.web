@@ -2645,6 +2645,11 @@ If you want to redirect your card to the smart business card, you must first go 
     'sales_rep_auto_selected' => 'Sales representative has been automatically selected based on the assigned cards.',
     'cards_not_assigned_to_sales_rep' => 'The selected cards are not assigned to any sales representative. Please assign them first.',
     'cards_assigned_to_different_sales_reps' => 'The selected cards are assigned to different sales representatives. Please select cards assigned to only one sales representative.',
+    'note' => 'Note',
+    'add_note' => 'Add Note',
+    'note_has_content' => 'Has Note - Click to Edit',
+    'note_placeholder' => 'Enter a note for this redirect link...',
+    'note_previous_value' => 'Previous Note',
     'history' => [
       'title' => 'Change History',
       'action' => 'Action',
@@ -2671,6 +2676,7 @@ If you want to redirect your card to the smart business card, you must first go 
       'restored' => 'Redirect link restored: :uri',
       'price_updated' => 'Price updated from :old to :new',
       'sales_price_updated' => 'Sales price updated from :old to :new',
+      'note_changed' => 'Note updated',
       'actions' => [
         'created' => 'Created',
         'status_changed' => 'Status Changed',
@@ -2686,6 +2692,7 @@ If you want to redirect your card to the smart business card, you must first go 
         'restored' => 'Restored',
         'price_changed' => 'Price Changed',
         'sales_price_changed' => 'Sales Price Changed',
+        'note_changed' => 'Note Changed',
       ],
       'card_not_owned' => 'This card does not belong to the selected sales representative',
       'card_already_in_acknowledgment' => 'This card is already in another acknowledgment',
