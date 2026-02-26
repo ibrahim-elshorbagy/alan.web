@@ -52,16 +52,23 @@ class SalesCustomersTable extends LivewireTableComponent
   {
     $salesUserId = auth()->id();
 
-    // Get unique user_ids connected to this sales rep through redirect_links
-    $customerIds = RedirectLink::where('assigned_id', $salesUserId)
+    // 1) Users connected via redirect_links (assigned_id = this sales rep)
+    $redirectLinkUserIds = RedirectLink::where('assigned_id', $salesUserId)
       ->whereNotNull('user_id')
       ->distinct()
       ->pluck('user_id')
       ->toArray();
 
-    return User::query()->whereIn('users.id', $customerIds)
+    // 2) Users created directly by this sales rep (createQuickUser flow)
+    // 3) Users deactivated by this sales rep (inactive_by)
+    return User::query()
+      ->where(function ($query) use ($salesUserId, $redirectLinkUserIds) {
+        $query->whereIn('users.id', $redirectLinkUserIds)
+              ->orWhere('users.created_by', $salesUserId)
+              ->orWhere('users.inactive_by', $salesUserId);
+      })
       ->with(['media'])
-      ->select('users.*');
+      ->select('users.id', 'users.first_name', 'users.last_name', 'users.email', 'users.contact', 'users.is_active');
   }
 
   public function resetPageTable($pageName = 'sales-customers-table')

@@ -73,6 +73,23 @@
                         </div>
                         @endif
 
+                        @if(!$user->is_active && $user->inactive_by && $user->inactivatedBy)
+                        <div class="col-sm-6 d-flex flex-column mt-md-10 mt-5">
+                            <label for="name" class="pb-2 fs-4 text-gray-600">{{__('messages.user.deactivated_by')}}:</label>
+                            <span class="fs-4 text-gray-800">
+                                {{ $user->inactivatedBy->first_name }} {{ $user->inactivatedBy->last_name }}
+                                @php $deactivatorRole = $user->inactivatedBy->roles->first(); @endphp
+                                @if($deactivatorRole)
+                                    <span class="badge bg-secondary ms-2">{{ ucfirst(str_replace('_', ' ', $deactivatorRole->name)) }}</span>
+                                @endif
+                            </span>
+                        </div>
+                        <div class="col-sm-6 d-flex flex-column mt-md-10 mt-5">
+                            <label for="name" class="pb-2 fs-4 text-gray-600">{{__('messages.user.deactivated_at')}}:</label>
+                            <span class="fs-4 text-gray-800">{{ getFormattedDateTime($user->inactive_time) }}</span>
+                        </div>
+                        @endif
+
                     </div>
                 </div>
                 <div class="tab-pane fade" id="vcards" role="tabpanel" aria-labelledby="cases-tab">

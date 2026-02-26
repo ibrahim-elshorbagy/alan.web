@@ -701,6 +701,8 @@ return [
     'overview' => 'نظرة عامة',
     'registered_date' => 'تاريخ التسجيل',
     'created_by' => 'أُنشئ بواسطة',
+    'deactivated_by' => 'تم تعطيله بواسطة',
+    'deactivated_at' => 'تم تعطيله في',
     'change_language' => 'تغيير اللغة',
     'your_name' => 'اسمك',
     'your_message' => 'رسالتك',

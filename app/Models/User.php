@@ -118,6 +118,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     'enable_two_factor_authentication',
     'google2fa_secret',
     'created_by',
+    'inactive_by',
+    'inactive_time',
   ];
 
   protected $casts = [
@@ -401,6 +403,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
   public function createdBy(): BelongsTo
   {
     return $this->belongsTo(User::class, 'created_by');
+  }
+
+  public function inactivatedBy()
+  {
+    return $this->belongsTo(User::class, 'inactive_by');
   }
 
   public function subscription(): BelongsTo

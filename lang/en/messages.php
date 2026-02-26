@@ -703,6 +703,8 @@ return [
     'overview' => 'Overview',
     'registered_date' => 'Registered Date',
     'created_by' => 'Created By',
+    'deactivated_by' => 'Deactivated By',
+    'deactivated_at' => 'Deactivated At',
     'change_language' => 'Change Language',
     'your_name' => 'Your Name',
     'your_message' => 'Your Message',
