@@ -40,6 +40,11 @@ class RedirectLinkController extends Controller
     return view('redirect_links.history_report');
   }
 
+  public function salesReport()
+  {
+    return view('redirect_links.sales_report');
+  }
+
   public function create()
   {
     $nfcs = Nfc::all();

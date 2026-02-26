@@ -594,11 +594,6 @@
       </a>
     @endif
 
-    {{-- History Report Link --}}
-    <a type="button" class="btn btn-info" href="{{ route('redirect-links.history-report') }}">
-      <i class="fas fa-chart-line"></i> <span
-        class="d-none d-sm-inline">{{ __('messages.redirect_links.history_report') }}</span>
-    </a>
   </div>
 
   {{-- Summary Card --}}
