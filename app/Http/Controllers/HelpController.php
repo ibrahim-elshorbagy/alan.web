@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Vcard;
 use App\Models\RedirectLink;
 use App\Models\WhatsappStore;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class HelpController extends Controller
 {
@@ -34,6 +36,11 @@ class HelpController extends Controller
       $redirectCard = $redirectLink->nfcs_id ?? $redirectLink->id;
     }
 
+    $assignedUser = null;
+    if ($redirectLink && $redirectLink->assigned_id) {
+        $assignedUser = User::withoutGlobalScopes()->find($redirectLink->assigned_id);
+    }
+
     $whatsappStore = WhatsappStore::where('tenant_id', $user->tenant_id)->first();
     $storeLink = null;
     if ($whatsappStore) {
@@ -48,8 +55,10 @@ class HelpController extends Controller
     $sitePhone = getSuperAdminSettingValue('phone') ?? '';
 
     $toPhone = null;
-    if (!empty($sitePhone)) {
-      $toPhone = preg_replace('/\D+/', '', ($sitePrefix ? $sitePrefix : '') . $sitePhone);
+    if ($assignedUser && !empty($assignedUser->contact)) {
+        $toPhone = preg_replace('/\D+/', '', $assignedUser->contact);
+    } elseif (!empty($sitePhone)) {
+        $toPhone = preg_replace('/\D+/', '', ($sitePrefix ? $sitePrefix : '') . $sitePhone);
     }
 
     return response()->json([
