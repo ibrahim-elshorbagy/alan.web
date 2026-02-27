@@ -280,18 +280,6 @@
   </a>
 </li>
 
-@php
-  $salesAdSetting = \App\Models\SalesAdvertiseSetting::where('user_id', auth()->id())->first();
-@endphp
-@if($salesAdSetting && $salesAdSetting->is_enabled)
-  <li class="nav-item {{ Request::is('sadmin/my-advertise*') ? 'active' : '' }}">
-    <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
-      href="{{ route('sales.advertise.edit') }}">
-      <span class="aside-menu-icon"><i class="fas fa-bullhorn icon-color-bs-blue"></i></span>
-      <span class="aside-menu-title">{{ __('messages.sales_advertise.my_advertise') }}</span>
-    </a>
-  </li>
-@endif
 @endhasrole
 
 @role(App\Models\Role::ROLE_ADMIN)

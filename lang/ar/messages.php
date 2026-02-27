@@ -1951,6 +1951,8 @@ return [
     'ad_closes_in'         => 'سيتم غلق الإعلان خلال :seconds ثانية',
     'ad_closes_in_template' => 'سيتم غلق الإعلان خلال :seconds ثانية',
     'ad_impressions'       => 'عدد مرات ظهور كل صورة',
+    'total_impressions'    => 'إجمالي مرات الظهور',
+    'ad_image'             => 'صورة الإعلان',
   ],
 
   'save' => 'حفظ',

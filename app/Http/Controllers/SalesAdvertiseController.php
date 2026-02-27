@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SalesAdvertiseSetting;
-use App\Models\User;
+use App\Models\RedirectLink;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,48 +13,54 @@ use Laracasts\Flash\Flash;
 
 class SalesAdvertiseController extends Controller
 {
-    // ─────────────────────────────────────────────
-    //  Super-admin: edit/update a sales user's ad settings
-    // ─────────────────────────────────────────────
+  // ─────────────────────────────────────────────
+  //  Update ad settings for a redirect link
+  //  Called from both client (admin user) and super_admin
+  // ─────────────────────────────────────────────
 
   /**
-   * Show the ad-settings edit form for a given sales user (super_admin only).
+   * Save/update ad settings for a specific redirect link.
+   * - Normal user (admin): can toggle is_enabled, duration, images on their own links
+   * - Super_admin: can do the same on any link
    */
-  public function edit(int $userId): \Illuminate\View\View
+  public function updateForRedirectLink(Request $request, int $redirectLinkId): RedirectResponse
   {
-    $salesUser = User::whereHas('roles', fn($q) => $q->where('name', 'sales'))
-      ->findOrFail($userId);
+    $user = Auth::user();
 
-    $setting = SalesAdvertiseSetting::firstOrNew(['user_id' => $userId]);
-
-    return view('sales_advertise.edit', compact('salesUser', 'setting'));
-  }
-
-  /**
-   * Save ad settings (super_admin: can toggle is_enabled + duration + images).
-   */
-  public function update(Request $request, int $userId): RedirectResponse
-  {
-    $salesUser = User::whereHas('roles', fn($q) => $q->where('name', 'sales'))
-      ->findOrFail($userId);
+    // Find the redirect link
+    if ($user->hasRole('super_admin')) {
+      $redirectLink = RedirectLink::findOrFail($redirectLinkId);
+    } else {
+      // Normal user can only edit their own
+      $redirectLink = RedirectLink::where('user_id', $user->id)->findOrFail($redirectLinkId);
+    }
 
     $request->validate([
-      'is_enabled'   => 'required|in:0,1',
-      'duration'     => 'required|integer|min:1|max:5',
-      'images.*'     => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:10240',
+      'ad_is_enabled' => 'required|in:0,1',
+      'ad_duration'   => 'required|integer|min:1|max:5',
+      'ad_images.*'   => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:10240',
+    ], [], [
+      'ad_is_enabled' => __('messages.sales_advertise.enable_advertise'),
+      'ad_duration'   => __('messages.sales_advertise.duration_label'),
+      'ad_images.*'   => __('messages.sales_advertise.ad_image'),
+      'ad_images.0'   => __('messages.sales_advertise.ad_image'),
+      'ad_images.1'   => __('messages.sales_advertise.ad_image'),
+      'ad_images.2'   => __('messages.sales_advertise.ad_image'),
+      'ad_images.3'   => __('messages.sales_advertise.ad_image'),
+      'ad_images.4'   => __('messages.sales_advertise.ad_image'),
     ]);
 
-    $setting = SalesAdvertiseSetting::firstOrNew(['user_id' => $userId]);
-    $setting->user_id    = $userId;
-    $setting->is_enabled = (bool) $request->input('is_enabled');
-    $setting->duration   = (int) $request->input('duration', 3);
+    $setting = SalesAdvertiseSetting::firstOrNew(['redirect_link_id' => $redirectLinkId]);
+    $setting->redirect_link_id = $redirectLinkId;
+    $setting->is_enabled = (bool) $request->input('ad_is_enabled');
+    $setting->duration   = (int) $request->input('ad_duration', 3);
 
     // Handle image uploads
     $existingImages = $setting->images ?? [];
     $impressions = $setting->impressions ?? [];
 
     // Handle deletions
-    $deleteIndexes = $request->input('delete_images', []);
+    $deleteIndexes = $request->input('ad_delete_images', []);
     foreach ($deleteIndexes as $idx) {
       if (isset($existingImages[$idx])) {
         $path = $existingImages[$idx];
@@ -63,20 +69,19 @@ class SalesAdvertiseController extends Controller
           File::delete($fullPath);
         }
         unset($existingImages[$idx]);
-        // Remove impression for this path
         unset($impressions[$path]);
       }
     }
     $existingImages = array_values($existingImages);
 
     // Handle new uploads
-    if ($request->hasFile('images')) {
-      $uploadDir = public_path('uploads/sales_advertise/' . $userId);
+    if ($request->hasFile('ad_images')) {
+      $uploadDir = public_path('uploads/sales_advertise/link_' . $redirectLinkId);
       if (!File::isDirectory($uploadDir)) {
         File::makeDirectory($uploadDir, 0755, true);
       }
 
-      foreach ($request->file('images') as $file) {
+      foreach ($request->file('ad_images') as $file) {
         if (count($existingImages) >= 5) {
           break; // max 5 images
         }
@@ -89,130 +94,39 @@ class SalesAdvertiseController extends Controller
         });
 
         $filename = time() . '_' . uniqid() . '.jpg';
-        $img->save($uploadDir . '/' . $filename, 80); // 80% quality JPEG
-
-        $existingImages[] = 'uploads/sales_advertise/' . $userId . '/' . $filename;
-      }
-    }
-
-    $setting->images = $existingImages;
-    $setting->save();
-
-    Flash::success(__('messages.sales_advertise.updated_successfully'));
-
-    return redirect()->route('sadmin.sales.advertise.edit', $userId);
-  }
-
-    // ─────────────────────────────────────────────
-    //  Sales user: view/edit own ad (duration + images only)
-    // ─────────────────────────────────────────────
-
-  /**
-   * Show the sales user's own ad-settings page.
-   * Only accessible when is_enabled = true for this user.
-   */
-  public function salesEdit(): \Illuminate\View\View
-  {
-    $userId  = Auth::id();
-    $setting = SalesAdvertiseSetting::where('user_id', $userId)->first();
-
-    // If not enabled, deny
-    if (!$setting || !$setting->is_enabled) {
-      abort(403, __('messages.sales_advertise.not_enabled'));
-    }
-
-    return view('sales_advertise.sales_edit', compact('setting'));
-  }
-
-  /**
-   * Sales user updates their own duration + images.
-   */
-  public function salesUpdate(Request $request): RedirectResponse
-  {
-    $userId  = Auth::id();
-    $setting = SalesAdvertiseSetting::where('user_id', $userId)->first();
-
-    if (!$setting || !$setting->is_enabled) {
-      abort(403, __('messages.sales_advertise.not_enabled'));
-    }
-
-    $request->validate([
-      'duration'  => 'required|integer|min:1|max:5',
-      'images.*'  => 'nullable|image|mimes:jpeg,jpg,png,gif,webp|max:500',
-    ]);
-
-    $setting->duration = (int) $request->input('duration', 3);
-
-    // Handle image deletions
-    $existingImages = $setting->images ?? [];
-    $impressions = $setting->impressions ?? [];
-    $deleteIndexes  = $request->input('delete_images', []);
-    foreach ($deleteIndexes as $idx) {
-      if (isset($existingImages[$idx])) {
-        $path = $existingImages[$idx];
-        $fullPath = public_path($path);
-        if (File::exists($fullPath)) {
-          File::delete($fullPath);
-        }
-        unset($existingImages[$idx]);
-        // Remove impression for this path
-        unset($impressions[$path]);
-      }
-    }
-    $existingImages = array_values($existingImages);
-
-    // Handle new uploads
-    if ($request->hasFile('images')) {
-      $uploadDir = public_path('uploads/sales_advertise/' . $userId);
-      if (!File::isDirectory($uploadDir)) {
-        File::makeDirectory($uploadDir, 0755, true);
-      }
-
-      foreach ($request->file('images') as $file) {
-        if (count($existingImages) >= 5) {
-          break;
-        }
-
-        $img = Image::make($file);
-
-        // Resize & crop to portrait reel format (1080×1920 / 9:16) with center-crop
-        // $img->fit(1080, 1920, function ($constraint) {
-        //   $constraint->upsize();
-        // });
-
-        $filename = time() . '_' . uniqid() . '.jpg';
         $img->save($uploadDir . '/' . $filename, 80);
 
-        $existingImages[] = 'uploads/sales_advertise/' . $userId . '/' . $filename;
+        $existingImages[] = 'uploads/sales_advertise/link_' . $redirectLinkId . '/' . $filename;
       }
     }
 
     $setting->images = $existingImages;
+    $setting->impressions = $impressions;
     $setting->save();
 
     Flash::success(__('messages.sales_advertise.updated_successfully'));
 
-    return redirect()->route('sales.advertise.edit');
+    return redirect()->back();
   }
 
-    // ─────────────────────────────────────────────
-    //  Public: serve interstitial ad before redirect
-    // ─────────────────────────────────────────────
+  // ─────────────────────────────────────────────
+  //  Public: serve interstitial ad before redirect
+  // ─────────────────────────────────────────────
 
   /**
-   * Check if a sales user has active ads and return an interstitial ad view.
+   * Check if a redirect link has active ads and return an interstitial ad view.
    * Returns null if no ad should be shown (feature disabled, no images, etc.).
    *
    * Round-robin cycling: next image index = sum(all impressions) % count(images)
    * Impression for that image is incremented immediately (on page serve).
    *
-   * @param  int    $assignedUserId  The sales user id (assigned_id on redirect link)
-   * @param  string $destinationUrl  The final URL to redirect to after the ad
+   * @param  int    $redirectLinkId   The redirect link id
+   * @param  string $destinationUrl   The final URL to redirect to after the ad
    * @return \Illuminate\View\View|null
    */
-  public function showAdBeforeRedirect(int $assignedUserId, string $destinationUrl): ?\Illuminate\View\View
+  public function showAdBeforeRedirect(int $redirectLinkId, string $destinationUrl): ?\Illuminate\View\View
   {
-    $setting = SalesAdvertiseSetting::where('user_id', $assignedUserId)->first();
+    $setting = SalesAdvertiseSetting::where('redirect_link_id', $redirectLinkId)->first();
 
     // Guard: feature disabled or no images
     if (!$setting || !$setting->is_enabled) {
@@ -227,8 +141,7 @@ class SalesAdvertiseController extends Controller
     // Determine which image to show (round-robin, keyed by image path)
     $rawImpressions = $setting->impressions ?? [];
 
-    // Build a path-keyed impression map for only the current images,
-    // normalising away any legacy numeric-keyed data.
+    // Build a path-keyed impression map for only the current images
     $pathCounts = [];
     foreach ($images as $path) {
       $pathCounts[$path] = $rawImpressions[$path] ?? 0;

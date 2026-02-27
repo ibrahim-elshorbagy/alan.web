@@ -191,6 +191,15 @@ return [
         'short_code' => 'الرمز القصير',
         'occupation' => 'المهنة',
         'ecard-logo' => 'شعار البطاقة الإلكترونية',
+        'ad_images' => 'صور الإعلان',
+        'ad_images.*' => 'صورة الإعلان',
+        'ad_images.0' => 'صورة الإعلان',
+        'ad_images.1' => 'صورة الإعلان',
+        'ad_images.2' => 'صورة الإعلان',
+        'ad_images.3' => 'صورة الإعلان',
+        'ad_images.4' => 'صورة الإعلان',
+        'ad_is_enabled' => 'تفعيل الإعلان',
+        'ad_duration' => 'مدة الإعلان',
     ],
 
     'coupon_code' => [

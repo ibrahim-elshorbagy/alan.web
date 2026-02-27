@@ -1954,6 +1954,8 @@ return [
     'ad_closes_in'         => 'Ad closes in :seconds second(s)',
     'ad_closes_in_template' => 'Ad closes in :seconds second(s)',
     'ad_impressions'       => 'Impressions per Image',
+    'total_impressions'    => 'Total Impressions',
+    'ad_image'             => 'Ad Image',
   ],
 
   'save' => 'Save',

@@ -71,9 +71,10 @@ class ClientRedirectLinkController extends Controller
       $assignedUser = \App\Models\User::withoutGlobalScopes()->where('id', $redirectLink->assigned_id)->select('id', 'first_name', 'last_name', 'contact')->first();
     }
 
+    // Load ad setting for this redirect link
+    $adSetting = \App\Models\SalesAdvertiseSetting::where('redirect_link_id', $redirectLink->id)->first();
 
-
-    return view('client.redirect_links.edit', compact('redirectLink', 'customQrCode', 'qrcodeColor', 'userVCards', 'assignedUser'));
+    return view('client.redirect_links.edit', compact('redirectLink', 'customQrCode', 'qrcodeColor', 'userVCards', 'assignedUser', 'adSetting'));
   }
 
   public function update(Request $request, $id)
@@ -171,6 +172,12 @@ class ClientRedirectLinkController extends Controller
           'new' => $newRedirectLink ?? __('messages.redirect_links.history.none')
         ])
       );
+    }
+
+    // Handle ad settings update if present
+    if ($request->has('ad_is_enabled')) {
+      $adController = new SalesAdvertiseController();
+      $adController->updateForRedirectLink($request, $redirectLink->id);
     }
 
     return redirect()->route('client.redirect-links.index')->with('success', __('messages.redirect_links.updated'));
@@ -341,13 +348,11 @@ class ClientRedirectLinkController extends Controller
         abort(404);
       }
 
-      // STEP 3c.1: Show interstitial ad if the assigned salesman has active ads
-      if ($uri->assigned_id) {
-        $adController = new SalesAdvertiseController();
-        $adView = $adController->showAdBeforeRedirect((int) $uri->assigned_id, $uri->redirect_link);
-        if ($adView !== null) {
-          return $adView;
-        }
+      // STEP 3c.1: Show interstitial ad if this redirect link has active ads
+      $adController = new SalesAdvertiseController();
+      $adView = $adController->showAdBeforeRedirect((int) $uri->id, $uri->redirect_link);
+      if ($adView !== null) {
+        return $adView;
       }
 
       return redirect()->away($uri->redirect_link);

@@ -17,7 +17,7 @@
 
         <div class="card">
           <div class="card-body">
-            {!! Form::open(['route' => ['client.redirect-links.update', $redirectLink->id], 'method' => 'put']) !!}
+            {!! Form::open(['route' => ['client.redirect-links.update', $redirectLink->id], 'method' => 'put', 'files' => true, 'id' => 'clientRedirectLinkEditForm']) !!}
             @include('client.redirect_links.fields')
             {{ Form::close() }}
           </div>
@@ -29,14 +29,14 @@
           <div class="card-body">
             <div class="qr-code-image d-flex justify-content-center" id="qr-code-one">
               {!! QrCode::size(130)->format('svg')->style($customQrCode['style'] ?? 'square')->eye($customQrCode['eye_style'] ?? 'square')->color(
-                      $qrcodeColor['qrcodeColor']->red(),
-                      $qrcodeColor['qrcodeColor']->green(),
-                      $qrcodeColor['qrcodeColor']->blue(),
-                  )->backgroundColor(
-                      $qrcodeColor['background_color']->red(),
-                      $qrcodeColor['background_color']->green(),
-                      $qrcodeColor['background_color']->blue(),
-                  )->generate(url('/auto-' . $redirectLink->uri)) !!}
+    $qrcodeColor['qrcodeColor']->red(),
+    $qrcodeColor['qrcodeColor']->green(),
+    $qrcodeColor['qrcodeColor']->blue(),
+  )->backgroundColor(
+      $qrcodeColor['background_color']->red(),
+      $qrcodeColor['background_color']->green(),
+      $qrcodeColor['background_color']->blue(),
+    )->generate(url('/auto-' . $redirectLink->uri)) !!}
             </div>
             <div class="d-flex justify-content-center mt-3">
               <a href="" class="btn btn-primary" id="qr-code-btn" download="qr_code.png">
@@ -54,7 +54,7 @@
 @endsection
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     const qrCodeOne = document.getElementById("qr-code-one");
     const svg = qrCodeOne.querySelector("svg");
 

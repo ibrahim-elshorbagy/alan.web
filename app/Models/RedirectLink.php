@@ -20,9 +20,7 @@ class RedirectLink extends Model
   const RECEIVED_STATUS_NOT_RECEIVED = 0;
   const RECEIVED_STATUS_RECEIVED = 1;
 
-  protected $casts = [
-
-  ];
+  protected $casts = [];
 
   public function user(): BelongsTo
   {
@@ -42,6 +40,14 @@ class RedirectLink extends Model
   public function histories()
   {
     return $this->hasMany(RedirectLinkHistory::class)->orderBy('created_at', 'desc');
+  }
+
+  /**
+   * The advertisement setting for this redirect link.
+   */
+  public function advertiseSetting()
+  {
+    return $this->hasOne(SalesAdvertiseSetting::class);
   }
 
   /**

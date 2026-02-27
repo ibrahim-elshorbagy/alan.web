@@ -10,7 +10,7 @@ class SalesAdvertiseSetting extends Model
   use HasFactory;
 
   protected $fillable = [
-    'user_id',
+    'redirect_link_id',
     'is_enabled',
     'duration',
     'images',
@@ -24,10 +24,10 @@ class SalesAdvertiseSetting extends Model
   ];
 
   /**
-   * The sales user this setting belongs to.
+   * The redirect link this setting belongs to.
    */
-  public function user()
+  public function redirectLink()
   {
-    return $this->belongsTo(User::class);
+    return $this->belongsTo(RedirectLink::class);
   }
 }

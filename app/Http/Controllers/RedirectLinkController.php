@@ -984,7 +984,10 @@ class RedirectLinkController extends Controller
       ->orderBy('created_at', 'desc')
       ->first();
 
-    return view('admin.redirect_links.edit', compact('redirectLink', 'users', 'nfcs', 'salesUsers', 'latestAcknowledgment'));
+    // Load ad setting for this redirect link (for super_admin view)
+    $adSetting = \App\Models\SalesAdvertiseSetting::where('redirect_link_id', $id)->first();
+
+    return view('admin.redirect_links.edit', compact('redirectLink', 'users', 'nfcs', 'salesUsers', 'latestAcknowledgment', 'adSetting'));
   }
 
   public function update(Request $request, $id)
@@ -1154,6 +1157,12 @@ class RedirectLinkController extends Controller
         $actualUserId,
         __('messages.redirect_links.history.' . $action, ['old' => $change['old'], 'new' => $change['new']])
       );
+    }
+
+    // Handle ad settings update (super_admin only)
+    if (auth()->user()->hasRole('super_admin') && $request->has('ad_is_enabled')) {
+      $adController = new \App\Http\Controllers\SalesAdvertiseController();
+      $adController->updateForRedirectLink($request, $redirectLink->id);
     }
 
     return redirect()->route('redirect-links.index')->with('success', __('messages.redirect_links.updated'));

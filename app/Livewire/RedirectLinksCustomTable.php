@@ -1220,6 +1220,7 @@ class RedirectLinksCustomTable extends Component
         'price',
         'sales_price',
         'received_status',
+        'note',
         'created_at',
         'updated_at'
       )
