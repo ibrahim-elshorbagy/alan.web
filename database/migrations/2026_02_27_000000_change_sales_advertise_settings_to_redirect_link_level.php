@@ -17,9 +17,9 @@ return new class extends Migration
   {
     Schema::table('sales_advertise_settings', function (Blueprint $table) {
       // Drop existing user_id foreign key and column
-      $table->dropForeign(['user_id']);
-      $table->dropUnique(['user_id']);
-      $table->dropColumn('user_id');
+      // $table->dropForeign(['user_id']);
+      // $table->dropUnique(['user_id']);
+      // $table->dropColumn('user_id');
 
       // Add redirect_link_id
       $table->unsignedBigInteger('redirect_link_id')->unique()->after('id');

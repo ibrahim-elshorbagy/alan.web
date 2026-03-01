@@ -18,9 +18,9 @@ class SalesAdvertiseSetting extends Model
   ];
 
   protected $casts = [
-    'is_enabled'  => 'boolean',
-    'images'      => 'array',
-    'impressions' => 'array',
+    'is_enabled'        => 'boolean',
+    'images'            => 'array',
+    'impressions'       => 'array',
   ];
 
   /**

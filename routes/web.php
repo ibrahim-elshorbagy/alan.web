@@ -87,6 +87,7 @@ use App\Http\Controllers\GlobalQrCodeController;
 use App\Http\Controllers\TwofactorAuthenticationController;
 use App\Http\Controllers\WhatsappStoreProductTransactionController;
 use App\Http\Controllers\RedirectLinkController;
+use App\Http\Controllers\SalesAdvertiseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -601,6 +602,17 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::post('redirect-links', [RedirectLinkController::class, 'store'])->name('redirect-links.store');
       Route::post('redirect-links/restore-selected', [RedirectLinkController::class, 'restoreSelected'])->name('redirect-links.restore-selected');
       Route::delete('redirect-links/{redirectLink}', [RedirectLinkController::class, 'destroy'])->name('redirect-links.destroy');
+    });
+
+    Route::middleware('role:super_admin|admin')->group(function () {
+      Route::get('contests/{contest}/participants', [SalesAdvertiseController::class, 'contestParticipants'])->name('contest.participants');
+      Route::get('redirect-links/{redirectLink}/contests/create', [SalesAdvertiseController::class, 'createContestForm'])->name('contests.create');
+      Route::get('contests/{contest}/edit', [SalesAdvertiseController::class, 'editContestForm'])->name('contests.edit');
+      Route::post('redirect-links/{redirectLink}/contests', [SalesAdvertiseController::class, 'storeContest'])->name('contests.store');
+      Route::put('contests/{contest}', [SalesAdvertiseController::class, 'updateContest'])->name('contests.update');
+      Route::delete('contests/{contest}', [SalesAdvertiseController::class, 'destroyContest'])->name('contests.destroy');
+      Route::post('contests/{contest}/toggle', [SalesAdvertiseController::class, 'toggleContest'])->name('contests.toggle');
+      Route::post('contests/{contest}/select-winners', [SalesAdvertiseController::class, 'selectWinners'])->name('contests.select-winners');
     });
 
 
@@ -1253,6 +1265,10 @@ Route::middleware(['freshInstall'])->group(function () {
   Route::get('phonepe-Product-response', [UserPhonepeController::class, 'productBuySuccess'])->name('phonepe-Product-response');
 
   Route::get('/getCookie', [VcardController::class, 'getCookie'])->name('getCookie');
+
+  // Contest public routes
+  Route::get('contest/{contest}/join', [SalesAdvertiseController::class, 'showContestJoinForm'])->name('contest.join')->middleware('setLanguage');
+  Route::post('contest/{contest}/join', [SalesAdvertiseController::class, 'storeContestParticipant'])->name('contest.store')->middleware(['setLanguage', 'throttle:10,1']);
 
   Route::get('auto-{uri:uri}', [ClientRedirectLinkController::class, 'redirectLink'])->name('redirect.link')->middleware('setLanguage');
 

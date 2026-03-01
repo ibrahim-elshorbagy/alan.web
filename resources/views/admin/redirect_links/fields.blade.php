@@ -166,7 +166,7 @@
             <span class="text-muted small">({{ __('messages.sales_advertise.duration_hint') }})</span>
           </label>
           <select name="ad_duration" id="ad_duration" class="form-select w-auto">
-            @for($i = 1; $i <= 5; $i++)
+            @for($i = 1; $i <= 10; $i++)
               <option value="{{ $i }}" {{ ($adSetting ? $adSetting->duration : 3) == $i ? 'selected' : '' }}>
                 {{ $i }} {{ __('messages.sales_advertise.seconds') }}
               </option>
@@ -232,6 +232,71 @@
           </div>
         @endif
 
+        {{-- Contest (مسابقة) Section — Multi-contest management --}}
+        <hr class="my-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0"><i class="fa-solid fa-trophy me-2"></i>{{ __('messages.contest.contest_settings') }}</h5>
+          <a href="{{ route('contests.create', $redirectLink->id) }}" class="btn btn-sm btn-primary">
+            <i class="fa-solid fa-plus me-1"></i> {{ __('messages.contest.add_contest') }}
+          </a>
+        </div>
+
+        @php
+          $contests = \App\Models\Contest::where('redirect_link_id', $redirectLink->id)->orderBy('created_at', 'desc')->get();
+        @endphp
+
+        {{-- Existing contests table --}}
+        @if($contests->count() > 0)
+          <div class="table-responsive mb-4">
+            <table class="table table-bordered table-striped align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>{{ __('messages.contest.contest_title') }}</th>
+                  <th>{{ __('messages.contest.draw_date') }}</th>
+                  <th>{{ __('messages.contest.num_winners') }}</th>
+                  <th>{{ __('messages.contest.participants') }}</th>
+                  <th>{{ __('messages.contest.status') }}</th>
+                  <th style="width: 160px;">{{ __('messages.common.action') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($contests as $ct)
+                  <tr id="contest-row-{{ $ct->id }}">
+                    <td>{{ $ct->title }}</td>
+                    <td>{{ $ct->draw_date->translatedFormat('Y-m-d h:i A') }}</td>
+                    <td>{{ $ct->num_winners }}</td>
+                    <td>
+                      <a href="{{ route('contest.participants', $ct->id) }}"
+                        class="badge bg-primary text-white text-decoration-none">
+                        <i class="fa-solid fa-eye me-1"></i>{{ $ct->participants()->count() }}
+                      </a>
+                    </td>
+                    <td>
+                      <button type="button" id="toggle-btn-{{ $ct->id }}"
+                        onclick="ajaxToggleContest({{ $ct->id }}, '{{ route('contests.toggle', $ct->id) }}')"
+                        class="btn btn-sm {{ $ct->is_enabled ? 'btn-success' : 'btn-outline-secondary' }}">
+                        <i class="fa-solid {{ $ct->is_enabled ? 'fa-toggle-on' : 'fa-toggle-off' }} me-1"
+                          id="toggle-icon-{{ $ct->id }}"></i>
+                        <span
+                          id="toggle-label-{{ $ct->id }}">{{ $ct->is_enabled ? __('messages.contest.enabled') : __('messages.contest.disabled') }}</span>
+                      </button>
+                    </td>
+                    <td>
+                      <a href="{{ route('contests.edit', $ct->id) }}" class="btn btn-sm btn-info">
+                        <i class="fa-solid fa-edit"></i>
+                      </a>
+                      <button type="button" class="btn btn-sm btn-danger"
+                        onclick="ajaxDeleteContest({{ $ct->id }}, '{{ route('contests.destroy', $ct->id) }}', '{{ addslashes(__('messages.contest.confirm_delete')) }}')">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        @endif
+
       </div>{{-- /adFields --}}
     </div>
 
@@ -239,6 +304,154 @@
       function toggleAdFields(val) {
         var el = document.getElementById('adFields');
         if (el) el.style.display = (val === '1') ? '' : 'none';
+      }
+
+      function ajaxToggleContest(id, url) {
+        var btn = document.getElementById('toggle-btn-' + id);
+        var icon = document.getElementById('toggle-icon-' + id);
+        var label = document.getElementById('toggle-label-' + id);
+        if (btn) btn.disabled = true;
+        var fd = new FormData();
+        fd.append('_token', '{{ csrf_token() }}');
+        fetch(url, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+          body: fd,
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (btn) btn.disabled = false;
+            if (data.success) {
+              var enabled = data.is_enabled;
+              if (btn) {
+                btn.className = 'btn btn-sm ' + (enabled ? 'btn-success' : 'btn-outline-secondary');
+              }
+              if (icon) {
+                icon.className = 'fa-solid ' + (enabled ? 'fa-toggle-on' : 'fa-toggle-off') + ' me-1';
+              }
+              if (label) {
+                label.textContent = data.label;
+              }
+              if (data.disabled_ids && data.disabled_ids.length) {
+                data.disabled_ids.forEach(function (otherId) {
+                  var ob = document.getElementById('toggle-btn-' + otherId);
+                  var oi = document.getElementById('toggle-icon-' + otherId);
+                  var ol = document.getElementById('toggle-label-' + otherId);
+                  if (ob) ob.className = 'btn btn-sm btn-outline-secondary';
+                  if (oi) oi.className = 'fa-solid fa-toggle-off me-1';
+                  if (ol) ol.textContent = data.disabled_label || '';
+                });
+              }
+              if (data.message) {
+                toastr.success(data.message);
+              }
+            }
+          })
+          .catch(function () { if (btn) btn.disabled = false; });
+      }
+
+      function ajaxDeleteContest(id, url, confirmMsg) {
+        if (!confirm(confirmMsg)) return;
+        var fd = new FormData();
+        fd.append('_token', '{{ csrf_token() }}');
+        fd.append('_method', 'DELETE');
+        fetch(url, {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+          body: fd,
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data.success) {
+              var row = document.getElementById('contest-row-' + id);
+              if (row) row.remove();
+              else window.location.reload();
+            }
+          })
+          .catch(function () { window.location.reload(); });
+      }
+
+      function submitContestForm() {
+        var errorsDiv = document.getElementById('contestFormErrors');
+        var btn = document.getElementById('contestSubmitBtn');
+        var spinner = document.getElementById('contestSubmitSpinner');
+        try {
+          var container = document.getElementById('contestForm');
+          var action = container.getAttribute('data-action');
+          var method = container.getAttribute('data-method') || 'POST';
+          errorsDiv.classList.add('d-none');
+          errorsDiv.innerHTML = '';
+          btn.disabled = true;
+          spinner.classList.remove('d-none');
+          var formData = new FormData();
+          formData.append('_token', '{{ csrf_token() }}');
+          formData.append('title', document.getElementById('contest_title_input').value);
+          formData.append('text', document.getElementById('contest_text_input').value);
+          formData.append('draw_date', document.getElementById('contest_draw_date_input').value);
+          formData.append('num_winners', document.getElementById('contest_num_winners_input').value);
+          if (method === 'PUT') { formData.append('_method', 'PUT'); }
+          fetch(action, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+            body: formData,
+          })
+            .then(function (response) {
+              btn.disabled = false;
+              spinner.classList.add('d-none');
+              if (response.ok) {
+                response.json().then(function (data) {
+                  if (data.success) { window.location.reload(); }
+                  else { errorsDiv.innerHTML = data.message || 'Error.'; errorsDiv.classList.remove('d-none'); }
+                }).catch(function () { window.location.reload(); });
+              } else if (response.status === 422) {
+                response.json().then(function (data) {
+                  var msgs = [];
+                  if (data.errors) { Object.values(data.errors).forEach(function (e) { msgs = msgs.concat(e); }); }
+                  errorsDiv.innerHTML = msgs.join('<br>');
+                  errorsDiv.classList.remove('d-none');
+                }).catch(function () { errorsDiv.innerHTML = 'Validation error.'; errorsDiv.classList.remove('d-none'); });
+              } else {
+                errorsDiv.innerHTML = 'An error occurred (HTTP ' + response.status + ').';
+                errorsDiv.classList.remove('d-none');
+              }
+            })
+            .catch(function (err) {
+              btn.disabled = false;
+              spinner.classList.add('d-none');
+              errorsDiv.innerHTML = 'Network error. Please try again.';
+              errorsDiv.classList.remove('d-none');
+            });
+        } catch (e) {
+          btn.disabled = false;
+          spinner.classList.add('d-none');
+          errorsDiv.innerHTML = 'Error: ' + e.message;
+          errorsDiv.classList.remove('d-none');
+        }
+      }
+
+      function editContest(id, data) {
+        var container = document.getElementById('contestForm');
+        container.setAttribute('data-action', '/contests/' + id);
+        container.setAttribute('data-method', 'PUT');
+        document.getElementById('contest_title_input').value = data.title || '';
+        document.getElementById('contest_text_input').value = data.text || '';
+        document.getElementById('contest_draw_date_input').value = data.draw_date || '';
+        document.getElementById('contest_num_winners_input').value = data.num_winners || 1;
+        document.getElementById('contestFormTitle').innerHTML = '<i class="fa-solid fa-edit me-1"></i> {{ __("messages.contest.edit_contest") }}';
+        document.getElementById('contestCancelBtn').classList.remove('d-none');
+        document.getElementById('contestFormCard').scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function cancelEditContest() {
+        var container = document.getElementById('contestForm');
+        container.setAttribute('data-action', '{{ route('contests.store', $redirectLink->id) }}');
+        container.setAttribute('data-method', 'POST');
+        document.getElementById('contest_title_input').value = '';
+        document.getElementById('contest_text_input').value = '';
+        document.getElementById('contest_draw_date_input').value = '';
+        document.getElementById('contest_num_winners_input').value = '1';
+        document.getElementById('contestFormTitle').innerHTML = '<i class="fa-solid fa-plus me-1"></i> {{ __("messages.contest.add_contest") }}';
+        document.getElementById('contestCancelBtn').classList.add('d-none');
       }
 
       function markAdForDelete(idx, btn) {
