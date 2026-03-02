@@ -2643,6 +2643,9 @@ return [
     'invalid_vcard_url' => 'رابط vCard غير صالح. يجب أن يكون بالتنسيق https://nfcjo.com/slug',
     'no_redirect_link' => 'لا يوجد رابط إعادة توجيه',
     'no_redirect_link_message' => 'لم يتم تحديد رابط إعادة التوجيه بعد. يرجى تحديث هذا الحقل برابط موقعك الإلكتروني.',
+    'direct_redirect' => 'توجيه مباشر للرابط',
+    'pause_for_ads' => 'التوقف لعدة ثواني لعرض إعلانات ترويجية ومسابقات',
+    'redirect_behavior' => 'سلوك إعادة التوجيه',
     'valid_url_examples' => 'أمثلة على روابط صالحة:',
 
     'received' => 'مستلم',

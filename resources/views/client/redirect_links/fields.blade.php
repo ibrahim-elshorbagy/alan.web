@@ -82,6 +82,23 @@
         http://example.com</small>
     </div>
   </div>
+
+  <div class="col-12 mb-4">
+    <label class="form-label fw-bold">{{ __('messages.redirect_links.redirect_behavior') }}</label>
+    <div class="d-flex gap-4 mt-2">
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="redirect_behavior" id="behaviorDirect" value="direct"
+          onchange="toggleAdSection(this.value)">
+        <label class="form-check-label" for="behaviorDirect">{{ __('messages.redirect_links.direct_redirect') }}</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="redirect_behavior" id="behaviorAds" value="ads" checked
+          onchange="toggleAdSection(this.value)">
+        <label class="form-check-label" for="behaviorAds">{{ __('messages.redirect_links.pause_for_ads') }}</label>
+      </div>
+    </div>
+  </div>
+
   @if (isset($redirectLink) && $redirectLink->status == 2)
     <div class="col-12">
       <div class="alert alert-danger">
@@ -97,30 +114,15 @@
       $adImages = $adSetting ? ($adSetting->images ?? []) : [];
       $adRemaining = 5 - count($adImages);
     @endphp
-    <div class="col-12 mt-4">
+    <div class="col-12 mt-4" id="adSection">
       <hr>
       <h4 class="mb-3"><i class="fa-solid fa-bullhorn me-2"></i>{{ __('messages.sales_advertise.advertise_settings') }}
       </h4>
 
-      {{-- Enable / Disable --}}
-      <div class="mb-4">
-        <label class="form-label fw-bold">
-          {{ __('messages.sales_advertise.enable_advertise') }}
-        </label>
-        <div class="d-flex gap-4 mt-2">
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="ad_is_enabled" id="adEnabledYes" value="1" {{ ($adSetting && $adSetting->is_enabled) ? 'checked' : '' }} onchange="toggleAdFields(this.value)">
-            <label class="form-check-label" for="adEnabledYes">{{ __('messages.sales_advertise.yes') }}</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="ad_is_enabled" id="adEnabledNo" value="0" {{ (!$adSetting || !$adSetting->is_enabled) ? 'checked' : '' }} onchange="toggleAdFields(this.value)">
-            <label class="form-check-label" for="adEnabledNo">{{ __('messages.sales_advertise.no') }}</label>
-          </div>
-        </div>
-      </div>
+      <input type="hidden" name="ad_is_enabled" id="ad_is_enabled" value="1">
 
       {{-- Fields shown only when enabled --}}
-      <div id="adFields" style="{{ ($adSetting && $adSetting->is_enabled) ? '' : 'display:none;' }}">
+      <div id="adFields">
 
         {{-- Duration --}}
         <div class="mb-4">
@@ -259,9 +261,11 @@
 </div>
 
 <script>
-  function toggleAdFields(val) {
-    var el = document.getElementById('adFields');
-    if (el) el.style.display = (val === '1') ? '' : 'none';
+  function toggleAdSection(val) {
+    var el = document.getElementById('adSection');
+    if (el) el.style.display = (val === 'ads') ? '' : 'none';
+    var hidden = document.getElementById('ad_is_enabled');
+    if (hidden) hidden.value = (val === 'ads') ? '1' : '0';
   }
 
   function ajaxToggleContest(id, url) {
