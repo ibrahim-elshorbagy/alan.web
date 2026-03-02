@@ -1928,7 +1928,7 @@ return [
   ],
 
   'sales_advertise' => [
-    'advertise_settings'   => 'إعدادات الإعلان',
+    'advertise_settings'   => 'تفعيل الإعلانات والمسابقات: لإظهار صورة اعلانية والدعوة للمشاركة في مسابقات ترويجية',
     'advertise'            => 'الإعلان',
     'my_advertise'         => 'إعلاني',
     'enable_advertise'     => 'تفعيل الإعلان',
@@ -1959,10 +1959,10 @@ return [
     'contest'                    => 'مسابقة',
     'contest_settings'           => 'إعدادات المسابقة',
     'enable_contest'             => 'تفعيل المسابقة',
-    'contest_title'              => 'عنوان المسابقة',
-    'contest_title_placeholder'  => 'أدخل عنوان المسابقة',
-    'contest_text'               => 'نص المسابقة',
-    'contest_text_placeholder'   => 'أدخل نص المسابقة',
+    'contest_title'              => 'اسم المسابقة',
+    'contest_title_placeholder'  => 'أدخل اسم المسابقة',
+    'contest_text'               => 'نص الدعوة للمشاركة في المسابقة',
+    'contest_text_placeholder'   => 'ادخل نص مناسبا للدعوة للمشاركة في المسابقة',
     'draw_date'                  => 'تاريخ السحب',
     'num_winners'                => 'عدد الفائزين',
     'join_now'                   => 'اشترك في المسابقة',
