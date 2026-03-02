@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ContestParticipantsExport;
 use App\Models\Contest;
 use App\Models\ContestParticipant;
 use App\Models\RedirectLink;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use Laracasts\Flash\Flash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class SalesAdvertiseController extends Controller
 {
@@ -472,6 +474,31 @@ class SalesAdvertiseController extends Controller
   // ─────────────────────────────────────────────
   //  Helper: resolve redirect link by role
   // ─────────────────────────────────────────────
+
+  // ─────────────────────────────────────────────
+  //  Export contest participants to Excel
+  // ─────────────────────────────────────────────
+
+  /**
+   * Export filtered contest participants as an Excel file.
+   */
+  public function exportContestParticipants(Request $request, int $contestId)
+  {
+    $user    = Auth::user();
+    $contest = Contest::findOrFail($contestId);
+    $this->resolveRedirectLink($user, $contest->redirect_link_id);
+
+    $search   = $request->input('search');
+    $dateFrom = $request->input('date_from');
+    $dateTo   = $request->input('date_to');
+
+    $filename = 'contest_participants_' . $contestId . '_' . now()->format('Ymd_His') . '.xlsx';
+
+    return Excel::download(
+      new ContestParticipantsExport($contestId, $search, $dateFrom, $dateTo),
+      $filename
+    );
+  }
 
   private function resolveRedirectLink($user, int $redirectLinkId): RedirectLink
   {

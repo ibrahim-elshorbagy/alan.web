@@ -606,6 +606,7 @@ Route::middleware(['freshInstall'])->group(function () {
 
     Route::middleware('role:super_admin|admin')->group(function () {
       Route::get('contests/{contest}/participants', [SalesAdvertiseController::class, 'contestParticipants'])->name('contest.participants');
+      Route::get('contests/{contest}/participants/export', [SalesAdvertiseController::class, 'exportContestParticipants'])->name('contest.participants.export');
       Route::get('redirect-links/{redirectLink}/contests/create', [SalesAdvertiseController::class, 'createContestForm'])->name('contests.create');
       Route::get('contests/{contest}/edit', [SalesAdvertiseController::class, 'editContestForm'])->name('contests.edit');
       Route::post('redirect-links/{redirectLink}/contests', [SalesAdvertiseController::class, 'storeContest'])->name('contests.store');

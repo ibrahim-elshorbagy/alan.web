@@ -2007,6 +2007,7 @@ return [
     'confirm_select_winners'     => 'Are you sure you want to select winners? This will replace any previously selected winners. This action cannot be undone!',
     'winners_selected'           => ':count winner(s) selected successfully!',
     'no_participants_to_draw'    => 'No participants available to draw winners from.',
+    'export_excel'               => 'Export to Excel',
   ],
 
   'save' => 'Save',

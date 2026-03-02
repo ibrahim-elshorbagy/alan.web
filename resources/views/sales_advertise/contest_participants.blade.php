@@ -125,6 +125,10 @@
                 <a href="{{ route('contest.participants', $contest->id) }}" class="btn btn-secondary">
                   <i class="fa-solid fa-rotate-left"></i>
                 </a>
+                <a href="{{ route('contest.participants.export', $contest->id) . '?' . http_build_query(array_filter(['search' => request('search'), 'date_from' => request('date_from'), 'date_to' => request('date_to')])) }}"
+                  class="btn btn-success" title="{{ __('messages.contest.export_excel') }}">
+                  <i class="fa-solid fa-file-excel"></i>
+                </a>
               </div>
             </form>
           </div>
@@ -161,7 +165,7 @@
                             @endif
                           @endif
                         </td>
-                        <td >{{ $participant->phone }}</td>
+                        <td>{{ $participant->phone }}</td>
                         <td>{{ $participant->created_at->translatedFormat('Y-m-d h:i A') }}</td>
                         <td>
                           @if($participant->winner_rank)
