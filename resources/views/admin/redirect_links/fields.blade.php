@@ -139,19 +139,19 @@
       <h4 class="mb-3"><i class="fa-solid fa-bullhorn me-2"></i>{{ __('messages.sales_advertise.advertise_settings') }}
       </h4>
 
-      {{-- Enable / Disable --}}
+      {{-- Redirect Behavior --}}
       <div class="mb-4">
         <label class="form-label fw-bold">
-          {{ __('messages.sales_advertise.enable_advertise') }}
+          {{ __('messages.redirect_links.redirect_behavior') }}
         </label>
         <div class="d-flex gap-4 mt-2">
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="ad_is_enabled" id="adEnabledYes" value="1" {{ ($adSetting && $adSetting->is_enabled) ? 'checked' : '' }} onchange="toggleAdFields(this.value)">
-            <label class="form-check-label" for="adEnabledYes">{{ __('messages.sales_advertise.yes') }}</label>
+            <input class="form-check-input" type="radio" name="ad_is_enabled" id="adEnabledNo" value="0" {{ (!$adSetting || !$adSetting->is_enabled) ? 'checked' : '' }} onchange="toggleAdFields(this.value)">
+            <label class="form-check-label" for="adEnabledNo">{{ __('messages.redirect_links.direct_redirect') }}</label>
           </div>
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="ad_is_enabled" id="adEnabledNo" value="0" {{ (!$adSetting || !$adSetting->is_enabled) ? 'checked' : '' }} onchange="toggleAdFields(this.value)">
-            <label class="form-check-label" for="adEnabledNo">{{ __('messages.sales_advertise.no') }}</label>
+            <input class="form-check-input" type="radio" name="ad_is_enabled" id="adEnabledYes" value="1" {{ ($adSetting && $adSetting->is_enabled) ? 'checked' : '' }} onchange="toggleAdFields(this.value)">
+            <label class="form-check-label" for="adEnabledYes">{{ __('messages.redirect_links.pause_for_ads') }}</label>
           </div>
         </div>
       </div>

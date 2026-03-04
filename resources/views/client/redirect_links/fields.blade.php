@@ -83,16 +83,21 @@
     </div>
   </div>
 
+  @php
+    $adIsEnabled = isset($adSetting) && $adSetting && $adSetting->is_enabled;
+  @endphp
   <div class="col-12 mb-4">
     <label class="form-label fw-bold">{{ __('messages.redirect_links.redirect_behavior') }}</label>
     <div class="d-flex gap-4 mt-2">
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="redirect_behavior" id="behaviorDirect" value="direct"
+          {{ !$adIsEnabled ? 'checked' : '' }}
           onchange="toggleAdSection(this.value)">
         <label class="form-check-label" for="behaviorDirect">{{ __('messages.redirect_links.direct_redirect') }}</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="redirect_behavior" id="behaviorAds" value="ads" checked
+        <input class="form-check-input" type="radio" name="redirect_behavior" id="behaviorAds" value="ads"
+          {{ $adIsEnabled ? 'checked' : '' }}
           onchange="toggleAdSection(this.value)">
         <label class="form-check-label" for="behaviorAds">{{ __('messages.redirect_links.pause_for_ads') }}</label>
       </div>
@@ -114,7 +119,7 @@
       $adImages = $adSetting ? ($adSetting->images ?? []) : [];
       $adRemaining = 5 - count($adImages);
     @endphp
-    <div class="col-12 mt-4" id="adSection">
+    <div class="col-12 mt-4" id="adSection" style="{{ $adIsEnabled ? '' : 'display:none;' }}">
       <hr>
       <h4 class="mb-3"><i class="fa-solid fa-bullhorn me-2"></i>{{ __('messages.sales_advertise.advertise_settings') }}
       </h4>
