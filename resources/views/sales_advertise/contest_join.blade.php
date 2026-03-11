@@ -131,6 +131,28 @@
       border: none;
       font-size: 0.9rem;
     }
+
+    .contest-continue-btn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: #ffd700;
+      font-weight: 700;
+      border: 2px solid #ffd700;
+      border-radius: 14px;
+      padding: 12px;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .contest-continue-btn:hover {
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+    }
   </style>
 @endpush
 
@@ -198,6 +220,15 @@
               <i class="fa-solid fa-hand-pointer me-1"></i> {{ __('messages.contest.join_now') }}
             </button>
           </form>
+        @endif
+
+        {{-- Continue button --}}
+        @if(!empty($destinationUrl))
+          <div class="mt-3">
+            <a href="{{ $destinationUrl }}" class="contest-continue-btn">
+              <i class="fa-solid fa-arrow-right me-1"></i> {{ __('messages.contest.continue') }}
+            </a>
+          </div>
         @endif
       </div>
     </div>

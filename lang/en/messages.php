@@ -2008,6 +2008,10 @@ return [
     'winners_selected'           => ':count winner(s) selected successfully!',
     'no_participants_to_draw'    => 'No participants available to draw winners from.',
     'export_excel'               => 'Export to Excel',
+    'continue'                   => 'Continue',
+    'contest_name_col'           => 'Contest Name',
+    'export_all_contests'        => 'Export All Contests',
+    'no_contests'                => 'No contests found for this redirect link.',
   ],
 
   'save' => 'Save',

@@ -174,11 +174,7 @@ class ClientRedirectLinkController extends Controller
       );
     }
 
-    // Handle ad settings update if present
-    if ($request->has('ad_is_enabled')) {
-      $adController = new SalesAdvertiseController();
-      $adController->updateForRedirectLink($request, $redirectLink->id);
-    }
+    // Handle ad settings update if present - now on separate page
 
     return redirect()->route('client.redirect-links.index')->with('success', __('messages.redirect_links.updated'));
   }

@@ -2005,6 +2005,10 @@ return [
     'winners_selected'           => 'تم اختيار :count فائز(ين) بنجاح!',
     'no_participants_to_draw'    => 'لا يوجد مشاركين لاختيار الفائزين منهم.',
     'export_excel'               => 'تصدير إلى Excel',
+    'continue'                   => 'متابعة',
+    'contest_name_col'           => 'اسم المسابقة',
+    'export_all_contests'        => 'تصدير جميع المسابقات',
+    'no_contests'                => 'لا توجد مسابقات لرابط إعادة التوجيه هذا.',
   ],
 
   'save' => 'حفظ',

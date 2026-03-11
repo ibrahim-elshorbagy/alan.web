@@ -1159,11 +1159,7 @@ class RedirectLinkController extends Controller
       );
     }
 
-    // Handle ad settings update (super_admin only)
-    if (auth()->user()->hasRole('super_admin') && $request->has('ad_is_enabled')) {
-      $adController = new \App\Http\Controllers\SalesAdvertiseController();
-      $adController->updateForRedirectLink($request, $redirectLink->id);
-    }
+    // Handle ad settings update - now on separate page
 
     return redirect()->route('redirect-links.index')->with('success', __('messages.redirect_links.updated'));
   }

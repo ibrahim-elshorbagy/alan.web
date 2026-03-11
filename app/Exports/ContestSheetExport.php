@@ -4,50 +4,36 @@ namespace App\Exports;
 
 use App\Models\ContestParticipant;
 use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class ContestParticipantsExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize
+class ContestSheetExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, WithTitle
 {
   protected int $contestId;
   protected string $contestTitle;
-  protected ?string $search;
-  protected ?string $dateFrom;
-  protected ?string $dateTo;
-
   private int $rowIndex = 0;
 
-  public function __construct(int $contestId, string $contestTitle, ?string $search = null, ?string $dateFrom = null, ?string $dateTo = null)
+  public function __construct(int $contestId, string $contestTitle)
   {
     $this->contestId    = $contestId;
     $this->contestTitle = $contestTitle;
-    $this->search       = $search;
-    $this->dateFrom     = $dateFrom;
-    $this->dateTo       = $dateTo;
+  }
+
+  public function title(): string
+  {
+    // Excel sheet names: max 31 chars, no: \ / ? * [ ] :
+    $safe = preg_replace('/[\/\\\?\*\[\]:\'"]+/', '', $this->contestTitle);
+    $safe = trim($safe);
+
+    return mb_substr($safe ?: ('Contest_' . $this->contestId), 0, 31);
   }
 
   public function query()
   {
-    $query = ContestParticipant::where('contest_id', $this->contestId);
-
-    if ($this->search) {
-      $search = $this->search;
-      $query->where(function ($q) use ($search) {
-        $q->where('name', 'like', '%' . $search . '%')
-          ->orWhere('phone', 'like', '%' . $search . '%');
-      });
-    }
-
-    if ($this->dateFrom) {
-      $query->whereDate('created_at', '>=', $this->dateFrom);
-    }
-
-    if ($this->dateTo) {
-      $query->whereDate('created_at', '<=', $this->dateTo);
-    }
-
-    return $query->orderBy('created_at', 'asc');
+    return ContestParticipant::where('contest_id', $this->contestId)
+      ->orderBy('created_at', 'asc');
   }
 
   public function headings(): array

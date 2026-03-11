@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\AllUserContestsExport;
 use App\Exports\ContestParticipantsExport;
+use App\Exports\RedirectLinkContestsExport;
 use App\Models\Contest;
 use App\Models\ContestParticipant;
 use App\Models\RedirectLink;
@@ -17,6 +19,35 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class SalesAdvertiseController extends Controller
 {
+  // ─────────────────────────────────────────────
+  //  Show ad & contest settings page for a redirect link
+  // ─────────────────────────────────────────────
+
+  /**
+   * Display the dedicated ad & contest settings page.
+   * Accessible by super_admin (any link) and admin/client (own links only).
+   * Sales role is blocked.
+   */
+  public function editSettings(int $redirectLinkId)
+  {
+    $user = Auth::user();
+
+    if ($user->hasRole('sales')) {
+      abort(403);
+    }
+
+    if ($user->hasRole('super_admin')) {
+      $redirectLink = RedirectLink::findOrFail($redirectLinkId);
+    } else {
+      $redirectLink = RedirectLink::where('user_id', $user->id)->findOrFail($redirectLinkId);
+    }
+
+    $adSetting = SalesAdvertiseSetting::where('redirect_link_id', $redirectLinkId)->first();
+    $contests = Contest::where('redirect_link_id', $redirectLinkId)->orderBy('created_at', 'desc')->get();
+
+    return view('redirect_links.ad_settings', compact('redirectLink', 'adSetting', 'contests'));
+  }
+
   // ─────────────────────────────────────────────
   //  Update ad settings for a redirect link
   //  Called from both client (admin user) and super_admin
@@ -378,8 +409,11 @@ class SalesAdvertiseController extends Controller
       abort(404);
     }
 
+    $destinationUrl = $contest->redirectLink?->redirect_link;
+
     return view('sales_advertise.contest_join', [
-      'contest' => $contest,
+      'contest'        => $contest,
+      'destinationUrl' => $destinationUrl,
     ]);
   }
 
@@ -429,7 +463,12 @@ class SalesAdvertiseController extends Controller
       'phone'      => $phone,
     ]);
 
-    return redirect()->back()->with('success', __('messages.contest.joined_successfully'));
+    $contest->load('redirectLink');
+    $destinationUrl = $contest->redirectLink?->redirect_link;
+
+    return redirect()->back()
+      ->with('success', __('messages.contest.joined_successfully'))
+      ->with('destinationUrl', $destinationUrl);
   }
 
   // ─────────────────────────────────────────────
@@ -495,9 +534,38 @@ class SalesAdvertiseController extends Controller
     $filename = 'contest_participants_' . $contestId . '_' . now()->format('Ymd_His') . '.xlsx';
 
     return Excel::download(
-      new ContestParticipantsExport($contestId, $search, $dateFrom, $dateTo),
+      new ContestParticipantsExport($contestId, $contest->title, $search, $dateFrom, $dateTo),
       $filename
     );
+  }
+
+  public function exportAllMyContests()
+  {
+    $user = Auth::user();
+
+    $filename = 'all_contests_' . now()->format('Ymd') . '.xlsx';
+
+    return Excel::download(new AllUserContestsExport($user->id), $filename);
+  }
+
+  public function exportAllContests(int $redirectLinkId)
+  {
+    $user = Auth::user();
+
+    if ($user->hasRole('sales')) {
+      abort(403);
+    }
+
+    $redirectLink = $this->resolveRedirectLink($user, $redirectLinkId);
+
+    $hasContests = Contest::where('redirect_link_id', $redirectLinkId)->exists();
+    if (!$hasContests) {
+      return redirect()->back()->with('error', __('messages.contest.no_contests'));
+    }
+
+    $filename = 'contests_' . $redirectLink->uri . '_' . now()->format('Ymd') . '.xlsx';
+
+    return Excel::download(new RedirectLinkContestsExport($redirectLinkId), $filename);
   }
 
   private function resolveRedirectLink($user, int $redirectLinkId): RedirectLink

@@ -251,9 +251,13 @@ Route::middleware(['freshInstall'])->group(function () {
           ->name('nfc.razorpay.failed');
 
         Route::get('redirect-links', [ClientRedirectLinkController::class, 'index'])->name('client.redirect-links.index');
+        Route::get('redirect-links/export-all-my-contests', [SalesAdvertiseController::class, 'exportAllMyContests'])->name('client.redirect-links.export-all-my-contests');
         Route::get('redirect-links/{id}/edit', [ClientRedirectLinkController::class, 'edit'])->name('client.redirect-links.edit');
         Route::put('redirect-links/{id}', [ClientRedirectLinkController::class, 'update'])->name('client.redirect-links.update');
         Route::post('redirect-links/redeem', [ClientRedirectLinkController::class, 'redeem'])->name('client.redirect-links.redeem')->middleware('throttle:20,1');
+        Route::get('redirect-links/{redirectLink}/ad-settings', [SalesAdvertiseController::class, 'editSettings'])->name('client.redirect-links.ad-settings');
+        Route::post('redirect-links/{redirectLink}/ad-settings', [SalesAdvertiseController::class, 'updateForRedirectLink'])->name('client.redirect-links.ad-settings.update');
+        Route::get('redirect-links/{redirectLink}/export-contests', [SalesAdvertiseController::class, 'exportAllContests'])->name('client.redirect-links.export-contests');
 
         Route::middleware('subscription')->group(function () {
           //admin dashboard route
@@ -605,6 +609,9 @@ Route::middleware(['freshInstall'])->group(function () {
     });
 
     Route::middleware('role:super_admin|admin')->group(function () {
+      Route::get('redirect-links/{redirectLink}/ad-settings', [SalesAdvertiseController::class, 'editSettings'])->name('redirect-links.ad-settings');
+      Route::post('redirect-links/{redirectLink}/ad-settings', [SalesAdvertiseController::class, 'updateForRedirectLink'])->name('redirect-links.ad-settings.update');
+      Route::get('redirect-links/{redirectLink}/export-contests', [SalesAdvertiseController::class, 'exportAllContests'])->name('redirect-links.export-contests');
       Route::get('contests/{contest}/participants', [SalesAdvertiseController::class, 'contestParticipants'])->name('contest.participants');
       Route::get('contests/{contest}/participants/export', [SalesAdvertiseController::class, 'exportContestParticipants'])->name('contest.participants.export');
       Route::get('redirect-links/{redirectLink}/contests/create', [SalesAdvertiseController::class, 'createContestForm'])->name('contests.create');

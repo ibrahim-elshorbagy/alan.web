@@ -7,9 +7,14 @@
     <div class="d-flex flex-column table-striped">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>{{ __('messages.redirect_links.my_redirect_links') }}</h1>
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#redeemModal">
-          <i class="fas fa-gift"></i> {{ __('messages.redirect_links.redeem_code') }}
-        </button>
+        <div class="d-flex gap-2">
+          <a href="{{ route('client.redirect-links.export-all-my-contests') }}" class="btn  btn-outline-primary">
+            <i class="fa-solid fa-file-excel"></i> {{ __('messages.contest.export_all_contests') }}
+          </a>
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#redeemModal">
+            <i class="fas fa-gift"></i> {{ __('messages.redirect_links.redeem_code') }}
+          </button>
+        </div>
       </div>
       @include('flash::message')
       <div class="table-responsive">
@@ -30,8 +35,7 @@
           @csrf
           <div class="modal-body">
             <div class="mb-3">
-              <label for="Code"
-                class="form-label required">{{ __('messages.redirect_links.enter_redeem_code') }}</label>
+              <label for="Code" class="form-label required">{{ __('messages.redirect_links.enter_redeem_code') }}</label>
               <input type="text" class="form-control" id="uri" name="uri" required
                 placeholder="{{ __('messages.redirect_links.redeem_code_placeholder') }}"
                 value="{{ session('pending_redeem_uri') }}">
@@ -51,12 +55,12 @@
 
 @push('scripts')
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       @if (session('pending_redeem_uri'))
         // Auto-open the redeem modal if there's a pending URI in session
         var redeemModal = new bootstrap.Modal(document.getElementById('redeemModal'));
         redeemModal.show();
       @endif
-    });
+      });
   </script>
 @endpush
