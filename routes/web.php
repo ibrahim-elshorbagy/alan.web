@@ -88,6 +88,7 @@ use App\Http\Controllers\TwofactorAuthenticationController;
 use App\Http\Controllers\WhatsappStoreProductTransactionController;
 use App\Http\Controllers\RedirectLinkController;
 use App\Http\Controllers\SalesAdvertiseController;
+use App\Http\Controllers\ShopVisitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -652,6 +653,11 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::post('/disable-user-2fa/{user}', [TwofactorAuthenticationController::class, 'adminDisableUser2FA'])->name('admin.disable.user.2fa')->middleware('role:super_admin');
     });
 
+    // Sales Dashboard
+    Route::prefix('sadmin')->middleware('role:sales')->group(function () {
+      Route::get('sales-dashboard', [App\Http\Controllers\SalesDashboardController::class, 'index'])->name('sales.dashboard');
+    });
+
     // Sales NFC Showcase
     Route::prefix('sadmin')->middleware('role:sales')->group(function () {
       Route::get('nfc-showcase', [App\Http\Controllers\SalesNfcController::class, 'index'])->name('sales.nfc.showcase');
@@ -661,6 +667,25 @@ Route::middleware(['freshInstall'])->group(function () {
     Route::prefix('sadmin')->middleware('role:sales')->group(function () {
       Route::get('my-customers', [App\Http\Controllers\SalesCustomerController::class, 'index'])->name('sales.customers.index');
       Route::get('my-customers/update-status/{user}', [App\Http\Controllers\SalesCustomerController::class, 'updateStatus'])->name('sales.customers.status');
+    });
+
+    // Sales Shop Visits (sales own CRUD + dashboard)
+    Route::prefix('sadmin')->middleware('role:sales')->group(function () {
+      Route::get('shop-visits', [ShopVisitController::class, 'index'])->name('sales.shop-visits.index');
+      Route::get('shop-visits/create', [ShopVisitController::class, 'create'])->name('sales.shop-visits.create');
+      Route::post('shop-visits', [ShopVisitController::class, 'store'])->name('sales.shop-visits.store');
+      Route::get('shop-visits/{id}/edit', [ShopVisitController::class, 'edit'])->name('sales.shop-visits.edit');
+      Route::put('shop-visits/{id}', [ShopVisitController::class, 'update'])->name('sales.shop-visits.update');
+      Route::delete('shop-visits/{id}', [ShopVisitController::class, 'destroy'])->name('sales.shop-visits.destroy');
+      Route::get('shop-visits-dashboard', [ShopVisitController::class, 'salesDashboard'])->name('sales.shop-visits.dashboard');
+    });
+
+    // Super Admin: view & edit sales users' shop visits
+    Route::prefix('sadmin')->middleware('role:super_admin')->group(function () {
+      Route::get('sales/{salesUserId}/shop-visits', [ShopVisitController::class, 'adminIndex'])->name('admin.sales-visits.index');
+      Route::get('sales/shop-visits/{id}/edit', [ShopVisitController::class, 'adminEdit'])->name('admin.sales-visits.edit');
+      Route::put('sales/shop-visits/{id}', [ShopVisitController::class, 'adminUpdate'])->name('admin.sales-visits.update');
+      Route::get('sales/{salesUserId}/shop-visits-dashboard', [ShopVisitController::class, 'adminDashboard'])->name('admin.sales-visits.dashboard');
     });
 
 

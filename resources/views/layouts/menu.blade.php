@@ -241,9 +241,8 @@
 @endrole
 
 @hasrole('sales')
-<li class="nav-item {{ Request::is('sadmin/dashboard*') ? 'active' : '' }}">
-  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
-    href="{{ route('redirect-links.index') }}">
+<li class="nav-item {{ Request::is('sadmin/sales-dashboard*') ? 'active' : '' }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('sales.dashboard') }}">
     <span class="aside-menu-icon"><i class="fas fa-tachometer-alt icon-color-bs-blue"></i></span>
     <span class="aside-menu-title">{{ __('messages.dashboard') }}</span>
   </a>
@@ -254,6 +253,14 @@
     href="{{ route('redirect-links.index') }}">
     <span class="aside-menu-icon"><i class="fas fa-link icon-color-bs-blue"></i></span>
     <span class="aside-menu-title">{{ __('messages.redirect_links.title') }}</span>
+  </a>
+</li>
+
+<li class="nav-item {{ Request::is('sadmin/shop-visits*') ? 'active' : '' }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sales.shop-visits.index') }}">
+    <span class="aside-menu-icon"><i class="fas fa-store icon-color-bs-blue"></i></span>
+    <span class="aside-menu-title">{{ __('messages.shop_visits.title') }}</span>
   </a>
 </li>
 

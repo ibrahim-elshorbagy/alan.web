@@ -9,6 +9,17 @@
       <i class="fa-solid fa-pen-to-square"></i>
     </a>
 
+    @if ($row->hasRole('sales'))
+      <a href="{{ route('admin.sales-visits.index', $row->id) }}" title="{{ __('messages.shop_visits.title') }}"
+        class="btn px-1 text-info fs-3">
+        <i class="fa-solid fa-store"></i>
+      </a>
+      <a href="{{ route('admin.sales-visits.dashboard', $row->id) }}" title="{{ __('messages.shop_visits.dashboard') }}"
+        class="btn px-1 text-warning fs-3">
+        <i class="fa-solid fa-chart-bar"></i>
+      </a>
+    @endif
+
     @if (!empty($row->contact))
       <a href="javascript:void(0)" data-id="{{ $row->id }}"
         title="إعادة تعيين كلمة المرور وارسالها برسالة واتس لرقم المندوب"
