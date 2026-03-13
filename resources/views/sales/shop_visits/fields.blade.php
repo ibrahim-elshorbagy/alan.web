@@ -39,14 +39,6 @@
         placeholder="{{ __('messages.shop_visits.phone_placeholder') }}" required>
     </div>
   </div>
-  <div class="col-lg-6">
-    <div class="mb-5">
-      <label for="cards_sold" class="form-label">{{ __('messages.shop_visits.cards_sold') }}:</label>
-      <input type="number" name="cards_sold" id="cards_sold" class="form-control" min="0"
-        value="{{ old('cards_sold', isset($visit) ? $visit->cards_sold : 0) }}"
-        placeholder="{{ __('messages.shop_visits.cards_sold_placeholder') }}">
-    </div>
-  </div>
   <div class="col-12">
     <div class="mb-5">
       <label for="notes" class="form-label">{{ __('messages.shop_visits.notes') }}:</label>

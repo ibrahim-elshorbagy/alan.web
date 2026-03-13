@@ -16,14 +16,12 @@ class ShopVisit extends Model
     'street',
     'shop_name',
     'phone',
-    'cards_sold',
     'notes',
     'visited_at',
   ];
 
   protected $casts = [
     'visited_at' => 'datetime',
-    'cards_sold' => 'integer',
   ];
 
   /**

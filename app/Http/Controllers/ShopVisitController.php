@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\ShopVisit;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Collection;
 use Laracasts\Flash\Flash;
-use Carbon\Carbon;
 
 class ShopVisitController extends Controller
 {
@@ -43,13 +45,11 @@ class ShopVisitController extends Controller
       'street'     => 'required|string|max:255',
       'shop_name'  => 'required|string|max:255',
       'phone'      => 'required|string|max:20',
-      'cards_sold' => 'nullable|integer|min:0',
       'notes'      => 'nullable|string|max:1000',
     ]);
 
     $validated['sales_user_id'] = Auth::id();
     $validated['visited_at'] = Carbon::now();
-    $validated['cards_sold'] = $validated['cards_sold'] ?? 0;
 
     ShopVisit::create($validated);
 
@@ -75,11 +75,8 @@ class ShopVisitController extends Controller
       'street'     => 'required|string|max:255',
       'shop_name'  => 'required|string|max:255',
       'phone'      => 'required|string|max:20',
-      'cards_sold' => 'nullable|integer|min:0',
       'notes'      => 'nullable|string|max:1000',
     ]);
-
-    $validated['cards_sold'] = $validated['cards_sold'] ?? 0;
 
     $visit->update($validated);
 
@@ -135,11 +132,8 @@ class ShopVisitController extends Controller
       'street'     => 'required|string|max:255',
       'shop_name'  => 'required|string|max:255',
       'phone'      => 'required|string|max:20',
-      'cards_sold' => 'nullable|integer|min:0',
       'notes'      => 'nullable|string|max:1000',
     ]);
-
-    $validated['cards_sold'] = $validated['cards_sold'] ?? 0;
 
     $visit->update($validated);
 
@@ -182,30 +176,202 @@ class ShopVisitController extends Controller
   public static function getVisitStats(int $salesUserId): array
   {
     $today = Carbon::today();
-    $weekStart = Carbon::now()->startOfWeek();
-    $monthStart = Carbon::now()->startOfMonth();
+    $previousWorkingDay = self::getPreviousWorkingDay($today);
+    [$weekStart, $weekEnd] = self::getCurrentWorkWeekRange($today);
+    $monthStart = $today->copy()->startOfMonth()->startOfDay();
+    $monthEnd = $today->copy()->endOfDay();
 
-    $baseQuery = ShopVisit::where('sales_user_id', $salesUserId);
+    $allVisits = ShopVisit::where('sales_user_id', $salesUserId)
+      ->orderBy('visited_at')
+      ->get(['visited_at']);
 
-    // Daily
-    $dailyVisits = (clone $baseQuery)->whereDate('visited_at', $today)->count();
-    $dailyCards  = (clone $baseQuery)->whereDate('visited_at', $today)->sum('cards_sold');
+    $workVisits = $allVisits
+      ->filter(fn(ShopVisit $visit) => !$visit->visited_at->isFriday())
+      ->values();
 
-    // Weekly
-    $weeklyVisits = (clone $baseQuery)->where('visited_at', '>=', $weekStart)->count();
-    $weeklyCards  = (clone $baseQuery)->where('visited_at', '>=', $weekStart)->sum('cards_sold');
+    $todayVisits = $workVisits->filter(fn(ShopVisit $visit) => $visit->visited_at->isSameDay($today))->count();
+    $previousWorkingDayVisits = $workVisits->filter(fn(ShopVisit $visit) => $visit->visited_at->isSameDay($previousWorkingDay))->count();
 
-    // Monthly
-    $monthlyVisits = (clone $baseQuery)->where('visited_at', '>=', $monthStart)->count();
-    $monthlyCards  = (clone $baseQuery)->where('visited_at', '>=', $monthStart)->sum('cards_sold');
+    $weeklyVisits = $workVisits->filter(function (ShopVisit $visit) use ($weekStart, $weekEnd) {
+      return $visit->visited_at->greaterThanOrEqualTo($weekStart)
+        && $visit->visited_at->lessThanOrEqualTo($weekEnd);
+    })->count();
+
+    $monthlyVisits = $workVisits->filter(function (ShopVisit $visit) use ($monthStart, $monthEnd) {
+      return $visit->visited_at->greaterThanOrEqualTo($monthStart)
+        && $visit->visited_at->lessThanOrEqualTo($monthEnd);
+    })->count();
+
+    $totalVisits = $workVisits->count();
+
+    $salesStats = self::buildSalesStats($salesUserId, $today, $previousWorkingDay, $weekStart, $weekEnd, $monthStart, $monthEnd);
+
+    return array_merge([
+      'today_visits'   => $todayVisits,
+      'previous_working_day_visits' => $previousWorkingDayVisits,
+      'weekly_visits'  => $weeklyVisits,
+      'monthly_visits' => $monthlyVisits,
+      'total_visits'   => $totalVisits,
+      'month_chart'    => self::buildCurrentMonthChart($workVisits, $monthStart, $monthEnd),
+      'overall_chart'  => self::buildOverallChart($workVisits),
+    ], $salesStats);
+  }
+
+  private static function getPreviousWorkingDay(Carbon $referenceDate): Carbon
+  {
+    $previousDay = $referenceDate->copy()->subDay();
+
+    while ($previousDay->isFriday()) {
+      $previousDay->subDay();
+    }
+
+    return $previousDay;
+  }
+
+  private static function getCurrentWorkWeekRange(Carbon $referenceDate): array
+  {
+    if ($referenceDate->isFriday()) {
+      $referenceDate = $referenceDate->copy()->subDay();
+    }
+
+    $weekStart = $referenceDate->copy()->startOfWeek(Carbon::SATURDAY)->startOfDay();
+    $weekEnd = $weekStart->copy()->addDays(5)->endOfDay();
+
+    return [$weekStart, $weekEnd];
+  }
+
+  private static function buildCurrentMonthChart(Collection $workVisits, Carbon $monthStart, Carbon $monthEnd): array
+  {
+    $dailyCounts = $workVisits
+      ->filter(function (ShopVisit $visit) use ($monthStart, $monthEnd) {
+        return $visit->visited_at->greaterThanOrEqualTo($monthStart)
+          && $visit->visited_at->lessThanOrEqualTo($monthEnd);
+      })
+      ->groupBy(fn(ShopVisit $visit) => $visit->visited_at->toDateString())
+      ->map(fn(Collection $visits) => $visits->count());
+
+    $labels = [];
+    $data = [];
+    $cursor = $monthStart->copy();
+
+    while ($cursor->lessThanOrEqualTo($monthEnd)) {
+      if (!$cursor->isFriday()) {
+        $dateKey = $cursor->toDateString();
+        $labels[] = $cursor->format('d M');
+        $data[] = (int) ($dailyCounts[$dateKey] ?? 0);
+      }
+
+      $cursor->addDay();
+    }
 
     return [
-      'daily_visits'   => $dailyVisits,
-      'daily_cards'    => (int) $dailyCards,
-      'weekly_visits'  => $weeklyVisits,
-      'weekly_cards'   => (int) $weeklyCards,
-      'monthly_visits' => $monthlyVisits,
-      'monthly_cards'  => (int) $monthlyCards,
+      'labels' => $labels,
+      'data'   => $data,
+    ];
+  }
+
+  private static function buildOverallChart(Collection $workVisits): array
+  {
+    $monthlyCounts = $workVisits
+      ->groupBy(fn(ShopVisit $visit) => $visit->visited_at->format('Y-m'))
+      ->map(fn(Collection $visits) => $visits->count())
+      ->sortKeys();
+
+    $labels = [];
+    $data = [];
+
+    foreach ($monthlyCounts as $month => $count) {
+      $labels[] = Carbon::createFromFormat('Y-m', $month)->format('M Y');
+      $data[] = (int) $count;
+    }
+
+    return [
+      'labels' => $labels,
+      'data'   => $data,
+    ];
+  }
+
+  /**
+   * Build active redirect-link sales stats for the given sales user.
+   * "Active" = most recent redemption (user_redeem) NOT followed by user_deleted_link.
+   */
+  private static function buildSalesStats(
+    int    $salesUserId,
+    Carbon $today,
+    Carbon $previousWorkingDay,
+    Carbon $weekStart,
+    Carbon $weekEnd,
+    Carbon $monthStart,
+    Carbon $monthEnd
+  ): array {
+    // Fetch timestamps of all active redemptions assigned to this salesperson
+    $activeSaleDates = DB::table('redirect_link_histories as rlh')
+      ->join('redirect_links as rl', 'rlh.redirect_link_id', '=', 'rl.id')
+      ->where('rlh.action', 'user_redeem')
+      ->where('rl.assigned_id', $salesUserId)
+      // Only the most recent redemption per link
+      ->whereIn('rlh.id', function ($sub) {
+        $sub->from('redirect_link_histories')
+          ->select(DB::raw('MAX(id)'))
+          ->where('action', 'user_redeem')
+          ->groupBy('redirect_link_id');
+      })
+      // No deletion after this redemption
+      ->whereNotExists(function ($sub) {
+        $sub->from('redirect_link_histories as rlh2')
+          ->whereColumn('rlh2.redirect_link_id', 'rlh.redirect_link_id')
+          ->where('rlh2.action', 'user_deleted_link')
+          ->whereColumn('rlh2.id', '>', 'rlh.id');
+      })
+      ->orderBy('rlh.created_at')
+      ->pluck('rlh.created_at')
+      ->map(fn($t) => Carbon::parse($t));
+
+    $todaySales        = $activeSaleDates->filter(fn($d) => $d->isSameDay($today))->count();
+    $prevDaySales      = $activeSaleDates->filter(fn($d) => $d->isSameDay($previousWorkingDay))->count();
+    $weeklySales       = $activeSaleDates->filter(fn($d) => $d->greaterThanOrEqualTo($weekStart) && $d->lessThanOrEqualTo($weekEnd))->count();
+    $monthlySales      = $activeSaleDates->filter(fn($d) => $d->greaterThanOrEqualTo($monthStart) && $d->lessThanOrEqualTo($monthEnd))->count();
+    $totalActiveSales  = $activeSaleDates->count(); // all-time, no date filter
+
+    // Current-month daily chart
+    $monthSalesByDay = $activeSaleDates
+      ->filter(fn($d) => $d->greaterThanOrEqualTo($monthStart) && $d->lessThanOrEqualTo($monthEnd))
+      ->groupBy(fn($d) => $d->toDateString())
+      ->map(fn($g) => $g->count());
+
+    $monthSalesLabels = [];
+    $monthSalesData   = [];
+    $cursor = $monthStart->copy();
+    while ($cursor->lessThanOrEqualTo($monthEnd)) {
+      if (!$cursor->isFriday()) {
+        $dateKey = $cursor->toDateString();
+        $monthSalesLabels[] = $cursor->format('d M');
+        $monthSalesData[]   = (int) ($monthSalesByDay[$dateKey] ?? 0);
+      }
+      $cursor->addDay();
+    }
+
+    // Overall monthly chart
+    $overallSalesByMonth = $activeSaleDates
+      ->groupBy(fn($d) => $d->format('Y-m'))
+      ->map(fn($g) => $g->count())
+      ->sortKeys();
+
+    $overallSalesLabels = [];
+    $overallSalesData   = [];
+    foreach ($overallSalesByMonth as $month => $count) {
+      $overallSalesLabels[] = Carbon::createFromFormat('Y-m', $month)->format('M Y');
+      $overallSalesData[]   = (int) $count;
+    }
+
+    return [
+      'today_active_sales'                => $todaySales,
+      'previous_working_day_active_sales' => $prevDaySales,
+      'weekly_active_sales'               => $weeklySales,
+      'monthly_active_sales'              => $monthlySales,
+      'total_active_sales'                => $totalActiveSales,
+      'month_sales_chart'                 => ['labels' => $monthSalesLabels, 'data' => $monthSalesData],
+      'overall_sales_chart'               => ['labels' => $overallSalesLabels, 'data' => $overallSalesData],
     ];
   }
 }

@@ -87,14 +87,30 @@ class RedirectLinksSalesReport extends Component
   }
 
   /**
-   * Base query for sales (user_redeem actions)
+   * Base query for active sales only.
+   * "Active" = redeemed (user_redeem) and NOT subsequently deleted (user_deleted_link).
+   * Only the most recent redemption per link is counted.
    */
   private function baseSalesQuery()
   {
-    $query = DB::table('redirect_link_histories')
-      ->where('redirect_link_histories.action', 'user_redeem')
-      ->join('redirect_links', 'redirect_link_histories.redirect_link_id', '=', 'redirect_links.id')
-      ->leftJoin('nfcs', 'redirect_links.nfcs_id', '=', 'nfcs.id');
+    $query = DB::table('redirect_link_histories as rlh')
+      ->join('redirect_links', 'rlh.redirect_link_id', '=', 'redirect_links.id')
+      ->leftJoin('nfcs', 'redirect_links.nfcs_id', '=', 'nfcs.id')
+      ->where('rlh.action', 'user_redeem')
+      // Only the most recent redemption per link
+      ->whereIn('rlh.id', function ($sub) {
+        $sub->from('redirect_link_histories')
+          ->select(DB::raw('MAX(id)'))
+          ->where('action', 'user_redeem')
+          ->groupBy('redirect_link_id');
+      })
+      // Exclude links that were deleted after redemption
+      ->whereNotExists(function ($sub) {
+        $sub->from('redirect_link_histories as rlh2')
+          ->whereColumn('rlh2.redirect_link_id', 'rlh.redirect_link_id')
+          ->where('rlh2.action', 'user_deleted_link')
+          ->whereColumn('rlh2.id', '>', 'rlh.id');
+      });
 
     // Role-based filtering
     if (auth()->user()->hasRole('sales')) {
@@ -113,24 +129,24 @@ class RedirectLinksSalesReport extends Component
 
     // Date filters
     if ($this->dateFromFilter !== '') {
-      $query->whereDate('redirect_link_histories.created_at', '>=', $this->dateFromFilter);
+      $query->whereDate('rlh.created_at', '>=', $this->dateFromFilter);
     }
 
     if ($this->dateToFilter !== '') {
-      $query->whereDate('redirect_link_histories.created_at', '<=', $this->dateToFilter);
+      $query->whereDate('rlh.created_at', '<=', $this->dateToFilter);
     }
 
     return $query;
   }
 
   /**
-   * Get detailed sales data
+   * Get detailed active sales data
    */
   public function getSalesData()
   {
     return $this->baseSalesQuery()
       ->select(
-        'redirect_link_histories.*',
+        'rlh.*',
         'redirect_links.uri',
         'redirect_links.nfcs_id',
         'redirect_links.assigned_id',
@@ -139,7 +155,7 @@ class RedirectLinksSalesReport extends Component
         'redirect_links.sales_price',
         'nfcs.name as nfc_name'
       )
-      ->orderBy('redirect_link_histories.created_at', 'desc')
+      ->orderBy('rlh.created_at', 'desc')
       ->get();
   }
 
@@ -179,15 +195,29 @@ class RedirectLinksSalesReport extends Component
   }
 
   /**
-   * Get quick period stats (for summary cards)
+   * Get quick period stats (active only) for summary cards
    */
   private function getPeriodStats($dateFrom, $dateTo)
   {
-    $query = DB::table('redirect_link_histories')
-      ->where('redirect_link_histories.action', 'user_redeem')
-      ->join('redirect_links', 'redirect_link_histories.redirect_link_id', '=', 'redirect_links.id')
-      ->whereDate('redirect_link_histories.created_at', '>=', $dateFrom)
-      ->whereDate('redirect_link_histories.created_at', '<=', $dateTo);
+    $query = DB::table('redirect_link_histories as rlh')
+      ->join('redirect_links', 'rlh.redirect_link_id', '=', 'redirect_links.id')
+      ->where('rlh.action', 'user_redeem')
+      ->whereDate('rlh.created_at', '>=', $dateFrom)
+      ->whereDate('rlh.created_at', '<=', $dateTo)
+      // Only the most recent redemption per link
+      ->whereIn('rlh.id', function ($sub) {
+        $sub->from('redirect_link_histories')
+          ->select(DB::raw('MAX(id)'))
+          ->where('action', 'user_redeem')
+          ->groupBy('redirect_link_id');
+      })
+      // Exclude links deleted after redemption
+      ->whereNotExists(function ($sub) {
+        $sub->from('redirect_link_histories as rlh2')
+          ->whereColumn('rlh2.redirect_link_id', 'rlh.redirect_link_id')
+          ->where('rlh2.action', 'user_deleted_link')
+          ->whereColumn('rlh2.id', '>', 'rlh.id');
+      });
 
     // Role-based filtering
     if (auth()->user()->hasRole('sales')) {

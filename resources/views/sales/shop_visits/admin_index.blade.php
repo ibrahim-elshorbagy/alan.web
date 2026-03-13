@@ -29,7 +29,6 @@
                 <th>{{ __('messages.shop_visits.street') }}</th>
                 <th>{{ __('messages.shop_visits.shop_name') }}</th>
                 <th>{{ __('messages.shop_visits.phone') }}</th>
-                <th>{{ __('messages.shop_visits.cards_sold') }}</th>
                 <th>{{ __('messages.shop_visits.notes') }}</th>
                 <th>{{ __('messages.common.action') }}</th>
               </tr>
@@ -44,7 +43,6 @@
                   <td>{{ $visit->street }}</td>
                   <td>{{ $visit->shop_name }}</td>
                   <td dir="ltr">{{ $visit->phone }}</td>
-                  <td>{{ $visit->cards_sold }}</td>
                   <td>{{ \Illuminate\Support\Str::limit($visit->notes, 40) }}</td>
                   <td>
                     <a href="{{ route('admin.sales-visits.edit', $visit->id) }}" class="btn btn-sm btn-primary"
@@ -55,7 +53,7 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="10" class="text-center text-muted">{{ __('messages.shop_visits.no_visits') }}</td>
+                  <td colspan="9" class="text-center text-muted">{{ __('messages.shop_visits.no_visits') }}</td>
                 </tr>
               @endforelse
             </tbody>
