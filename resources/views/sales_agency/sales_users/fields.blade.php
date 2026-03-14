@@ -2,6 +2,7 @@
   <div class="col-lg-6">
     <div class="mb-5">
       {{ Form::hidden('is_admin', true) }}
+      {{ Form::hidden('role', 'sales') }}
       {{ Form::label('first_name', __('messages.user.first_name') . ':', ['class' => 'form-label required']) }}
       {{ Form::text('first_name', isset($user) ? $user->first_name : null, ['class' => 'form-control', 'placeholder' => __('messages.form.first_name'), 'required', 'id' => 'userFirstName']) }}
     </div>
@@ -30,15 +31,6 @@
       title="يرجى إدخال رقم هاتف أردني صالح يبدأ بـ 962 غير متبوع ب 0"
       style="padding: 8px 13px; padding-left: 50px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 16px; background: #fafbfc; transition: all 0.3s ease; background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMTMuMSAyIDE0IDIuOSAxNCA0VjE2QzE0IDE3LjEgMTMuMSAxOCA5IDE4VjE2QzQuOSAxNiA0IDE1LjEgNCAxNFY0QzQgMi45IDQuOSAyIDYgMkgxOFoiIGZpbGw9IiM2MzY2RjEiLz4KPHN2ZyB4PSI2IiB5PSI2IiB3aWR0aD0iMTIiIGhlaWdodD0iMTIiIHZpZXdCb3g9IjAgMCAxMiAxMiIgZmlsbD0ibm9uZSI+Cjx0ZXh0IHg9IjAiIHk9IjEwIiBmb250LXNpemU9IjEwIiBmaWxsPSIjNjM2NkYxIj5KTzwvdGV4dD4KPHN2Zz4KPHN2Zz4K'); background-repeat: no-repeat; background-position: 10px center;">
     <div class="fv-plugins-message-container invalid-feedback"></div>
-  </div>
-  <div class="col-lg-6 mb-5">
-    {{ Form::label('role', __('messages.admin.role') . ':', ['class' => 'form-label required']) }}
-    {{ Form::select('role', ['super_admin' => __('messages.admin.super_admin'), 'sales' => __('messages.admin.sales'), 'sales_agency' => __('messages.admin.sales_agency')], isset($user) ? $user->getRoleNames()->first() : old('role'), ['class' => 'form-control', 'required']) }}
-  </div>
-  <div class="col-lg-6 mb-5" id="agencyDiv"
-    style="display: {{ (isset($user) && $user->hasRole('sales')) || old('role') == 'sales' ? 'block' : 'none' }};">
-    {{ Form::label('agency_id', __('messages.admin.agency') . ':', ['class' => 'form-label required']) }}
-    {{ Form::select('agency_id', \App\Models\User::role('sales_agency')->get()->pluck('full_name', 'id'), isset($user) ? $user->agency_id : old('agency_id'), ['class' => 'form-control', 'id' => 'agencySelect']) }}
   </div>
   @if (!isset($user))
     <div class="col-lg-6 mb-5">
@@ -80,7 +72,6 @@
         <span class="picker-edit rounded-circle text-gray-500 fs-small" data-bs-toggle="tooltip" data-placement="top"
           data-bs-original-title="{{ __('messages.tooltip.profile') }}">
           <label>
-            <i class="fa-solid fa-pen" id="profileImageIcon"></i>
             <input type="file" id="profile_image" name="profile"
               class="image-upload file-validation d-none crop-image-input" accept="image/*" data-crop-width="100"
               data-crop-height="100" data-preview-id="adminUserProfilePreview" />
@@ -92,6 +83,7 @@
   </div>
   <div>
     {{ Form::submit(__('messages.common.save'), ['class' => 'btn btn-primary me-3']) }}
-    <a href="{{ route('admins.index') }}" class="btn btn-secondary">{{ __('messages.common.discard') }}</a>
+    <a href="{{ route('sales-agency.sales-users.index') }}"
+      class="btn btn-secondary">{{ __('messages.common.discard') }}</a>
   </div>
 </div>

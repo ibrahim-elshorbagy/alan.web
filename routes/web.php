@@ -41,6 +41,7 @@ use App\Http\Controllers\PaystackController;
 use App\Http\Controllers\RazorpayController;
 use App\Http\Controllers\SendMailController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\SalesAgencySalesUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FrontFAQsController;
 use App\Http\Controllers\NfcOrdersController;
@@ -609,7 +610,7 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::delete('redirect-links/{redirectLink}', [RedirectLinkController::class, 'destroy'])->name('redirect-links.destroy');
     });
 
-    Route::middleware('role:super_admin|admin')->group(function () {
+    Route::middleware('role:super_admin')->group(function () {
       Route::get('redirect-links/{redirectLink}/ad-settings', [SalesAdvertiseController::class, 'editSettings'])->name('redirect-links.ad-settings');
       Route::post('redirect-links/{redirectLink}/ad-settings', [SalesAdvertiseController::class, 'updateForRedirectLink'])->name('redirect-links.ad-settings.update');
       Route::get('redirect-links/{redirectLink}/export-contests', [SalesAdvertiseController::class, 'exportAllContests'])->name('redirect-links.export-contests');
@@ -681,11 +682,14 @@ Route::middleware(['freshInstall'])->group(function () {
     });
 
     // Super Admin: view & edit sales users' shop visits
-    Route::prefix('sadmin')->middleware('role:super_admin')->group(function () {
+    Route::prefix('sadmin')->middleware('role:super_admin|sales_agency')->group(function () {
       Route::get('sales/{salesUserId}/shop-visits', [ShopVisitController::class, 'adminIndex'])->name('admin.sales-visits.index');
       Route::get('sales/shop-visits/{id}/edit', [ShopVisitController::class, 'adminEdit'])->name('admin.sales-visits.edit');
       Route::put('sales/shop-visits/{id}', [ShopVisitController::class, 'adminUpdate'])->name('admin.sales-visits.update');
       Route::get('sales/{salesUserId}/shop-visits-dashboard', [ShopVisitController::class, 'adminDashboard'])->name('admin.sales-visits.dashboard');
+
+      //impersonate
+      Route::get('/impersonate/{user}', [UserController::class, 'impersonate'])->name('impersonate');
     });
 
 
@@ -723,8 +727,6 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::get('/users/update-status/{user}', [UserController::class, 'updateStatus'])->name('users.status');
 
       Route::get('/users/update-verified/{vcard}', [VcardController::class, 'verified'])->name('vcard.verified');
-      //impersonate
-      Route::get('/impersonate/{user}', [UserController::class, 'impersonate'])->name('impersonate');
       //vcard
       Route::get('/vcards', [VcardController::class, 'vcards'])->name('sadmin.vcards.index');
       Route::get('/vcard/clone-to/{vcard}', [VcardController::class, 'cloneTo'])->name('sadmin.vcard.clone');
@@ -948,6 +950,13 @@ Route::middleware(['freshInstall'])->group(function () {
 
       //whatsapp store
       Route::get('/whatsapp-stores', [WhatsappStoreController::class, 'index'])->name('sadmin.whatsapp-stores.index');
+    });
+
+    // Sales Agency routes
+    Route::prefix('sadmin')->name('sales-agency.')->middleware('role:sales_agency')->group(function () {
+      Route::resource('sales-agency/sales-users', SalesAgencySalesUserController::class);
+      Route::get('/sales-agency/admins/get-credentials/{id}', [AdminUserController::class, 'getCredentials'])->name('admins.get.credentials');
+      Route::put('/sales-agency/change-password/{user}', [UserController::class, 'changeUserPassword'])->name('changePassword');
     });
 
     //Show Withdrawal data

@@ -104,6 +104,10 @@ class ShopVisitController extends Controller
     $salesUser = User::whereHas('roles', fn($q) => $q->where('name', 'sales'))
       ->findOrFail($salesUserId);
 
+    if (auth()->user()->hasRole('sales_agency') && $salesUser->agency_id != auth()->id()) {
+      abort(403);
+    }
+
     $visits = ShopVisit::where('sales_user_id', $salesUserId)
       ->orderBy('visited_at', 'desc')
       ->paginate(20);
@@ -119,12 +123,24 @@ class ShopVisitController extends Controller
     $salesUser = User::whereHas('roles', fn($q) => $q->where('name', 'sales'))
       ->findOrFail($visit->sales_user_id);
 
+    if (auth()->user()->hasRole('sales_agency') && $salesUser->agency_id != auth()->id()) {
+      abort(403);
+    }
+
     return view('sales.shop_visits.admin_edit', compact('visit', 'salesUser'));
   }
 
   public function adminUpdate(Request $request, $id): RedirectResponse
   {
     $visit = ShopVisit::findOrFail($id);
+
+    // Ensure the visit belongs to a sales user
+    $salesUser = User::whereHas('roles', fn($q) => $q->where('name', 'sales'))
+      ->findOrFail($visit->sales_user_id);
+
+    if (auth()->user()->hasRole('sales_agency') && $salesUser->agency_id != auth()->id()) {
+      abort(403);
+    }
 
     $validated = $request->validate([
       'city'       => 'required|string|max:255',
@@ -158,6 +174,10 @@ class ShopVisitController extends Controller
   {
     $salesUser = User::whereHas('roles', fn($q) => $q->where('name', 'sales'))
       ->findOrFail($salesUserId);
+
+    if (auth()->user()->hasRole('sales_agency') && $salesUser->agency_id != auth()->id()) {
+      abort(403);
+    }
 
     $stats = $this->getVisitStats($salesUserId);
 

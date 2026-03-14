@@ -7,21 +7,21 @@ use Illuminate\Database\Eloquent\Builder;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 
-class SuperAdminTable extends LivewireTableComponent
+class SalesAgencySalesUsersTable extends LivewireTableComponent
 {
   protected $model = User::class;
   public bool $showButtonOnHeader = true;
-  public string $buttonComponent = 'admin_users.add-button';
+  public string $buttonComponent = 'sales_agency.sales_users.add-button';
   protected $listeners = ['refresh' => '$refresh', 'changeFilter', 'resetPageTable'];
 
   public function configure(): void
   {
     $this->setPrimaryKey('id');
-    $this->setPageName('user-table');
+    $this->setPageName('sales-user-table');
     $this->setDefaultSort('created_at', 'desc');
     $this->setColumnSelectStatus(false);
     $this->setQueryStringStatus(false);
-    $this->resetPage('user-table');
+    $this->resetPage('sales-user-table');
 
     $this->setThAttributes(function (Column $column) {
       if ($column->isField('email_verified')) {
@@ -41,20 +41,18 @@ class SuperAdminTable extends LivewireTableComponent
       Column::make(__('messages.common.name'), 'first_name')->sortable()
         ->searchable(function (Builder $query, $direction) {
           $query->whereRaw("TRIM(CONCAT(first_name,' ',last_name,' ')) like '%{$direction}%'");
-        })->view('admin_users.columns.name'),
+        })->view('sales_agency.sales_users.columns.name'),
       Column::make(__('messages.admin.role'), 'id')
-        ->view('admin_users.columns.role'),
+        ->view('sales_agency.sales_users.columns.role'),
       Column::make(__('messages.user.full_name'), 'last_name')->sortable()->searchable()->hideIf(1),
       Column::make(__('messages.user.email_verified'), 'id')
-        ->view('admin_users.columns.email_verified'),
+        ->view('sales_agency.sales_users.columns.email_verified'),
       Column::make(__('messages.common.is_active'), 'id')
-        ->view('admin_users.columns.is_active'),
+        ->view('sales_agency.sales_users.columns.is_active'),
       Column::make(__('messages.user.impersonate'), 'id')
-        ->view('admin_users.columns.impersonate'),
-      Column::make(__('messages.receipts.receipts'), 'id')
-        ->view('admin_users.columns.receipts'),
+        ->view('sales_agency.sales_users.columns.impersonate'),
       Column::make(__('messages.common.action'), 'id')
-        ->view('admin_users.columns.action'),
+        ->view('sales_agency.sales_users.columns.action'),
       Column::make('email', 'email')->hideIf(1)->searchable(),
       Column::make('email_verified_at', 'email_verified_at')->hideIf(1),
       Column::make('contact', 'contact')->hideIf(1),
@@ -64,11 +62,11 @@ class SuperAdminTable extends LivewireTableComponent
   public function builder(): Builder
   {
     return User::whereHas('roles', function ($query) {
-      $query->whereIn('name', ['super_admin', 'sales','sales_agency']);
-    })->with(['media', 'subscriptions.plan'])->where('id', '!=', getLogInUserId());
+      $query->where('name', 'sales');
+    })->where('agency_id', auth()->id())->with(['media', 'subscriptions.plan']);
   }
 
-  public function resetPageTable($pageName = 'user-table')
+  public function resetPageTable($pageName = 'sales-user-table')
   {
     $rowsPropertyData = $this->getRows()->toArray();
     $prevPageNum = $rowsPropertyData['current_page'] - 1;

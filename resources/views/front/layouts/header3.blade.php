@@ -81,6 +81,11 @@
                 class="ml-2 px-6 py-2.5 rounded-[4px] text-white bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 shadow-lg transition-all duration-300 hover:shadow-primary-900/30 hover:scale-105 font-medium">
                 {{ __('messages.dashboard') }}</a>
             @endif
+            @if (getLogInUser()->hasrole('sales_agency'))
+              <a href="{{ route('sales-agency.sales-users.index') }}"
+                class="ml-2 px-6 py-2.5 rounded-[4px] text-white bg-gradient-to-r from-primary-500 to-accent-500 hover:from-primary-600 hover:to-accent-600 shadow-lg transition-all duration-300 hover:shadow-primary-900/30 hover:scale-105 font-medium">
+                {{ __('messages.dashboard') }}</a>
+            @endif
           @endif
       </div>
       <!-- Mobile menu button -->

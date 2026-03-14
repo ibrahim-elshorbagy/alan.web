@@ -17,11 +17,11 @@
         <div class="card">
           <div class="card-body">
             {!! Form::open([
-                'route' => ['admins.update', $user->id],
-                'method' => 'put',
-                'files' => 'true',
-                'id' => 'userEditForm',
-            ]) !!}
+    'route' => ['admins.update', $user->id],
+    'method' => 'put',
+    'files' => 'true',
+    'id' => 'userEditForm',
+  ]) !!}
             @include('admin_users.fields')
             {{ Form::close() }}
           </div>
@@ -40,8 +40,18 @@
 
 @section('scripts')
   <script>
-    $(document).ready(function() {
-      $(document).on('click', '.delete-document', function() {
+    $(document).ready(function () {
+      $('#role').on('change', function () {
+        if ($(this).val() === 'sales') {
+          $('#agencyDiv').show();
+          $('#agencySelect').attr('required', true);
+        } else {
+          $('#agencyDiv').hide();
+          $('#agencySelect').attr('required', false);
+        }
+      });
+
+      $(document).on('click', '.delete-document', function () {
         var documentId = $(this).data('id');
         var row = $(this).closest('tr');
 
@@ -52,7 +62,7 @@
             data: {
               _token: '{{ csrf_token() }}'
             },
-            success: function(response) {
+            success: function (response) {
               toastr.success(response.message);
               row.remove();
               // If no more rows, reload or hide table
@@ -60,7 +70,7 @@
                 location.reload();
               }
             },
-            error: function(xhr) {
+            error: function (xhr) {
               toastr.error(xhr.responseJSON?.message || '{{ __('messages.common.something_went_wrong') }}');
             }
           });

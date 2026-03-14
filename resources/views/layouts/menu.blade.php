@@ -289,6 +289,16 @@
 
 @endhasrole
 
+@hasrole('sales_agency')
+<li class="nav-item {{ Request::is('sadmin/sales-agency*') ? 'active' : '' }}">
+  <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page"
+    href="{{ route('sales-agency.sales-users.index') }}">
+    <span class="aside-menu-icon"><i class="fas fa-users icon-color-bs-blue"></i></span>
+    <span class="aside-menu-title">{{ __('messages.admin.sales_users') }}</span>
+  </a>
+</li>
+@endhasrole
+
 @role(App\Models\Role::ROLE_ADMIN)
 <li class="user-dashboard nav-item {{ Request::is('admin/dashboard*') ? 'active' : '' }}">
   <a class="nav-link d-flex align-items-center py-3 gap-3" aria-current="page" href="{{ route('admin.dashboard') }}">

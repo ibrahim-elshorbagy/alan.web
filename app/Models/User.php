@@ -120,6 +120,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     'created_by',
     'inactive_by',
     'inactive_time',
+    'agency_id',
   ];
 
   protected $casts = [
@@ -408,6 +409,16 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
   public function inactivatedBy()
   {
     return $this->belongsTo(User::class, 'inactive_by');
+  }
+
+  public function agency(): BelongsTo
+  {
+    return $this->belongsTo(User::class, 'agency_id');
+  }
+
+  public function salesUsers(): HasMany
+  {
+    return $this->hasMany(User::class, 'agency_id');
   }
 
   public function subscription(): BelongsTo

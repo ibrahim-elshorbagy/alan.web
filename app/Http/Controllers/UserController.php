@@ -207,12 +207,20 @@ class UserController extends AppBaseController
    */
   public function impersonate(User $user): RedirectResponse
   {
+    // Check if sales_agency is trying to impersonate a user not under them
+    if (auth()->user()->hasRole('sales_agency') && $user->agency_id != auth()->id()) {
+      abort(403, 'Unauthorized');
+    }
+
     getLogInUser()->impersonate($user);
 
     if ($user->hasRole('sales')) {
       return redirect(route('redirect-links.index'));
     }
 
+    if ($user->hasRole('sales_agency')) {
+      return redirect(route('sales-agency.sales-users.index'));
+    }
     return redirect(route('admin.dashboard'));
   }
 
@@ -226,6 +234,9 @@ class UserController extends AppBaseController
     $user = getLogInUser();
     if ($user->hasRole('super_admin')) {
       return redirect(route('admins.index'));
+    }
+    if ($user->hasRole('sales_agency')) {
+      return redirect(route('sales-agency.sales-users.index'));
     }
 
     return redirect(route('users.index'));
@@ -283,6 +294,12 @@ class UserController extends AppBaseController
     $input = $request->all();
 
     try {
+      if (Auth::user()->hasRole('sales_agency')) {
+        if (!$user->hasRole('sales') || $user->agency_id != Auth::id()) {
+          return $this->sendError('Unauthorized');
+        }
+      }
+
       $input['password'] = Hash::make($input['new_password']);
       $this->userRepo->update($input, $user);
 

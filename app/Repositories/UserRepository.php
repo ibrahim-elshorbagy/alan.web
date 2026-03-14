@@ -87,6 +87,9 @@ class UserRepository extends BaseRepository
         $user = User::create($input)->assignRole($input['role']);
         $user->email_verified_at = Carbon::now();
         $user->is_active = true;
+        if ($input['role'] == 'sales') {
+          $user->agency_id = $input['agency_id'];
+        }
         $user->save();
       } else {
         $input['affiliate_code'] = generateUniqueAffiliateCode();
@@ -198,6 +201,12 @@ class UserRepository extends BaseRepository
 
     if (isset($input['role'])) {
       $user->syncRoles([$input['role']]);
+      if ($input['role'] == 'sales') {
+        $user->agency_id = $input['agency_id'];
+      } else {
+        $user->agency_id = null;
+      }
+      $user->save();
     }
 
     if (isset($input['profile']) && !empty($input['profile'])) {

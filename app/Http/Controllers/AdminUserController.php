@@ -66,6 +66,8 @@ class AdminUserController extends AppBaseController
   {
     $input = $request->all();
     $input['role'] = $request->role;
+
+
     $this->userRepo->store($input);
 
     Flash::success(__('messages.admin.admin_created_successfully'));
@@ -89,6 +91,7 @@ class AdminUserController extends AppBaseController
   public function update(UpdateUserRequest $request, $id): RedirectResponse
   {
     $user = User::findOrFail($id);
+
 
     $this->userRepo->update($request->all(), $user);
 
@@ -115,14 +118,20 @@ class AdminUserController extends AppBaseController
 
   public function getCredentials($id)
   {
-    if (!Auth::user()->hasRole('super_admin')) {
+    if (!Auth::user()->hasAnyRole(['super_admin', 'sales_agency'])) {
       return $this->sendError('Unauthorized');
     }
 
     $user = User::find($id);
 
-    if (!$user || !$user->hasAnyRole(['super_admin', 'sales'])) {
-      return $this->sendError('User not found or not authorized');
+    if (Auth::user()->hasRole('sales_agency')) {
+      if (!$user || !$user->hasRole('sales') || $user->agency_id != Auth::id()) {
+        return $this->sendError('Unauthorized');
+      }
+    } else {
+      if (!$user || !$user->hasAnyRole(['super_admin', 'sales', 'sales_agency'])) {
+        return $this->sendError('User not found or not authorized');
+      }
     }
 
     // generate new password
