@@ -11,7 +11,7 @@
           <a href="{{ route('admin.sales-visits.dashboard', $salesUser->id) }}" class="btn btn-info">
             <i class="fas fa-chart-bar"></i> {{ __('messages.shop_visits.dashboard') }}
           </a>
-          <a href="{{ route('admins.index') }}" class="btn btn-outline-primary">{{ __('messages.common.back') }}</a>
+          <a  href="{{ auth()->user()->hasRole('super_admin') ? route('admins.index') : route('sales-agency.sales-users.index') }}" class="btn btn-outline-primary">{{ __('messages.common.back') }}</a>
         </div>
       </div>
 
