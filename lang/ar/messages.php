@@ -6,7 +6,7 @@ return [
   'have_subscription' => 'لديك اشتراك؟',
   'please_login' => 'يرجى تسجيل الدخول',
 
-  'sold_by' => 'وكالة التسويق',
+  'sold_by' => 'وكالة تسويق',
   'contact_sales_rep' => 'تواصل مع وكيل التسويق',
 
   'images' => "الصور",
@@ -1832,9 +1832,9 @@ return [
     'admin_delete_successfully' => 'تم حذف الحساب بنجاح.',
     'admin_deleted_successfully' => 'تم حذف الحساب بنجاح.',
     'role' => 'الدور - الصلاحيات',
-    'super_admin' => 'المدير العام سوبر أدمن',
-    'sales' => ' التسويق والمبيعات',
-    'sales_agency' => 'وكالة المبيعات',
+    'super_admin' => 'سوبر أدمن',
+    'sales' => 'مندوب مبيعات',
+    'sales_agency' => 'وكالة تسويق',
     'agency' => 'الوكالة',
     'no_one' => 'لا أحد',
     'sales_users' => 'المبيعات',
@@ -2915,10 +2915,10 @@ return [
   ],
 
   'shop_visits' => [
-    'title' => 'الزيارات الميدانية',
+    'title' => 'قائمة الزيارات الميدانية',
     'add_visit' => 'إضافة زيارة',
     'edit_visit' => 'تعديل زيارة',
-    'dashboard' => 'لوحة الإنجاز',
+    'dashboard' => 'ملخص المبيعات والزيارات',
     'city' => 'المدينة',
     'area' => 'المنطقة',
     'street' => 'اسم الشارع',
