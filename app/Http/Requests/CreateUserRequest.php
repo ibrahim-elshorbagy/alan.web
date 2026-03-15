@@ -23,7 +23,7 @@ class CreateUserRequest extends FormRequest
     $rules = User::$rules;
     $rules['profile'] = 'mimes:jpg,bmp,png,apng,avif,jpeg,';
     $rules['password'] = 'required|same:password_confirmation|min:8';
-    $rules['role'] = 'required|in:super_admin,sales';
+    $rules['role'] = 'required|in:super_admin,sales,sales_agency';
 
     return $rules;
   }

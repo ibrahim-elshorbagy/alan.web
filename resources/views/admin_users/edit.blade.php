@@ -44,7 +44,6 @@
       $('#role').on('change', function () {
         if ($(this).val() === 'sales') {
           $('#agencyDiv').show();
-          $('#agencySelect').attr('required', true);
         } else {
           $('#agencyDiv').hide();
           $('#agencySelect').attr('required', false);
