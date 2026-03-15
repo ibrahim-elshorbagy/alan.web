@@ -1836,6 +1836,7 @@ return [
     'sales' => ' التسويق والمبيعات',
     'sales_agency' => 'وكالة المبيعات',
     'agency' => 'الوكالة',
+    'no_one' => 'لا أحد',
     'sales_users' => 'المبيعات',
     'cannot_delete_user_with_receipts' => 'لا يمكن حذف المستخدم لديه إيصالات موجودة.',
     'cannot_delete_user_with_active_cards' => 'لا يمكن حذف المستخدم لديه بطاقات نشطة مخصصة.',

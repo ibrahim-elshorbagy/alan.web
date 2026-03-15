@@ -1840,6 +1840,7 @@ return [
     'sales' => 'Sales',
     'sales_agency' => 'Sales Agency',
     'agency' => 'Agency',
+    'no_one' => 'No One',
     'sales_users' => 'Sales Users',
     'cannot_delete_user_with_receipts' => 'Cannot delete user with existing receipts.',
     'cannot_delete_user_with_active_cards' => 'Cannot delete user with assigned active cards.',

@@ -37,8 +37,8 @@
   </div>
   <div class="col-lg-6 mb-5" id="agencyDiv"
     style="display: {{ (isset($user) && $user->hasRole('sales')) || old('role') == 'sales' ? 'block' : 'none' }};">
-    {{ Form::label('agency_id', __('messages.admin.agency') . ':', ['class' => 'form-label required']) }}
-    {{ Form::select('agency_id', \App\Models\User::role('sales_agency')->get()->pluck('full_name', 'id'), isset($user) ? $user->agency_id : old('agency_id'), ['class' => 'form-control', 'id' => 'agencySelect']) }}
+    {{ Form::label('agency_id', __('messages.admin.agency') . ':', ['class' => 'form-label']) }}
+    {{ Form::select('agency_id', ['' => __('messages.admin.no_one')] + \App\Models\User::role('sales_agency')->get()->pluck('full_name', 'id')->toArray(), isset($user) ? $user->agency_id : old('agency_id'), ['class' => 'form-control', 'id' => 'agencySelect']) }}
   </div>
   @if (!isset($user))
     <div class="col-lg-6 mb-5">

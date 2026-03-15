@@ -88,7 +88,7 @@ class UserRepository extends BaseRepository
         $user->email_verified_at = Carbon::now();
         $user->is_active = true;
         if ($input['role'] == 'sales') {
-          $user->agency_id = $input['agency_id'];
+          $user->agency_id = isset($input['agency_id']) ? $input['agency_id'] : null;
         }
         $user->save();
       } else {
@@ -202,7 +202,7 @@ class UserRepository extends BaseRepository
     if (isset($input['role'])) {
       $user->syncRoles([$input['role']]);
       if ($input['role'] == 'sales') {
-        $user->agency_id = $input['agency_id'];
+        $user->agency_id = isset($input['agency_id']) ? $input['agency_id'] : null;
       } else {
         $user->agency_id = null;
       }
