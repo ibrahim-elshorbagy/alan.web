@@ -2323,7 +2323,7 @@ return [
     'email_subscription' => 'اشتراك بريد متجر واتساب',
     'share_my_whatsapp_store' => 'مشاركة متجر واتساب الخاص بي',
     'explore' => 'استكشاف',
-    'package' => 'باقة',
+    'package' => 'المنتجات والعروض',
     'no_package_found' => 'لم يتم العثور على باقات',
     'package_details' => 'تفاصيل الباقة',
     'slider_video_banner' => 'بانر فيديو متحرك',
