@@ -136,9 +136,9 @@
                     </span>
                   </label>
                   <input type="file" name="ad_images[]" id="adImageInput" class="form-control" multiple accept="image/*">
-                  <p class="text-muted small mt-1">
+                  {{-- <p class="text-muted small mt-1">
                     {{ __('messages.sales_advertise.compress_note') }}
-                  </p>
+                  </p> --}}
                 </div>
               @else
                 <div class="alert alert-info mb-4">
@@ -318,3 +318,5 @@
   }
 </script>
 @endpush
+
+

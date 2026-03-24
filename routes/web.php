@@ -610,7 +610,7 @@ Route::middleware(['freshInstall'])->group(function () {
       Route::delete('redirect-links/{redirectLink}', [RedirectLinkController::class, 'destroy'])->name('redirect-links.destroy');
     });
 
-    Route::middleware('role:super_admin')->group(function () {
+    Route::middleware('role:super_admin|admin')->group(function () {
       Route::get('redirect-links/{redirectLink}/ad-settings', [SalesAdvertiseController::class, 'editSettings'])->name('redirect-links.ad-settings');
       Route::post('redirect-links/{redirectLink}/ad-settings', [SalesAdvertiseController::class, 'updateForRedirectLink'])->name('redirect-links.ad-settings.update');
       Route::get('redirect-links/{redirectLink}/export-contests', [SalesAdvertiseController::class, 'exportAllContests'])->name('redirect-links.export-contests');
