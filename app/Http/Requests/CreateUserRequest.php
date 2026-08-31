@@ -23,7 +23,12 @@ class CreateUserRequest extends FormRequest
     $rules = User::$rules;
     $rules['profile'] = 'mimes:jpg,bmp,png,apng,avif,jpeg,';
     $rules['password'] = 'required|same:password_confirmation|min:8';
-    $rules['role'] = 'required|in:super_admin,sales,sales_agency';
+    // Role is required only for admin creation (sadmin/admins), nullable for regular users (sadmin/users)
+    if ($this->routeIs('admins.*')) {
+      $rules['role'] = 'required|in:super_admin,sales,sales_agency';
+    } else {
+      $rules['role'] = 'nullable|in:super_admin,sales,sales_agency';
+    }
 
     return $rules;
   }

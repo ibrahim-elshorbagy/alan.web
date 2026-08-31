@@ -1,7 +1,0 @@
-{
-    "Test":true,
-    "GoogleWallet":true,
-    "SlackIntegration":true,
-    "MercadoPago":true,
-    "TwofactorAuthentication" : true
-}

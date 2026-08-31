@@ -20,7 +20,9 @@ class UpdateUserRequest extends FormRequest
    */
   public function rules(): array
   {
-    $requestId = $this->route('user') ?: ($this->route('admin') ?: $this->route('sales_user'));
+    $routeParam = $this->route('user') ?: ($this->route('admin') ?: $this->route('sales_user'));
+    // Handle route model binding: if param is User model, extract id
+    $requestId = is_object($routeParam) ? ($routeParam->id ?? $routeParam->getKey() ?? null) : $routeParam;
     $rules = User::$rules;
     $rules['profile'] = 'mimes:jpg,bmp,png,apng,avif,jpeg,';
     $rules['email'] = 'nullable|email:filter|max:191|unique:users,email,' . $requestId;

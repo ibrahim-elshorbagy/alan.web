@@ -21,7 +21,9 @@ class UpdatePlanRequest extends FormRequest
     public function rules(): array
     {
         $rules = Plan::$rules;
-        $rules['name'] = $rules['name'].$this->route('plan');
+        $planParam = $this->route('plan');
+        $planId = is_object($planParam) ? ($planParam->id ?? $planParam->getKey()) : $planParam;
+        $rules['name'] = $rules['name'].$planId;
         if (!$this->custom_select && !$this->custom_vcard_number) {
          $rules['price'] = 'required|numeric';
          $rules['no_of_vcards'] = 'required|integer|min:1';

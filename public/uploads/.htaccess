@@ -1,0 +1,22 @@
+# Block PHP execution in uploads (post-breach hardening)
+# Prevents webshell execution if attacker uploads .php via media library
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .phps .pht
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .phps .pht
+
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phps|pht|phar)$">
+    Require all denied
+    Deny from all
+</FilesMatch>
+
+Options -Indexes -ExecCGI

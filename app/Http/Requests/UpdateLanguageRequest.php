@@ -19,8 +19,15 @@ class UpdateLanguageRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules['name'] = 'required|max:20|unique:languages,name,'.$this->route()->id;
-        $rules['iso_code'] = 'required|max:2|min:2|unique:languages,iso_code,'.$this->route()->id;
+        $langParam = $this->route('language') ?? $this->route('languages');
+        $langId = is_object($langParam) ? ($langParam->id ?? $langParam->getKey()) : $langParam;
+        // fallback to route()->id if param not found (legacy)
+        if (empty($langId)) {
+            $route = $this->route();
+            $langId = is_object($route) && isset($route->id) ? $route->id : null;
+        }
+        $rules['name'] = 'required|max:20|unique:languages,name,'.$langId;
+        $rules['iso_code'] = 'required|max:2|min:2|unique:languages,iso_code,'.$langId;
 
         return $rules;
     }

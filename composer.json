@@ -8,12 +8,6 @@
   ],
   "license": "MIT",
   "version": "14.7.0",
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/vishalinfyom/InstallerErag"
-    }
-  ],
   "require": {
     "php": "^8.1",
     "bacon/bacon-qr-code": "^2.0",
@@ -22,7 +16,7 @@
     "berkayk/onesignal-laravel": "^2.0",
     "biscolab/laravel-recaptcha": "^6.0",
     "doctrine/dbal": "^3.5",
-    "erag/installererag": "dev-main",
+    "erag/installererag": "dev-main#583bfa850a3b8c859ae7a103c92da8f21e67b61c",
     "gerardojbaez/money": "^0.3.1",
     "guzzlehttp/guzzle": "^7.2",
     "iyzico/iyzipay-php": "^2.0",
@@ -43,13 +37,11 @@
     "maatwebsite/excel": "^3.1",
     "mariuzzo/laravel-js-localization": "^1.10",
     "mews/purifier": "^3.4",
-    "mhmiton/laravel-modules-livewire": "^2.3",
-    "nwidart/laravel-modules": "^v10.0",
     "opcodesio/log-viewer": "^3.8",
     "paypal/paypal-payouts-sdk": "^1.0",
     "pragmarx/google2fa-laravel": "^2.3",
     "rap2hpoutre/laravel-log-viewer": "^2.3",
-    "rappasoft/laravel-livewire-tables": "^3.2",
+    "rappasoft/laravel-livewire-tables": "3.2.5",
     "razorpay/razorpay": "^2.8",
     "simplesoftwareio/simple-qrcode": "^4.2",
     "spatie/color": "^1.5",
@@ -84,7 +76,6 @@
   "autoload": {
     "psr-4": {
       "App\\": "app/",
-      "Modules\\": "Modules/",
       "Database\\Factories\\": "database/factories/",
       "Database\\Seeders\\": "database/seeders/"
     },
@@ -115,11 +106,6 @@
   "extra": {
     "laravel": {
       "dont-discover": []
-    },
-    "merge-plugin": {
-      "include": [
-        "Modules/*/composer.json"
-      ]
     }
   },
   "config": {
@@ -127,8 +113,7 @@
     "preferred-install": "dist",
     "sort-packages": true,
     "allow-plugins": {
-      "php-http/discovery": true,
-      "wikimedia/composer-merge-plugin": true
+      "php-http/discovery": true
     }
   },
   "minimum-stability": "stable",

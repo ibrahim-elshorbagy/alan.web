@@ -74,9 +74,9 @@ class UserRepository extends BaseRepository
    */
   public function store($input)
   {
-    try {
-      DB::beginTransaction();
-
+    // Retry on deadlock (1213) / lock wait timeout (1205) — transient InnoDB gap locks on users_email_unique / contact + SMTP hold
+    $shouldSendVerification = !isset($input['is_admin']);
+    $user = DB::transaction(function () use ($input) {
       $tenant = MultiTenant::create(['tenant_username' => $input['first_name']]);
       $userDefaultLanguage = Setting::where('key', 'user_default_language')->first()->value ?? 'en';
 
@@ -104,9 +104,6 @@ class UserRepository extends BaseRepository
         $user->addMedia($input['profile'])->toMediaCollection(User::PROFILE, config('app.media_disc'));
       }
 
-      if (!isset($input['is_admin'])) {
-        $user->sendEmailVerificationNotification();
-      }
       if (isset($input['plan_id'])) {
         $plan = Plan::whereId($input['plan_id'])->first();
       } else {
@@ -138,14 +135,20 @@ class UserRepository extends BaseRepository
         $subscription->status = Subscription::ACTIVE;
         $subscription->saveQuietly();
       }
-      DB::commit();
 
       return $user;
-    } catch (Exception $e) {
-      DB::rollBack();
+    }, 3);
 
-      throw new UnprocessableEntityHttpException($e->getMessage());
+    // Send verification AFTER commit to avoid holding row locks during SMTP (mailtrap timeout caused 1205)
+    if ($shouldSendVerification) {
+      try {
+        $user->sendEmailVerificationNotification();
+      } catch (\Throwable $e) {
+        Log::warning('Verification email failed for user '.$user->id.': '.$e->getMessage());
+      }
     }
+
+    return $user;
   }
 
   /**
